@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
 import { forwardRef } from 'react'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -73,7 +74,25 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || loading}
         {...props}
       >
-        {loading && <Loader2 className="absolute h-4 w-4 animate-spin" />}
+        <AnimatePresence>
+          {loading && (
+            <motion.span
+              className="absolute !visible"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.2 }}
+            >
+              <motion.span
+                className="block"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+              >
+                <Loader2 className="h-4 w-4" />
+              </motion.span>
+            </motion.span>
+          )}
+        </AnimatePresence>
         {children}
       </button>
     )

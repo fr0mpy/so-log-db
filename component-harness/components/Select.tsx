@@ -97,7 +97,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             'bg-neu-base shadow-neu-raised px-3 py-2 text-sm text-foreground cursor-pointer',
             'focus-visible:outline-none focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]',
             'disabled:cursor-not-allowed disabled:opacity-50',
-            isOpen && 'z-[10000]',
+            isOpen && 'z-popover',
             className
           )}
           {...props}
@@ -129,7 +129,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
                   left: dropdownPosition.left,
                   width: dropdownPosition.width,
                 }}
-                className="z-[9999] rounded-theme-md bg-neu-base shadow-neu-raised-lg border border-white/40 dark:border-white/10"
+                className="z-popover rounded-theme-md bg-neu-base shadow-neu-raised-lg border border-white/40 dark:border-white/10"
               >
                 {searchable && (
                   <div className="p-2 pt-4 border-b border-border/30">
