@@ -21,7 +21,9 @@
       "success": "#00af66",
       "success-foreground": "#FFFFFF",
       "warning": "#ff6900",
-      "warning-foreground": "#FFFFFF"
+      "warning-foreground": "#FFFFFF",
+      "info": "#3b82f6",
+      "info-foreground": "#FFFFFF"
     },
     "neumorphic": {
       "base": "#e4e8eb",
