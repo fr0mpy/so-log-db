@@ -2,7 +2,8 @@ import { cn } from '@/lib/utils'
 import { X } from 'lucide-react'
 import { forwardRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { SmoothScroll } from './SmoothScroll'
+import { ScrollArea } from './ScrollArea'
+import { Button } from './Button'
 
 // Spring config for smooth slide
 const spring = {
@@ -112,25 +113,19 @@ const Drawer = forwardRef<HTMLDivElement, DrawerProps>(
                     {title}
                   </h2>
                 )}
-                <motion.button
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={onClose}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={cn(
-                    'ml-auto rounded-theme-lg p-1.5 cursor-pointer min-h-11 min-w-11 flex items-center justify-center',
-                    'bg-neu-base shadow-neu-raised-sm',
-                    'transition-shadow duration-neu ease-neu hover:shadow-neu-raised',
-                    'active:shadow-neu-pressed-sm',
-                    'focus-visible:outline-none focus-visible:shadow-[var(--shadow-raised-sm),var(--shadow-focus)]'
-                  )}
+                  className="ml-auto"
+                  aria-label="Close"
                 >
                   <X className="h-4 w-4" />
-                  <span className="sr-only">Close</span>
-                </motion.button>
+                </Button>
               </div>
-              <SmoothScroll className="flex-1 overflow-auto p-6 pt-0">
+              <ScrollArea className="flex-1 overflow-auto p-6 pt-0">
                 {children}
-              </SmoothScroll>
+              </ScrollArea>
             </motion.div>
           </div>
         )}

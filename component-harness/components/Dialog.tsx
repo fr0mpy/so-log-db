@@ -1,7 +1,8 @@
 import { cn } from '@/lib/utils'
 import { X } from 'lucide-react'
-import { forwardRef, createContext, useContext, useState, useEffect } from 'react'
+import React, { forwardRef, createContext, useContext, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
+import { Button } from './Button'
 
 // Shared spring config for consistent motion
 const spring = {
@@ -13,6 +14,7 @@ const spring = {
 interface DialogContextValue {
   open: boolean
   setOpen: (open: boolean) => void
+  blocking: boolean
 }
 
 const DialogContext = createContext<DialogContextValue | undefined>(undefined)
@@ -29,10 +31,12 @@ interface DialogProps {
   open?: boolean
   defaultOpen?: boolean
   onOpenChange?: (open: boolean) => void
+  /** When true, prevents closing via backdrop click or escape key (alert dialog behavior) */
+  blocking?: boolean
   children: React.ReactNode
 }
 
-const Dialog = ({ open, defaultOpen = false, onOpenChange, children }: DialogProps) => {
+const Dialog = ({ open, defaultOpen = false, onOpenChange, blocking = false, children }: DialogProps) => {
   const [isOpen, setIsOpen] = useState(open !== undefined ? open : defaultOpen)
 
   useEffect(() => {
@@ -49,84 +53,122 @@ const Dialog = ({ open, defaultOpen = false, onOpenChange, children }: DialogPro
   }
 
   return (
-    <DialogContext.Provider value={{ open: isOpen, setOpen: handleSetOpen }}>
+    <DialogContext.Provider value={{ open: isOpen, setOpen: handleSetOpen, blocking }}>
       {children}
     </DialogContext.Provider>
   )
 }
 
-const DialogTrigger = forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
-  ({ className, children, ...props }, ref) => {
+interface DialogTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  asChild?: boolean
+}
+
+const DialogTrigger = forwardRef<HTMLButtonElement, DialogTriggerProps>(
+  ({ asChild, children, onClick, ...props }, ref) => {
     const { setOpen } = useDialogContext()
 
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      onClick?.(e)
+      setOpen(true)
+    }
+
+    if (asChild && React.isValidElement(children)) {
+      return React.cloneElement(children as React.ReactElement<{ onClick?: (e: React.MouseEvent) => void; ref?: React.Ref<HTMLButtonElement> }>, {
+        onClick: handleClick,
+        ref,
+      })
+    }
+
     return (
-      <motion.button
-        ref={ref}
-        onClick={() => setOpen(true)}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className={cn(
-          'cursor-pointer rounded-theme-md px-2 py-1',
-          'transition-colors duration-200',
-          'hover:bg-slate-400',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
-          className
-        )}
-        {...props}
-      >
+      <Button ref={ref} variant="outline" onClick={handleClick} {...props}>
         {children}
-      </motion.button>
+      </Button>
     )
   }
 )
 DialogTrigger.displayName = 'DialogTrigger'
 
-const DialogContent = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+interface DialogContentProps extends React.HTMLAttributes<HTMLDivElement> {
+  'aria-labelledby'?: string
+  'aria-describedby'?: string
+}
+
+const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
   ({ className, children, ...props }, ref) => {
-    const { open, setOpen } = useDialogContext()
+    const { open, setOpen, blocking } = useDialogContext()
+
+    // Body scroll lock
+    useEffect(() => {
+      if (open) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = ''
+      }
+      return () => {
+        document.body.style.overflow = ''
+      }
+    }, [open])
+
+    // Handle escape key (blocked when blocking is true)
+    useEffect(() => {
+      if (!open || blocking) return
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          setOpen(false)
+        }
+      }
+      document.addEventListener('keydown', handleEscape)
+      return () => document.removeEventListener('keydown', handleEscape)
+    }, [open, blocking, setOpen])
+
+    const handleBackdropClick = () => {
+      if (!blocking) {
+        setOpen(false)
+      }
+    }
 
     return (
       <AnimatePresence>
         {open && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-foreground/80 backdrop-blur-sm"
-              onClick={() => setOpen(false)}
+              className={cn(
+                'fixed inset-0 bg-foreground/80 backdrop-blur-sm',
+                blocking && 'cursor-not-allowed'
+              )}
+              onClick={handleBackdropClick}
             />
             <motion.div
               ref={ref}
+              role={blocking ? 'alertdialog' : 'dialog'}
+              aria-modal="true"
               initial={{ opacity: 0, scale: 0.95, y: -8 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -8 }}
               transition={spring}
               className={cn(
-                'relative z-50 w-full max-w-lg rounded-theme-xl',
+                'relative z-50 w-full max-w-lg rounded-theme-xl p-6',
                 'bg-neu-base shadow-neu-raised-lg',
                 className
               )}
               {...props}
             >
               {children}
-              <motion.button
-                onClick={() => setOpen(false)}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className={cn(
-                  'absolute right-4 top-4 rounded-theme-lg p-1.5 cursor-pointer',
-                  'bg-neu-base shadow-neu-raised-sm',
-                  'transition-shadow duration-200 hover:shadow-neu-raised',
-                  'active:shadow-neu-pressed-sm',
-                  'focus-visible:outline-none focus-visible:shadow-[var(--shadow-raised-sm),var(--shadow-focus)]',
-                  'disabled:pointer-events-none'
-                )}
-              >
-                <X className="h-4 w-4" />
-                <span className="sr-only">Close</span>
-              </motion.button>
+              {!blocking && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setOpen(false)}
+                  className="absolute right-4 top-4 h-8 w-8 min-h-8 min-w-8 p-0"
+                  aria-label="Close"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
             </motion.div>
           </div>
         )}
@@ -140,7 +182,7 @@ const DialogHeader = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElem
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex flex-col space-y-1.5 p-6', className)}
+      className={cn('flex flex-col space-y-1.5 pb-4', className)}
       {...props}
     />
   )
@@ -173,7 +215,7 @@ const DialogFooter = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElem
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex items-center justify-end gap-2 p-6 pt-0', className)}
+      className={cn('flex items-center justify-end gap-2 pt-4', className)}
       {...props}
     />
   )
