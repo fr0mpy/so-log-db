@@ -9,7 +9,7 @@ interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
 const Alert = forwardRef<HTMLDivElement, AlertProps>(
   ({ variant = 'info', className, children, ...props }, ref) => {
     const variants = {
-      info: 'bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.2),-2px_-2px_4px_rgba(255,255,255,0.2),2px_2px_4px_rgba(0,100,60,0.2)] border-transparent',
+      info: 'bg-info text-info-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.2),-2px_-2px_4px_rgba(255,255,255,0.2),2px_2px_4px_rgba(59,130,246,0.3)] border-transparent',
       success: 'bg-success text-success-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.2),-2px_-2px_4px_rgba(255,255,255,0.2),2px_2px_4px_rgba(0,100,60,0.2)] border-transparent',
       warning: 'bg-warning text-warning-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.2),-2px_-2px_4px_rgba(255,255,255,0.2),2px_2px_4px_rgba(180,80,0,0.2)] border-transparent',
       destructive: 'bg-destructive text-destructive-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.2),-2px_-2px_4px_rgba(255,255,255,0.2),2px_2px_4px_rgba(180,40,40,0.2)] border-transparent',

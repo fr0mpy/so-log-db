@@ -1,11 +1,13 @@
 import { cn } from '@/lib/utils'
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react'
-import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from 'react'
+import { useState, useEffect, useCallback, createContext, useContext, ReactNode, forwardRef } from 'react'
 import { createPortal } from 'react-dom'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence, type TargetAndTransition } from 'motion/react'
+
+type MotionVariant = { initial: TargetAndTransition; animate: TargetAndTransition; exit: TargetAndTransition }
 
 type ToastVariant = 'info' | 'success' | 'warning' | 'destructive'
-type ToastPosition = 'top' | 'bottom' | 'left' | 'right'
+type ToastPosition = 'top' | 'top-left' | 'top-right' | 'bottom' | 'bottom-left' | 'bottom-right' | 'left' | 'right'
 
 interface ToastData {
   id: string
@@ -53,7 +55,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 }
 
 function ToastContainer({ toasts, onRemove }: { toasts: ToastData[]; onRemove: (id: string) => void }) {
-  const positions: ToastPosition[] = ['top', 'bottom', 'left', 'right']
+  const positions: ToastPosition[] = ['top', 'top-left', 'top-right', 'bottom', 'bottom-left', 'bottom-right', 'left', 'right']
 
   return createPortal(
     <>
@@ -61,9 +63,13 @@ function ToastContainer({ toasts, onRemove }: { toasts: ToastData[]; onRemove: (
         const positionToasts = toasts.filter((t) => t.position === position)
         if (positionToasts.length === 0) return null
 
-        const containerStyles = {
+        const containerStyles: Record<ToastPosition, string> = {
           top: 'top-4 left-1/2 -translate-x-1/2 flex-col',
+          'top-left': 'top-4 left-4 flex-col',
+          'top-right': 'top-4 right-4 flex-col',
           bottom: 'bottom-4 left-1/2 -translate-x-1/2 flex-col-reverse',
+          'bottom-left': 'bottom-4 left-4 flex-col-reverse',
+          'bottom-right': 'bottom-4 right-4 flex-col-reverse',
           left: 'left-4 top-1/2 -translate-y-1/2 flex-col',
           right: 'right-4 top-1/2 -translate-y-1/2 flex-col',
         }
@@ -86,7 +92,12 @@ function ToastContainer({ toasts, onRemove }: { toasts: ToastData[]; onRemove: (
   )
 }
 
-function ToastItem({ toast, onClose }: { toast: ToastData; onClose: () => void }) {
+interface ToastItemProps {
+  toast: ToastData
+  onClose: () => void
+}
+
+const ToastItem = forwardRef<HTMLDivElement, ToastItemProps>(({ toast, onClose }, ref) => {
   const [isVisible, setIsVisible] = useState(true)
   const duration = toast.duration ?? 5000
 
@@ -102,32 +113,59 @@ function ToastItem({ toast, onClose }: { toast: ToastData; onClose: () => void }
   }, [duration, handleClose])
 
   const variantStyles = {
-    info: 'bg-primary/10 text-primary border-primary/20',
-    success: 'bg-success/10 text-success border-success/20',
-    warning: 'bg-warning/10 text-warning border-warning/20',
-    destructive: 'bg-destructive/10 text-destructive border-destructive/20',
+    info: 'border-primary/40',
+    success: 'border-success/40',
+    warning: 'border-warning/40',
+    destructive: 'border-destructive/40',
   }
 
-  const motionVariants = {
+  const iconStyles = {
+    info: 'text-primary',
+    success: 'text-success',
+    warning: 'text-warning',
+    destructive: 'text-destructive',
+  }
+
+  const motionVariants: Record<ToastPosition, MotionVariant> = {
     top: {
-      initial: { y: '-100vh', opacity: 0 },
+      initial: { y: '-100%', opacity: 0 },
       animate: { y: 0, opacity: 1 },
-      exit: { y: '-100vh', opacity: 0 },
+      exit: { y: '-100%', opacity: 0 },
+    },
+    'top-left': {
+      initial: { x: '-100%', opacity: 0 },
+      animate: { x: 0, opacity: 1 },
+      exit: { x: '-100%', opacity: 0 },
+    },
+    'top-right': {
+      initial: { x: '100%', opacity: 0 },
+      animate: { x: 0, opacity: 1 },
+      exit: { x: '100%', opacity: 0 },
     },
     bottom: {
-      initial: { y: '100vh', opacity: 0 },
+      initial: { y: '100%', opacity: 0 },
       animate: { y: 0, opacity: 1 },
-      exit: { y: '100vh', opacity: 0 },
+      exit: { y: '100%', opacity: 0 },
+    },
+    'bottom-left': {
+      initial: { x: '-100%', opacity: 0 },
+      animate: { x: 0, opacity: 1 },
+      exit: { x: '-100%', opacity: 0 },
+    },
+    'bottom-right': {
+      initial: { x: '100%', opacity: 0 },
+      animate: { x: 0, opacity: 1 },
+      exit: { x: '100%', opacity: 0 },
     },
     left: {
-      initial: { x: '-100vw', opacity: 0 },
+      initial: { x: '-100%', opacity: 0 },
       animate: { x: 0, opacity: 1 },
-      exit: { x: '-100vw', opacity: 0 },
+      exit: { x: '-100%', opacity: 0 },
     },
     right: {
-      initial: { x: '100vw', opacity: 0 },
+      initial: { x: '100%', opacity: 0 },
       animate: { x: 0, opacity: 1 },
-      exit: { x: '100vw', opacity: 0 },
+      exit: { x: '100%', opacity: 0 },
     },
   }
 
@@ -144,6 +182,7 @@ function ToastItem({ toast, onClose }: { toast: ToastData; onClose: () => void }
     <AnimatePresence mode="wait" onExitComplete={onClose}>
       {isVisible && (
         <motion.div
+          ref={ref}
           layout
           role="alert"
           initial={motionVariants[toast.position].initial}
@@ -156,21 +195,21 @@ function ToastItem({ toast, onClose }: { toast: ToastData; onClose: () => void }
           }}
           className={cn(
             'w-full max-w-sm rounded-theme-lg border p-4 shadow-neu-raised pointer-events-auto',
-            'flex items-start gap-3',
+            'flex items-start gap-3 text-foreground bg-background',
             variantStyles[toast.variant]
           )}
         >
-          <Icon className="h-5 w-5 flex-shrink-0" />
+          <Icon className={cn('h-5 w-5 flex-shrink-0', iconStyles[toast.variant])} />
           <div className="flex-1">
             {toast.title && <div className="font-semibold">{toast.title}</div>}
-            {toast.description && <div className="text-sm opacity-90 mt-1">{toast.description}</div>}
+            {toast.description && <div className="text-sm opacity-80 mt-1">{toast.description}</div>}
           </div>
           <button
             onClick={handleClose}
             className={cn(
               'rounded-theme-sm opacity-70 cursor-pointer min-h-11 min-w-11',
-              'transition-opacity hover:opacity-100',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2'
+              'transition-opacity hover:opacity-100 text-foreground',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2'
             )}
           >
             <X className="h-4 w-4" />
@@ -180,16 +219,20 @@ function ToastItem({ toast, onClose }: { toast: ToastData; onClose: () => void }
       )}
     </AnimatePresence>
   )
-}
+})
+
+ToastItem.displayName = 'ToastItem'
 
 // Standalone Toast component for simple usage
-interface ToastProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ToastProps {
   variant?: ToastVariant
   position?: ToastPosition
   title?: string
   description?: string
   duration?: number
   onClose?: () => void
+  className?: string
+  children?: React.ReactNode
 }
 
 function Toast({
@@ -201,7 +244,6 @@ function Toast({
   onClose,
   className,
   children,
-  ...props
 }: ToastProps) {
   const [isVisible, setIsVisible] = useState(true)
   const [shouldRender, setShouldRender] = useState(true)
@@ -225,39 +267,70 @@ function Toast({
   if (!shouldRender) return null
 
   const variantStyles = {
-    info: 'bg-primary/10 text-primary border-primary/20',
-    success: 'bg-success/10 text-success border-success/20',
-    warning: 'bg-warning/10 text-warning border-warning/20',
-    destructive: 'bg-destructive/10 text-destructive border-destructive/20',
+    info: 'border-primary/40',
+    success: 'border-success/40',
+    warning: 'border-warning/40',
+    destructive: 'border-destructive/40',
   }
 
-  const positionStyles = {
-    top: 'top-4 left-1/2',
-    bottom: 'bottom-4 left-1/2',
-    left: 'left-4 top-1/2',
-    right: 'right-4 top-1/2',
+  const iconStyles = {
+    info: 'text-primary',
+    success: 'text-success',
+    warning: 'text-warning',
+    destructive: 'text-destructive',
   }
 
-  const motionVariants = {
+  const positionStyles: Record<ToastPosition, string> = {
+    top: 'top-4 left-1/2 -translate-x-1/2',
+    'top-left': 'top-4 left-4',
+    'top-right': 'top-4 right-4',
+    bottom: 'bottom-4 left-1/2 -translate-x-1/2',
+    'bottom-left': 'bottom-4 left-4',
+    'bottom-right': 'bottom-4 right-4',
+    left: 'left-4 top-1/2 -translate-y-1/2',
+    right: 'right-4 top-1/2 -translate-y-1/2',
+  }
+
+  const motionVariants: Record<ToastPosition, MotionVariant> = {
     top: {
-      initial: { y: '-100vh', x: '-50%', opacity: 0 },
-      animate: { y: 0, x: '-50%', opacity: 1 },
-      exit: { y: '-100vh', x: '-50%', opacity: 0 },
+      initial: { y: '-100%', opacity: 0 },
+      animate: { y: 0, opacity: 1 },
+      exit: { y: '-100%', opacity: 0 },
+    },
+    'top-left': {
+      initial: { x: '-100%', opacity: 0 },
+      animate: { x: 0, opacity: 1 },
+      exit: { x: '-100%', opacity: 0 },
+    },
+    'top-right': {
+      initial: { x: '100%', opacity: 0 },
+      animate: { x: 0, opacity: 1 },
+      exit: { x: '100%', opacity: 0 },
     },
     bottom: {
-      initial: { y: '100vh', x: '-50%', opacity: 0 },
-      animate: { y: 0, x: '-50%', opacity: 1 },
-      exit: { y: '100vh', x: '-50%', opacity: 0 },
+      initial: { y: '100%', opacity: 0 },
+      animate: { y: 0, opacity: 1 },
+      exit: { y: '100%', opacity: 0 },
+    },
+    'bottom-left': {
+      initial: { x: '-100%', opacity: 0 },
+      animate: { x: 0, opacity: 1 },
+      exit: { x: '-100%', opacity: 0 },
+    },
+    'bottom-right': {
+      initial: { x: '100%', opacity: 0 },
+      animate: { x: 0, opacity: 1 },
+      exit: { x: '100%', opacity: 0 },
     },
     left: {
-      initial: { x: '-100vw', y: '-50%', opacity: 0 },
-      animate: { x: 0, y: '-50%', opacity: 1 },
-      exit: { x: '-100vw', y: '-50%', opacity: 0 },
+      initial: { x: '-100%', opacity: 0 },
+      animate: { x: 0, opacity: 1 },
+      exit: { x: '-100%', opacity: 0 },
     },
     right: {
-      initial: { x: '100vw', y: '-50%', opacity: 0 },
-      animate: { x: 0, y: '-50%', opacity: 1 },
-      exit: { x: '100vw', y: '-50%', opacity: 0 },
+      initial: { x: '100%', opacity: 0 },
+      animate: { x: 0, opacity: 1 },
+      exit: { x: '100%', opacity: 0 },
     },
   }
 
@@ -285,25 +358,24 @@ function Toast({
           }}
           className={cn(
             'fixed z-toast w-full max-w-sm rounded-theme-lg border p-4 shadow-neu-raised',
-            'flex items-start gap-3',
+            'flex items-start gap-3 text-foreground bg-background',
             positionStyles[position],
             variantStyles[variant],
             className
           )}
-          {...props}
         >
-          <Icon className="h-5 w-5 flex-shrink-0" />
+          <Icon className={cn('h-5 w-5 flex-shrink-0', iconStyles[variant])} />
           <div className="flex-1">
             {title && <div className="font-semibold">{title}</div>}
-            {description && <div className="text-sm opacity-90 mt-1">{description}</div>}
+            {description && <div className="text-sm opacity-80 mt-1">{description}</div>}
             {children}
           </div>
           <button
             onClick={handleClose}
             className={cn(
               'rounded-theme-sm opacity-70 cursor-pointer min-h-11 min-w-11',
-              'transition-opacity hover:opacity-100',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2'
+              'transition-opacity hover:opacity-100 text-foreground',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2'
             )}
           >
             <X className="h-4 w-4" />
