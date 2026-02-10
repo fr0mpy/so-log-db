@@ -22,6 +22,7 @@ import {
   NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink,
   NumberInput,
   Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis,
+  Paper, PaperHeader, PaperTitle, PaperDescription, PaperContent, PaperFooter,
   Popover,
   Progress,
   Radio, RadioGroup, RadioGroupItem,
@@ -35,7 +36,7 @@ import {
   Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption,
   Tabs, TabsList, TabsTrigger, TabsContent,
   Textarea,
-  Toast,
+  ToastProvider, useToast,
   Toolbar, ToolbarButton, ToolbarSeparator, ToolbarGroup, ToolbarLink,
   Tooltip,
 } from './components'
@@ -184,11 +185,53 @@ function DrawerDemo() {
   )
 }
 
+function ToastDemoContent() {
+  const { addToast } = useToast()
+  const variants = ['info', 'success', 'warning', 'destructive'] as const
+
+  // Grid layout matching screen positions
+  const gridPositions = [
+    ['top-left', 'top', 'top-right'],
+    ['left', null, 'right'],
+    ['bottom-left', 'bottom', 'bottom-right'],
+  ] as const
+
+  return (
+    <div className="space-y-4">
+      <p className="text-xs text-muted-foreground mb-2">Click to show toast at each position</p>
+      <div className="grid grid-cols-3 gap-2 max-w-xs">
+        {gridPositions.flat().map((position, idx) =>
+          position ? (
+            <Button
+              key={position}
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                addToast({
+                  variant: variants[Math.floor(Math.random() * variants.length)],
+                  position,
+                  title: position.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+                  description: `Toast from ${position}`,
+                  duration: 3000,
+                })
+              }
+            >
+              {position}
+            </Button>
+          ) : (
+            <div key={idx} />
+          )
+        )}
+      </div>
+    </div>
+  )
+}
+
 function ToastDemo() {
   return (
-    <div className="space-y-2">
-      <Toast variant="success" title="Success" description="Your changes have been saved." />
-    </div>
+    <ToastProvider>
+      <ToastDemoContent />
+    </ToastProvider>
   )
 }
 
@@ -257,6 +300,23 @@ function CarouselDemo() {
     </div>,
   ]
   return <Carousel items={items} />
+}
+
+function ProgressDemo() {
+  const [value, setValue] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setValue(v => (v >= 100 ? 0 : v + 1))
+    }, 50)
+    return () => clearInterval(timer)
+  }, [])
+
+  return (
+    <div className="w-full max-w-md">
+      <Progress value={value} />
+    </div>
+  )
 }
 
 // Loading fallback for lazy components
@@ -521,13 +581,7 @@ const componentPreviews = [
   },
   {
     name: 'Progress',
-    render: () => (
-      <div className="space-y-4 w-full max-w-md">
-        <Progress value={25} />
-        <Progress value={50} />
-        <Progress value={75} />
-      </div>
-    ),
+    render: () => <ProgressDemo />,
   },
   {
     name: 'Tabs',
@@ -560,9 +614,39 @@ const componentPreviews = [
   {
     name: 'Tooltip',
     render: () => (
-      <Tooltip content="This is a helpful tooltip" side="top">
-        <Button variant="outline">Hover me</Button>
-      </Tooltip>
+      <div className="flex flex-col gap-8 items-center">
+        {/* Side variations */}
+        <div className="flex gap-4 items-center">
+          <Tooltip content="Top tooltip" side="top">
+            <Button variant="outline" size="sm">Top</Button>
+          </Tooltip>
+          <Tooltip content="Right tooltip" side="right">
+            <Button variant="outline" size="sm">Right</Button>
+          </Tooltip>
+          <Tooltip content="Bottom tooltip" side="bottom">
+            <Button variant="outline" size="sm">Bottom</Button>
+          </Tooltip>
+          <Tooltip content="Left tooltip" side="left">
+            <Button variant="outline" size="sm">Left</Button>
+          </Tooltip>
+        </div>
+        {/* Anchor variations */}
+        <div className="flex gap-4 items-center">
+          <Tooltip content="Anchored start" side="top" anchor="start">
+            <Button variant="ghost" size="sm">Start</Button>
+          </Tooltip>
+          <Tooltip content="Anchored center" side="top" anchor="center">
+            <Button variant="ghost" size="sm">Center</Button>
+          </Tooltip>
+          <Tooltip content="Anchored end" side="top" anchor="end">
+            <Button variant="ghost" size="sm">End</Button>
+          </Tooltip>
+        </div>
+        {/* No arrow */}
+        <Tooltip content="No arrow pointer" side="bottom" showArrow={false}>
+          <Button variant="secondary" size="sm">No Arrow</Button>
+        </Tooltip>
+      </div>
     ),
   },
   {
@@ -661,6 +745,39 @@ const componentPreviews = [
     render: () => <PaginationDemo />,
   },
   {
+    name: 'Paper',
+    render: () => (
+      <div className="space-y-6">
+        <div className="flex gap-6">
+          <Paper className="w-full max-w-sm p-6">
+            <p className="text-sm text-muted-foreground">
+              Simple Paper with default depth. Content appears carved into the surface.
+            </p>
+          </Paper>
+          <Paper depth="sm" className="w-full max-w-sm p-6">
+            <p className="text-sm text-muted-foreground">
+              Paper with subtle (sm) depth for lighter inset effect.
+            </p>
+          </Paper>
+        </div>
+        <Paper className="w-full max-w-md">
+          <PaperHeader>
+            <PaperTitle>Inward Neumorphic</PaperTitle>
+            <PaperDescription>Content that appears carved into the surface.</PaperDescription>
+          </PaperHeader>
+          <PaperContent>
+            <p className="text-sm text-muted-foreground">
+              Paper uses inset shadows to create a concave effect, opposite of Card which appears raised.
+            </p>
+          </PaperContent>
+          <PaperFooter>
+            <Button variant="ghost" size="sm">Learn more</Button>
+          </PaperFooter>
+        </Paper>
+      </div>
+    ),
+  },
+  {
     name: 'Table',
     render: () => (
       <Table>
@@ -748,16 +865,8 @@ const MemoizedPreview = memo(({ render }: { render: () => React.ReactNode }) => 
 ))
 MemoizedPreview.displayName = 'MemoizedPreview'
 
-// Shadow class mapping (defined outside component to avoid recreation)
-const SHADOW_CLASSES = {
-  sm: 'shadow-neu-raised-sm',
-  md: 'shadow-neu-raised',
-  lg: 'shadow-neu-raised-lg',
-} as const
-
 export default function Gallery() {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [shadowLevel, setShadowLevel] = useState<keyof typeof SHADOW_CLASSES>('md')
   const [isDark, setIsDark] = useState(false)
 
   const currentComponent = componentPreviews[currentIndex]
@@ -780,10 +889,6 @@ export default function Gallery() {
     setIsDark((prev) => !prev)
   }, [])
 
-  const handleShadowChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    setShadowLevel(e.target.value as keyof typeof SHADOW_CLASSES)
-  }, [])
-
   return (
     <div className="h-screen flex bg-background overflow-hidden">
       {/* Sidebar - neumorphic with smooth scroll */}
@@ -796,17 +901,14 @@ export default function Gallery() {
           </div>
           <nav className="space-y-1">
             {componentPreviews.map((component, index) => (
-              <button
+              <Button
                 key={component.name}
+                variant={index === currentIndex ? 'primary' : 'ghost'}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-full text-left px-3 py-2 rounded-theme-lg text-sm transition-all duration-200 cursor-pointer ${
-                  index === currentIndex
-                    ? 'bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.2),-2px_-2px_6px_rgba(255,255,255,0.3),2px_2px_6px_rgba(0,100,60,0.3)]'
-                    : 'bg-neu-base shadow-neu-raised-sm hover:shadow-neu-raised text-foreground'
-                }`}
+                className="w-full justify-start"
               >
                 {component.name}
-              </button>
+              </Button>
             ))}
           </nav>
         </ScrollArea>
@@ -825,46 +927,32 @@ export default function Gallery() {
           {/* Navigation controls */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
-              <button
+              <Button
+                variant="ghost"
                 onClick={goToPrevious}
                 disabled={currentIndex === 0}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-theme-lg bg-neu-base text-foreground shadow-neu-raised hover:shadow-neu-raised-lg active:shadow-neu-pressed-sm transition-shadow duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer focus-visible:outline-none focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]"
               >
                 <ChevronLeft className="h-4 w-4" />
                 Previous
-              </button>
+              </Button>
               <span className="font-heading text-2xl font-semibold text-foreground">
                 {currentComponent.name}
               </span>
-              <button
+              <Button
+                variant="ghost"
                 onClick={goToNext}
                 disabled={currentIndex === componentPreviews.length - 1}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-theme-lg bg-neu-base text-foreground shadow-neu-raised hover:shadow-neu-raised-lg active:shadow-neu-pressed-sm transition-shadow duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer focus-visible:outline-none focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]"
               >
                 Next
                 <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-foreground">Shadow:</span>
-              <select
-                id="shadow-select"
-                value={shadowLevel}
-                onChange={handleShadowChange}
-                className="px-3 py-1.5 rounded-theme-lg bg-neu-base shadow-neu-pressed-sm text-sm cursor-pointer text-foreground focus-visible:outline-none focus-visible:shadow-[var(--shadow-pressed-sm),var(--shadow-focus)]"
-              >
-                <option value="sm">Small</option>
-                <option value="md">Medium</option>
-                <option value="lg">Large</option>
-              </select>
+              </Button>
             </div>
           </div>
 
           {/* Component preview - main neumorphic panel */}
           <div
             data-testid={`component-preview-${currentComponent.name.toLowerCase()}`}
-            className={`rounded-theme-2xl bg-neu-base ${SHADOW_CLASSES[shadowLevel]} p-8 transition-shadow duration-200`}
+            className="rounded-theme-2xl bg-neu-base shadow-neu-raised p-8"
           >
             <ComponentErrorBoundary name={currentComponent.name}>
               <MemoizedPreview render={currentComponent.render} />
