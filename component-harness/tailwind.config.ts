@@ -71,8 +71,8 @@ export default {
         sticky: '200',
         modal: '300',
         popover: '400',
-        toast: '500',
         tooltip: '600',
+        toast: '9900',
       },
       keyframes: {
         'accordion-expand': {
