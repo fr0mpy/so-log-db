@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, Suspense, memo } from 'react'
-import { ChevronLeft, ChevronRight, Mail, Search } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Mail, Search, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Link } from 'lucide-react'
 import { ThemeSwitcher } from './components/ThemeSwitcher'
 import { ComponentErrorBoundary } from './ComponentErrorBoundary'
 import {
@@ -13,32 +13,30 @@ import {
   Carousel,
   Checkbox,
   Collapsible, CollapsibleTrigger, CollapsibleContent,
-  Combobox,
   ContextMenu, ContextMenuItem, ContextMenuSeparator,
   Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
   Drawer,
   DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel,
   HoverCard,
   Input,
-  Label,
-  Modal,
   NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink,
+  NumberInput,
   Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis,
   Popover,
   Progress,
-  Radio,
+  Radio, RadioGroup, RadioGroupItem,
   Select,
   Separator,
   Skeleton,
   Slider,
-  SmoothScroll,
+  ScrollArea,
   Spinner,
   Switch,
   Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption,
   Tabs, TabsList, TabsTrigger, TabsContent,
   Textarea,
   Toast,
-  ToggleGroup, ToggleGroupItem,
+  Toolbar, ToolbarButton, ToolbarSeparator, ToolbarGroup, ToolbarLink,
   Tooltip,
 } from './components'
 
@@ -83,55 +81,94 @@ function AccordionDemo() {
   )
 }
 
-function DialogDemo() {
+function PaginationDemo() {
+  const [currentPage, setCurrentPage] = useState(1)
+  const totalPages = 5
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>Open Dialog</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Edit Profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <Input id="name" placeholder="John Doe" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="john@example.com" />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline">Cancel</Button>
-          <Button>Save Changes</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <Pagination>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious
+            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+          />
+        </PaginationItem>
+        {[1, 2, 3].map(page => (
+          <PaginationItem key={page}>
+            <PaginationLink
+              isActive={currentPage === page}
+              onClick={() => setCurrentPage(page)}
+            >
+              {page}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
+        <PaginationItem>
+          <PaginationEllipsis />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink
+            isActive={currentPage === totalPages}
+            onClick={() => setCurrentPage(totalPages)}
+          >
+            {totalPages}
+          </PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext
+            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+          />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
   )
 }
 
-function ModalDemo() {
-  const [isOpen, setIsOpen] = useState(false)
+function DialogDemo() {
+  const [blockingOpen, setBlockingOpen] = useState(false)
   return (
-    <>
-      <Button onClick={() => setIsOpen(true)}>Open Modal</Button>
-      <Modal
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        title="Confirmation"
-        description="Are you sure you want to continue?"
-      >
-        <div className="flex gap-2 mt-4">
-          <Button variant="outline" onClick={() => setIsOpen(false)}>Cancel</Button>
-          <Button onClick={() => setIsOpen(false)}>Confirm</Button>
-        </div>
-      </Modal>
-    </>
+    <div className="flex flex-wrap gap-4">
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button>Open Dialog</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Profile</DialogTitle>
+            <DialogDescription>
+              Make changes to your profile here. Click save when you're done.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <Input label="Name" placeholder="John Doe" />
+            <Input label="Email" type="email" placeholder="john@example.com" />
+          </div>
+          <DialogFooter>
+            <Button variant="outline">Cancel</Button>
+            <Button>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Button variant="destructive" onClick={() => setBlockingOpen(true)}>
+        Delete Item (Blocking)
+      </Button>
+      <Dialog blocking open={blockingOpen} onOpenChange={setBlockingOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Are you sure?</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. You must confirm or cancel to close this dialog.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setBlockingOpen(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={() => setBlockingOpen(false)}>Delete</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   )
 }
 
@@ -178,43 +215,33 @@ function CollapsibleDemo() {
 
 function SelectDemo() {
   return (
-    <Select
-      options={[
-        { value: 'apple', label: 'Apple' },
-        { value: 'banana', label: 'Banana' },
-        { value: 'orange', label: 'Orange' },
-      ]}
-      placeholder="Select a fruit"
-    />
-  )
-}
-
-function ComboboxDemo() {
-  return (
-    <Combobox
-      options={[
-        { value: 'next', label: 'Next.js' },
-        { value: 'react', label: 'React' },
-        { value: 'vue', label: 'Vue' },
-        { value: 'svelte', label: 'Svelte' },
-      ]}
-      placeholder="Select framework"
-    />
+    <div className="flex flex-col gap-4 w-full">
+      <Select
+        options={[
+          { value: 'apple', label: 'Apple' },
+          { value: 'banana', label: 'Banana' },
+          { value: 'orange', label: 'Orange' },
+        ]}
+        placeholder="Select a fruit"
+      />
+      <Select
+        searchable
+        options={[
+          { value: 'react', label: 'React' },
+          { value: 'vue', label: 'Vue' },
+          { value: 'angular', label: 'Angular' },
+          { value: 'svelte', label: 'Svelte' },
+          { value: 'solid', label: 'SolidJS' },
+          { value: 'preact', label: 'Preact' },
+        ]}
+        placeholder="Search frameworks..."
+      />
+    </div>
   )
 }
 
 function SliderDemo() {
   return <Slider defaultValue={50} className="w-full" />
-}
-
-function ToggleGroupDemo() {
-  return (
-    <ToggleGroup type="single" defaultValue="center">
-      <ToggleGroupItem value="left">Left</ToggleGroupItem>
-      <ToggleGroupItem value="center">Center</ToggleGroupItem>
-      <ToggleGroupItem value="right">Right</ToggleGroupItem>
-    </ToggleGroup>
-  )
 }
 
 function CarouselDemo() {
@@ -288,19 +315,21 @@ const componentPreviews = [
     ),
   },
   {
-    name: 'Textarea',
+    name: 'NumberInput',
     render: () => (
-      <div className="space-y-4 w-full max-w-md">
-        <Textarea placeholder="Enter your message..." />
+      <div className="space-y-4 w-full max-w-xs">
+        <NumberInput label="Quantity" defaultValue={1} min={0} max={100} />
+        <NumberInput label="Price" defaultValue={25} step={5} helperText="In increments of 5" />
+        <NumberInput label="With bounds" defaultValue={50} min={0} max={100} helperText="Min: 0, Max: 100" />
+        <NumberInput label="Disabled" defaultValue={10} disabled />
       </div>
     ),
   },
   {
-    name: 'Label',
+    name: 'Textarea',
     render: () => (
-      <div className="space-y-2">
-        <Label htmlFor="example">Example Label</Label>
-        <Input id="example" placeholder="Input with label" />
+      <div className="space-y-4 w-full max-w-md">
+        <Textarea placeholder="Enter your message..." />
       </div>
     ),
   },
@@ -317,10 +346,23 @@ const componentPreviews = [
   {
     name: 'Radio',
     render: () => (
-      <div className="space-y-2">
-        <Radio name="option" label="Option 1" />
-        <Radio name="option" label="Option 2" />
-        <Radio name="option" label="Option 3" />
+      <div className="space-y-6">
+        <div>
+          <p className="text-xs text-muted-foreground mb-3">Vertical</p>
+          <RadioGroup defaultValue="option1">
+            <RadioGroupItem value="option1" label="Option 1" />
+            <RadioGroupItem value="option2" label="Option 2" />
+            <RadioGroupItem value="option3" label="Option 3" />
+          </RadioGroup>
+        </div>
+        <div>
+          <p className="text-xs text-muted-foreground mb-3">Horizontal</p>
+          <RadioGroup defaultValue="small" orientation="horizontal">
+            <RadioGroupItem value="small" label="Small" />
+            <RadioGroupItem value="medium" label="Medium" />
+            <RadioGroupItem value="large" label="Large" />
+          </RadioGroup>
+        </div>
       </div>
     ),
   },
@@ -336,10 +378,6 @@ const componentPreviews = [
   {
     name: 'Select',
     render: () => <SelectDemo />,
-  },
-  {
-    name: 'Combobox',
-    render: () => <ComboboxDemo />,
   },
   {
     name: 'Slider',
@@ -452,6 +490,36 @@ const componentPreviews = [
     ),
   },
   {
+    name: 'ScrollArea',
+    render: () => (
+      <div className="space-y-4">
+        <p className="text-xs text-muted-foreground mb-2">Vertical scroll with smooth momentum</p>
+        <ScrollArea className="h-48 w-full rounded-theme-lg border border-border p-4 overflow-auto">
+          <div className="space-y-4">
+            {Array.from({ length: 20 }).map((_, i) => (
+              <div key={i} className="p-3 rounded-theme-md bg-muted/50">
+                <p className="text-sm">Scrollable item {i + 1}</p>
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
+        <p className="text-xs text-muted-foreground mb-2">Horizontal scroll</p>
+        <ScrollArea
+          className="w-full rounded-theme-lg border border-border p-4 overflow-auto"
+          options={{ orientation: 'horizontal' }}
+        >
+          <div className="flex gap-4 w-max">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className="flex-shrink-0 w-32 h-24 rounded-theme-md bg-muted/50 flex items-center justify-center">
+                <p className="text-sm">Item {i + 1}</p>
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
+      </div>
+    ),
+  },
+  {
     name: 'Progress',
     render: () => (
       <div className="space-y-4 w-full max-w-md">
@@ -474,10 +542,6 @@ const componentPreviews = [
     render: () => <DialogDemo />,
   },
   {
-    name: 'Modal',
-    render: () => <ModalDemo />,
-  },
-  {
     name: 'Drawer',
     render: () => <DrawerDemo />,
   },
@@ -488,10 +552,6 @@ const componentPreviews = [
   {
     name: 'Collapsible',
     render: () => <CollapsibleDemo />,
-  },
-  {
-    name: 'ToggleGroup',
-    render: () => <ToggleGroupDemo />,
   },
   {
     name: 'Carousel',
@@ -598,30 +658,7 @@ const componentPreviews = [
   },
   {
     name: 'Pagination',
-    render: () => (
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink isActive>1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink>2</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink>3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    ),
+    render: () => <PaginationDemo />,
   },
   {
     name: 'Table',
@@ -650,7 +687,58 @@ const componentPreviews = [
       </Table>
     ),
   },
-]
+  {
+    name: 'Toolbar',
+    render: () => (
+      <div className="space-y-4">
+        <p className="text-xs text-muted-foreground mb-2">Horizontal toolbar</p>
+        <Toolbar>
+          <ToolbarGroup>
+            <ToolbarButton aria-label="Bold">
+              <Bold className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton aria-label="Italic">
+              <Italic className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton aria-label="Underline">
+              <Underline className="h-4 w-4" />
+            </ToolbarButton>
+          </ToolbarGroup>
+          <ToolbarSeparator />
+          <ToolbarGroup>
+            <ToolbarButton active aria-label="Align left">
+              <AlignLeft className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton aria-label="Align center">
+              <AlignCenter className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton aria-label="Align right">
+              <AlignRight className="h-4 w-4" />
+            </ToolbarButton>
+          </ToolbarGroup>
+          <ToolbarSeparator />
+          <ToolbarLink href="#">
+            <Link className="h-4 w-4 mr-1" />
+            Link
+          </ToolbarLink>
+        </Toolbar>
+        <p className="text-xs text-muted-foreground mb-2">Vertical toolbar</p>
+        <Toolbar orientation="vertical" className="w-fit">
+          <ToolbarButton aria-label="Bold">
+            <Bold className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton aria-label="Italic">
+            <Italic className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarSeparator />
+          <ToolbarButton active aria-label="Align left">
+            <AlignLeft className="h-4 w-4" />
+          </ToolbarButton>
+        </Toolbar>
+      </div>
+    ),
+  },
+].sort((a, b) => a.name.localeCompare(b.name))
 
 // Memoized component preview wrapper
 const MemoizedPreview = memo(({ render }: { render: () => React.ReactNode }) => (
@@ -700,7 +788,7 @@ export default function Gallery() {
     <div className="h-screen flex bg-background overflow-hidden">
       {/* Sidebar - neumorphic with smooth scroll */}
       <aside className="w-64 border-r border-border bg-neu-base flex-shrink-0 overflow-hidden">
-        <SmoothScroll className="h-full overflow-y-auto p-4">
+        <ScrollArea className="h-full overflow-y-auto p-4">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-heading text-lg font-semibold text-foreground">Components</h2>
             {/* Dark mode toggle */}
@@ -721,12 +809,12 @@ export default function Gallery() {
               </button>
             ))}
           </nav>
-        </SmoothScroll>
+        </ScrollArea>
       </aside>
 
       {/* Main content with smooth scroll */}
       <main className="flex-1 bg-background overflow-hidden">
-        <SmoothScroll className="h-full overflow-y-auto p-8">
+        <ScrollArea className="h-full overflow-y-auto p-8">
           <header className="mb-8">
             <h1 className="font-heading text-4xl font-bold mb-2 text-foreground">Component Gallery</h1>
             <p className="text-muted-foreground">
@@ -759,7 +847,7 @@ export default function Gallery() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Label htmlFor="shadow-select" className="text-foreground">Shadow:</Label>
+              <span className="text-sm font-medium text-foreground">Shadow:</span>
               <select
                 id="shadow-select"
                 value={shadowLevel}
@@ -789,7 +877,7 @@ export default function Gallery() {
               Component {currentIndex + 1} of {componentPreviews.length}
             </p>
           </div>
-        </SmoothScroll>
+        </ScrollArea>
       </main>
     </div>
   )
