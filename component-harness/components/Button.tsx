@@ -12,10 +12,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = 'primary', size = 'md', loading, disabled, className, children, ...props }, ref) => {
     const baseStyles = cn(
       'inline-flex items-center justify-center gap-2 font-medium cursor-pointer',
-      'transition-[transform,background-color] duration-200 ease-neu',
+      'transition-[background-color] duration-200 ease-neu',
       'outline-none',
-      'disabled:pointer-events-none disabled:opacity-50',
-      'active:scale-[0.98]'
+      'disabled:pointer-events-none disabled:opacity-50'
     )
 
     const variants = {
