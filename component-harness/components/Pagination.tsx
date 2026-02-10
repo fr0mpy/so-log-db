@@ -49,7 +49,7 @@ const PaginationLink = forwardRef<HTMLButtonElement, PaginationLinkProps>(
         'disabled:pointer-events-none disabled:opacity-50',
         isActive
           ? 'bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.2),-2px_-2px_4px_rgba(255,255,255,0.2),2px_2px_4px_rgba(0,100,60,0.2)]'
-          : 'bg-neu-base shadow-neu-raised-sm hover:shadow-neu-raised',
+          : 'bg-transparent text-foreground hover:bg-neu-base hover:shadow-neu-raised-sm active:shadow-neu-pressed-sm',
         className
       )}
       {...props}
@@ -65,12 +65,11 @@ const PaginationPrevious = forwardRef<HTMLButtonElement, React.ButtonHTMLAttribu
       aria-label="Go to previous page"
       className={cn(
         'inline-flex items-center justify-center gap-1 h-9 px-3 rounded-theme-lg text-sm font-medium cursor-pointer',
-        'bg-secondary text-secondary-foreground',
-        'shadow-[inset_0_1px_0_rgba(255,255,255,0.2),-4px_-4px_10px_rgba(255,255,255,0.3),4px_4px_10px_rgba(60,60,140,0.3)]',
+        'bg-transparent text-foreground',
         'transition-all duration-200 active:scale-[0.98]',
-        'hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3),-2px_-2px_8px_rgba(255,255,255,0.4),2px_2px_8px_rgba(60,60,140,0.4)]',
-        'active:shadow-[inset_-2px_-2px_5px_rgba(255,255,255,0.2),inset_2px_2px_5px_rgba(50,50,120,0.3)]',
-        'focus-visible:outline-none focus-visible:shadow-[inset_0_1px_0_rgba(255,255,255,0.2),-4px_-4px_10px_rgba(255,255,255,0.3),4px_4px_10px_rgba(60,60,140,0.3),var(--shadow-focus)]',
+        'hover:bg-neu-base hover:shadow-neu-raised-sm',
+        'active:shadow-neu-pressed-sm',
+        'focus-visible:outline-none focus-visible:shadow-neu-focus',
         'disabled:pointer-events-none disabled:opacity-50',
         className
       )}
@@ -90,12 +89,11 @@ const PaginationNext = forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<
       aria-label="Go to next page"
       className={cn(
         'inline-flex items-center justify-center gap-1 h-9 px-3 rounded-theme-lg text-sm font-medium cursor-pointer',
-        'bg-secondary text-secondary-foreground',
-        'shadow-[inset_0_1px_0_rgba(255,255,255,0.2),-4px_-4px_10px_rgba(255,255,255,0.3),4px_4px_10px_rgba(60,60,140,0.3)]',
+        'bg-transparent text-foreground',
         'transition-all duration-200 active:scale-[0.98]',
-        'hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3),-2px_-2px_8px_rgba(255,255,255,0.4),2px_2px_8px_rgba(60,60,140,0.4)]',
-        'active:shadow-[inset_-2px_-2px_5px_rgba(255,255,255,0.2),inset_2px_2px_5px_rgba(50,50,120,0.3)]',
-        'focus-visible:outline-none focus-visible:shadow-[inset_0_1px_0_rgba(255,255,255,0.2),-4px_-4px_10px_rgba(255,255,255,0.3),4px_4px_10px_rgba(60,60,140,0.3),var(--shadow-focus)]',
+        'hover:bg-neu-base hover:shadow-neu-raised-sm',
+        'active:shadow-neu-pressed-sm',
+        'focus-visible:outline-none focus-visible:shadow-neu-focus',
         'disabled:pointer-events-none disabled:opacity-50',
         className
       )}

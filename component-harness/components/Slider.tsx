@@ -54,7 +54,7 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
           value={currentValue}
           onInput={handleInput}
           className={cn(
-            'absolute inset-0 h-2 w-full cursor-pointer appearance-none bg-transparent',
+            'absolute left-0 right-0 top-1/2 -translate-y-1/2 h-5 w-full cursor-pointer appearance-none bg-transparent',
             '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5',
             '[&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-neu-base',
             '[&::-webkit-slider-thumb]:shadow-neu-raised',

@@ -11,6 +11,10 @@ const sizeConfig = {
   lg: { cube: 56, translate: 28 },
 }
 
+// Border radius for smooth corners only (not edges)
+const BORDER_RADIUS = 3
+const CORNER_FILL = 1 // Minimal overlap to prevent flashing gaps at corners
+
 const faceColors = {
   front: '#00af66',           // Primary green
   back: '#00935a',            // Darker green
@@ -49,62 +53,86 @@ const Spinner = forwardRef<HTMLDivElement, SpinnerProps>(
             animation: 'cube-spin 3s linear infinite',
           }}
         >
+          {/* Front face */}
           <div
             style={{
-              width: cube,
-              height: cube,
+              width: cube + CORNER_FILL * 2,
+              height: cube + CORNER_FILL * 2,
               position: 'absolute',
+              top: -CORNER_FILL,
+              left: -CORNER_FILL,
               opacity: 0.8,
+              borderRadius: BORDER_RADIUS,
               transform: `translateZ(${translate}px)`,
               backgroundColor: faceColors.front,
             }}
           />
+          {/* Back face */}
           <div
             style={{
-              width: cube,
-              height: cube,
+              width: cube + CORNER_FILL * 2,
+              height: cube + CORNER_FILL * 2,
               position: 'absolute',
+              top: -CORNER_FILL,
+              left: -CORNER_FILL,
               opacity: 0.8,
+              borderRadius: BORDER_RADIUS,
               transform: `translateZ(-${translate}px)`,
               backgroundColor: faceColors.back,
             }}
           />
+          {/* Left face */}
           <div
             style={{
-              width: cube,
-              height: cube,
+              width: cube + CORNER_FILL * 2,
+              height: cube + CORNER_FILL * 2,
               position: 'absolute',
+              top: -CORNER_FILL,
+              left: -CORNER_FILL,
               opacity: 0.8,
+              borderRadius: BORDER_RADIUS,
               transform: `rotateY(90deg) translateZ(${translate}px)`,
               backgroundColor: faceColors.left,
             }}
           />
+          {/* Right face */}
           <div
             style={{
-              width: cube,
-              height: cube,
+              width: cube + CORNER_FILL * 2,
+              height: cube + CORNER_FILL * 2,
               position: 'absolute',
+              top: -CORNER_FILL,
+              left: -CORNER_FILL,
               opacity: 0.8,
+              borderRadius: BORDER_RADIUS,
               transform: `rotateY(-90deg) translateZ(${translate}px)`,
               backgroundColor: faceColors.right,
             }}
           />
+          {/* Top face */}
           <div
             style={{
-              width: cube,
-              height: cube,
+              width: cube + CORNER_FILL * 2,
+              height: cube + CORNER_FILL * 2,
               position: 'absolute',
+              top: -CORNER_FILL,
+              left: -CORNER_FILL,
               opacity: 0.8,
+              borderRadius: BORDER_RADIUS,
               transform: `rotateX(90deg) translateZ(${translate}px)`,
               backgroundColor: faceColors.top,
             }}
           />
+          {/* Bottom face */}
           <div
             style={{
-              width: cube,
-              height: cube,
+              width: cube + CORNER_FILL * 2,
+              height: cube + CORNER_FILL * 2,
               position: 'absolute',
+              top: -CORNER_FILL,
+              left: -CORNER_FILL,
               opacity: 0.8,
+              borderRadius: BORDER_RADIUS,
               transform: `rotateX(-90deg) translateZ(${translate}px)`,
               backgroundColor: faceColors.bottom,
             }}

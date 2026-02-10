@@ -1,10 +1,10 @@
 import { cn } from '@/lib/utils'
 import { forwardRef } from 'react'
-import { SmoothScroll } from './SmoothScroll'
+import { ScrollArea } from './ScrollArea'
 
 const Table = forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
-    <SmoothScroll
+    <ScrollArea
       className="relative w-full overflow-auto"
       options={{ orientation: 'horizontal' }}
     >
@@ -13,7 +13,7 @@ const Table = forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement
         className={cn('w-full caption-bottom text-sm', className)}
         {...props}
       />
-    </SmoothScroll>
+    </ScrollArea>
   )
 )
 Table.displayName = 'Table'

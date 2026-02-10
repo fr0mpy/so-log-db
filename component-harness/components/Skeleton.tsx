@@ -19,7 +19,7 @@ const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
       <div
         ref={ref}
         className={cn(
-          'animate-pulse bg-neu-base shadow-neu-pressed-sm',
+          'animate-pulse bg-muted shadow-neu-pressed',
           VARIANT_CLASSES[variant],
           className
         )}
