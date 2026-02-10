@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Component Harness - StackOne Neumorphic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Light Mode (default) */
+      :root {
+        --neu-base: #e4e8eb;
+        --neu-light: rgba(255, 255, 255, 0.8);
+        --neu-dark: rgba(163, 177, 198, 0.6);
+
+        --color-primary: #00af66;
+        --color-primary-foreground: #FFFFFF;
+        --color-secondary: #6366f1;
+        --color-secondary-foreground: #FFFFFF;
+        --color-background: #e4e8eb;
+        --color-foreground: #2b2b2b;
+        --color-surface: #e4e8eb;
+        --color-muted: #d1d5d8;
+        --color-muted-foreground: #6b7280;
+        --color-border: #c5cace;
+        --color-destructive: #ef3737;
+        --color-destructive-foreground: #FFFFFF;
+        --color-accent: #6366f1;
+        --color-accent-foreground: #FFFFFF;
+        --color-success: #00af66;
+        --color-success-foreground: #FFFFFF;
+        --color-warning: #ff6900;
+        --color-warning-foreground: #FFFFFF;
+
+        --radius-sm: 0.375rem;
+        --radius-md: 0.625rem;
+        --radius-lg: 1rem;
+        --radius-xl: 1.5rem;
+        --radius-2xl: 2rem;
+
+        --shadow-raised: -6px -6px 14px var(--neu-light), 6px 6px 14px var(--neu-dark);
+        --shadow-raised-sm: -3px -3px 8px var(--neu-light), 3px 3px 8px var(--neu-dark);
+        --shadow-raised-lg: -8px -8px 20px rgba(255, 255, 255, 0.9), 8px 8px 20px rgba(163, 177, 198, 0.7);
+        --shadow-pressed: inset -4px -4px 8px var(--neu-light), inset 4px 4px 8px var(--neu-dark);
+        --shadow-pressed-sm: inset -2px -2px 5px rgba(255, 255, 255, 0.7), inset 2px 2px 5px rgba(163, 177, 198, 0.4);
+        --shadow-flat: inset 1px 1px 2px rgba(163, 177, 198, 0.3), inset -1px -1px 2px rgba(255, 255, 255, 0.5);
+        --shadow-focus: 0 0 0 3px rgba(0, 175, 102, 0.25);
+
+        --font-heading: 'Inter', ui-sans-serif, system-ui, sans-serif;
+        --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+        --font-code: 'IBM Plex Mono', ui-monospace, monospace;
+      }
+
+      /* Dark Mode */
+      .dark {
+        --neu-base: #2d3748;
+        --neu-light: rgba(255, 255, 255, 0.05);
+        --neu-dark: rgba(0, 0, 0, 0.4);
+
+        --color-background: #2d3748;
+        --color-foreground: #f7fafc;
+        --color-surface: #2d3748;
+        --color-muted: #4a5568;
+        --color-muted-foreground: #a0aec0;
+        --color-border: #4a5568;
+
+        --shadow-raised: -6px -6px 14px var(--neu-light), 6px 6px 14px var(--neu-dark);
+        --shadow-raised-sm: -3px -3px 8px var(--neu-light), 3px 3px 8px var(--neu-dark);
+        --shadow-raised-lg: -8px -8px 20px rgba(255, 255, 255, 0.08), 8px 8px 20px rgba(0, 0, 0, 0.5);
+        --shadow-pressed: inset -4px -4px 8px var(--neu-light), inset 4px 4px 8px var(--neu-dark);
+        --shadow-pressed-sm: inset -2px -2px 5px rgba(255, 255, 255, 0.03), inset 2px 2px 5px rgba(0, 0, 0, 0.3);
+        --shadow-flat: inset 1px 1px 2px rgba(0, 0, 0, 0.2), inset -1px -1px 2px rgba(255, 255, 255, 0.03);
+        --shadow-focus: 0 0 0 3px rgba(0, 175, 102, 0.4);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: var(--font-body);
+        background: var(--color-background);
+        color: var(--color-foreground);
+        min-height: 100vh;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* Neumorphic utility classes */
+      .neu-raised {
+        background: var(--neu-base);
+        box-shadow: var(--shadow-raised);
+        border: none;
+      }
+
+      .neu-raised-sm {
+        background: var(--neu-base);
+        box-shadow: var(--shadow-raised-sm);
+        border: none;
+      }
+
+      .neu-raised-lg {
+        background: var(--neu-base);
+        box-shadow: var(--shadow-raised-lg);
+        border: none;
+      }
+
+      .neu-pressed {
+        background: var(--neu-base);
+        box-shadow: var(--shadow-pressed);
+        border: none;
+      }
+
+      .neu-pressed-sm {
+        background: var(--neu-base);
+        box-shadow: var(--shadow-pressed-sm);
+        border: none;
+      }
+
+      .neu-flat {
+        background: var(--neu-base);
+        box-shadow: var(--shadow-flat);
+        border: none;
+      }
+
+      .neu-interactive {
+        transition: box-shadow 0.2s ease-out, transform 0.15s ease-out;
+      }
+
+      .neu-interactive:hover {
+        box-shadow: var(--shadow-raised-lg);
+      }
+
+      .neu-interactive:active {
+        box-shadow: var(--shadow-pressed);
+        transform: scale(0.98);
+      }
+
+      .neu-btn {
+        background: var(--neu-base);
+        box-shadow: var(--shadow-raised);
+        border: none;
+        transition: box-shadow 0.2s ease-out, transform 0.1s ease-out;
+      }
+
+      .neu-btn:hover {
+        box-shadow: -4px -4px 10px var(--neu-light), 4px 4px 10px var(--neu-dark);
+      }
+
+      .neu-btn:active {
+        box-shadow: var(--shadow-pressed-sm);
+        transform: scale(0.98);
+      }
+
+      .neu-btn:focus-visible {
+        outline: none;
+        box-shadow: var(--shadow-raised), var(--shadow-focus);
+      }
+
+      .neu-btn-primary {
+        background: var(--color-primary);
+        color: var(--color-primary-foreground);
+        box-shadow: -4px -4px 10px rgba(255, 255, 255, 0.3),
+                    4px 4px 10px rgba(0, 100, 60, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        border: none;
+        transition: box-shadow 0.2s ease-out, transform 0.1s ease-out;
+      }
+
+      .dark .neu-btn-primary {
+        box-shadow: -3px -3px 8px rgba(255, 255, 255, 0.1),
+                    3px 3px 8px rgba(0, 0, 0, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      }
+
+      .neu-btn-primary:hover {
+        box-shadow: -2px -2px 8px rgba(255, 255, 255, 0.4),
+                    2px 2px 8px rgba(0, 100, 60, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      }
+
+      .neu-btn-primary:active {
+        box-shadow: inset -2px -2px 5px rgba(255, 255, 255, 0.2),
+                    inset 2px 2px 5px rgba(0, 80, 50, 0.3);
+        transform: scale(0.98);
+      }
+
+      .neu-input {
+        background: var(--neu-base);
+        box-shadow: var(--shadow-pressed-sm);
+        border: 1px solid transparent;
+        transition: box-shadow 0.2s ease-out, border-color 0.2s ease-out;
+      }
+
+      .neu-input:hover {
+        box-shadow: var(--shadow-pressed);
+      }
+
+      .neu-input:focus {
+        outline: none;
+        box-shadow: var(--shadow-pressed), var(--shadow-focus);
+        border-color: var(--color-primary);
+      }
+
+      .neu-card {
+        background: var(--neu-base);
+        box-shadow: var(--shadow-raised);
+        border: none;
+      }
+
+      /* Toggle switch track */
+      .neu-toggle-track {
+        background: var(--neu-base);
+        box-shadow: var(--shadow-pressed-sm);
+        transition: background-color 0.2s ease-out;
+      }
+
+      .neu-toggle-track[data-state="checked"] {
+        background: var(--color-primary);
+      }
+
+      /* Toggle switch thumb */
+      .neu-toggle-thumb {
+        background: var(--neu-base);
+        box-shadow: var(--shadow-raised-sm);
+        transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .neu-interactive,
+        .neu-btn,
+        .neu-btn-primary,
+        .neu-input,
+        .neu-toggle-track,
+        .neu-toggle-thumb,
+        body {
+          transition: none;
+        }
+
+        .neu-interactive:active,
+        .neu-btn:active,
+        .neu-btn-primary:active {
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/main.tsx"></script>
+  </body>
+</html>
