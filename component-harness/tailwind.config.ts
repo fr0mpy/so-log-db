@@ -27,6 +27,8 @@ export default {
         'success-foreground': 'var(--color-success-foreground)',
         warning: 'var(--color-warning)',
         'warning-foreground': 'var(--color-warning-foreground)',
+        info: 'var(--color-info)',
+        'info-foreground': 'var(--color-info-foreground)',
         neu: {
           base: 'var(--neu-base)',
           light: 'var(--neu-light)',
@@ -63,6 +65,14 @@ export default {
         'neu-fast': '150ms',
         'neu': '200ms',
         'neu-slow': '300ms',
+      },
+      zIndex: {
+        dropdown: '100',
+        sticky: '200',
+        modal: '300',
+        popover: '400',
+        toast: '500',
+        tooltip: '600',
       },
       keyframes: {
         'accordion-expand': {
