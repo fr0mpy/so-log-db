@@ -30,7 +30,7 @@ export const ButtonStyles = {
   ].join(' '),
 
   /** Loading state modifier */
-  loading: 'flex-col py-2 disabled:opacity-100',
+  loading: 'flex-col py-1.5 disabled:opacity-100',
 
   /** Loading content wrapper */
   loadingContent: [
@@ -54,29 +54,52 @@ export const ButtonStyles = {
     SpacingTokens.gap1,
   ].join(' '),
 
-  /** Size variants */
+  /** Size variants - sleek modern heights with subtle rounding */
   sizes: {
     sm: [
-      SizingTokens.h9,
+      SizingTokens.h8,
       SpacingTokens.px3,
       TypographyTokens.textSm,
-      'rounded-theme-lg',
-      SizingTokens.minTouch,
+      'rounded-theme-md',
     ].join(' '),
     md: [
+      SizingTokens.h9,
+      SpacingTokens.px4,
+      TypographyTokens.textSm,
+      'rounded-theme-md',
+    ].join(' '),
+    lg: [
       SizingTokens.h10,
       SpacingTokens.px5,
       TypographyTokens.textSm,
-      'rounded-theme-xl',
-      SizingTokens.minTouch,
+      'rounded-theme-md',
+    ].join(' '),
+  },
+
+  /** Icon-only button sizes (square) */
+  iconOnly: {
+    sm: [
+      SizingTokens.square8,
+      SpacingTokens.p0,
+      'rounded-theme-md',
+    ].join(' '),
+    md: [
+      SizingTokens.square9,
+      SpacingTokens.p0,
+      'rounded-theme-md',
     ].join(' '),
     lg: [
-      SizingTokens.h12,
-      SpacingTokens.px6,
-      TypographyTokens.textBase,
-      'rounded-theme-xl',
-      SizingTokens.minTouch,
+      SizingTokens.square10,
+      SpacingTokens.p0,
+      'rounded-theme-md',
     ].join(' '),
+  },
+
+  /** Icon sizing within buttons */
+  icon: {
+    sm: SizingTokens.iconSm,
+    md: SizingTokens.iconSm,
+    lg: SizingTokens.iconMd,
   },
 
   /** Variant styles */

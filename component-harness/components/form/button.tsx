@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import { motion, AnimatePresence } from 'motion/react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, isValidElement, cloneElement } from 'react'
 import { Progress } from '../display/progress'
 import { LOADING, DURATION, LABEL } from '../../config'
 import { ButtonStyles as S } from './styles'
@@ -13,6 +13,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: ButtonSize
   loading?: boolean
   loadingText?: string
+  asChild?: boolean
   ref?: React.Ref<HTMLButtonElement>
 }
 
@@ -24,6 +25,7 @@ function Button({
   disabled,
   className,
   children,
+  asChild,
   ref,
   ...props
 }: ButtonProps) {
@@ -40,16 +42,25 @@ function Button({
     return () => clearInterval(interval)
   }, [loading])
 
+  const buttonClassName = cn(
+    S.base,
+    S.sizes[size],
+    S.variants[variant],
+    loading && S.loading,
+    className
+  )
+
+  // When asChild is true, clone the child element with button styles
+  if (asChild && isValidElement(children)) {
+    return cloneElement(children as React.ReactElement<{ className?: string }>, {
+      className: cn(buttonClassName, (children as React.ReactElement<{ className?: string }>).props.className),
+    })
+  }
+
   return (
     <button
       ref={ref}
-      className={cn(
-        S.base,
-        S.sizes[size],
-        S.variants[variant],
-        loading && S.loading,
-        className
-      )}
+      className={buttonClassName}
       disabled={disabled || loading}
       {...props}
     >
