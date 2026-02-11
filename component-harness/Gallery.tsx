@@ -50,24 +50,16 @@ export default function Gallery() {
       {/* Sidebar - neumorphic with smooth scroll */}
       <aside className="w-64 border-r border-border bg-neu-base flex-shrink-0 overflow-hidden">
         <ScrollArea className="h-full overflow-y-auto p-4">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-heading text-lg font-semibold text-foreground">Components</h2>
-            {/* Dark mode toggle */}
-            <ThemeSwitcher isDark={isDark} onToggle={toggleDarkMode} />
-          </div>
           <nav className="space-y-1">
             {componentRoutes.map((route) => (
-              <Link
+              <Button
                 key={route.path}
-                to={`/${route.path}`}
-                className={`block w-full text-left px-3 py-2 rounded-theme-md text-sm font-medium transition-colors ${
-                  route.path === componentPath
-                    ? 'bg-primary text-primary-foreground shadow-neu-raised-sm'
-                    : 'text-foreground hover:bg-muted'
-                }`}
+                variant={route.path === componentPath ? 'primary' : 'ghost'}
+                asChild
+                className="w-full justify-start"
               >
-                {route.name}
-              </Link>
+                <Link to={`/${route.path}`}>{route.name}</Link>
+              </Button>
             ))}
           </nav>
         </ScrollArea>
@@ -76,11 +68,12 @@ export default function Gallery() {
       {/* Main content with smooth scroll */}
       <main className="flex-1 bg-background overflow-hidden">
         <ScrollArea className="h-full overflow-y-auto p-8">
-          <header className="mb-8">
-            <h1 className="font-heading text-4xl font-bold mb-2 text-foreground">Component Gallery</h1>
-            <p className="text-muted-foreground">
-              Neumorphic Theme - {total} Components
-            </p>
+          <header className="flex items-start justify-between mb-8">
+            <div>
+              <h1 className="font-heading text-4xl font-bold mb-2 text-foreground">Component Gallery</h1>
+            </div>
+            {/* Dark mode toggle */}
+            <ThemeSwitcher isDark={isDark} onToggle={toggleDarkMode} />
           </header>
 
           {/* Navigation controls */}
