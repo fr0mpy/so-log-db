@@ -15,7 +15,7 @@ export const BreadcrumbStyles = {
   link: [
     Interactive.Cursor.pointer,
     'transition-colors',
-    'hover:text-foreground',
+    'hover:text-primary',
   ].join(' '),
   separator: '',
   separatorIcon: SizingTokens.iconSm,

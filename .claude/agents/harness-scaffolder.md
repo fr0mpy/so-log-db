@@ -22,23 +22,130 @@ You are a component harness scaffolder for React + Tailwind + Base UI projects.
    ├── Gallery.tsx
    ├── ComponentErrorBoundary.tsx # Catches per-component render errors
    ├── components/
-   ├── lib/utils.ts              # cn() utility using clsx + tailwind-merge
+   │   └── [name]/                # Component subdirectory
+   │       ├── [name].tsx         # Component logic (NO inline classnames)
+   │       ├── index.ts           # Barrel exports
+   │       ├── types.ts           # TypeScript interfaces
+   │       └── styles.ts          # Tailwind class objects
+   ├── config/
+   │   ├── index.ts               # Barrel export
+   │   ├── motion.ts              # SPRING, DURATION, OPACITY presets
+   │   └── text.ts                # ARIA, LABEL, SR_ONLY constants
+   ├── hooks/
+   │   ├── index.ts               # Barrel export
+   │   ├── useControlledState.ts  # Controlled/uncontrolled state
+   │   ├── useBodyScrollLock.ts   # Lock body scroll
+   │   ├── useEscapeKey.ts        # Escape key handler
+   │   ├── useClickOutside.ts     # Outside click handler
+   │   └── usePositioning.ts      # Floating element positioning
+   ├── styles/
+   │   ├── index.ts               # Main barrel export
+   │   ├── motion.ts              # Framer Motion presets
+   │   ├── responsive.ts          # Responsive utilities
+   │   ├── tokens/                # Primitive style tokens
+   │   │   ├── index.ts
+   │   │   ├── spacing.ts         # Spacing.p4, Spacing.gap2
+   │   │   ├── sizing.ts          # Sizing.w4, Sizing.h10
+   │   │   └── typography.ts      # Typography.textSm
+   │   └── patterns/              # Style compositions (namespaced)
+   │       ├── index.ts
+   │       ├── form/              # Form.Label.base, Form.Input.base
+   │       ├── layout/            # Layout.Flex.center, Layout.Position.absolute
+   │       ├── interactive/       # Interactive.Focus.ring, Interactive.Cursor.pointer
+   │       ├── overlay/           # Overlay.Dialog.backdrop, Overlay.Card.container
+   │       ├── control/           # Control.Toggle.base, Control.Slider.track
+   │       └── feedback/          # Feedback.Badge.primary, Feedback.Alert.success
+   ├── lib/utils.ts               # cn() utility using clsx + tailwind-merge
+   ├── utils/
+   │   ├── index.ts
+   │   └── createContextHook.ts   # Context factory
    ├── vite.config.ts
-   ├── tailwind.config.ts        # CSS variable → semantic class mapping from tokens
+   ├── tailwind.config.ts         # CSS variable → semantic class mapping
    ├── postcss.config.js
    ├── tsconfig.json
-   ├── package.json              # Includes Playwright deps
-   ├── playwright.config.ts      # Component test config
+   ├── package.json               # Includes Playwright deps
+   ├── playwright.config.ts       # Component test config
    └── tests/
-       └── components.spec.ts    # Auto-discovery component tests
+       └── components.spec.ts     # Auto-discovery component tests
    ```
 
-4. **Generate components from recipes** — For each recipe in `.claude/component-recipes/`, generate a `.tsx` component file using semantic tokens from the styling config. Apply these rules without exception:
-   - Use `cursor-pointer` on ALL interactive elements (buttons, links, toggles, tabs)
+4. **Generate components from recipes** — For each recipe in `.claude/component-recipes/`, generate component files following the co-located pattern:
+
+   **File structure per component:**
+   ```
+   components/button/
+   ├── button.tsx    # Component logic (NO inline classnames)
+   ├── index.ts      # export * from './button'; export * from './types'
+   ├── types.ts      # interface ButtonProps extends React.ComponentPropsWithRef<'button'>
+   └── styles.ts     # Imports from ../../styles, exports ButtonStyles
+   ```
+
+   **styles.ts pattern (REQUIRED):**
+   ```typescript
+   // components/button/styles.ts
+   import { Interactive, Layout } from '../../styles'
+
+   export const ButtonStyles = {
+     base: [
+       Layout.Flex.centerInline,
+       Interactive.Button.base,
+       Interactive.Focus.ring,
+       Interactive.Cursor.pointer,
+     ].join(' '),
+
+     variants: {
+       primary: 'bg-primary text-primary-foreground shadow-neu-raised',
+       secondary: 'bg-secondary text-secondary-foreground shadow-neu-raised',
+     },
+
+     sizes: {
+       sm: 'h-8 px-3 text-sm',
+       md: 'h-10 px-4',
+       lg: 'h-12 px-6 text-lg',
+     },
+   } as const
+   ```
+
+   **Component pattern:**
+   ```tsx
+   // button.tsx - NO inline Tailwind classnames
+   import { ButtonStyles as S } from './styles'
+
+   function Button({ variant = 'primary', className, ref, ...props }: ButtonProps) {
+     return (
+       <button
+         ref={ref}
+         className={cn(S.base, S.variants[variant], className)}
+         {...props}
+       />
+     )
+   }
+   ```
+
+   **Compound component pattern (for multi-part components):**
+   ```tsx
+   // Use Object.assign for callable + namespace pattern
+   export const Dialog = Object.assign(DialogSimple, {
+     Root: DialogRoot,
+     Trigger: DialogTrigger,
+     Content: DialogContent,
+   })
+
+   // Individual exports for backward compatibility
+   export { DialogRoot, DialogTrigger, DialogContent }
+   ```
+
+   **Apply these rules without exception:**
+   - NO Tailwind classnames inline in JSX — always use styles.ts
+   - Use ref as prop (React 19 style): `function Button({ ref, ...props }: Props)`
+   - Use `cursor-pointer` on ALL interactive elements (via style constants)
    - Use `focus-visible:` NEVER `focus:` for focus states
    - Use semantic tokens (`bg-primary`, `text-foreground`) NEVER hardcoded colors
    - Mobile-first responsive: base = mobile, `sm:`/`md:`/`lg:` = progressive
-   - Touch targets minimum 44×44px on interactive elements (`min-h-11 min-w-11`)
+   - Touch targets minimum 44×44px (`min-h-11 min-w-11`)
+   - Import motion constants from `@/config`: `SPRING`, `DURATION`, `OPACITY`
+   - Import text constants from `@/config`: `ARIA`, `LABEL`, `SR_ONLY`
+   - Destructure Framer Motion conflicting props: `onDrag`, `onAnimationStart`, etc.
 
 5. **Generate ComponentErrorBoundary.tsx** — Create a React error boundary that:
    - Wraps each component preview individually (not the whole gallery)
@@ -83,9 +190,16 @@ Return findings in this EXACT structure for context handoff:
 ### RESULT: [scaffolded | resumed | failed]
 
 ### FILES FOUND:
-- `component-harness/components/Button.tsx` - [generated | existing]
-- `component-harness/components/Card.tsx` - [generated | existing]
-- `component-harness/Gallery.tsx` - [generated | updated]
+- `styles/index.ts` - [generated | existing]
+- `styles/patterns/` - [generated | existing]
+- `components/button/button.tsx` - [generated | existing]
+- `components/button/styles.ts` - [generated | existing]
+- `Gallery.tsx` - [generated | updated]
+
+### STYLE COMPLIANCE:
+- Zero-inline-classnames: [N]/[N] components compliant
+- styles.ts files: [N]/[N] components have styles.ts
+- Namespace imports: [N]/[N] use ../../styles patterns
 
 ### PATTERNS DETECTED:
 - [N] recipes found, [N] components generated
@@ -134,13 +248,32 @@ Return findings in this EXACT structure for context handoff:
 
 ## Rules
 
+### Component Structure
+- Every component gets a subdirectory: `components/[name]/`
+- Required files: `[name].tsx`, `index.ts`, `types.ts`, `styles.ts`
+- NO Tailwind classnames inline in component JSX — use styles.ts
+- Use ref as prop (React 19 style), not forwardRef
+- Multi-part components use Object.assign for callable + namespace pattern
+- Export individual parts for backward compatibility
+
+### Styling
 - Never hardcode colors — always use semantic tokens from styling config
+- All styles in styles.ts, import as `S`: `import { ButtonStyles as S } from './styles'`
+- Compose styles using array.join(' ') pattern
 - Always use `focus-visible:` — never `focus:`
-- Always add `cursor-pointer` to interactive elements
-- Stateful gallery demos use separate `*Demo` components
+- Always add `cursor-pointer` to interactive elements (via style constants)
 - Mobile-first responsive patterns only
 - Touch targets ≥ 44×44px on interactive elements
+
+### Config & Hooks
+- Motion values from `@/config`: SPRING, DURATION, OPACITY
+- Text/ARIA from `@/config`: ARIA, LABEL, SR_ONLY
+- Use shared hooks from `@/hooks`: useControlledState, useBodyScrollLock, etc.
+- Destructure Framer Motion conflicting props before spreading
+
+### Gallery
+- Stateful gallery demos use separate `*Demo` components
+- ALWAYS wrap each component preview in `<ComponentErrorBoundary>`
+- Error boundary fallback MUST have `data-testid="component-error"`
 - Only generate missing components when resuming (don't overwrite existing)
 - Include Playwright config and test scaffold in every harness
-- ALWAYS wrap each component preview in `<ComponentErrorBoundary>` — never render components without error boundaries
-- Error boundary fallback MUST have `data-testid="component-error"` for Playwright MCP detection

@@ -18,7 +18,7 @@ export const NavigationStyles = {
     TypographyTokens.textSm,
     TypographyTokens.fontMedium,
     'transition-colors',
-    'hover:bg-surface',
+    'hover:text-primary',
     'focus-visible:bg-surface',
     Interactive.Focus.ring,
     Interactive.Disabled.base,
@@ -39,7 +39,7 @@ export const NavigationStyles = {
     TypographyTokens.fontMedium,
     Interactive.Cursor.pointer,
     'transition-colors',
-    'hover:bg-surface',
+    'hover:text-primary',
     Interactive.Focus.ring,
   ].join(' '),
 } as const
