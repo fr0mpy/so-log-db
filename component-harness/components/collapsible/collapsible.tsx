@@ -1,7 +1,9 @@
 import { cn } from '@/lib/utils'
 import { ChevronDown } from 'lucide-react'
 import { createContext, useContext, cloneElement, isValidElement } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 import { useControlledState } from '../../hooks/useControlledState'
+import { SPRING, DURATION } from '@/config'
 import type {
   CollapsibleContextValue,
   CollapsibleRootProps,
@@ -68,7 +70,13 @@ function CollapsibleTrigger({ className, children, asChild, ref, ...props }: Col
       {...props}
     >
       {children}
-      <ChevronDown className={cn(S.icon, open && S.iconOpen)} />
+      <motion.span
+        animate={{ rotate: open ? 180 : 0 }}
+        transition={SPRING.default}
+        className={S.iconWrapper}
+      >
+        <ChevronDown className={S.icon} />
+      </motion.span>
     </button>
   )
 }
@@ -80,17 +88,41 @@ function CollapsibleTrigger({ className, children, asChild, ref, ...props }: Col
 function CollapsibleContent({ className, children, ref, ...props }: CollapsibleContentProps) {
   const { open } = useCollapsibleContext()
 
-  if (!open) return null
+  // Destructure drag-related props to avoid conflicts with Framer Motion's drag types
+  const { onDrag, onDragEnd, onDragStart, ...motionSafeProps } = props as Record<string, unknown>
 
   return (
-    <div
-      ref={ref}
-      data-state={open ? 'open' : 'closed'}
-      className={cn(S.content, className)}
-      {...props}
-    >
-      {children}
-    </div>
+    <AnimatePresence initial={false}>
+      {open && (
+        <motion.div
+          ref={ref}
+          initial={{ height: 0, opacity: 0 }}
+          animate={{
+            height: 'auto',
+            opacity: 1,
+            transition: {
+              height: { ...SPRING.default },
+              opacity: { duration: DURATION.normal, delay: DURATION.instant }
+            }
+          }}
+          exit={{
+            height: 0,
+            opacity: 0,
+            transition: {
+              height: { ...SPRING.default },
+              opacity: { duration: DURATION.fast }
+            }
+          }}
+          data-state={open ? 'open' : 'closed'}
+          className={S.contentWrapper}
+          {...motionSafeProps}
+        >
+          <div className={cn(S.content, className)}>
+            {children}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }
 

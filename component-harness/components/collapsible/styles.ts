@@ -14,11 +14,11 @@ export const CollapsibleStyles = {
     'hover:bg-muted',
     Interactive.Focus.ring,
   ].join(' '),
-  icon: [
-    SizingTokens.iconSm,
+  iconWrapper: [
+    Layout.Flex.center,
     'shrink-0',
-    Interactive.Transition.transform,
   ].join(' '),
-  iconOpen: 'rotate-180',
-  content: 'animate-in slide-in-from-top-2',
+  icon: SizingTokens.iconSm,
+  contentWrapper: 'overflow-hidden',
+  content: SpacingTokens.pt2,
 } as const
