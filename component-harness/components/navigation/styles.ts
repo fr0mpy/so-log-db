@@ -1,0 +1,45 @@
+import { Layout, Interactive, SpacingTokens, SizingTokens, TypographyTokens } from '../../styles'
+
+export const NavigationStyles = {
+  root: 'relative z-10 flex items-center justify-center',
+  list: [
+    Layout.Flex.center,
+    Layout.Spacing.gap1,
+  ].join(' '),
+  item: 'relative',
+  itemDropdownWrapper: Layout.Flex.center,
+  trigger: [
+    Layout.Flex.inline,
+    Layout.Spacing.gap1,
+    'rounded-theme-md',
+    SpacingTokens.px4,
+    SpacingTokens.py2,
+    Interactive.Cursor.pointer,
+    TypographyTokens.textSm,
+    TypographyTokens.fontMedium,
+    'transition-colors',
+    'hover:bg-surface',
+    'focus-visible:bg-surface',
+    Interactive.Focus.ring,
+    Interactive.Disabled.base,
+  ].join(' '),
+  triggerIcon: SizingTokens.iconSm,
+  content: [
+    'absolute left-0 top-full mt-1 w-auto min-w-[12rem]',
+    'rounded-theme-md border border-border',
+    'bg-background shadow-theme-lg glass',
+    SpacingTokens.p2,
+    'origin-top',
+  ].join(' '),
+  link: [
+    'block rounded-theme-md',
+    SpacingTokens.px4,
+    SpacingTokens.py2,
+    TypographyTokens.textSm,
+    TypographyTokens.fontMedium,
+    Interactive.Cursor.pointer,
+    'transition-colors',
+    'hover:bg-surface',
+    Interactive.Focus.ring,
+  ].join(' '),
+} as const
