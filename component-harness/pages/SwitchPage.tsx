@@ -1,0 +1,10 @@
+import { Switch } from '../components'
+
+export default function SwitchPage() {
+  return (
+    <div className="space-y-2">
+      <Switch label="Enable notifications" />
+      <Switch label="Auto-save" defaultChecked />
+    </div>
+  )
+}
