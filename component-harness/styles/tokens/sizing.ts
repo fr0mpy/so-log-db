@@ -10,6 +10,7 @@ export const Sizing = {
   h3: 'h-3',
   h4: 'h-4',
   h5: 'h-5',
+  h7: 'h-7',
   h8: 'h-8',
   h9: 'h-9',
   h10: 'h-10',
