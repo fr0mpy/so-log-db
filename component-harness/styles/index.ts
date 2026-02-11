@@ -1,28 +1,100 @@
 /**
  * Centralized style constants for component harness.
- * Organized by component category for easy reuse.
+ * Uses namespace pattern for clean organization.
+ *
+ * @example
+ * import { Form, Layout, Interactive, Overlay, Control, Feedback } from '../styles'
+ * <input className={Form.Input.base} />
+ * <div className={Layout.Flex.center} />
  */
 
-// Feedback components (Badge, Alert)
-export {
-  FEEDBACK_VARIANTS,
-  ALERT_VARIANTS,
-  type FeedbackVariant,
-  type AlertVariant,
-} from './feedback'
+// ============================================================================
+// TOKEN EXPORTS (Primitives)
+// ============================================================================
 
-// Control components (Checkbox, Switch, Radio, Slider)
+export { Spacing as SpacingTokens } from './tokens/spacing'
+export { Sizing as SizingTokens } from './tokens/sizing'
+export { Typography as TypographyTokens } from './tokens/typography'
+
+// ============================================================================
+// PATTERN EXPORTS (Compositions) - from patterns/ subdirectory
+// ============================================================================
+
+// Main namespaces
 export {
-  CONTROL_BASE,
-  CONTROL_UNCHECKED,
-  CONTROL_CHECKED,
-  CONTROL_CHECKED_STATE,
-  CONTROL_DISABLED,
-  CONTROL_FOCUS,
-  CONTROL_UNCHECKED_FULL,
-  CONTROL_LABEL,
-  SLIDER_THUMB,
-  SLIDER_THUMB_WEBKIT,
-  SLIDER_THUMB_MOZ,
-  SLIDER_TRACK_BASE,
-} from './control'
+  Form,
+  Layout,
+  Interactive,
+  Overlay,
+  Control,
+  Feedback,
+  Patterns,
+} from './patterns'
+
+// Sub-namespaces
+export {
+  Label,
+  Input,
+  NumberInput,
+  Textarea,
+  Helper,
+  Stepper,
+  getInputStyles,
+  getHelperStyles,
+} from './patterns'
+
+export {
+  Flex,
+  Spacing,
+  Position,
+  Size,
+} from './patterns'
+
+export {
+  Transition,
+  Focus,
+  Disabled,
+  Hover,
+  Active,
+  Cursor,
+  Button,
+  CloseButton,
+} from './patterns'
+
+export {
+  Dialog,
+  Drawer,
+  Card,
+  Paper,
+} from './patterns'
+
+export {
+  Toggle,
+  Slider,
+} from './patterns'
+
+export {
+  Badge,
+  Alert,
+  type BadgeVariant,
+  type AlertVariant,
+} from './patterns'
+
+// ============================================================================
+// MOTION EXPORTS (Framer Motion presets)
+// ============================================================================
+
+export { Motion, Variants as MotionVariants, Transition as MotionTransition, type MotionVariant } from './motion'
+
+// ============================================================================
+// UTILITY EXPORTS
+// ============================================================================
+
+export {
+  responsiveClasses,
+  getResponsiveClasses,
+  resolveResponsiveValue,
+  isResponsiveObject,
+  type Breakpoint,
+  type ResponsiveValue,
+} from './responsive'
