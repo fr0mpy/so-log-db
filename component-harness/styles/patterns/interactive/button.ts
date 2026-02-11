@@ -12,7 +12,7 @@ export const Button = {
   nav: [
     'inline-flex items-center justify-center gap-1',
     'h-9 px-3 rounded-theme-lg',
-    'text-sm font-medium cursor-pointer',
+    'text-sm font-medium cursor-pointer whitespace-nowrap',
     'bg-transparent text-foreground',
     'transition-all duration-200',
     'hover:bg-neu-base hover:shadow-neu-raised-sm',

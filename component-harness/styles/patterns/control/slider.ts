@@ -24,18 +24,11 @@ export const Slider = {
     '[&::-moz-range-thumb]:cursor-pointer',
   ].join(' '),
 
-  /** Combined thumb (all browsers) */
+  /** Combined thumb (all browsers) - hidden */
   thumb: [
     '[&::-webkit-slider-thumb]:appearance-none',
-    '[&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5',
-    '[&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-neu-base',
-    '[&::-webkit-slider-thumb]:shadow-neu-raised [&::-webkit-slider-thumb]:cursor-pointer',
-    '[&::-webkit-slider-thumb]:transition-shadow [&::-webkit-slider-thumb]:duration-200',
-    '[&::-webkit-slider-thumb]:hover:shadow-neu-raised-lg',
-    '[&::-webkit-slider-thumb]:active:shadow-neu-pressed-sm',
-    '[&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5',
-    '[&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-neu-base',
-    '[&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-neu-raised',
-    '[&::-moz-range-thumb]:cursor-pointer',
+    '[&::-webkit-slider-thumb]:h-0 [&::-webkit-slider-thumb]:w-0',
+    '[&::-moz-range-thumb]:h-0 [&::-moz-range-thumb]:w-0',
+    '[&::-moz-range-thumb]:border-0',
   ].join(' '),
 } as const
