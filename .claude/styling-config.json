@@ -6,8 +6,10 @@
     "colors": {
       "primary": "#00af66",
       "primary-foreground": "#FFFFFF",
+      "primary-hover": "#008a52",
       "secondary": "#6366f1",
       "secondary-foreground": "#FFFFFF",
+      "secondary-hover": "#4338ca",
       "background": "#e4e8eb",
       "foreground": "#2b2b2b",
       "surface": "#e4e8eb",
@@ -16,6 +18,7 @@
       "border": "#c5cace",
       "destructive": "#ef3737",
       "destructive-foreground": "#FFFFFF",
+      "destructive-hover": "#b91c1c",
       "accent": "#6366f1",
       "accent-foreground": "#FFFFFF",
       "success": "#00af66",
@@ -23,7 +26,13 @@
       "warning": "#ff6900",
       "warning-foreground": "#FFFFFF",
       "info": "#3b82f6",
-      "info-foreground": "#FFFFFF"
+      "info-foreground": "#FFFFFF",
+      "spinner-front": "#00af66",
+      "spinner-back": "#00935a",
+      "spinner-light": "#d4d4d4",
+      "spinner-lighter": "#e5e5e5",
+      "spinner-dark": "#404040",
+      "spinner-darker": "#525252"
     },
     "neumorphic": {
       "base": "#e4e8eb",
@@ -50,7 +59,15 @@
       "pressed": "inset -4px -4px 8px rgba(255, 255, 255, 0.8), inset 4px 4px 8px rgba(163, 177, 198, 0.5)",
       "pressed-sm": "inset -2px -2px 5px rgba(255, 255, 255, 0.7), inset 2px 2px 5px rgba(163, 177, 198, 0.4)",
       "flat": "inset 1px 1px 2px rgba(163, 177, 198, 0.3), inset -1px -1px 2px rgba(255, 255, 255, 0.5)",
-      "focus": "0 0 0 3px rgba(0, 175, 102, 0.25)"
+      "focus": "0 0 0 3px rgba(0, 175, 102, 0.25)",
+      "inset-highlight": "inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+      "variant-primary": "inset 0 1px 0 rgba(255, 255, 255, 0.2), -4px -4px 10px rgba(255, 255, 255, 0.3), 4px 4px 10px rgba(0, 100, 60, 0.3)",
+      "variant-secondary": "inset 0 1px 0 rgba(255, 255, 255, 0.2), -4px -4px 10px rgba(255, 255, 255, 0.3), 4px 4px 10px rgba(60, 60, 140, 0.3)",
+      "variant-destructive": "inset 0 1px 0 rgba(255, 255, 255, 0.2), -4px -4px 10px rgba(255, 255, 255, 0.3), 4px 4px 10px rgba(180, 40, 40, 0.3)",
+      "variant-success": "inset 0 1px 0 rgba(255, 255, 255, 0.2), -4px -4px 10px rgba(255, 255, 255, 0.3), 4px 4px 10px rgba(0, 100, 60, 0.2)",
+      "variant-warning": "inset 0 1px 0 rgba(255, 255, 255, 0.2), -4px -4px 10px rgba(255, 255, 255, 0.3), 4px 4px 10px rgba(180, 80, 0, 0.2)",
+      "control-unchecked": "inset -2px -2px 4px rgba(255, 255, 255, 0.4), inset 2px 2px 4px rgba(0, 60, 40, 0.25)",
+      "control-checked": "inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 2px 2px 4px rgba(0, 80, 50, 0.3)"
     },
     "spacing": {
       "tight": "1",
@@ -104,8 +121,69 @@
       "slow": "0.3s ease-out"
     },
     "press": {
-      "scale": "0.98",
-      "duration": "0.1s"
+      "scale": 0.98,
+      "duration": 0.1
+    },
+    "spring": {
+      "default": { "stiffness": 300, "damping": 30 },
+      "bouncy": { "stiffness": 400, "damping": 30 },
+      "gentle": { "stiffness": 200, "damping": 25 },
+      "snappy": { "stiffness": 500, "damping": 30 },
+      "tooltip": { "stiffness": 400, "damping": 15, "mass": 0.8 }
+    },
+    "duration": {
+      "instant": 0.1,
+      "fast": 0.15,
+      "normal": 0.2,
+      "slow": 0.3,
+      "spinner": 3,
+      "progress": 1.2,
+      "loading": 0.2,
+      "scroll": 1.2
+    },
+    "offset": {
+      "popover": 4,
+      "dropdown": 4,
+      "tooltip": 4,
+      "slide": 8,
+      "icon": 16,
+      "knob": 24
+    },
+    "opacity": {
+      "backdrop": 0.8,
+      "drawerBackdrop": 0.6,
+      "highlight": 0.2
+    },
+    "lerp": {
+      "scroll": 0.1
+    },
+    "multiplier": {
+      "wheel": 1,
+      "touch": 2
+    }
+  },
+  "text": {
+    "aria": {
+      "close": "Close",
+      "loading": "Loading...",
+      "previousSlide": "Previous slide",
+      "nextSlide": "Next slide",
+      "goToSlide": "Go to slide",
+      "morePages": "More pages",
+      "previousPage": "Go to previous page",
+      "nextPage": "Go to next page",
+      "decreaseValue": "Decrease value",
+      "increaseValue": "Increase value",
+      "breadcrumb": "breadcrumb",
+      "switchToLight": "Switch to light mode",
+      "switchToDark": "Switch to dark mode"
+    },
+    "labels": {
+      "previous": "Previous",
+      "next": "Next",
+      "loading": "LOADING",
+      "searchPlaceholder": "Search...",
+      "selectPlaceholder": "Select..."
     }
   }
 }

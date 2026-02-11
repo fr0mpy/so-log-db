@@ -25,7 +25,7 @@ import {
   Paper, PaperHeader, PaperTitle, PaperDescription, PaperContent, PaperFooter,
   Popover,
   Progress,
-  Radio, RadioGroup, RadioGroupItem,
+  RadioGroup, RadioGroupItem,
   Select,
   Separator,
   Skeleton,

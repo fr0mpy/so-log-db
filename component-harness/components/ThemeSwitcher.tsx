@@ -1,6 +1,7 @@
 import { Sun, Moon } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import { cn } from '../lib/utils'
+import { THEME_TIMING, OFFSET, SPRING, OPACITY, ARIA, DURATION } from '@/config'
 
 interface ThemeSwitcherProps {
   isDark: boolean
@@ -8,28 +9,12 @@ interface ThemeSwitcherProps {
   className?: string
 }
 
-// Animation timing constants
-const TIMING = {
-  iconExit: 0.12,      // Icon exits first
-  knobDelay: 0.08,     // Knob starts slightly after exit begins
-  knobDuration: 0.25,  // Knob slide duration
-  iconEntryDelay: 0.28, // Icon enters after knob settles
-  iconEntry: 0.2,      // Icon entry duration
-} as const
-
-// Spring config for satisfying bounce
-const knobSpring = {
-  type: 'spring',
-  stiffness: 500,
-  damping: 30,
-} as const
-
 export function ThemeSwitcher({ isDark, onToggle, className }: ThemeSwitcherProps) {
   return (
     <button
       role="switch"
       aria-checked={isDark}
-      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={isDark ? ARIA.switchToLight : ARIA.switchToDark}
       onClick={onToggle}
       className={cn(
         'relative w-14 h-8 rounded-full cursor-pointer',
@@ -45,10 +30,10 @@ export function ThemeSwitcher({ isDark, onToggle, className }: ThemeSwitcherProp
           'bg-neu-base shadow-neu-raised',
           'flex items-center justify-center overflow-hidden'
         )}
-        animate={{ x: isDark ? 24 : 0 }}
+        animate={{ x: isDark ? OFFSET.knob : 0 }}
         transition={{
-          ...knobSpring,
-          delay: TIMING.knobDelay,
+          ...SPRING.snappy,
+          delay: THEME_TIMING.knobDelay,
         }}
       >
         {/* Icon container */}
@@ -59,21 +44,21 @@ export function ThemeSwitcher({ isDark, onToggle, className }: ThemeSwitcherProp
               <motion.span
                 key="moon"
                 className="absolute inset-0 flex items-center justify-center cursor-pointer"
-                initial={{ y: -16, opacity: 0 }}
+                initial={{ y: -OFFSET.icon, opacity: 0 }}
                 animate={{
                   y: 0,
                   opacity: 1,
                   transition: {
-                    y: { duration: TIMING.iconEntry, delay: TIMING.iconEntryDelay, ease: 'easeOut' },
-                    opacity: { duration: TIMING.iconEntry * 0.6, delay: TIMING.iconEntryDelay + 0.05 },
+                    y: { duration: THEME_TIMING.iconEntry, delay: THEME_TIMING.iconEntryDelay, ease: 'easeOut' },
+                    opacity: { duration: THEME_TIMING.iconEntry * 0.6, delay: THEME_TIMING.iconEntryDelay + 0.05 },
                   },
                 }}
                 exit={{
-                  y: -16,
+                  y: -OFFSET.icon,
                   opacity: 0,
                   transition: {
-                    y: { duration: TIMING.iconExit, ease: 'easeIn' },
-                    opacity: { duration: TIMING.iconExit * 0.8 },
+                    y: { duration: THEME_TIMING.iconExit, ease: 'easeIn' },
+                    opacity: { duration: THEME_TIMING.iconExit * 0.8 },
                   },
                 }}
               >
@@ -84,21 +69,21 @@ export function ThemeSwitcher({ isDark, onToggle, className }: ThemeSwitcherProp
               <motion.span
                 key="sun"
                 className="absolute inset-0 flex items-center justify-center cursor-pointer"
-                initial={{ y: 16, opacity: 0 }}
+                initial={{ y: OFFSET.icon, opacity: 0 }}
                 animate={{
                   y: 0,
                   opacity: 1,
                   transition: {
-                    y: { duration: TIMING.iconEntry, delay: TIMING.iconEntryDelay, ease: 'easeOut' },
-                    opacity: { duration: TIMING.iconEntry * 0.6, delay: TIMING.iconEntryDelay + 0.05 },
+                    y: { duration: THEME_TIMING.iconEntry, delay: THEME_TIMING.iconEntryDelay, ease: 'easeOut' },
+                    opacity: { duration: THEME_TIMING.iconEntry * 0.6, delay: THEME_TIMING.iconEntryDelay + 0.05 },
                   },
                 }}
                 exit={{
-                  y: 16,
+                  y: OFFSET.icon,
                   opacity: 0,
                   transition: {
-                    y: { duration: TIMING.iconExit, ease: 'easeIn' },
-                    opacity: { duration: TIMING.iconExit * 0.8 },
+                    y: { duration: THEME_TIMING.iconExit, ease: 'easeIn' },
+                    opacity: { duration: THEME_TIMING.iconExit * 0.8 },
                   },
                 }}
               >
@@ -114,14 +99,14 @@ export function ThemeSwitcher({ isDark, onToggle, className }: ThemeSwitcherProp
         className="absolute inset-0 flex items-center justify-between px-2 pointer-events-none"
       >
         <motion.span
-          animate={{ opacity: isDark ? 0.2 : 0 }}
-          transition={{ duration: 0.3 }}
+          animate={{ opacity: isDark ? OPACITY.highlight : 0 }}
+          transition={{ duration: DURATION.slow }}
         >
           <Sun className="w-3 h-3 text-foreground" />
         </motion.span>
         <motion.span
-          animate={{ opacity: isDark ? 0 : 0.2 }}
-          transition={{ duration: 0.3 }}
+          animate={{ opacity: isDark ? 0 : OPACITY.highlight }}
+          transition={{ duration: DURATION.slow }}
         >
           <Moon className="w-3 h-3 text-foreground" />
         </motion.span>
