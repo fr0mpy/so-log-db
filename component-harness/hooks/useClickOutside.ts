@@ -8,7 +8,7 @@ import { useEffect, useRef, RefObject } from 'react'
  * @param enabled - Whether the listener is active (default: true)
  */
 export function useClickOutside<T extends HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null>,
   callback: () => void,
   enabled: boolean = true
 ): void {
@@ -41,7 +41,7 @@ export function useClickOutside<T extends HTMLElement>(
  * Variant that accepts multiple refs (useful for dropdown with trigger)
  */
 export function useClickOutsideMultiple<T extends HTMLElement>(
-  refs: RefObject<T>[],
+  refs: RefObject<T | null>[],
   callback: () => void,
   enabled: boolean = true
 ): void {
