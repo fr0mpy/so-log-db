@@ -22,6 +22,18 @@ export function useControlledState<T>(
   // Track whether this is the first render to avoid calling onChange on mount
   const isFirstRender = useRef(true)
 
+  // Use refs to access current values without creating unstable callback references
+  const internalValueRef = useRef(internalValue)
+  const controlledRef = useRef(controlled)
+  const isControlledRef = useRef(isControlled)
+  const onChangeRef = useRef(onChange)
+
+  // Keep refs in sync
+  internalValueRef.current = internalValue
+  controlledRef.current = controlled
+  isControlledRef.current = isControlled
+  onChangeRef.current = onChange
+
   // Sync internal state with controlled value
   useEffect(() => {
     if (isControlled) {
@@ -29,21 +41,23 @@ export function useControlledState<T>(
     }
   }, [isControlled, controlled])
 
+  // Stable setValue that never changes reference
   const setValue = useCallback(
     (newValue: T | ((prev: T) => T)) => {
+      const currentValue = isControlledRef.current ? controlledRef.current : internalValueRef.current
       const resolvedValue = typeof newValue === 'function'
-        ? (newValue as (prev: T) => T)(isControlled ? controlled : internalValue)
+        ? (newValue as (prev: T) => T)(currentValue as T)
         : newValue
 
       // Only update internal state if uncontrolled
-      if (!isControlled) {
+      if (!isControlledRef.current) {
         setInternalValue(resolvedValue)
       }
 
       // Always call onChange
-      onChange?.(resolvedValue)
+      onChangeRef.current?.(resolvedValue)
     },
-    [isControlled, controlled, internalValue, onChange]
+    [] // Empty deps = stable reference
   )
 
   // Skip onChange on first render
