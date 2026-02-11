@@ -12,7 +12,7 @@ export const SelectStyles = {
     placeholder: 'text-muted-foreground',
   },
   icon: 'h-4 w-4 opacity-50',
-  positioner: 'z-popover',
+  positioner: 'z-dropdown overflow-visible origin-top',
   popup: [
     'rounded-theme-md bg-neu-base shadow-neu-raised-lg border border-white/40 dark:border-white/10',
   ].join(' '),

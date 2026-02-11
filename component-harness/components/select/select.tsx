@@ -14,6 +14,21 @@ import { Input } from '../form/input'
 import { useControlledState } from '../../hooks/useControlledState'
 import { useClickOutsideMultiple } from '../../hooks/useClickOutside'
 import { SPRING, PLACEHOLDER } from '../../config'
+
+// Animation variants - scaleY from top keeps dropdown under trigger
+const positionerVariants = {
+  initial: { opacity: 0, scaleY: 0 },
+  animate: {
+    opacity: 1,
+    scaleY: 1,
+    transition: SPRING.selectOpen,
+  },
+  exit: {
+    opacity: 0,
+    scaleY: 0,
+    transition: SPRING.selectClose,
+  },
+}
 import { SelectStyles as S } from './styles'
 import type {
   SelectContextValue,
@@ -50,6 +65,7 @@ function SelectRoot({
   onValueChange,
   disabled = false,
   searchable = false,
+  triggerMode = 'hover',
 }: SelectRootProps) {
   const [currentValue, setValue] = useControlledState(value, defaultValue, onValueChange)
   const [isOpen, setIsOpen] = useControlledState<boolean>(undefined, false)
@@ -105,6 +121,7 @@ function SelectRoot({
       dropdownPosition,
       disabled,
       searchable,
+      triggerMode,
     }),
     [
       isOpen,
@@ -116,6 +133,7 @@ function SelectRoot({
       dropdownPosition,
       disabled,
       searchable,
+      triggerMode,
     ]
   )
 
@@ -124,11 +142,15 @@ function SelectRoot({
 
 // Select.Trigger - The button that opens the dropdown
 function SelectTrigger({ children, className, ref }: SelectTriggerProps) {
-  const { isOpen, setIsOpen, triggerRef, disabled } = useSelectContext()
+  const { isOpen, setIsOpen, triggerRef, disabled, triggerMode } = useSelectContext()
 
   const handleMouseEnter = useCallback(() => {
-    if (!disabled) setIsOpen(true)
-  }, [disabled, setIsOpen])
+    if (!disabled && triggerMode === 'hover') setIsOpen(true)
+  }, [disabled, setIsOpen, triggerMode])
+
+  const handleClick = useCallback(() => {
+    if (!disabled && triggerMode === 'click') setIsOpen(!isOpen)
+  }, [disabled, setIsOpen, triggerMode, isOpen])
 
   // Combine refs
   const combinedRef = (node: HTMLButtonElement | null) => {
@@ -146,6 +168,7 @@ function SelectTrigger({ children, className, ref }: SelectTriggerProps) {
       type="button"
       disabled={disabled}
       onMouseEnter={handleMouseEnter}
+      onClick={handleClick}
       whileTap={{ scale: 0.99 }}
       className={cn(
         S.trigger.base,
@@ -194,10 +217,13 @@ function SelectPortal({ children }: SelectPortalProps) {
 
 // Select.Positioner - Positions the dropdown
 function SelectPositioner({ children }: SelectPositionerProps) {
-  const { dropdownPosition, dropdownRef, setIsOpen, triggerRef, setSearchQuery } = useSelectContext()
+  const { dropdownPosition, dropdownRef, setIsOpen, triggerRef, setSearchQuery, triggerMode } = useSelectContext()
 
   const handleMouseLeave = useCallback(
     (e: React.MouseEvent) => {
+      // Only close on mouse leave for hover mode
+      if (triggerMode !== 'hover') return
+
       // Check if moving back to the trigger
       const relatedTarget = e.relatedTarget as Node
       if (triggerRef.current?.contains(relatedTarget)) {
@@ -206,16 +232,16 @@ function SelectPositioner({ children }: SelectPositionerProps) {
       setIsOpen(false)
       setSearchQuery('')
     },
-    [setIsOpen, setSearchQuery, triggerRef]
+    [setIsOpen, setSearchQuery, triggerRef, triggerMode]
   )
 
   return (
     <motion.div
       ref={dropdownRef}
-      initial={{ clipPath: 'inset(0 0 100% 0)' }}
-      animate={{ clipPath: 'inset(0 0 0 0)' }}
-      exit={{ clipPath: 'inset(0 0 100% 0)' }}
-      transition={SPRING.bouncy}
+      variants={positionerVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
       onMouseLeave={handleMouseLeave}
       style={{
         position: 'fixed',

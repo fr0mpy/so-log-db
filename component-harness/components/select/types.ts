@@ -5,6 +5,8 @@ export interface SelectOption {
   label: string
 }
 
+export type SelectTriggerMode = 'click' | 'hover'
+
 export interface SelectRootProps {
   children: ReactNode
   value?: string
@@ -12,6 +14,7 @@ export interface SelectRootProps {
   onValueChange?: (value: string) => void
   disabled?: boolean
   searchable?: boolean
+  triggerMode?: SelectTriggerMode
 }
 
 export interface SelectTriggerProps {
@@ -67,4 +70,5 @@ export interface SelectContextValue {
   dropdownPosition: { top: number; left: number; width: number }
   disabled?: boolean
   searchable?: boolean
+  triggerMode: SelectTriggerMode
 }
