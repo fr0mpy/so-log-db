@@ -33,8 +33,9 @@ export const ContextMenuStyles = {
 export const DropdownMenuStyles = {
   wrapper: 'relative inline-block',
   trigger: 'cursor-pointer',
+  positioner: 'absolute z-50 mt-1',
   popup: [
-    'absolute z-50 mt-1 min-w-[12rem] rounded-theme-md border border-border',
+    'min-w-[12rem] rounded-theme-md border border-border',
     'bg-background shadow-theme-lg glass p-1 origin-top',
   ].join(' '),
   item: MenuStyles.item,
@@ -42,3 +43,4 @@ export const DropdownMenuStyles = {
   label: MenuStyles.label,
   alignment: MenuStyles.alignment,
 } as const
+
