@@ -1,10 +1,11 @@
 import { ReactLenis, type LenisRef } from 'lenis/react'
-import { forwardRef, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { SCROLL } from '../../config'
 
 interface ScrollAreaProps {
   children: ReactNode
   className?: string
+  ref?: React.Ref<LenisRef>
   /** Lenis configuration options */
   options?: {
     /** Scroll lerp (linear interpolation) - lower = smoother, higher = snappier. Default: 0.1 */
@@ -28,30 +29,26 @@ interface ScrollAreaProps {
  * ScrollArea wrapper using Lenis for buttery smooth scrolling.
  * Wrap any scrollable container with this component.
  */
-const ScrollArea = forwardRef<LenisRef, ScrollAreaProps>(
-  ({ children, className, options = {} }, ref) => {
-    const defaultOptions = {
-      lerp: SCROLL.lerp,
-      duration: SCROLL.duration,
-      smoothWheel: true,
-      wheelMultiplier: SCROLL.wheelMultiplier,
-      touchMultiplier: SCROLL.touchMultiplier,
-      ...options,
-    }
-
-    return (
-      <ReactLenis
-        ref={ref}
-        className={className}
-        options={defaultOptions}
-      >
-        {children}
-      </ReactLenis>
-    )
+function ScrollArea({ children, className, ref, options = {} }: ScrollAreaProps) {
+  const defaultOptions = {
+    lerp: SCROLL.lerp,
+    duration: SCROLL.duration,
+    smoothWheel: true,
+    wheelMultiplier: SCROLL.wheelMultiplier,
+    touchMultiplier: SCROLL.touchMultiplier,
+    ...options,
   }
-)
 
-ScrollArea.displayName = 'ScrollArea'
+  return (
+    <ReactLenis
+      ref={ref}
+      className={className}
+      options={defaultOptions}
+    >
+      {children}
+    </ReactLenis>
+  )
+}
 
 export { ScrollArea }
 export type { ScrollAreaProps }

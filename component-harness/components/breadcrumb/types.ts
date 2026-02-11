@@ -1,13 +1,25 @@
-import type { HTMLAttributes, AnchorHTMLAttributes } from 'react'
+import type { HTMLAttributes, AnchorHTMLAttributes, Ref } from 'react'
 
-export interface BreadcrumbRootProps extends HTMLAttributes<HTMLElement> {}
+export interface BreadcrumbRootProps extends HTMLAttributes<HTMLElement> {
+  ref?: Ref<HTMLElement>
+}
 
-export interface BreadcrumbListProps extends HTMLAttributes<HTMLOListElement> {}
+export interface BreadcrumbListProps extends HTMLAttributes<HTMLOListElement> {
+  ref?: Ref<HTMLOListElement>
+}
 
-export interface BreadcrumbItemProps extends HTMLAttributes<HTMLLIElement> {}
+export interface BreadcrumbItemProps extends HTMLAttributes<HTMLLIElement> {
+  ref?: Ref<HTMLLIElement>
+}
 
-export interface BreadcrumbLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {}
+export interface BreadcrumbLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+  ref?: Ref<HTMLAnchorElement>
+}
 
-export interface BreadcrumbSeparatorProps extends HTMLAttributes<HTMLLIElement> {}
+export interface BreadcrumbSeparatorProps extends HTMLAttributes<HTMLLIElement> {
+  ref?: Ref<HTMLLIElement>
+}
 
-export interface BreadcrumbPageProps extends HTMLAttributes<HTMLSpanElement> {}
+export interface BreadcrumbPageProps extends HTMLAttributes<HTMLSpanElement> {
+  ref?: Ref<HTMLSpanElement>
+}

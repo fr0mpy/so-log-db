@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { forwardRef, createContext, useContext, useId, useRef, useCallback, useEffect } from 'react'
+import { createContext, useContext, useId, useRef, useCallback, useEffect } from 'react'
 import { motion, LayoutGroup } from 'motion/react'
 import { useControlledState } from '../../hooks/useControlledState'
 import type {
@@ -8,8 +8,10 @@ import type {
   TabsListProps,
   TabsTriggerProps,
   TabsContentProps,
+  TabsIndicatorProps,
 } from './types'
 import { SPRING } from '../../config'
+import { TabsStyles as S } from './styles'
 
 // Original spring with natural bounce - used at edges
 const SPRING_BOUNCE = SPRING.bouncy
@@ -31,184 +33,162 @@ const useTabsContext = () => {
 // Tabs.Root
 // ============================================================================
 
-const TabsRoot = forwardRef<HTMLDivElement, TabsRootProps>(
-  ({ defaultValue, value, onValueChange, className, children, ...props }, ref) => {
-    const layoutId = useId()
+function TabsRoot({ defaultValue, value, onValueChange, className, children, ref, ...props }: TabsRootProps) {
+  const layoutId = useId()
 
-    const [activeTab, setActiveTabState] = useControlledState<string>(
-      value,
-      defaultValue,
-      onValueChange
-    )
+  const [activeTab, setActiveTabState] = useControlledState<string>(
+    value,
+    defaultValue,
+    onValueChange
+  )
 
-    // Track registered tabs in DOM order
-    const tabsRef = useRef<string[]>([])
-    const currentSpringRef = useRef<typeof SPRING_SMOOTH | typeof SPRING_BOUNCE>(SPRING_SMOOTH)
+  // Track registered tabs in DOM order
+  const tabsRef = useRef<string[]>([])
+  const currentSpringRef = useRef<typeof SPRING_SMOOTH | typeof SPRING_BOUNCE>(SPRING_SMOOTH)
 
-    const registerTab = useCallback((tabValue: string) => {
-      if (!tabsRef.current.includes(tabValue)) {
-        tabsRef.current.push(tabValue)
-      }
-    }, [])
+  const registerTab = useCallback((tabValue: string) => {
+    if (!tabsRef.current.includes(tabValue)) {
+      tabsRef.current.push(tabValue)
+    }
+  }, [])
 
-    const unregisterTab = useCallback((tabValue: string) => {
-      tabsRef.current = tabsRef.current.filter(t => t !== tabValue)
-    }, [])
+  const unregisterTab = useCallback((tabValue: string) => {
+    tabsRef.current = tabsRef.current.filter(t => t !== tabValue)
+  }, [])
 
-    const computeSpring = useCallback((toValue: string) => {
-      const tabs = tabsRef.current
-      const toIndex = tabs.indexOf(toValue)
-      const isEdge = toIndex === 0 || toIndex === tabs.length - 1
-      return isEdge ? SPRING_BOUNCE : SPRING_SMOOTH
-    }, [])
+  const computeSpring = useCallback((toValue: string) => {
+    const tabs = tabsRef.current
+    const toIndex = tabs.indexOf(toValue)
+    const isEdge = toIndex === 0 || toIndex === tabs.length - 1
+    return isEdge ? SPRING_BOUNCE : SPRING_SMOOTH
+  }, [])
 
-    const setActiveTab = useCallback((newValue: string) => {
-      currentSpringRef.current = computeSpring(newValue)
-      setActiveTabState(newValue)
-    }, [computeSpring, setActiveTabState])
+  const setActiveTab = useCallback((newValue: string) => {
+    currentSpringRef.current = computeSpring(newValue)
+    setActiveTabState(newValue)
+  }, [computeSpring, setActiveTabState])
 
-    const getSpring = useCallback(() => currentSpringRef.current, [])
+  const getSpring = useCallback(() => currentSpringRef.current, [])
 
-    return (
-      <TabsContext.Provider value={{
-        activeTab,
-        setActiveTab,
-        layoutId,
-        registerTab,
-        unregisterTab,
-        getSpring,
-      }}>
-        <LayoutGroup>
-          <div ref={ref} className={cn('w-full', className)} {...props}>
-            {children}
-          </div>
-        </LayoutGroup>
-      </TabsContext.Provider>
-    )
-  }
-)
-TabsRoot.displayName = 'Tabs.Root'
+  return (
+    <TabsContext.Provider value={{
+      activeTab,
+      setActiveTab,
+      layoutId,
+      registerTab,
+      unregisterTab,
+      getSpring,
+    }}>
+      <LayoutGroup>
+        <div ref={ref} className={cn(S.root, className)} {...props}>
+          {children}
+        </div>
+      </LayoutGroup>
+    </TabsContext.Provider>
+  )
+}
 
 // ============================================================================
 // Tabs.List
 // ============================================================================
 
-const TabsList = forwardRef<HTMLDivElement, TabsListProps>(
-  ({ className, children, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        role="tablist"
-        className={cn(
-          'relative inline-flex h-10 items-center justify-center rounded-theme-lg bg-neu-base shadow-neu-pressed-sm p-1 text-muted-foreground',
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </div>
-    )
-  }
-)
-TabsList.displayName = 'Tabs.List'
+function TabsList({ className, children, ref, ...props }: TabsListProps) {
+  return (
+    <div
+      ref={ref}
+      role="tablist"
+      className={cn(S.list, className)}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
 
 // ============================================================================
 // Tabs.Trigger
 // ============================================================================
 
-const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
-  ({ value, className, children, ...props }, ref) => {
-    const { activeTab, setActiveTab, layoutId, registerTab, unregisterTab, getSpring } = useTabsContext()
-    const isActive = activeTab === value
+function TabsTrigger({ value, className, children, ref, ...props }: TabsTriggerProps) {
+  const { activeTab, setActiveTab, layoutId, registerTab, unregisterTab, getSpring } = useTabsContext()
+  const isActive = activeTab === value
 
-    // Register tab on mount, unregister on unmount
-    useEffect(() => {
-      registerTab(value)
-      return () => unregisterTab(value)
-    }, [value, registerTab, unregisterTab])
+  // Register tab on mount, unregister on unmount
+  useEffect(() => {
+    registerTab(value)
+    return () => unregisterTab(value)
+  }, [value, registerTab, unregisterTab])
 
-    return (
-      <button
-        ref={ref}
-        type="button"
-        role="tab"
-        aria-selected={isActive}
-        onClick={() => setActiveTab(value)}
-        className={cn(
-          'relative z-10 inline-flex items-center justify-center whitespace-nowrap rounded-theme-md px-3 py-1.5',
-          'text-sm font-medium cursor-pointer',
-          'transition-colors duration-neu ease-neu',
-          'focus-visible:outline-none focus-visible:shadow-neu-focus',
-          'disabled:pointer-events-none disabled:opacity-50',
-          isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
-          className
-        )}
-        {...props}
-      >
-        {isActive && (
-          <motion.span
-            layoutId={`${layoutId}-indicator`}
-            className="absolute inset-0 rounded-theme-md bg-neu-base shadow-neu-raised-sm"
-            transition={getSpring()}
-          />
-        )}
-        <span className="relative z-10">{children}</span>
-      </button>
-    )
-  }
-)
-TabsTrigger.displayName = 'Tabs.Trigger'
+  return (
+    <button
+      ref={ref}
+      type="button"
+      role="tab"
+      aria-selected={isActive}
+      onClick={() => setActiveTab(value)}
+      className={cn(
+        S.trigger.base,
+        isActive ? S.trigger.active : S.trigger.inactive,
+        className
+      )}
+      {...props}
+    >
+      {isActive && (
+        <motion.span
+          layoutId={`${layoutId}-indicator`}
+          className={S.indicator}
+          transition={getSpring()}
+        />
+      )}
+      <span className={S.triggerLabel}>{children}</span>
+    </button>
+  )
+}
 
 // ============================================================================
 // Tabs.Content
 // ============================================================================
 
-const TabsContent = forwardRef<HTMLDivElement, TabsContentProps>(
-  ({ value, forceMount, className, children, ...props }, ref) => {
-    const { activeTab } = useTabsContext()
-    const isActive = activeTab === value
+function TabsContent({ value, forceMount, className, children, ref, ...props }: TabsContentProps) {
+  const { activeTab } = useTabsContext()
+  const isActive = activeTab === value
 
-    if (!isActive && !forceMount) return null
+  if (!isActive && !forceMount) return null
 
-    return (
-      <div
-        ref={ref}
-        role="tabpanel"
-        tabIndex={isActive ? 0 : -1}
-        className={cn(
-          'mt-2 focus-visible:outline-none',
-          !isActive && 'hidden',
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </div>
-    )
-  }
-)
-TabsContent.displayName = 'Tabs.Content'
+  return (
+    <div
+      ref={ref}
+      role="tabpanel"
+      tabIndex={isActive ? 0 : -1}
+      className={cn(
+        S.content.base,
+        !isActive && S.content.hidden,
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
 
 // ============================================================================
 // Tabs.Indicator (for custom indicator placement)
 // ============================================================================
 
-const TabsIndicator = forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>(
-  ({ className, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }, ref) => {
-    const { layoutId, getSpring } = useTabsContext()
+function TabsIndicator({ className, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: TabsIndicatorProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+  const { layoutId, getSpring } = useTabsContext()
 
-    return (
-      <motion.span
-        ref={ref}
-        layoutId={`${layoutId}-indicator`}
-        className={cn('absolute rounded-theme-md bg-neu-base shadow-neu-raised-sm', className)}
-        transition={getSpring()}
-        {...props}
-      />
-    )
-  }
-)
-TabsIndicator.displayName = 'Tabs.Indicator'
+  return (
+    <motion.span
+      ref={ref}
+      layoutId={`${layoutId}-indicator`}
+      className={cn(S.indicator, className)}
+      transition={getSpring()}
+      {...props}
+    />
+  )
+}
 
 // ============================================================================
 // Namespace Export

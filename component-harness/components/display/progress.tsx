@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
-import { forwardRef } from 'react'
 import { DURATION } from '../../config'
+import { ProgressStyles as S } from './styles'
 
 interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
   value?: number
@@ -8,63 +8,53 @@ interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
   segments?: number
   indeterminate?: boolean
   size?: 'sm' | 'md'
+  ref?: React.Ref<HTMLDivElement>
 }
 
-const sizeStyles = {
-  sm: 'h-1 gap-0.5',
-  md: 'h-2 gap-1',
-}
+function Progress({ value = 0, max = 100, segments = 10, indeterminate = false, size = 'md', className, ref, ...props }: ProgressProps) {
+  const percentage = Math.min(100, Math.max(0, (value / max) * 100))
+  const filledSegments = Math.round((percentage / 100) * segments)
 
-const Progress = forwardRef<HTMLDivElement, ProgressProps>(
-  ({ value = 0, max = 100, segments = 10, indeterminate = false, size = 'md', className, ...props }, ref) => {
-    const percentage = Math.min(100, Math.max(0, (value / max) * 100))
-    const filledSegments = Math.round((percentage / 100) * segments)
-
-    return (
-      <div
-        ref={ref}
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={max}
-        aria-valuenow={indeterminate ? undefined : value}
-        className={cn('flex w-full', sizeStyles[size], className)}
-        {...props}
-      >
-        {indeterminate ? (
-          <>
-            <style>
-              {`
-                @keyframes progress-wave {
-                  0% { transform: translateX(-100%); }
-                  100% { transform: translateX(200%); }
-                }
-              `}
-            </style>
-            <div className="relative flex-1 bg-neu-base shadow-neu-pressed-sm rounded-full overflow-hidden">
-              <div
-                className="absolute inset-y-0 w-1/3 bg-primary rounded-full shadow-neu-raised-sm"
-                style={{ animation: `progress-wave ${DURATION.progress}s ease-in-out infinite` }}
-              />
-            </div>
-          </>
-        ) : (
-          Array.from({ length: segments }).map((_, i) => (
+  return (
+    <div
+      ref={ref}
+      role="progressbar"
+      aria-valuemin={0}
+      aria-valuemax={max}
+      aria-valuenow={indeterminate ? undefined : value}
+      className={cn(S.container, S.sizes[size], className)}
+      {...props}
+    >
+      {indeterminate ? (
+        <>
+          <style>
+            {`
+              @keyframes progress-wave {
+                0% { transform: translateX(-100%); }
+                100% { transform: translateX(200%); }
+              }
+            `}
+          </style>
+          <div className={S.indeterminate.track}>
             <div
-              key={i}
-              className={cn(
-                'flex-1 rounded-full transition-all duration-200 ease-out',
-                i < filledSegments
-                  ? 'bg-primary shadow-neu-raised-sm'
-                  : 'bg-neu-base shadow-neu-pressed-sm'
-              )}
+              className={S.indeterminate.indicator}
+              style={{ animation: `progress-wave ${DURATION.progress}s ease-in-out infinite` }}
             />
-          ))
-        )}
-      </div>
-    )
-  }
-)
-
-Progress.displayName = 'Progress'
+          </div>
+        </>
+      ) : (
+        Array.from({ length: segments }).map((_, i) => (
+          <div
+            key={i}
+            className={cn(
+              S.segment.base,
+              i < filledSegments ? S.segment.filled : S.segment.empty
+            )}
+          />
+        ))
+      )}
+    </div>
+  )
+}
 
 export { Progress }

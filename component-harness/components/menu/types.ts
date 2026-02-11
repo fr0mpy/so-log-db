@@ -1,4 +1,4 @@
-import type { ReactNode, HTMLAttributes, ButtonHTMLAttributes } from 'react'
+import type { ReactNode, HTMLAttributes, ButtonHTMLAttributes, Ref } from 'react'
 
 // ============================================================================
 // Shared Types
@@ -9,13 +9,17 @@ export type MenuAlign = 'start' | 'center' | 'end'
 export interface MenuItemProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Menu item content */
   children: ReactNode
+  ref?: Ref<HTMLButtonElement>
 }
 
-export interface MenuSeparatorProps extends HTMLAttributes<HTMLDivElement> {}
+export interface MenuSeparatorProps extends HTMLAttributes<HTMLDivElement> {
+  ref?: Ref<HTMLDivElement>
+}
 
 export interface MenuLabelProps extends HTMLAttributes<HTMLDivElement> {
   /** Label text */
   children: ReactNode
+  ref?: Ref<HTMLDivElement>
 }
 
 // ============================================================================
@@ -57,6 +61,7 @@ export interface MenuPositionerProps {
 export interface MenuPopupProps extends HTMLAttributes<HTMLDivElement> {
   /** Menu items */
   children: ReactNode
+  ref?: Ref<HTMLDivElement>
 }
 
 // ============================================================================
@@ -94,4 +99,5 @@ export interface ContextMenuPositionerProps {
 export interface ContextMenuPopupProps extends HTMLAttributes<HTMLDivElement> {
   /** Menu items */
   children: ReactNode
+  ref?: Ref<HTMLDivElement>
 }

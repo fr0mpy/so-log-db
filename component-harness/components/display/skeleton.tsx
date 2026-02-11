@@ -1,35 +1,22 @@
 import { cn } from '@/lib/utils'
-import { forwardRef } from 'react'
+import { SkeletonStyles as S } from './styles'
 
 type SkeletonVariant = 'text' | 'circle' | 'rectangular'
 
 interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: SkeletonVariant
+  ref?: React.Ref<HTMLDivElement>
 }
 
-const VARIANT_CLASSES: Record<SkeletonVariant, string> = {
-  text: 'rounded-theme-md',
-  circle: 'rounded-full aspect-square',
-  rectangular: 'rounded-theme-lg',
+function Skeleton({ className, variant = 'text', ref, ...props }: SkeletonProps) {
+  return (
+    <div
+      ref={ref}
+      className={cn(S.base, S.variants[variant], className)}
+      {...props}
+    />
+  )
 }
-
-const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
-  ({ className, variant = 'text', ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={cn(
-          'animate-pulse bg-muted shadow-neu-pressed',
-          VARIANT_CLASSES[variant],
-          className
-        )}
-        {...props}
-      />
-    )
-  }
-)
-
-Skeleton.displayName = 'Skeleton'
 
 export { Skeleton }
 export type { SkeletonProps, SkeletonVariant }

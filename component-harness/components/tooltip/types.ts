@@ -16,6 +16,7 @@ export interface TooltipTriggerProps extends React.HTMLAttributes<HTMLDivElement
   /** Render as child element instead of div wrapper */
   asChild?: boolean
   children: React.ReactNode
+  ref?: React.Ref<HTMLDivElement>
 }
 
 export interface TooltipPortalProps {
@@ -35,6 +36,7 @@ export interface TooltipPositionerProps {
 
 export interface TooltipPopupProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
+  ref?: React.Ref<HTMLDivElement>
 }
 
 export interface TooltipArrowProps {
@@ -44,7 +46,7 @@ export interface TooltipArrowProps {
 export interface TooltipContextValue {
   open: boolean
   setOpen: (open: boolean) => void
-  triggerRef: React.RefObject<HTMLElement>
+  triggerRef: React.RefObject<HTMLElement | null>
   side: Side
   setSide: (side: Side) => void
   anchor: Anchor

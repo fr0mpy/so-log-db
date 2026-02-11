@@ -1,4 +1,4 @@
-import type { HTMLAttributes, ButtonHTMLAttributes } from 'react'
+import type { HTMLAttributes, ButtonHTMLAttributes, Ref } from 'react'
 
 export interface TabsContextValue {
   activeTab: string
@@ -16,13 +16,17 @@ export interface TabsRootProps extends HTMLAttributes<HTMLDivElement> {
   value?: string
   /** Callback when active tab changes */
   onValueChange?: (value: string) => void
+  ref?: Ref<HTMLDivElement>
 }
 
-export interface TabsListProps extends HTMLAttributes<HTMLDivElement> {}
+export interface TabsListProps extends HTMLAttributes<HTMLDivElement> {
+  ref?: Ref<HTMLDivElement>
+}
 
 export interface TabsTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Unique identifier for this tab */
   value: string
+  ref?: Ref<HTMLButtonElement>
 }
 
 export interface TabsContentProps extends HTMLAttributes<HTMLDivElement> {
@@ -30,6 +34,9 @@ export interface TabsContentProps extends HTMLAttributes<HTMLDivElement> {
   value: string
   /** Keep content mounted when tab is not active */
   forceMount?: boolean
+  ref?: Ref<HTMLDivElement>
 }
 
-export interface TabsIndicatorProps extends HTMLAttributes<HTMLSpanElement> {}
+export interface TabsIndicatorProps extends HTMLAttributes<HTMLSpanElement> {
+  ref?: Ref<HTMLSpanElement>
+}

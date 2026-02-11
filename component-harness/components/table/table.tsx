@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
-import { forwardRef } from 'react'
 import { ScrollArea } from '../display/scroll-area'
+import { TableStyles as S } from './styles'
 import type {
   TableRootProps,
   TableHeaderProps,
@@ -12,100 +12,86 @@ import type {
   TableCaptionProps,
 } from './types'
 
-const TableRoot = forwardRef<HTMLTableElement, TableRootProps>(
-  ({ className, ...props }, ref) => (
+function TableRoot({ className, ref, ...props }: TableRootProps) {
+  return (
     <ScrollArea
-      className="relative w-full overflow-auto"
+      className={S.wrapper}
       options={{ orientation: 'horizontal' }}
     >
       <table
         ref={ref}
-        className={cn('w-full caption-bottom text-sm', className)}
+        className={cn(S.table, className)}
         {...props}
       />
     </ScrollArea>
   )
-)
-TableRoot.displayName = 'Table.Root'
+}
 
-const TableHeader = forwardRef<HTMLTableSectionElement, TableHeaderProps>(
-  ({ className, ...props }, ref) => (
-    <thead ref={ref} className={cn('[&_tr]:border-b', className)} {...props} />
+function TableHeader({ className, ref, ...props }: TableHeaderProps) {
+  return (
+    <thead ref={ref} className={cn(S.header, className)} {...props} />
   )
-)
-TableHeader.displayName = 'Table.Header'
+}
 
-const TableBody = forwardRef<HTMLTableSectionElement, TableBodyProps>(
-  ({ className, ...props }, ref) => (
+function TableBody({ className, ref, ...props }: TableBodyProps) {
+  return (
     <tbody
       ref={ref}
-      className={cn('[&_tr:last-child]:border-0', className)}
+      className={cn(S.body, className)}
       {...props}
     />
   )
-)
-TableBody.displayName = 'Table.Body'
+}
 
-const TableFooter = forwardRef<HTMLTableSectionElement, TableFooterProps>(
-  ({ className, ...props }, ref) => (
+function TableFooter({ className, ref, ...props }: TableFooterProps) {
+  return (
     <tfoot
       ref={ref}
-      className={cn('bg-muted/50 font-medium [&>tr]:last:border-b-0', className)}
+      className={cn(S.footer, className)}
       {...props}
     />
   )
-)
-TableFooter.displayName = 'Table.Footer'
+}
 
-const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(
-  ({ className, ...props }, ref) => (
+function TableRow({ className, ref, ...props }: TableRowProps) {
+  return (
     <tr
       ref={ref}
-      className={cn(
-        'border-b border-border transition-colors hover:bg-muted/50',
-        className
-      )}
+      className={cn(S.row, className)}
       {...props}
     />
   )
-)
-TableRow.displayName = 'Table.Row'
+}
 
-const TableHead = forwardRef<HTMLTableCellElement, TableHeadProps>(
-  ({ className, ...props }, ref) => (
+function TableHead({ className, ref, ...props }: TableHeadProps) {
+  return (
     <th
       ref={ref}
-      className={cn(
-        'h-12 px-4 text-left align-middle font-medium text-muted-foreground',
-        className
-      )}
+      className={cn(S.head, className)}
       {...props}
     />
   )
-)
-TableHead.displayName = 'Table.Head'
+}
 
-const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>(
-  ({ className, ...props }, ref) => (
+function TableCell({ className, ref, ...props }: TableCellProps) {
+  return (
     <td
       ref={ref}
-      className={cn('p-4 align-middle', className)}
+      className={cn(S.cell, className)}
       {...props}
     />
   )
-)
-TableCell.displayName = 'Table.Cell'
+}
 
-const TableCaption = forwardRef<HTMLTableCaptionElement, TableCaptionProps>(
-  ({ className, ...props }, ref) => (
+function TableCaption({ className, ref, ...props }: TableCaptionProps) {
+  return (
     <caption
       ref={ref}
-      className={cn('mt-4 text-sm text-muted-foreground', className)}
+      className={cn(S.caption, className)}
       {...props}
     />
   )
-)
-TableCaption.displayName = 'Table.Caption'
+}
 
 // Namespace Export (callable as Root + namespace)
 export const Table = Object.assign(TableRoot, {

@@ -14,6 +14,7 @@ export interface PopoverTriggerProps extends React.ButtonHTMLAttributes<HTMLButt
   /** Render as child element instead of button */
   asChild?: boolean
   children: React.ReactNode
+  ref?: React.Ref<HTMLButtonElement>
 }
 
 export interface PopoverPortalProps {
@@ -31,6 +32,7 @@ export interface PopoverPositionerProps {
 
 export interface PopoverPopupProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
+  ref?: React.Ref<HTMLDivElement>
 }
 
 export interface PopoverArrowProps {
@@ -41,12 +43,13 @@ export interface PopoverCloseProps extends React.ButtonHTMLAttributes<HTMLButton
   /** Render as child element instead of button */
   asChild?: boolean
   children?: React.ReactNode
+  ref?: React.Ref<HTMLButtonElement>
 }
 
 export interface PopoverContextValue {
   open: boolean
   setOpen: (open: boolean) => void
-  triggerRef: React.RefObject<HTMLButtonElement>
+  triggerRef: React.RefObject<HTMLButtonElement | null>
   side: Side
   setSide: (side: Side) => void
 }

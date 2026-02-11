@@ -11,7 +11,7 @@ export type {
 // =============================================================================
 // Backward compatibility exports (convenience wrappers)
 // =============================================================================
-import { forwardRef, type ReactNode } from 'react'
+import type { ReactNode, Ref } from 'react'
 import { Radio } from './radio'
 
 export interface RadioGroupWrapperProps {
@@ -23,6 +23,7 @@ export interface RadioGroupWrapperProps {
   name?: string
   orientation?: 'horizontal' | 'vertical'
   className?: string
+  ref?: Ref<HTMLDivElement>
 }
 
 export interface RadioGroupItemProps {
@@ -30,13 +31,14 @@ export interface RadioGroupItemProps {
   label?: ReactNode
   disabled?: boolean
   className?: string
+  ref?: Ref<HTMLInputElement>
 }
 
 /**
  * Convenience wrapper that combines Radio.Root and Radio.Group
  */
-export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupWrapperProps>(
-  ({ children, value, defaultValue, onValueChange, disabled, name, orientation, className }, ref) => (
+export function RadioGroup({ children, value, defaultValue, onValueChange, disabled, name, orientation, className, ref }: RadioGroupWrapperProps) {
+  return (
     <Radio.Root
       value={value}
       defaultValue={defaultValue}
@@ -49,17 +51,15 @@ export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupWrapperProps>(
       </Radio.Group>
     </Radio.Root>
   )
-)
-RadioGroup.displayName = 'RadioGroup'
+}
 
 /**
  * Convenience wrapper that combines Radio.Item with label prop
  */
-export const RadioGroupItem = forwardRef<HTMLInputElement, RadioGroupItemProps>(
-  ({ value, label, disabled, className }, ref) => (
+export function RadioGroupItem({ value, label, disabled, className, ref }: RadioGroupItemProps) {
+  return (
     <Radio.Item ref={ref} value={value} disabled={disabled} className={className}>
       {label}
     </Radio.Item>
   )
-)
-RadioGroupItem.displayName = 'RadioGroupItem'
+}

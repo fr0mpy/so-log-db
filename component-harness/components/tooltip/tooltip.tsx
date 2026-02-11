@@ -6,7 +6,6 @@ import {
   useState,
   useRef,
   useCallback,
-  forwardRef,
   cloneElement,
   isValidElement,
   useEffect,
@@ -19,6 +18,7 @@ import {
   type Side,
   type Anchor,
 } from '../../hooks'
+import { TooltipStyles as S } from './styles'
 import type {
   TooltipRootProps,
   TooltipTriggerProps,
@@ -59,7 +59,7 @@ function TooltipRoot({
   const [side, setSide] = useState<Side>('top')
   const [anchor, setAnchor] = useState<Anchor>('center')
   const triggerRef = useRef<HTMLElement>(null)
-  const delayTimerRef = useRef<ReturnType<typeof setTimeout>>()
+  const delayTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   const isControlled = controlledOpen !== undefined
   const open = isControlled ? controlledOpen : uncontrolledOpen
@@ -109,89 +109,83 @@ function TooltipRoot({
   )
 }
 
-TooltipRoot.displayName = 'Tooltip.Root'
-
 // ============================================================================
 // Trigger
 // ============================================================================
 
-const TooltipTrigger = forwardRef<HTMLDivElement, TooltipTriggerProps>(
-  ({ asChild, children, onMouseEnter, onMouseLeave, onFocus, onBlur, ...props }, ref) => {
-    const { setOpen, triggerRef } = useTooltipContext()
+function TooltipTrigger({ asChild, children, onMouseEnter, onMouseLeave, onFocus, onBlur, ref, ...props }: TooltipTriggerProps) {
+  const { setOpen, triggerRef } = useTooltipContext()
 
-    const handleMouseEnter = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
-        setOpen(true)
-        onMouseEnter?.(e)
-      },
-      [setOpen, onMouseEnter]
-    )
+  const handleMouseEnter = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      setOpen(true)
+      onMouseEnter?.(e)
+    },
+    [setOpen, onMouseEnter]
+  )
 
-    const handleMouseLeave = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
-        setOpen(false)
-        onMouseLeave?.(e)
-      },
-      [setOpen, onMouseLeave]
-    )
+  const handleMouseLeave = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      setOpen(false)
+      onMouseLeave?.(e)
+    },
+    [setOpen, onMouseLeave]
+  )
 
-    const handleFocus = useCallback(
-      (e: React.FocusEvent<HTMLDivElement>) => {
-        setOpen(true)
-        onFocus?.(e)
-      },
-      [setOpen, onFocus]
-    )
+  const handleFocus = useCallback(
+    (e: React.FocusEvent<HTMLDivElement>) => {
+      setOpen(true)
+      onFocus?.(e)
+    },
+    [setOpen, onFocus]
+  )
 
-    const handleBlur = useCallback(
-      (e: React.FocusEvent<HTMLDivElement>) => {
-        setOpen(false)
-        onBlur?.(e)
-      },
-      [setOpen, onBlur]
-    )
+  const handleBlur = useCallback(
+    (e: React.FocusEvent<HTMLDivElement>) => {
+      setOpen(false)
+      onBlur?.(e)
+    },
+    [setOpen, onBlur]
+  )
 
-    // Merge refs
-    const mergedRef = useCallback(
-      (node: HTMLElement | null) => {
-        if (typeof ref === 'function') {
-          ref(node as HTMLDivElement)
-        } else if (ref) {
-          ref.current = node as HTMLDivElement
-        }
-        (triggerRef as React.MutableRefObject<HTMLElement | null>).current = node
-      },
-      [ref, triggerRef]
-    )
+  // Merge refs
+  const mergedRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (typeof ref === 'function') {
+        ref(node as HTMLDivElement)
+      } else if (ref) {
+        (ref as React.MutableRefObject<HTMLDivElement | null>).current = node as HTMLDivElement
+      }
+      (triggerRef as React.MutableRefObject<HTMLElement | null>).current = node
+    },
+    [ref, triggerRef]
+  )
 
-    if (asChild && isValidElement(children)) {
-      return cloneElement(children as React.ReactElement<any>, {
-        ref: mergedRef,
-        onMouseEnter: handleMouseEnter,
-        onMouseLeave: handleMouseLeave,
-        onFocus: handleFocus,
-        onBlur: handleBlur,
-        ...props,
-      })
-    }
-
-    return (
-      <div
-        ref={mergedRef as React.Ref<HTMLDivElement>}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        className="inline-block"
-        {...props}
-      >
-        {children}
-      </div>
-    )
+  if (asChild && isValidElement(children)) {
+    return cloneElement(children as React.ReactElement<any>, {
+      ref: mergedRef,
+      onMouseEnter: handleMouseEnter,
+      onMouseLeave: handleMouseLeave,
+      onFocus: handleFocus,
+      onBlur: handleBlur,
+      ...props,
+    })
   }
-)
 
-TooltipTrigger.displayName = 'Tooltip.Trigger'
+  return (
+    <div
+      ref={mergedRef as React.Ref<HTMLDivElement>}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      className={S.trigger}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
 
 // ============================================================================
 // Portal
@@ -204,8 +198,6 @@ function TooltipPortal({ children, container }: TooltipPortalProps) {
 
   return createPortal(children, container ?? document.body)
 }
-
-TooltipPortal.displayName = 'Tooltip.Portal'
 
 // ============================================================================
 // Positioner
@@ -284,51 +276,41 @@ function TooltipPositioner({
   }
 
   return (
-    <div className={cn('z-50', className)} style={getPositionStyles()}>
+    <div className={cn(S.positioner, className)} style={getPositionStyles()}>
       {children}
     </div>
   )
 }
 
-TooltipPositioner.displayName = 'Tooltip.Positioner'
-
 // ============================================================================
 // Popup
 // ============================================================================
 
-const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopupProps>(
-  ({ children, className }, ref) => {
-    const { side, open } = useTooltipContext()
-    const { initialOffset } = usePositioning(side)
+function TooltipPopup({ children, className, ref }: TooltipPopupProps) {
+  const { side, open } = useTooltipContext()
+  const { initialOffset } = usePositioning(side)
 
-    // Bouncy spring config for tooltip
-    const bouncySpring = SPRING.tooltip
+  // Bouncy spring config for tooltip
+  const bouncySpring = SPRING.tooltip
 
-    return (
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            ref={ref}
-            role="tooltip"
-            initial={{ ...initialOffset, opacity: 0 }}
-            animate={{ x: 0, y: 0, opacity: 1 }}
-            exit={{ ...initialOffset, opacity: 0 }}
-            transition={bouncySpring}
-            className={cn(
-              'px-3 py-1.5 text-sm text-foreground whitespace-nowrap',
-              'bg-neu-base rounded-theme-md shadow-neu-raised',
-              className
-            )}
-          >
-            {children}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    )
-  }
-)
-
-TooltipPopup.displayName = 'Tooltip.Popup'
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          ref={ref}
+          role="tooltip"
+          initial={{ ...initialOffset, opacity: 0 }}
+          animate={{ x: 0, y: 0, opacity: 1 }}
+          exit={{ ...initialOffset, opacity: 0 }}
+          transition={bouncySpring}
+          className={cn(S.popup, className)}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
 
 // ============================================================================
 // Arrow
@@ -340,18 +322,11 @@ function TooltipArrow({ className }: TooltipArrowProps) {
 
   return (
     <span
-      className={cn(
-        'absolute w-2 h-2 rotate-45',
-        'bg-neu-base shadow-neu-raised-sm',
-        arrowClasses,
-        className
-      )}
+      className={cn(S.arrow.base, arrowClasses, className)}
       aria-hidden="true"
     />
   )
 }
-
-TooltipArrow.displayName = 'Tooltip.Arrow'
 
 // ============================================================================
 // Simple Wrapper (backward compatibility)

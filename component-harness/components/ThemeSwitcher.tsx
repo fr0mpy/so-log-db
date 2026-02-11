@@ -2,6 +2,7 @@ import { Sun, Moon } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import { cn } from '../lib/utils'
 import { THEME_TIMING, OFFSET, SPRING, OPACITY, ARIA, DURATION } from '@/config'
+import { ThemeSwitcherStyles as S } from './ThemeSwitcher.styles'
 
 interface ThemeSwitcherProps {
   isDark: boolean
@@ -16,34 +17,22 @@ export function ThemeSwitcher({ isDark, onToggle, className }: ThemeSwitcherProp
       aria-checked={isDark}
       aria-label={isDark ? ARIA.switchToLight : ARIA.switchToDark}
       onClick={onToggle}
-      className={cn(
-        'relative w-14 h-8 rounded-full cursor-pointer',
-        'bg-neu-base shadow-neu-pressed',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-        className
-      )}
+      className={cn(S.button, className)}
     >
-      {/* Sliding knob with spring physics */}
       <motion.span
-        className={cn(
-          'absolute top-1 left-1 w-6 h-6 rounded-full cursor-pointer',
-          'bg-neu-base shadow-neu-raised',
-          'flex items-center justify-center overflow-hidden'
-        )}
+        className={S.knob}
         animate={{ x: isDark ? OFFSET.knob : 0 }}
         transition={{
           ...SPRING.snappy,
           delay: THEME_TIMING.knobDelay,
         }}
       >
-        {/* Icon container */}
-        <span className="relative w-4 h-4 cursor-pointer">
+        <span className={S.iconContainer}>
           <AnimatePresence mode="wait" initial={false}>
             {isDark ? (
-              // Moon - descends from top
               <motion.span
                 key="moon"
-                className="absolute inset-0 flex items-center justify-center cursor-pointer"
+                className={S.iconWrapper}
                 initial={{ y: -OFFSET.icon, opacity: 0 }}
                 animate={{
                   y: 0,
@@ -62,13 +51,12 @@ export function ThemeSwitcher({ isDark, onToggle, className }: ThemeSwitcherProp
                   },
                 }}
               >
-                <Moon className="w-4 h-4 text-indigo-400" />
+                <Moon className={S.icon.moon} />
               </motion.span>
             ) : (
-              // Sun - rises from bottom
               <motion.span
                 key="sun"
-                className="absolute inset-0 flex items-center justify-center cursor-pointer"
+                className={S.iconWrapper}
                 initial={{ y: OFFSET.icon, opacity: 0 }}
                 animate={{
                   y: 0,
@@ -87,28 +75,25 @@ export function ThemeSwitcher({ isDark, onToggle, className }: ThemeSwitcherProp
                   },
                 }}
               >
-                <Sun className="w-4 h-4 text-amber-500" />
+                <Sun className={S.icon.sun} />
               </motion.span>
             )}
           </AnimatePresence>
         </span>
       </motion.span>
 
-      {/* Track indicators */}
-      <motion.span
-        className="absolute inset-0 flex items-center justify-between px-2 pointer-events-none"
-      >
+      <motion.span className={S.trackIndicators}>
         <motion.span
           animate={{ opacity: isDark ? OPACITY.highlight : 0 }}
           transition={{ duration: DURATION.slow }}
         >
-          <Sun className="w-3 h-3 text-foreground" />
+          <Sun className={S.trackIcon} />
         </motion.span>
         <motion.span
           animate={{ opacity: isDark ? 0 : OPACITY.highlight }}
           transition={{ duration: DURATION.slow }}
         >
-          <Moon className="w-3 h-3 text-foreground" />
+          <Moon className={S.trackIcon} />
         </motion.span>
       </motion.span>
     </button>

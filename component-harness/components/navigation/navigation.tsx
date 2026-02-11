@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import { ChevronDown } from 'lucide-react'
-import { forwardRef, useState, createContext, useContext } from 'react'
+import { useState, createContext, useContext } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import type {
   NavigationRootProps,
@@ -11,145 +11,118 @@ import type {
   NavigationLinkProps,
 } from './types'
 import { SPRING, OFFSET } from '../../config'
+import { NavigationStyles as S } from './styles'
 
 // Context to share open state between NavigationItem and NavigationContent
 const NavigationItemContext = createContext<{ isOpen: boolean }>({ isOpen: false })
 
-const NavigationRoot = forwardRef<HTMLElement, NavigationRootProps>(
-  ({ className, children, ...props }, ref) => (
+function NavigationRoot({ className, children, ref, ...props }: NavigationRootProps) {
+  return (
     <nav
       ref={ref}
-      className={cn('relative z-10 flex items-center justify-center', className)}
+      className={cn(S.root, className)}
       {...props}
     >
       {children}
     </nav>
   )
-)
-NavigationRoot.displayName = 'Navigation.Root'
+}
 
-const NavigationList = forwardRef<HTMLUListElement, NavigationListProps>(
-  ({ className, children, ...props }, ref) => (
+function NavigationList({ className, children, ref, ...props }: NavigationListProps) {
+  return (
     <ul
       ref={ref}
-      className={cn('flex items-center gap-1', className)}
+      className={cn(S.list, className)}
       {...props}
     >
       {children}
     </ul>
   )
-)
-NavigationList.displayName = 'Navigation.List'
+}
 
-const NavigationItem = forwardRef<HTMLLIElement, NavigationItemProps>(
-  ({ hasDropdown, className, children, ...props }, ref) => {
-    const [isOpen, setIsOpen] = useState(false)
+function NavigationItem({ hasDropdown, className, children, ref, ...props }: NavigationItemProps) {
+  const [isOpen, setIsOpen] = useState(false)
 
-    return (
-      <NavigationItemContext.Provider value={{ isOpen }}>
-        <li
-          ref={ref}
-          className={cn('relative', className)}
-          onMouseEnter={() => hasDropdown && setIsOpen(true)}
-          onMouseLeave={() => hasDropdown && setIsOpen(false)}
-          {...props}
-        >
-          {hasDropdown ? (
-            <>
-              <div className="flex items-center">
-                {children}
-              </div>
-            </>
-          ) : (
-            children
-          )}
-        </li>
-      </NavigationItemContext.Provider>
-    )
-  }
-)
-NavigationItem.displayName = 'Navigation.Item'
-
-const NavigationTrigger = forwardRef<HTMLButtonElement, NavigationTriggerProps>(
-  ({ className, children, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }, ref) => {
-    const { isOpen } = useContext(NavigationItemContext)
-
-    return (
-      <motion.button
+  return (
+    <NavigationItemContext.Provider value={{ isOpen }}>
+      <li
         ref={ref}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className={cn(
-          'inline-flex items-center justify-center gap-1 rounded-theme-md px-4 py-2 cursor-pointer',
-          'text-sm font-medium transition-colors',
-          'hover:bg-surface focus-visible:bg-surface',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
-          'disabled:pointer-events-none disabled:opacity-50',
-          className
-        )}
+        className={cn(S.item, className)}
+        onMouseEnter={() => hasDropdown && setIsOpen(true)}
+        onMouseLeave={() => hasDropdown && setIsOpen(false)}
         {...props}
       >
-        {children}
-        <motion.span
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={SPRING.default}
-        >
-          <ChevronDown className="h-4 w-4" />
-        </motion.span>
-      </motion.button>
-    )
-  }
-)
-NavigationTrigger.displayName = 'Navigation.Trigger'
-
-const NavigationContent = forwardRef<HTMLDivElement, NavigationContentProps>(
-  ({ className, children, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }, ref) => {
-    const { isOpen } = useContext(NavigationItemContext)
-
-    return (
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            ref={ref}
-            initial={{ opacity: 0, scale: 0.95, y: -OFFSET.dropdown }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: -OFFSET.dropdown }}
-            transition={SPRING.default}
-            className={cn(
-              'absolute left-0 top-full mt-1 w-auto min-w-[12rem] rounded-theme-md border border-border',
-              'bg-background shadow-theme-lg glass p-2 origin-top',
-              className
-            )}
-            {...props}
-          >
-            {children}
-          </motion.div>
+        {hasDropdown ? (
+          <>
+            <div className={S.itemDropdownWrapper}>
+              {children}
+            </div>
+          </>
+        ) : (
+          children
         )}
-      </AnimatePresence>
-    )
-  }
-)
-NavigationContent.displayName = 'Navigation.Content'
+      </li>
+    </NavigationItemContext.Provider>
+  )
+}
 
-const NavigationLink = forwardRef<HTMLAnchorElement, NavigationLinkProps>(
-  ({ className, children, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }, ref) => (
+function NavigationTrigger({ className, children, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: NavigationTriggerProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+  const { isOpen } = useContext(NavigationItemContext)
+
+  return (
+    <motion.button
+      ref={ref}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      className={cn(S.trigger, className)}
+      {...props}
+    >
+      {children}
+      <motion.span
+        animate={{ rotate: isOpen ? 180 : 0 }}
+        transition={SPRING.default}
+      >
+        <ChevronDown className={S.triggerIcon} />
+      </motion.span>
+    </motion.button>
+  )
+}
+
+function NavigationContent({ className, children, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: NavigationContentProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+  const { isOpen } = useContext(NavigationItemContext)
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, scale: 0.95, y: -OFFSET.dropdown }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: -OFFSET.dropdown }}
+          transition={SPRING.default}
+          className={cn(S.content, className)}
+          {...props}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
+
+function NavigationLink({ className, children, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: NavigationLinkProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+  return (
     <motion.a
       ref={ref}
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
-      className={cn(
-        'block rounded-theme-md px-4 py-2 text-sm font-medium cursor-pointer',
-        'transition-colors hover:bg-surface',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
-        className
-      )}
+      className={cn(S.link, className)}
       {...props}
     >
       {children}
     </motion.a>
   )
-)
-NavigationLink.displayName = 'Navigation.Link'
+}
 
 export const Navigation = {
   Root: NavigationRoot,

@@ -1,40 +1,42 @@
 import { cn } from '@/lib/utils'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { forwardRef } from 'react'
-import { FEEDBACK_VARIANTS } from '../../styles'
+import { Feedback } from '../../styles'
 
-const badgeVariants = cva(
-  'inline-flex items-center rounded-theme-md px-2.5 py-0.5 text-xs font-medium',
-  {
-    variants: {
-      variant: FEEDBACK_VARIANTS,
+const badgeVariants = cva(Feedback.Badge.base, {
+  variants: {
+    variant: {
+      primary: Feedback.Badge.primary,
+      secondary: Feedback.Badge.secondary,
+      destructive: Feedback.Badge.destructive,
+      success: Feedback.Badge.success,
+      warning: Feedback.Badge.warning,
+      info: Feedback.Badge.info,
+      outline: Feedback.Badge.outline,
     },
-    defaultVariants: {
-      variant: 'primary',
-    },
-  }
-)
+  },
+  defaultVariants: {
+    variant: 'primary',
+  },
+})
 
 export type BadgeVariant = VariantProps<typeof badgeVariants>['variant']
 
 interface BadgeProps
   extends React.HTMLAttributes<HTMLSpanElement>,
-    VariantProps<typeof badgeVariants> {}
+    VariantProps<typeof badgeVariants> {
+  ref?: React.Ref<HTMLSpanElement>
+}
 
-const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ variant, className, children, ...props }, ref) => {
-    return (
-      <span
-        ref={ref}
-        className={cn(badgeVariants({ variant }), className)}
-        {...props}
-      >
-        {children}
-      </span>
-    )
-  }
-)
-
-Badge.displayName = 'Badge'
+function Badge({ variant, className, children, ref, ...props }: BadgeProps) {
+  return (
+    <span
+      ref={ref}
+      className={cn(badgeVariants({ variant }), className)}
+      {...props}
+    >
+      {children}
+    </span>
+  )
+}
 
 export { Badge, badgeVariants }

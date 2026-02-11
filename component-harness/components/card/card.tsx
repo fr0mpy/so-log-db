@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { forwardRef } from 'react'
+import { CardStyles as S } from './styles'
 import type {
   CardRootProps,
   CardHeaderProps,
@@ -7,89 +7,77 @@ import type {
   CardDescriptionProps,
   CardContentProps,
   CardFooterProps,
+  CardWithSlotsProps,
 } from './types'
 
-const CardRoot = forwardRef<HTMLDivElement, CardRootProps>(
-  ({ className, children, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        'rounded-theme-xl bg-neu-base shadow-neu-raised',
-        'transition-shadow duration-200 ease-neu',
-        className
-      )}
-      {...props}
-    >
+function CardRoot({ className, children, ref, ...props }: CardRootProps) {
+  return (
+    <div ref={ref} className={cn(S.container, className)} {...props}>
       {children}
     </div>
   )
-)
-CardRoot.displayName = 'Card.Root'
+}
 
-const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
-  ({ className, children, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn('flex flex-col space-y-1.5 p-6', className)}
-      {...props}
-    >
+function CardHeader({ className, children, ref, ...props }: CardHeaderProps) {
+  return (
+    <div ref={ref} className={cn(S.header, className)} {...props}>
       {children}
     </div>
   )
-)
-CardHeader.displayName = 'Card.Header'
+}
 
-const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
-  ({ className, children, ...props }, ref) => (
-    <h3
-      ref={ref}
-      className={cn('font-heading text-lg font-semibold text-foreground', className)}
-      {...props}
-    >
+function CardTitle({ className, children, ref, ...props }: CardTitleProps) {
+  return (
+    <h3 ref={ref} className={cn(S.title, className)} {...props}>
       {children}
     </h3>
   )
-)
-CardTitle.displayName = 'Card.Title'
+}
 
-const CardDescription = forwardRef<HTMLParagraphElement, CardDescriptionProps>(
-  ({ className, children, ...props }, ref) => (
-    <p
-      ref={ref}
-      className={cn('text-sm text-muted-foreground', className)}
-      {...props}
-    >
+function CardDescription({ className, children, ref, ...props }: CardDescriptionProps) {
+  return (
+    <p ref={ref} className={cn(S.description, className)} {...props}>
       {children}
     </p>
   )
-)
-CardDescription.displayName = 'Card.Description'
+}
 
-const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
-  ({ className, children, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn('p-6 pt-0', className)}
-      {...props}
-    >
+function CardContent({ className, children, ref, ...props }: CardContentProps) {
+  return (
+    <div ref={ref} className={cn(S.content, className)} {...props}>
       {children}
     </div>
   )
-)
-CardContent.displayName = 'Card.Content'
+}
 
-const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
-  ({ className, children, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn('flex items-center p-6 pt-0', className)}
-      {...props}
-    >
+function CardFooter({ className, children, ref, ...props }: CardFooterProps) {
+  return (
+    <div ref={ref} className={cn(S.footer, className)} {...props}>
       {children}
     </div>
   )
-)
-CardFooter.displayName = 'Card.Footer'
+}
+
+function CardWithSlots({ slots, children, className, ref, ...props }: CardWithSlotsProps) {
+  const hasHeader = slots?.header || slots?.title || slots?.description
+
+  return (
+    <div ref={ref} className={cn(S.container, className)} {...props}>
+      {hasHeader && (
+        <div className={S.header}>
+          {slots?.header ?? (
+            <>
+              {slots?.title && <h3 className={S.title}>{slots.title}</h3>}
+              {slots?.description && <p className={S.description}>{slots.description}</p>}
+            </>
+          )}
+        </div>
+      )}
+      <div className={S.content}>{children}</div>
+      {slots?.footer && <div className={S.footer}>{slots.footer}</div>}
+    </div>
+  )
+}
 
 // Namespace Export (callable as Root + namespace)
 export const Card = Object.assign(CardRoot, {
@@ -99,7 +87,7 @@ export const Card = Object.assign(CardRoot, {
   Description: CardDescription,
   Content: CardContent,
   Footer: CardFooter,
+  WithSlots: CardWithSlots,
 })
 
-// Individual exports for backward compatibility
-export { CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
+export { CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardWithSlots }

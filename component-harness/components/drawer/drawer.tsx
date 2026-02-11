@@ -1,7 +1,6 @@
 import { cn } from '@/lib/utils'
 import { X } from 'lucide-react'
 import React, {
-  forwardRef,
   createContext,
   useContext,
   useCallback,
@@ -17,6 +16,7 @@ import {
   SPRING_CONFIG,
 } from '../../hooks'
 import { DURATION, ARIA } from '../../config'
+import { DrawerStyles as S, SIDE_POSITIONS } from './styles'
 import type {
   DrawerContextValue,
   DrawerRootProps,
@@ -40,14 +40,7 @@ const useDrawerContext = () => {
   return context
 }
 
-// Position and animation configurations
-const SIDE_POSITIONS: Record<DrawerSide, string> = {
-  left: 'left-0 top-0 h-full w-80',
-  right: 'right-0 top-0 h-full w-80',
-  top: 'top-0 left-0 w-full h-80',
-  bottom: 'bottom-0 left-0 w-full h-80',
-}
-
+// Animation configurations
 const SLIDE_VARIANTS: Record<
   DrawerSide,
   { initial: { x?: string; y?: string }; animate: { x?: number; y?: number }; exit: { x?: string; y?: string } }
@@ -75,13 +68,13 @@ const SLIDE_VARIANTS: Record<
 }
 
 // Sub-components
-const DrawerRoot = ({
+function DrawerRoot({
   open,
   defaultOpen = false,
   onOpenChange,
   side = 'right',
   children,
-}: DrawerRootProps) => {
+}: DrawerRootProps) {
   const [isOpen, setIsOpen] = useControlledState(open, defaultOpen, onOpenChange)
 
   const handleSetOpen = useCallback(
@@ -97,9 +90,8 @@ const DrawerRoot = ({
     </DrawerContext.Provider>
   )
 }
-DrawerRoot.displayName = 'Drawer.Root'
 
-const DrawerPortal = ({ children }: DrawerPortalProps) => {
+function DrawerPortal({ children }: DrawerPortalProps) {
   const { open } = useDrawerContext()
 
   // Use body scroll lock from shared hooks
@@ -109,150 +101,130 @@ const DrawerPortal = ({ children }: DrawerPortalProps) => {
 
   return createPortal(
     <AnimatePresence>
-      {open && <div className="fixed inset-0 z-50">{children}</div>}
+      {open && <div className={S.portal}>{children}</div>}
     </AnimatePresence>,
     document.body
   )
 }
-DrawerPortal.displayName = 'Drawer.Portal'
 
-const DrawerBackdrop = forwardRef<HTMLDivElement, DrawerBackdropProps>(
-  ({ className, onClick, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }, ref) => {
-    const { setOpen } = useDrawerContext()
+function DrawerBackdrop({ className, onClick, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: DrawerBackdropProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+  const { setOpen } = useDrawerContext()
 
-    const handleClick = useCallback(() => {
-      setOpen(false)
-    }, [setOpen])
+  const handleClick = useCallback(() => {
+    setOpen(false)
+  }, [setOpen])
 
-    return (
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: DURATION.normal }}
-        className={cn(
-          'fixed inset-0 bg-foreground/60 backdrop-blur-sm',
-          className
-        )}
-        onClick={handleClick}
-        aria-hidden="true"
-        {...props}
-      />
-    )
-  }
-)
-DrawerBackdrop.displayName = 'Drawer.Backdrop'
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: DURATION.normal }}
+      className={cn(S.backdrop, className)}
+      onClick={handleClick}
+      aria-hidden="true"
+      {...props}
+    />
+  )
+}
 
-const DrawerContent = forwardRef<HTMLDivElement, DrawerContentProps>(
-  ({ className, children, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }, ref) => {
-    const { setOpen, side } = useDrawerContext()
+function DrawerContent({ className, children, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: DrawerContentProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+  const { setOpen, side } = useDrawerContext()
 
-    // Handle escape key using shared hook
-    useEscapeKey(() => setOpen(false))
+  // Handle escape key using shared hook
+  useEscapeKey(() => setOpen(false))
 
-    const variants = SLIDE_VARIANTS[side]
+  const variants = SLIDE_VARIANTS[side]
 
-    return (
-      <motion.div
-        ref={ref}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="drawer-title"
-        initial={variants.initial}
-        animate={variants.animate}
-        exit={variants.exit}
-        transition={SPRING_CONFIG.default}
-        className={cn(
-          'fixed z-50 bg-neu-base shadow-neu-raised-lg',
-          'flex flex-col',
-          SIDE_POSITIONS[side],
-          className
-        )}
-        {...props}
-      >
-        <ScrollArea className="flex-1 overflow-auto">{children}</ScrollArea>
-      </motion.div>
-    )
-  }
-)
-DrawerContent.displayName = 'Drawer.Content'
+  return (
+    <motion.div
+      ref={ref}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="drawer-title"
+      initial={variants.initial}
+      animate={variants.animate}
+      exit={variants.exit}
+      transition={SPRING_CONFIG.default}
+      className={cn(S.content.base, SIDE_POSITIONS[side], className)}
+      {...props}
+    >
+      <ScrollArea className={S.scrollArea}>{children}</ScrollArea>
+    </motion.div>
+  )
+}
 
-const DrawerHeader = forwardRef<HTMLDivElement, DrawerHeaderProps>(
-  ({ className, children, ...props }, ref) => (
+function DrawerHeader({ className, children, ref, ...props }: DrawerHeaderProps) {
+  return (
     <div
       ref={ref}
-      className={cn('flex items-center justify-between p-6', className)}
+      className={cn(S.header, className)}
       {...props}
     >
       {children}
     </div>
   )
-)
-DrawerHeader.displayName = 'Drawer.Header'
+}
 
-const DrawerTitle = forwardRef<HTMLHeadingElement, DrawerTitleProps>(
-  ({ className, ...props }, ref) => (
+function DrawerTitle({ className, ref, ...props }: DrawerTitleProps) {
+  return (
     <h2
       ref={ref}
       id="drawer-title"
-      className={cn('font-heading text-lg font-semibold text-foreground', className)}
+      className={cn(S.title, className)}
       {...props}
     />
   )
-)
-DrawerTitle.displayName = 'Drawer.Title'
+}
 
-const DrawerClose = forwardRef<HTMLButtonElement, DrawerCloseProps>(
-  ({ asChild, children, onClick, className, ...props }, ref) => {
-    const { setOpen } = useDrawerContext()
+function DrawerClose({ asChild, children, onClick, className, ref, ...props }: DrawerCloseProps) {
+  const { setOpen } = useDrawerContext()
 
-    const handleClick = useCallback(
-      (e: React.MouseEvent) => {
-        onClick?.(e as React.MouseEvent<HTMLButtonElement>)
-        setOpen(false)
-      },
-      [onClick, setOpen]
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      onClick?.(e as React.MouseEvent<HTMLButtonElement>)
+      setOpen(false)
+    },
+    [onClick, setOpen]
+  )
+
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(
+      children as React.ReactElement<{
+        onClick?: (e: React.MouseEvent) => void
+        ref?: React.Ref<HTMLButtonElement>
+      }>,
+      {
+        onClick: handleClick,
+        ref,
+      }
     )
+  }
 
-    if (asChild && React.isValidElement(children)) {
-      return React.cloneElement(
-        children as React.ReactElement<{
-          onClick?: (e: React.MouseEvent) => void
-          ref?: React.Ref<HTMLButtonElement>
-        }>,
-        {
-          onClick: handleClick,
-          ref,
-        }
-      )
-    }
-
-    // Default close button
-    if (!children) {
-      return (
-        <Button
-          ref={ref}
-          variant="ghost"
-          size="sm"
-          onClick={handleClick}
-          className={cn('ml-auto', className)}
-          aria-label={ARIA.close}
-          {...props}
-        >
-          <X className="h-4 w-4" />
-        </Button>
-      )
-    }
-
+  // Default close button
+  if (!children) {
     return (
-      <Button ref={ref} variant="ghost" onClick={handleClick} className={className} {...props}>
-        {children}
+      <Button
+        ref={ref}
+        variant="ghost"
+        size="sm"
+        onClick={handleClick}
+        className={cn(S.closeButton, className)}
+        aria-label={ARIA.close}
+        {...props}
+      >
+        <X className={S.closeIcon} />
       </Button>
     )
   }
-)
-DrawerClose.displayName = 'Drawer.Close'
+
+  return (
+    <Button ref={ref} variant="ghost" onClick={handleClick} className={className} {...props}>
+      {children}
+    </Button>
+  )
+}
 
 // ============================================================================
 // Simple Wrapper (backward compatibility)
@@ -282,7 +254,7 @@ function DrawerSimple({
             <DrawerTitle>{title}</DrawerTitle>
             <DrawerClose />
           </DrawerHeader>
-          <ScrollArea className="flex-1 p-6">
+          <ScrollArea className={S.scrollAreaPadded}>
             {children}
           </ScrollArea>
         </DrawerContent>

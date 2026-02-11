@@ -18,6 +18,7 @@ export type {
 // =============================================================================
 import { useMemo } from 'react'
 import { Select as SelectNamespace } from './select'
+import { SelectStyles as S } from './styles'
 import type { SelectOption } from './types'
 
 export interface SelectProps {
@@ -64,7 +65,7 @@ export function Select({
         <SelectNamespace.Positioner>
           <SelectNamespace.Popup>
             <SelectNamespace.Search />
-            <div className="p-1">
+            <div className={S.optionsWrapper}>
               {filteredOptions.map((option) => (
                 <SelectNamespace.Option key={option.value} value={option.value}>
                   {option.label}

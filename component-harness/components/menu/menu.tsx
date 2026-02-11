@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils'
 import {
-  forwardRef,
   useState,
   useRef,
   useCallback,
@@ -10,6 +9,7 @@ import {
 } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { useClickOutside, SPRING_CONFIG } from '../../hooks'
+import { MenuStyles as S } from './styles'
 import type {
   MenuRootProps,
   MenuTriggerProps,
@@ -19,7 +19,6 @@ import type {
   MenuItemProps,
   MenuSeparatorProps,
   MenuLabelProps,
-  MenuAlign,
 } from './types'
 
 // ============================================================================
@@ -39,16 +38,6 @@ function useMenuContext() {
     throw new Error('Menu components must be used within Menu.Root')
   }
   return context
-}
-
-// ============================================================================
-// Alignment classes for dropdown positioning
-// ============================================================================
-
-const ALIGNMENT_CLASSES: Record<MenuAlign, string> = {
-  start: 'left-0',
-  center: 'left-1/2 -translate-x-1/2',
-  end: 'right-0',
 }
 
 // ============================================================================
@@ -87,8 +76,6 @@ function MenuRoot({
   return <MenuContext.Provider value={contextValue}>{children}</MenuContext.Provider>
 }
 
-MenuRoot.displayName = 'Menu.Root'
-
 function MenuTrigger({ children, className }: MenuTriggerProps) {
   const { open, setOpen } = useMenuContext()
 
@@ -112,22 +99,18 @@ function MenuTrigger({ children, className }: MenuTriggerProps) {
       tabIndex={0}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      className={cn('cursor-pointer', className)}
+      className={cn(S.trigger, className)}
     >
       {children}
     </div>
   )
 }
 
-MenuTrigger.displayName = 'Menu.Trigger'
-
 function MenuPortal({ children }: MenuPortalProps) {
   const { open } = useMenuContext()
 
   return <AnimatePresence>{open && children}</AnimatePresence>
 }
-
-MenuPortal.displayName = 'Menu.Portal'
 
 function MenuPositioner({ align = 'start', children, className }: MenuPositionerProps) {
   const { setOpen } = useMenuContext()
@@ -140,101 +123,77 @@ function MenuPositioner({ align = 'start', children, className }: MenuPositioner
   )
 
   return (
-    <div ref={positionerRef} className={cn('absolute z-50 mt-1', ALIGNMENT_CLASSES[align], className)}>
+    <div ref={positionerRef} className={cn(S.positioner, S.alignment[align], className)}>
       {children}
     </div>
   )
 }
 
-MenuPositioner.displayName = 'Menu.Positioner'
+function MenuPopup({ className, children, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: MenuPopupProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+  return (
+    <motion.div
+      ref={ref}
+      role="menu"
+      initial={{ opacity: 0, scale: 0.95, y: -4 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95, y: -4 }}
+      transition={SPRING_CONFIG.default}
+      className={cn(S.popup, className)}
+      {...props}
+    >
+      {children}
+    </motion.div>
+  )
+}
 
-const MenuPopup = forwardRef<HTMLDivElement, MenuPopupProps>(
-  ({ className, children, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }, ref) => {
-    return (
-      <motion.div
-        ref={ref}
-        role="menu"
-        initial={{ opacity: 0, scale: 0.95, y: -4 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: -4 }}
-        transition={SPRING_CONFIG.default}
-        className={cn(
-          'min-w-[12rem] rounded-theme-md border border-border',
-          'bg-background shadow-theme-lg glass p-1 origin-top',
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </motion.div>
-    )
-  }
-)
+function MenuItem({ className, children, onClick, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: MenuItemProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+  const { setOpen } = useMenuContext()
 
-MenuPopup.displayName = 'Menu.Popup'
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      onClick?.(e)
+      setOpen(false)
+    },
+    [onClick, setOpen]
+  )
 
-const MenuItem = forwardRef<HTMLButtonElement, MenuItemProps>(
-  ({ className, children, onClick, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }, ref) => {
-    const { setOpen } = useMenuContext()
+  return (
+    <motion.button
+      ref={ref}
+      role="menuitem"
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
+      onClick={handleClick}
+      className={cn(S.item, className)}
+      {...props}
+    >
+      {children}
+    </motion.button>
+  )
+}
 
-    const handleClick = useCallback(
-      (e: React.MouseEvent<HTMLButtonElement>) => {
-        onClick?.(e)
-        setOpen(false)
-      },
-      [onClick, setOpen]
-    )
-
-    return (
-      <motion.button
-        ref={ref}
-        role="menuitem"
-        whileHover={{ scale: 1.01 }}
-        whileTap={{ scale: 0.99 }}
-        onClick={handleClick}
-        className={cn(
-          'relative flex w-full cursor-pointer select-none items-center rounded-theme-sm px-2 py-1.5',
-          'text-sm outline-none transition-colors',
-          'hover:bg-muted focus-visible:bg-muted',
-          'disabled:pointer-events-none disabled:opacity-50',
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </motion.button>
-    )
-  }
-)
-
-MenuItem.displayName = 'Menu.Item'
-
-const MenuSeparator = forwardRef<HTMLDivElement, MenuSeparatorProps>(
-  ({ className, ...props }, ref) => (
+function MenuSeparator({ className, ref, ...props }: MenuSeparatorProps) {
+  return (
     <div
       ref={ref}
       role="separator"
-      className={cn('my-1 h-px bg-border', className)}
+      className={cn(S.separator, className)}
       {...props}
     />
   )
-)
+}
 
-MenuSeparator.displayName = 'Menu.Separator'
-
-const MenuLabel = forwardRef<HTMLDivElement, MenuLabelProps>(
-  ({ className, children, ...props }, ref) => (
+function MenuLabel({ className, children, ref, ...props }: MenuLabelProps) {
+  return (
     <div
       ref={ref}
-      className={cn('px-2 py-1.5 text-sm font-semibold text-foreground', className)}
+      className={cn(S.label, className)}
       {...props}
     >
       {children}
     </div>
   )
-)
-
-MenuLabel.displayName = 'Menu.Label'
+}
 
 // ============================================================================
 // Namespace Export

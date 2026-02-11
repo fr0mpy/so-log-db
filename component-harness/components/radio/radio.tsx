@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils'
 import {
-  forwardRef,
   createContext,
   useContext,
   useId,
@@ -9,6 +8,7 @@ import {
 } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { useControlledState } from '../../hooks/useControlledState'
+import { RadioStyles as S } from './styles'
 import type {
   RadioContextValue,
   RadioItemContextValue,
@@ -45,14 +45,14 @@ const useRadioItemContext = () => {
 }
 
 // Radio.Root - Context provider for the radio group
-const RadioRoot = ({
+function RadioRoot({
   children,
   value,
   defaultValue = '',
   onValueChange,
   disabled = false,
   name,
-}: RadioRootProps) => {
+}: RadioRootProps) {
   const [currentValue, setValue] = useControlledState(value, defaultValue, onValueChange)
   const generatedId = useId()
   const groupName = name || `radio-group-${generatedId}`
@@ -69,43 +69,36 @@ const RadioRoot = ({
 
   return <RadioContext.Provider value={contextValue}>{children}</RadioContext.Provider>
 }
-RadioRoot.displayName = 'Radio.Root'
 
 // Radio.Group - Visual wrapper for radio options
-const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
-  ({ children, orientation = 'vertical', className, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        role="radiogroup"
-        aria-orientation={orientation}
-        className={cn(
-          'flex',
-          orientation === 'vertical' ? 'flex-col gap-2' : 'flex-row gap-4',
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </div>
-    )
-  }
-)
-RadioGroup.displayName = 'Radio.Group'
+function RadioGroup({ children, orientation = 'vertical', className, ref, ...props }: RadioGroupProps) {
+  return (
+    <div
+      ref={ref}
+      role="radiogroup"
+      aria-orientation={orientation}
+      className={cn(
+        S.group.base,
+        orientation === 'vertical' ? S.group.vertical : S.group.horizontal,
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
 
 // Radio.Indicator - The visual indicator (the filled circle)
 // Defined before RadioItem since RadioItem uses it internally
-const RadioIndicator = ({ className }: RadioIndicatorProps) => {
+function RadioIndicator({ className }: RadioIndicatorProps) {
   const { isSelected } = useRadioItemContext()
 
   return (
     <AnimatePresence>
       {isSelected && (
         <motion.span
-          className={cn(
-            'absolute h-3 w-3 rounded-full bg-primary shadow-neu-radio-indicator',
-            className
-          )}
+          className={cn(S.indicator, className)}
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0, opacity: 0 }}
@@ -115,78 +108,71 @@ const RadioIndicator = ({ className }: RadioIndicatorProps) => {
     </AnimatePresence>
   )
 }
-RadioIndicator.displayName = 'Radio.Indicator'
 
 // Radio.Item - Individual radio option
-const RadioItem = forwardRef<HTMLInputElement, RadioItemProps>(
-  ({ value: itemValue, children, className, id, disabled: itemDisabled, ...props }, ref) => {
-    const { value: groupValue, setValue, name, disabled: groupDisabled } = useRadioContext()
-    const isSelected = groupValue === itemValue
-    const disabled = itemDisabled || groupDisabled
-    const generatedId = useId()
-    const radioId = id || `${name}-${itemValue}-${generatedId}`
+function RadioItem({ value: itemValue, children, className, id, disabled: itemDisabled, ref, ...props }: RadioItemProps) {
+  const { value: groupValue, setValue, name, disabled: groupDisabled } = useRadioContext()
+  const isSelected = groupValue === itemValue
+  const disabled = itemDisabled || groupDisabled
+  const generatedId = useId()
+  const radioId = id || `${name}-${itemValue}-${generatedId}`
 
-    const handleChange = useCallback(() => {
-      if (!disabled) {
-        setValue(itemValue)
-      }
-    }, [disabled, setValue, itemValue])
+  const handleChange = useCallback(() => {
+    if (!disabled) {
+      setValue(itemValue)
+    }
+  }, [disabled, setValue, itemValue])
 
-    const itemContextValue = useMemo<RadioItemContextValue>(
-      () => ({
-        isSelected,
-        disabled: disabled || false,
-        radioId,
-      }),
-      [isSelected, disabled, radioId]
-    )
+  const itemContextValue = useMemo<RadioItemContextValue>(
+    () => ({
+      isSelected,
+      disabled: disabled || false,
+      radioId,
+    }),
+    [isSelected, disabled, radioId]
+  )
 
-    return (
-      <RadioItemContext.Provider value={itemContextValue}>
-        <div className={cn('flex items-center gap-3', className)}>
-          <div className="relative">
-            <input
-              type="radio"
-              ref={ref}
-              id={radioId}
-              name={name}
-              value={itemValue}
-              checked={isSelected}
-              disabled={disabled}
-              onChange={handleChange}
-              className="sr-only peer"
-              {...props}
-            />
-            <label
-              htmlFor={radioId}
-              className={cn(
-                'relative flex h-5 w-5 cursor-pointer items-center justify-center rounded-full',
-                'bg-neu-base shadow-neu-pressed-sm',
-                'transition-shadow duration-200',
-                'peer-focus-visible:shadow-[var(--shadow-pressed-sm),var(--shadow-focus)]',
-                disabled && 'cursor-not-allowed opacity-50'
-              )}
-            >
-              <RadioIndicator />
-            </label>
-          </div>
-          {children && (
-            <label
-              htmlFor={radioId}
-              className={cn(
-                'text-sm font-medium text-foreground cursor-pointer select-none',
-                disabled && 'cursor-not-allowed opacity-50'
-              )}
-            >
-              {children}
-            </label>
-          )}
+  return (
+    <RadioItemContext.Provider value={itemContextValue}>
+      <div className={cn(S.item.wrapper, className)}>
+        <div className={S.item.inputWrapper}>
+          <input
+            type="radio"
+            ref={ref}
+            id={radioId}
+            name={name}
+            value={itemValue}
+            checked={isSelected}
+            disabled={disabled}
+            onChange={handleChange}
+            className={S.item.input}
+            {...props}
+          />
+          <label
+            htmlFor={radioId}
+            className={cn(
+              S.item.label.base,
+              disabled && S.item.label.disabled
+            )}
+          >
+            <RadioIndicator />
+          </label>
         </div>
-      </RadioItemContext.Provider>
-    )
-  }
-)
-RadioItem.displayName = 'Radio.Item'
+        {children && (
+          <label
+            htmlFor={radioId}
+            className={cn(
+              S.item.textLabel.base,
+              disabled && S.item.textLabel.disabled
+            )}
+          >
+            {children}
+          </label>
+        )}
+      </div>
+    </RadioItemContext.Provider>
+  )
+}
 
 // Namespace export
 export const Radio = {

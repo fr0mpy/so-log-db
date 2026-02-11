@@ -37,6 +37,7 @@ export interface ToastContainerProps {
 export interface ToastRootProps {
   toast: ToastData
   onClose: () => void
+  ref?: React.Ref<HTMLDivElement>
 }
 
 export interface ToastIconProps {

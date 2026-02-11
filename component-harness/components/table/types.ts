@@ -1,17 +1,33 @@
-import type { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes } from 'react'
+import type { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes, Ref } from 'react'
 
-export type TableRootProps = HTMLAttributes<HTMLTableElement>
+export interface TableRootProps extends HTMLAttributes<HTMLTableElement> {
+  ref?: Ref<HTMLTableElement>
+}
 
-export type TableHeaderProps = HTMLAttributes<HTMLTableSectionElement>
+export interface TableHeaderProps extends HTMLAttributes<HTMLTableSectionElement> {
+  ref?: Ref<HTMLTableSectionElement>
+}
 
-export type TableBodyProps = HTMLAttributes<HTMLTableSectionElement>
+export interface TableBodyProps extends HTMLAttributes<HTMLTableSectionElement> {
+  ref?: Ref<HTMLTableSectionElement>
+}
 
-export type TableFooterProps = HTMLAttributes<HTMLTableSectionElement>
+export interface TableFooterProps extends HTMLAttributes<HTMLTableSectionElement> {
+  ref?: Ref<HTMLTableSectionElement>
+}
 
-export type TableRowProps = HTMLAttributes<HTMLTableRowElement>
+export interface TableRowProps extends HTMLAttributes<HTMLTableRowElement> {
+  ref?: Ref<HTMLTableRowElement>
+}
 
-export type TableHeadProps = ThHTMLAttributes<HTMLTableCellElement>
+export interface TableHeadProps extends ThHTMLAttributes<HTMLTableCellElement> {
+  ref?: Ref<HTMLTableCellElement>
+}
 
-export type TableCellProps = TdHTMLAttributes<HTMLTableCellElement>
+export interface TableCellProps extends TdHTMLAttributes<HTMLTableCellElement> {
+  ref?: Ref<HTMLTableCellElement>
+}
 
-export type TableCaptionProps = HTMLAttributes<HTMLTableCaptionElement>
+export interface TableCaptionProps extends HTMLAttributes<HTMLTableCaptionElement> {
+  ref?: Ref<HTMLTableCaptionElement>
+}

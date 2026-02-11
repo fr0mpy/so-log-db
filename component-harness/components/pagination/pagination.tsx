@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils'
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react'
-import { forwardRef } from 'react'
 import { ARIA, SR_ONLY, LABEL } from '../../config'
 import type {
   PaginationRootProps,
@@ -11,121 +10,92 @@ import type {
   PaginationNextProps,
   PaginationEllipsisProps,
 } from './types'
+import { PaginationStyles as S } from './styles'
 
-const PaginationRoot = forwardRef<HTMLElement, PaginationRootProps>(
-  ({ className, ...props }, ref) => (
+function PaginationRoot({ className, ref, ...props }: PaginationRootProps) {
+  return (
     <nav
       ref={ref}
       role="navigation"
       aria-label="pagination"
-      className={cn('mx-auto flex w-full justify-center', className)}
+      className={cn(S.root, className)}
       {...props}
     />
   )
-)
-PaginationRoot.displayName = 'Pagination.Root'
+}
 
-const PaginationContent = forwardRef<HTMLUListElement, PaginationContentProps>(
-  ({ className, ...props }, ref) => (
+function PaginationContent({ className, ref, ...props }: PaginationContentProps) {
+  return (
     <ul
       ref={ref}
-      className={cn('flex items-center gap-1', className)}
+      className={cn(S.content, className)}
       {...props}
     />
   )
-)
-PaginationContent.displayName = 'Pagination.Content'
+}
 
-const PaginationItem = forwardRef<HTMLLIElement, PaginationItemProps>(
-  ({ className, ...props }, ref) => (
-    <li ref={ref} className={cn('', className)} {...props} />
+function PaginationItem({ className, ref, ...props }: PaginationItemProps) {
+  return (
+    <li ref={ref} className={cn(S.item, className)} {...props} />
   )
-)
-PaginationItem.displayName = 'Pagination.Item'
+}
 
-const PaginationLink = forwardRef<HTMLButtonElement, PaginationLinkProps>(
-  ({ isActive, className, ...props }, ref) => (
+function PaginationLink({ isActive, className, ref, ...props }: PaginationLinkProps) {
+  return (
     <button
       ref={ref}
       aria-current={isActive ? 'page' : undefined}
       className={cn(
-        'inline-flex items-center justify-center min-h-11 min-w-11 h-9 w-9 rounded-theme-lg text-sm font-medium',
-        'transition-shadow duration-200 cursor-pointer',
-        'focus-visible:outline-none focus-visible:shadow-neu-focus',
-        'disabled:pointer-events-none disabled:opacity-50',
-        isActive
-          ? 'bg-primary text-primary-foreground shadow-neu-badge-primary'
-          : 'bg-transparent text-foreground hover:bg-neu-base hover:shadow-neu-raised-sm active:shadow-neu-pressed-sm',
+        S.link.base,
+        isActive ? S.link.active : S.link.inactive,
         className
       )}
       {...props}
     />
   )
-)
-PaginationLink.displayName = 'Pagination.Link'
+}
 
-const PaginationPrevious = forwardRef<HTMLButtonElement, PaginationPreviousProps>(
-  ({ className, ...props }, ref) => (
+function PaginationPrevious({ className, ref, ...props }: PaginationPreviousProps) {
+  return (
     <button
       ref={ref}
       aria-label={ARIA.previousPage}
-      className={cn(
-        'inline-flex items-center justify-center gap-1 h-9 px-3 rounded-theme-lg text-sm font-medium cursor-pointer',
-        'bg-transparent text-foreground',
-        'transition-all duration-200 active:scale-[0.98]',
-        'hover:bg-neu-base hover:shadow-neu-raised-sm',
-        'active:shadow-neu-pressed-sm',
-        'focus-visible:outline-none focus-visible:shadow-neu-focus',
-        'disabled:pointer-events-none disabled:opacity-50',
-        className
-      )}
+      className={cn(S.navButton, className)}
       {...props}
     >
-      <ChevronLeft className="h-4 w-4" />
+      <ChevronLeft className={S.ellipsisIcon} />
       <span>{LABEL.previous}</span>
     </button>
   )
-)
-PaginationPrevious.displayName = 'Pagination.Previous'
+}
 
-const PaginationNext = forwardRef<HTMLButtonElement, PaginationNextProps>(
-  ({ className, ...props }, ref) => (
+function PaginationNext({ className, ref, ...props }: PaginationNextProps) {
+  return (
     <button
       ref={ref}
       aria-label={ARIA.nextPage}
-      className={cn(
-        'inline-flex items-center justify-center gap-1 h-9 px-3 rounded-theme-lg text-sm font-medium cursor-pointer',
-        'bg-transparent text-foreground',
-        'transition-all duration-200 active:scale-[0.98]',
-        'hover:bg-neu-base hover:shadow-neu-raised-sm',
-        'active:shadow-neu-pressed-sm',
-        'focus-visible:outline-none focus-visible:shadow-neu-focus',
-        'disabled:pointer-events-none disabled:opacity-50',
-        className
-      )}
+      className={cn(S.navButton, className)}
       {...props}
     >
       <span>{LABEL.next}</span>
-      <ChevronRight className="h-4 w-4" />
+      <ChevronRight className={S.ellipsisIcon} />
     </button>
   )
-)
-PaginationNext.displayName = 'Pagination.Next'
+}
 
-const PaginationEllipsis = forwardRef<HTMLSpanElement, PaginationEllipsisProps>(
-  ({ className, ...props }, ref) => (
+function PaginationEllipsis({ className, ref, ...props }: PaginationEllipsisProps) {
+  return (
     <span
       ref={ref}
       aria-hidden
-      className={cn('flex h-9 w-9 items-center justify-center', className)}
+      className={cn(S.ellipsis, className)}
       {...props}
     >
-      <MoreHorizontal className="h-4 w-4" />
-      <span className="sr-only">{SR_ONLY.morePages}</span>
+      <MoreHorizontal className={S.ellipsisIcon} />
+      <span className={S.srOnly}>{SR_ONLY.morePages}</span>
     </span>
   )
-)
-PaginationEllipsis.displayName = 'Pagination.Ellipsis'
+}
 
 export const Pagination = Object.assign(PaginationRoot, {
   Content: PaginationContent,

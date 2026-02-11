@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils'
 import { ChevronRight } from 'lucide-react'
-import { forwardRef } from 'react'
 import { ARIA } from '../../config'
 import type {
   BreadcrumbRootProps,
@@ -10,75 +9,70 @@ import type {
   BreadcrumbSeparatorProps,
   BreadcrumbPageProps,
 } from './types'
+import { BreadcrumbStyles as S } from './styles'
 
-const BreadcrumbRoot = forwardRef<HTMLElement, BreadcrumbRootProps>(
-  ({ className, ...props }, ref) => (
-    <nav ref={ref} aria-label={ARIA.breadcrumb} className={cn('', className)} {...props} />
+function BreadcrumbRoot({ className, ref, ...props }: BreadcrumbRootProps) {
+  return (
+    <nav ref={ref} aria-label={ARIA.breadcrumb} className={cn(S.root, className)} {...props} />
   )
-)
-BreadcrumbRoot.displayName = 'Breadcrumb.Root'
+}
 
-const BreadcrumbList = forwardRef<HTMLOListElement, BreadcrumbListProps>(
-  ({ className, ...props }, ref) => (
+function BreadcrumbList({ className, ref, ...props }: BreadcrumbListProps) {
+  return (
     <ol
       ref={ref}
-      className={cn('flex items-center gap-2 text-sm text-muted-foreground', className)}
+      className={cn(S.list, className)}
       {...props}
     />
   )
-)
-BreadcrumbList.displayName = 'Breadcrumb.List'
+}
 
-const BreadcrumbItem = forwardRef<HTMLLIElement, BreadcrumbItemProps>(
-  ({ className, ...props }, ref) => (
+function BreadcrumbItem({ className, ref, ...props }: BreadcrumbItemProps) {
+  return (
     <li
       ref={ref}
-      className={cn('inline-flex items-center gap-2', className)}
+      className={cn(S.item, className)}
       {...props}
     />
   )
-)
-BreadcrumbItem.displayName = 'Breadcrumb.Item'
+}
 
-const BreadcrumbLink = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
-  ({ className, ...props }, ref) => (
+function BreadcrumbLink({ className, ref, ...props }: BreadcrumbLinkProps) {
+  return (
     <a
       ref={ref}
-      className={cn('cursor-pointer transition-colors hover:text-foreground', className)}
+      className={cn(S.link, className)}
       {...props}
     />
   )
-)
-BreadcrumbLink.displayName = 'Breadcrumb.Link'
+}
 
-const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
-  ({ className, children, ...props }, ref) => (
+function BreadcrumbSeparator({ className, children, ref, ...props }: BreadcrumbSeparatorProps) {
+  return (
     <li
       ref={ref}
       role="presentation"
       aria-hidden="true"
-      className={cn('', className)}
+      className={cn(S.separator, className)}
       {...props}
     >
-      {children || <ChevronRight className="h-4 w-4" />}
+      {children || <ChevronRight className={S.separatorIcon} />}
     </li>
   )
-)
-BreadcrumbSeparator.displayName = 'Breadcrumb.Separator'
+}
 
-const BreadcrumbPage = forwardRef<HTMLSpanElement, BreadcrumbPageProps>(
-  ({ className, ...props }, ref) => (
+function BreadcrumbPage({ className, ref, ...props }: BreadcrumbPageProps) {
+  return (
     <span
       ref={ref}
       role="link"
       aria-disabled="true"
       aria-current="page"
-      className={cn('font-medium text-foreground', className)}
+      className={cn(S.page, className)}
       {...props}
     />
   )
-)
-BreadcrumbPage.displayName = 'Breadcrumb.Page'
+}
 
 // Namespace Export (callable as Root + namespace)
 export const Breadcrumb = Object.assign(BreadcrumbRoot, {

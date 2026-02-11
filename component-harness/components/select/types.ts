@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { ReactNode, Ref } from 'react'
 
 export interface SelectOption {
   value: string
@@ -18,6 +18,7 @@ export interface SelectTriggerProps {
   children?: ReactNode
   className?: string
   placeholder?: string
+  ref?: Ref<HTMLButtonElement>
 }
 
 export interface SelectValueProps {
@@ -39,12 +40,14 @@ export interface SelectPositionerProps {
 export interface SelectPopupProps {
   children: ReactNode
   className?: string
+  ref?: Ref<HTMLDivElement>
 }
 
 export interface SelectOptionProps {
   value: string
   children: ReactNode
   className?: string
+  ref?: Ref<HTMLButtonElement>
 }
 
 export interface SelectSearchProps {
@@ -59,8 +62,8 @@ export interface SelectContextValue {
   setValue: (value: string) => void
   searchQuery: string
   setSearchQuery: (query: string) => void
-  triggerRef: React.RefObject<HTMLButtonElement>
-  dropdownRef: React.RefObject<HTMLDivElement>
+  triggerRef: React.RefObject<HTMLButtonElement | null>
+  dropdownRef: React.RefObject<HTMLDivElement | null>
   dropdownPosition: { top: number; left: number; width: number }
   disabled?: boolean
   searchable?: boolean

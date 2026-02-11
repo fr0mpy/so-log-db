@@ -1,9 +1,15 @@
 import { cn } from '@/lib/utils'
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react'
-import { useState, useEffect, useCallback, createContext, useContext, forwardRef } from 'react'
+import { useState, useEffect, useCallback, createContext, useContext } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'motion/react'
 import { TOAST, SPRING, SR_ONLY } from '../../config'
+import {
+  ToastStyles as S,
+  variantStyles,
+  iconStyles,
+  containerStyles,
+} from './styles'
 import type {
   ToastVariant,
   ToastPosition,
@@ -20,20 +26,6 @@ import type {
 } from './types'
 
 // Module-level constants to avoid recreation on each render
-const variantStyles: Record<ToastVariant, string> = {
-  info: 'border-primary/40',
-  success: 'border-success/40',
-  warning: 'border-warning/40',
-  destructive: 'border-destructive/40',
-}
-
-const iconStyles: Record<ToastVariant, string> = {
-  info: 'text-primary',
-  success: 'text-success',
-  warning: 'text-warning',
-  destructive: 'text-destructive',
-}
-
 const icons: Record<ToastVariant, typeof Info> = {
   info: Info,
   success: CheckCircle,
@@ -84,17 +76,6 @@ const motionVariants: Record<ToastPosition, MotionVariant> = {
   },
 }
 
-const containerStyles: Record<ToastPosition, string> = {
-  top: 'top-4 left-1/2 -translate-x-1/2 flex-col',
-  'top-left': 'top-4 left-4 flex-col',
-  'top-right': 'top-4 right-4 flex-col',
-  bottom: 'bottom-4 left-1/2 -translate-x-1/2 flex-col-reverse',
-  'bottom-left': 'bottom-4 left-4 flex-col-reverse',
-  'bottom-right': 'bottom-4 right-4 flex-col-reverse',
-  left: 'left-4 top-1/2 -translate-y-1/2 flex-col',
-  right: 'right-4 top-1/2 -translate-y-1/2 flex-col',
-}
-
 const positions: ToastPosition[] = ['top', 'top-left', 'top-right', 'bottom', 'bottom-left', 'bottom-right', 'left', 'right']
 
 const ToastContext = createContext<ToastContextValue | null>(null)
@@ -126,7 +107,6 @@ function ToastProvider({ children }: ToastProviderProps) {
     </ToastContext.Provider>
   )
 }
-ToastProvider.displayName = 'Toast.Provider'
 
 function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
   return createPortal(
@@ -138,7 +118,7 @@ function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
         return (
           <div
             key={position}
-            className={cn('fixed z-toast flex gap-2 pointer-events-none', containerStyles[position])}
+            className={cn(S.container.base, containerStyles[position])}
           >
             <AnimatePresence mode="popLayout">
               {positionToasts.map((toast) => (
@@ -152,9 +132,8 @@ function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
     document.body
   )
 }
-ToastContainer.displayName = 'Toast.Container'
 
-const ToastRoot = forwardRef<HTMLDivElement, ToastRootProps>(({ toast, onClose }, ref) => {
+function ToastRoot({ toast, onClose, ref }: ToastRootProps) {
   const [isVisible, setIsVisible] = useState(true)
   const duration = toast.duration ?? TOAST.defaultDuration
 
@@ -180,14 +159,10 @@ const ToastRoot = forwardRef<HTMLDivElement, ToastRootProps>(({ toast, onClose }
           animate={motionVariants[toast.position].animate}
           exit={motionVariants[toast.position].exit}
           transition={SPRING.bouncy}
-          className={cn(
-            'w-full max-w-sm rounded-theme-lg border p-4 shadow-neu-raised pointer-events-auto',
-            'flex items-start gap-3 text-foreground bg-background',
-            variantStyles[toast.variant]
-          )}
+          className={cn(S.root.base, variantStyles[toast.variant])}
         >
           <ToastIcon variant={toast.variant} />
-          <div className="flex-1">
+          <div className={S.content}>
             {toast.title && <ToastTitle>{toast.title}</ToastTitle>}
             {toast.description && <ToastDescription>{toast.description}</ToastDescription>}
           </div>
@@ -196,50 +171,40 @@ const ToastRoot = forwardRef<HTMLDivElement, ToastRootProps>(({ toast, onClose }
       )}
     </AnimatePresence>
   )
-})
-ToastRoot.displayName = 'Toast.Root'
+}
 
 function ToastIcon({ variant, className }: ToastIconProps) {
   const Icon = icons[variant]
-  return <Icon className={cn('h-5 w-5 flex-shrink-0', iconStyles[variant], className)} />
+  return <Icon className={cn(S.icon, iconStyles[variant], className)} />
 }
-ToastIcon.displayName = 'Toast.Icon'
 
 function ToastTitle({ className, children, ...props }: ToastTitleProps) {
   return (
-    <div className={cn('font-semibold', className)} {...props}>
+    <div className={cn(S.title, className)} {...props}>
       {children}
     </div>
   )
 }
-ToastTitle.displayName = 'Toast.Title'
 
 function ToastDescription({ className, children, ...props }: ToastDescriptionProps) {
   return (
-    <div className={cn('text-sm opacity-80 mt-1', className)} {...props}>
+    <div className={cn(S.description, className)} {...props}>
       {children}
     </div>
   )
 }
-ToastDescription.displayName = 'Toast.Description'
 
 function ToastClose({ onClose, className }: ToastCloseProps) {
   return (
     <button
       onClick={onClose}
-      className={cn(
-        'rounded-theme-sm opacity-70 cursor-pointer min-h-11 min-w-11',
-        'transition-opacity hover:opacity-100 text-foreground',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2',
-        className
-      )}
+      className={cn(S.closeButton, className)}
     >
-      <X className="h-4 w-4" />
-      <span className="sr-only">{SR_ONLY.close}</span>
+      <X className={S.closeIcon} />
+      <span className={S.srOnly}>{SR_ONLY.close}</span>
     </button>
   )
 }
-ToastClose.displayName = 'Toast.Close'
 
 export const Toast = {
   Provider: ToastProvider,

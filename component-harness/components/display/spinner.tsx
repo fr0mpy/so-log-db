@@ -1,9 +1,10 @@
 import { cn } from '@/lib/utils'
-import { forwardRef } from 'react'
 import { SPINNER, DURATION, SR_ONLY } from '../../config'
+import { SpinnerStyles as S } from './styles'
 
 interface SpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: 'sm' | 'md' | 'lg'
+  ref?: React.Ref<HTMLDivElement>
 }
 
 const faceColors = {
@@ -15,126 +16,122 @@ const faceColors = {
   bottom: 'var(--color-spinner-darker)',
 }
 
-const Spinner = forwardRef<HTMLDivElement, SpinnerProps>(
-  ({ size = 'md', className, ...props }, ref) => {
-    const { cube, translate } = SPINNER.sizes[size]
+function Spinner({ size = 'md', className, ref, ...props }: SpinnerProps) {
+  const { cube, translate } = SPINNER.sizes[size]
 
-    return (
+  return (
+    <div
+      ref={ref}
+      role="status"
+      className={cn(S.container, className)}
+      style={{ perspective: SPINNER.perspective }}
+      {...props}
+    >
+      <style>
+        {`
+          @keyframes cube-spin {
+            0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
+            100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+          }
+        `}
+      </style>
       <div
-        ref={ref}
-        role="status"
-        className={cn('inline-flex items-center justify-center', className)}
-        style={{ perspective: SPINNER.perspective }}
-        {...props}
+        style={{
+          width: cube,
+          height: cube,
+          position: 'relative',
+          transformStyle: 'preserve-3d',
+          animation: `cube-spin ${DURATION.spinner}s linear infinite`,
+        }}
       >
-        <style>
-          {`
-            @keyframes cube-spin {
-              0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
-              100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
-            }
-          `}
-        </style>
+        {/* Front face */}
         <div
           style={{
-            width: cube,
-            height: cube,
-            position: 'relative',
-            transformStyle: 'preserve-3d',
-            animation: `cube-spin ${DURATION.spinner}s linear infinite`,
+            width: cube + SPINNER.cornerFill * 2,
+            height: cube + SPINNER.cornerFill * 2,
+            position: 'absolute',
+            top: -SPINNER.cornerFill,
+            left: -SPINNER.cornerFill,
+            opacity: 0.8,
+            borderRadius: SPINNER.borderRadius,
+            transform: `translateZ(${translate}px)`,
+            backgroundColor: faceColors.front,
           }}
-        >
-          {/* Front face */}
-          <div
-            style={{
-              width: cube + SPINNER.cornerFill * 2,
-              height: cube + SPINNER.cornerFill * 2,
-              position: 'absolute',
-              top: -SPINNER.cornerFill,
-              left: -SPINNER.cornerFill,
-              opacity: 0.8,
-              borderRadius: SPINNER.borderRadius,
-              transform: `translateZ(${translate}px)`,
-              backgroundColor: faceColors.front,
-            }}
-          />
-          {/* Back face */}
-          <div
-            style={{
-              width: cube + SPINNER.cornerFill * 2,
-              height: cube + SPINNER.cornerFill * 2,
-              position: 'absolute',
-              top: -SPINNER.cornerFill,
-              left: -SPINNER.cornerFill,
-              opacity: 0.8,
-              borderRadius: SPINNER.borderRadius,
-              transform: `translateZ(-${translate}px)`,
-              backgroundColor: faceColors.back,
-            }}
-          />
-          {/* Left face */}
-          <div
-            style={{
-              width: cube + SPINNER.cornerFill * 2,
-              height: cube + SPINNER.cornerFill * 2,
-              position: 'absolute',
-              top: -SPINNER.cornerFill,
-              left: -SPINNER.cornerFill,
-              opacity: 0.8,
-              borderRadius: SPINNER.borderRadius,
-              transform: `rotateY(90deg) translateZ(${translate}px)`,
-              backgroundColor: faceColors.left,
-            }}
-          />
-          {/* Right face */}
-          <div
-            style={{
-              width: cube + SPINNER.cornerFill * 2,
-              height: cube + SPINNER.cornerFill * 2,
-              position: 'absolute',
-              top: -SPINNER.cornerFill,
-              left: -SPINNER.cornerFill,
-              opacity: 0.8,
-              borderRadius: SPINNER.borderRadius,
-              transform: `rotateY(-90deg) translateZ(${translate}px)`,
-              backgroundColor: faceColors.right,
-            }}
-          />
-          {/* Top face */}
-          <div
-            style={{
-              width: cube + SPINNER.cornerFill * 2,
-              height: cube + SPINNER.cornerFill * 2,
-              position: 'absolute',
-              top: -SPINNER.cornerFill,
-              left: -SPINNER.cornerFill,
-              opacity: 0.8,
-              borderRadius: SPINNER.borderRadius,
-              transform: `rotateX(90deg) translateZ(${translate}px)`,
-              backgroundColor: faceColors.top,
-            }}
-          />
-          {/* Bottom face */}
-          <div
-            style={{
-              width: cube + SPINNER.cornerFill * 2,
-              height: cube + SPINNER.cornerFill * 2,
-              position: 'absolute',
-              top: -SPINNER.cornerFill,
-              left: -SPINNER.cornerFill,
-              opacity: 0.8,
-              borderRadius: SPINNER.borderRadius,
-              transform: `rotateX(-90deg) translateZ(${translate}px)`,
-              backgroundColor: faceColors.bottom,
-            }}
-          />
-        </div>
-        <span className="sr-only">{SR_ONLY.loading}</span>
+        />
+        {/* Back face */}
+        <div
+          style={{
+            width: cube + SPINNER.cornerFill * 2,
+            height: cube + SPINNER.cornerFill * 2,
+            position: 'absolute',
+            top: -SPINNER.cornerFill,
+            left: -SPINNER.cornerFill,
+            opacity: 0.8,
+            borderRadius: SPINNER.borderRadius,
+            transform: `translateZ(-${translate}px)`,
+            backgroundColor: faceColors.back,
+          }}
+        />
+        {/* Left face */}
+        <div
+          style={{
+            width: cube + SPINNER.cornerFill * 2,
+            height: cube + SPINNER.cornerFill * 2,
+            position: 'absolute',
+            top: -SPINNER.cornerFill,
+            left: -SPINNER.cornerFill,
+            opacity: 0.8,
+            borderRadius: SPINNER.borderRadius,
+            transform: `rotateY(90deg) translateZ(${translate}px)`,
+            backgroundColor: faceColors.left,
+          }}
+        />
+        {/* Right face */}
+        <div
+          style={{
+            width: cube + SPINNER.cornerFill * 2,
+            height: cube + SPINNER.cornerFill * 2,
+            position: 'absolute',
+            top: -SPINNER.cornerFill,
+            left: -SPINNER.cornerFill,
+            opacity: 0.8,
+            borderRadius: SPINNER.borderRadius,
+            transform: `rotateY(-90deg) translateZ(${translate}px)`,
+            backgroundColor: faceColors.right,
+          }}
+        />
+        {/* Top face */}
+        <div
+          style={{
+            width: cube + SPINNER.cornerFill * 2,
+            height: cube + SPINNER.cornerFill * 2,
+            position: 'absolute',
+            top: -SPINNER.cornerFill,
+            left: -SPINNER.cornerFill,
+            opacity: 0.8,
+            borderRadius: SPINNER.borderRadius,
+            transform: `rotateX(90deg) translateZ(${translate}px)`,
+            backgroundColor: faceColors.top,
+          }}
+        />
+        {/* Bottom face */}
+        <div
+          style={{
+            width: cube + SPINNER.cornerFill * 2,
+            height: cube + SPINNER.cornerFill * 2,
+            position: 'absolute',
+            top: -SPINNER.cornerFill,
+            left: -SPINNER.cornerFill,
+            opacity: 0.8,
+            borderRadius: SPINNER.borderRadius,
+            transform: `rotateX(-90deg) translateZ(${translate}px)`,
+            backgroundColor: faceColors.bottom,
+          }}
+        />
       </div>
-    )
-  }
-)
-
-Spinner.displayName = 'Spinner'
+      <span className={S.srOnly}>{SR_ONLY.loading}</span>
+    </div>
+  )
+}
 
 export { Spinner }

@@ -1,4 +1,4 @@
-export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './card'
+export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardWithSlots } from './card'
 export type {
   CardRootProps,
   CardHeaderProps,
@@ -6,4 +6,6 @@ export type {
   CardDescriptionProps,
   CardContentProps,
   CardFooterProps,
+  CardSlots,
+  CardWithSlotsProps,
 } from './types'

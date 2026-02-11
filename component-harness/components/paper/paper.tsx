@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { forwardRef } from 'react'
+import { PaperStyles as S } from './styles'
 import type {
   PaperRootProps,
   PaperHeaderProps,
@@ -9,14 +9,13 @@ import type {
   PaperFooterProps,
 } from './types'
 
-const PaperRoot = forwardRef<HTMLDivElement, PaperRootProps>(
-  ({ className, children, depth = 'md', ...props }, ref) => (
+function PaperRoot({ className, children, depth = 'md', ref, ...props }: PaperRootProps) {
+  return (
     <div
       ref={ref}
       className={cn(
-        'rounded-theme-xl bg-neu-base',
-        depth === 'sm' ? 'shadow-neu-pressed-sm' : 'shadow-neu-pressed',
-        'transition-shadow duration-200 ease-neu',
+        depth === 'sm' ? S.root.inset : S.root.base,
+        S.root.effects,
         className
       )}
       {...props}
@@ -24,73 +23,67 @@ const PaperRoot = forwardRef<HTMLDivElement, PaperRootProps>(
       {children}
     </div>
   )
-)
-PaperRoot.displayName = 'Paper.Root'
+}
 
-const PaperHeader = forwardRef<HTMLDivElement, PaperHeaderProps>(
-  ({ className, children, ...props }, ref) => (
+function PaperHeader({ className, children, ref, ...props }: PaperHeaderProps) {
+  return (
     <div
       ref={ref}
-      className={cn('flex flex-col space-y-1.5 p-6', className)}
+      className={cn(S.header, className)}
       {...props}
     >
       {children}
     </div>
   )
-)
-PaperHeader.displayName = 'Paper.Header'
+}
 
-const PaperTitle = forwardRef<HTMLHeadingElement, PaperTitleProps>(
-  ({ className, children, ...props }, ref) => (
+function PaperTitle({ className, children, ref, ...props }: PaperTitleProps) {
+  return (
     <h3
       ref={ref}
-      className={cn('font-heading text-lg font-semibold text-foreground', className)}
+      className={cn(S.title, className)}
       {...props}
     >
       {children}
     </h3>
   )
-)
-PaperTitle.displayName = 'Paper.Title'
+}
 
-const PaperDescription = forwardRef<HTMLParagraphElement, PaperDescriptionProps>(
-  ({ className, children, ...props }, ref) => (
+function PaperDescription({ className, children, ref, ...props }: PaperDescriptionProps) {
+  return (
     <p
       ref={ref}
-      className={cn('text-sm text-muted-foreground', className)}
+      className={cn(S.description, className)}
       {...props}
     >
       {children}
     </p>
   )
-)
-PaperDescription.displayName = 'Paper.Description'
+}
 
-const PaperContent = forwardRef<HTMLDivElement, PaperContentProps>(
-  ({ className, children, ...props }, ref) => (
+function PaperContent({ className, children, ref, ...props }: PaperContentProps) {
+  return (
     <div
       ref={ref}
-      className={cn('p-6 pt-0', className)}
+      className={cn(S.content, className)}
       {...props}
     >
       {children}
     </div>
   )
-)
-PaperContent.displayName = 'Paper.Content'
+}
 
-const PaperFooter = forwardRef<HTMLDivElement, PaperFooterProps>(
-  ({ className, children, ...props }, ref) => (
+function PaperFooter({ className, children, ref, ...props }: PaperFooterProps) {
+  return (
     <div
       ref={ref}
-      className={cn('flex items-center p-6 pt-0', className)}
+      className={cn(S.footer, className)}
       {...props}
     >
       {children}
     </div>
   )
-)
-PaperFooter.displayName = 'Paper.Footer'
+}
 
 // Namespace Export (callable as Root + namespace)
 export const Paper = Object.assign(PaperRoot, {

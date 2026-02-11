@@ -1,4 +1,4 @@
-import type { ReactNode, HTMLAttributes, ButtonHTMLAttributes } from 'react'
+import type { ReactNode, HTMLAttributes, ButtonHTMLAttributes, Ref } from 'react'
 
 export interface DialogContextValue {
   open: boolean
@@ -21,6 +21,7 @@ export interface DialogRootProps {
 export interface DialogTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Render as child element instead of button */
   asChild?: boolean
+  ref?: Ref<HTMLButtonElement>
 }
 
 export interface DialogPortalProps {
@@ -30,22 +31,33 @@ export interface DialogPortalProps {
 export interface DialogBackdropProps extends HTMLAttributes<HTMLDivElement> {
   /** Whether clicks are blocked (for alert dialogs) */
   blocking?: boolean
+  ref?: Ref<HTMLDivElement>
 }
 
 export interface DialogPopupProps extends HTMLAttributes<HTMLDivElement> {
   'aria-labelledby'?: string
   'aria-describedby'?: string
+  ref?: Ref<HTMLDivElement>
 }
 
-export interface DialogHeaderProps extends HTMLAttributes<HTMLDivElement> {}
+export interface DialogHeaderProps extends HTMLAttributes<HTMLDivElement> {
+  ref?: Ref<HTMLDivElement>
+}
 
-export interface DialogTitleProps extends HTMLAttributes<HTMLHeadingElement> {}
+export interface DialogTitleProps extends HTMLAttributes<HTMLHeadingElement> {
+  ref?: Ref<HTMLHeadingElement>
+}
 
-export interface DialogDescriptionProps extends HTMLAttributes<HTMLParagraphElement> {}
+export interface DialogDescriptionProps extends HTMLAttributes<HTMLParagraphElement> {
+  ref?: Ref<HTMLParagraphElement>
+}
 
-export interface DialogFooterProps extends HTMLAttributes<HTMLDivElement> {}
+export interface DialogFooterProps extends HTMLAttributes<HTMLDivElement> {
+  ref?: Ref<HTMLDivElement>
+}
 
 export interface DialogCloseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Render as child element instead of button */
   asChild?: boolean
+  ref?: Ref<HTMLButtonElement>
 }

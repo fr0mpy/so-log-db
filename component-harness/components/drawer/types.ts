@@ -1,4 +1,4 @@
-import type { ReactNode, HTMLAttributes, ButtonHTMLAttributes } from 'react'
+import type { ReactNode, HTMLAttributes, ButtonHTMLAttributes, Ref } from 'react'
 
 export type DrawerSide = 'left' | 'right' | 'top' | 'bottom'
 
@@ -24,15 +24,24 @@ export interface DrawerPortalProps {
   children: ReactNode
 }
 
-export interface DrawerBackdropProps extends HTMLAttributes<HTMLDivElement> {}
+export interface DrawerBackdropProps extends HTMLAttributes<HTMLDivElement> {
+  ref?: Ref<HTMLDivElement>
+}
 
-export interface DrawerContentProps extends HTMLAttributes<HTMLDivElement> {}
+export interface DrawerContentProps extends HTMLAttributes<HTMLDivElement> {
+  ref?: Ref<HTMLDivElement>
+}
 
-export interface DrawerHeaderProps extends HTMLAttributes<HTMLDivElement> {}
+export interface DrawerHeaderProps extends HTMLAttributes<HTMLDivElement> {
+  ref?: Ref<HTMLDivElement>
+}
 
-export interface DrawerTitleProps extends HTMLAttributes<HTMLHeadingElement> {}
+export interface DrawerTitleProps extends HTMLAttributes<HTMLHeadingElement> {
+  ref?: Ref<HTMLHeadingElement>
+}
 
 export interface DrawerCloseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Render as child element instead of button */
   asChild?: boolean
+  ref?: Ref<HTMLButtonElement>
 }

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { ReactNode, Ref } from 'react'
 
 export interface RadioRootProps {
   children: ReactNode
@@ -12,11 +12,13 @@ export interface RadioRootProps {
 export interface RadioGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   children: ReactNode
   orientation?: 'horizontal' | 'vertical'
+  ref?: Ref<HTMLDivElement>
 }
 
 export interface RadioItemProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'value'> {
   value: string
   children?: ReactNode
+  ref?: Ref<HTMLInputElement>
 }
 
 export interface RadioIndicatorProps {

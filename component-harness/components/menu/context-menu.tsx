@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils'
 import {
-  forwardRef,
   useState,
   useRef,
   useCallback,
@@ -10,6 +9,7 @@ import {
 } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { useClickOutside, SPRING_CONFIG } from '../../hooks'
+import { ContextMenuStyles as S } from './styles'
 import type {
   ContextMenuRootProps,
   ContextMenuTriggerProps,
@@ -81,8 +81,6 @@ function ContextMenuRoot({
   )
 }
 
-ContextMenuRoot.displayName = 'ContextMenu.Root'
-
 function ContextMenuTrigger({ children, className }: ContextMenuTriggerProps) {
   const { setOpen, setPosition } = useContextMenuContext()
 
@@ -102,15 +100,11 @@ function ContextMenuTrigger({ children, className }: ContextMenuTriggerProps) {
   )
 }
 
-ContextMenuTrigger.displayName = 'ContextMenu.Trigger'
-
 function ContextMenuPortal({ children }: ContextMenuPortalProps) {
   const { open } = useContextMenuContext()
 
   return <AnimatePresence>{open && children}</AnimatePresence>
 }
-
-ContextMenuPortal.displayName = 'ContextMenu.Portal'
 
 function ContextMenuPositioner({ children, className }: ContextMenuPositionerProps) {
   const { setOpen, position } = useContextMenuContext()
@@ -121,7 +115,7 @@ function ContextMenuPositioner({ children, className }: ContextMenuPositionerPro
   return (
     <div
       ref={positionerRef}
-      className={cn('fixed z-50', className)}
+      className={cn(S.positioner, className)}
       style={{ left: `${position.x}px`, top: `${position.y}px` }}
     >
       {children}
@@ -129,81 +123,59 @@ function ContextMenuPositioner({ children, className }: ContextMenuPositionerPro
   )
 }
 
-ContextMenuPositioner.displayName = 'ContextMenu.Positioner'
+function ContextMenuPopup({ className, children, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: ContextMenuPopupProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+  return (
+    <motion.div
+      ref={ref}
+      role="menu"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={SPRING_CONFIG.default}
+      className={cn(S.popup, className)}
+      {...props}
+    >
+      {children}
+    </motion.div>
+  )
+}
 
-const ContextMenuPopup = forwardRef<HTMLDivElement, ContextMenuPopupProps>(
-  ({ className, children, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }, ref) => {
-    return (
-      <motion.div
-        ref={ref}
-        role="menu"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        transition={SPRING_CONFIG.default}
-        className={cn(
-          'min-w-[12rem] rounded-theme-md border border-border',
-          'bg-background shadow-theme-lg glass p-1 origin-top-left',
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </motion.div>
-    )
-  }
-)
+function ContextMenuItem({ className, children, onClick, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: MenuItemProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+  const { setOpen } = useContextMenuContext()
 
-ContextMenuPopup.displayName = 'ContextMenu.Popup'
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      onClick?.(e)
+      setOpen(false)
+    },
+    [onClick, setOpen]
+  )
 
-const ContextMenuItem = forwardRef<HTMLButtonElement, MenuItemProps>(
-  ({ className, children, onClick, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }, ref) => {
-    const { setOpen } = useContextMenuContext()
+  return (
+    <motion.button
+      ref={ref}
+      role="menuitem"
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
+      onClick={handleClick}
+      className={cn(S.item, className)}
+      {...props}
+    >
+      {children}
+    </motion.button>
+  )
+}
 
-    const handleClick = useCallback(
-      (e: React.MouseEvent<HTMLButtonElement>) => {
-        onClick?.(e)
-        setOpen(false)
-      },
-      [onClick, setOpen]
-    )
-
-    return (
-      <motion.button
-        ref={ref}
-        role="menuitem"
-        whileHover={{ scale: 1.01 }}
-        whileTap={{ scale: 0.99 }}
-        onClick={handleClick}
-        className={cn(
-          'relative flex w-full cursor-pointer select-none items-center rounded-theme-sm px-2 py-1.5',
-          'text-sm outline-none transition-colors',
-          'hover:bg-muted focus-visible:bg-muted',
-          'disabled:pointer-events-none disabled:opacity-50',
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </motion.button>
-    )
-  }
-)
-
-ContextMenuItem.displayName = 'ContextMenu.Item'
-
-const ContextMenuSeparator = forwardRef<HTMLDivElement, MenuSeparatorProps>(
-  ({ className, ...props }, ref) => (
+function ContextMenuSeparator({ className, ref, ...props }: MenuSeparatorProps) {
+  return (
     <div
       ref={ref}
       role="separator"
-      className={cn('my-1 h-px bg-border', className)}
+      className={cn(S.separator, className)}
       {...props}
     />
   )
-)
-
-ContextMenuSeparator.displayName = 'ContextMenu.Separator'
+}
 
 // ============================================================================
 // Simple Wrapper (backward compatibility)

@@ -1,7 +1,6 @@
 import { cn } from '@/lib/utils'
 import { Check, ChevronDown, Search } from 'lucide-react'
 import {
-  forwardRef,
   useRef,
   useLayoutEffect,
   useMemo,
@@ -15,6 +14,7 @@ import { Input } from '../form/input'
 import { useControlledState } from '../../hooks/useControlledState'
 import { useClickOutsideMultiple } from '../../hooks/useClickOutside'
 import { SPRING, PLACEHOLDER } from '../../config'
+import { SelectStyles as S } from './styles'
 import type {
   SelectContextValue,
   SelectRootProps,
@@ -43,14 +43,14 @@ const useSelectContext = () => {
 }
 
 // Select.Root - Context provider
-const SelectRoot = ({
+function SelectRoot({
   children,
   value,
   defaultValue = '',
   onValueChange,
   disabled = false,
   searchable = false,
-}: SelectRootProps) => {
+}: SelectRootProps) {
   const [currentValue, setValue] = useControlledState(value, defaultValue, onValueChange)
   const [isOpen, setIsOpen] = useControlledState<boolean>(undefined, false)
   const [searchQuery, setSearchQuery] = useControlledState<string>(undefined, '')
@@ -121,78 +121,69 @@ const SelectRoot = ({
 
   return <SelectContext.Provider value={contextValue}>{children}</SelectContext.Provider>
 }
-SelectRoot.displayName = 'Select.Root'
 
 // Select.Trigger - The button that opens the dropdown
-const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
-  ({ children, className }, ref) => {
-    const { isOpen, setIsOpen, triggerRef, disabled } = useSelectContext()
+function SelectTrigger({ children, className, ref }: SelectTriggerProps) {
+  const { isOpen, setIsOpen, triggerRef, disabled } = useSelectContext()
 
-    const handleMouseEnter = useCallback(() => {
-      if (!disabled) setIsOpen(true)
-    }, [disabled, setIsOpen])
+  const handleMouseEnter = useCallback(() => {
+    if (!disabled) setIsOpen(true)
+  }, [disabled, setIsOpen])
 
-    // Combine refs
-    const combinedRef = (node: HTMLButtonElement | null) => {
-      if (typeof ref === 'function') {
-        ref(node)
-      } else if (ref) {
-        ref.current = node
-      }
-      ;(triggerRef as React.MutableRefObject<HTMLButtonElement | null>).current = node
+  // Combine refs
+  const combinedRef = (node: HTMLButtonElement | null) => {
+    if (typeof ref === 'function') {
+      ref(node)
+    } else if (ref) {
+      (ref as React.MutableRefObject<HTMLButtonElement | null>).current = node
     }
-
-    return (
-      <motion.button
-        ref={combinedRef}
-        type="button"
-        disabled={disabled}
-        onMouseEnter={handleMouseEnter}
-        whileTap={{ scale: 0.99 }}
-        className={cn(
-          'relative flex h-10 w-full items-center justify-between rounded-theme-lg',
-          'bg-neu-base shadow-neu-raised px-3 py-2 text-sm text-foreground cursor-pointer',
-          'focus-visible:outline-none focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]',
-          'disabled:cursor-not-allowed disabled:opacity-50',
-          isOpen && 'z-popover',
-          className
-        )}
-        aria-haspopup="listbox"
-        aria-expanded={isOpen}
-      >
-        {children}
-      </motion.button>
-    )
+    ;(triggerRef as React.MutableRefObject<HTMLButtonElement | null>).current = node
   }
-)
-SelectTrigger.displayName = 'Select.Trigger'
+
+  return (
+    <motion.button
+      ref={combinedRef}
+      type="button"
+      disabled={disabled}
+      onMouseEnter={handleMouseEnter}
+      whileTap={{ scale: 0.99 }}
+      className={cn(
+        S.trigger.base,
+        isOpen && S.trigger.open,
+        className
+      )}
+      aria-haspopup="listbox"
+      aria-expanded={isOpen}
+    >
+      {children}
+    </motion.button>
+  )
+}
 
 // Select.Value - Displays the selected value
-const SelectValue = ({ placeholder = PLACEHOLDER.select }: SelectValueProps) => {
+function SelectValue({ placeholder = PLACEHOLDER.select }: SelectValueProps) {
   const { value } = useSelectContext()
 
   return (
-    <span className={cn(!value && 'text-muted-foreground')}>
+    <span className={cn(!value && S.value.placeholder)}>
       {value || placeholder}
     </span>
   )
 }
-SelectValue.displayName = 'Select.Value'
 
 // Select.Icon - The chevron icon
-const SelectIcon = ({ className }: SelectIconProps) => {
+function SelectIcon({ className }: SelectIconProps) {
   const { isOpen } = useSelectContext()
 
   return (
     <motion.span animate={{ rotate: isOpen ? 180 : 0 }} transition={spring}>
-      <ChevronDown className={cn('h-4 w-4 opacity-50', className)} />
+      <ChevronDown className={cn(S.icon, className)} />
     </motion.span>
   )
 }
-SelectIcon.displayName = 'Select.Icon'
 
 // Select.Portal - Renders children in a portal
-const SelectPortal = ({ children }: SelectPortalProps) => {
+function SelectPortal({ children }: SelectPortalProps) {
   const { isOpen } = useSelectContext()
 
   return createPortal(
@@ -200,10 +191,9 @@ const SelectPortal = ({ children }: SelectPortalProps) => {
     document.body
   )
 }
-SelectPortal.displayName = 'Select.Portal'
 
 // Select.Positioner - Positions the dropdown
-const SelectPositioner = ({ children }: SelectPositionerProps) => {
+function SelectPositioner({ children }: SelectPositionerProps) {
   const { dropdownPosition, dropdownRef, setIsOpen, triggerRef, setSearchQuery } = useSelectContext()
 
   const handleMouseLeave = useCallback(
@@ -233,91 +223,78 @@ const SelectPositioner = ({ children }: SelectPositionerProps) => {
         left: dropdownPosition.left,
         width: dropdownPosition.width,
       }}
-      className="z-popover"
+      className={S.positioner}
     >
       {children}
     </motion.div>
   )
 }
-SelectPositioner.displayName = 'Select.Positioner'
 
 // Select.Popup - The dropdown container
-const SelectPopup = forwardRef<HTMLDivElement, SelectPopupProps>(
-  ({ children, className }, ref) => {
-    return (
-      <div
-        ref={ref}
-        role="listbox"
-        className={cn(
-          'rounded-theme-md bg-neu-base shadow-neu-raised-lg border border-white/40 dark:border-white/10',
-          className
-        )}
-      >
-        {children}
-      </div>
-    )
-  }
-)
-SelectPopup.displayName = 'Select.Popup'
+function SelectPopup({ children, className, ref }: SelectPopupProps) {
+  return (
+    <div
+      ref={ref}
+      role="listbox"
+      className={cn(S.popup, className)}
+    >
+      {children}
+    </div>
+  )
+}
 
 // Select.Search - Search input for searchable selects
-const SelectSearch = ({ placeholder = PLACEHOLDER.search, className }: SelectSearchProps) => {
+function SelectSearch({ placeholder = PLACEHOLDER.search, className }: SelectSearchProps) {
   const { searchQuery, setSearchQuery, searchable } = useSelectContext()
 
   if (!searchable) return null
 
   return (
-    <div className="p-2 pt-4 border-b border-border/30">
+    <div className={S.search.wrapper}>
       <Input
         placeholder={placeholder}
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        leftIcon={<Search className="h-4 w-4" />}
-        className={cn('h-9', className)}
+        leftIcon={<Search className={S.icon} />}
+        className={cn(S.search.input, className)}
       />
     </div>
   )
 }
-SelectSearch.displayName = 'Select.Search'
 
 // Select.Option - Individual option
-const SelectOption = forwardRef<HTMLButtonElement, SelectOptionProps>(
-  ({ value: optionValue, children, className }, ref) => {
-    const { value, setValue } = useSelectContext()
-    const isSelected = value === optionValue
+function SelectOption({ value: optionValue, children, className, ref }: SelectOptionProps) {
+  const { value, setValue } = useSelectContext()
+  const isSelected = value === optionValue
 
-    const handleClick = useCallback(() => {
-      setValue(optionValue)
-    }, [setValue, optionValue])
+  const handleClick = useCallback(() => {
+    setValue(optionValue)
+  }, [setValue, optionValue])
 
-    return (
-      <motion.button
-        ref={ref}
-        type="button"
-        role="option"
-        aria-selected={isSelected}
-        onClick={handleClick}
-        whileTap={{ scale: 0.99 }}
+  return (
+    <motion.button
+      ref={ref}
+      type="button"
+      role="option"
+      aria-selected={isSelected}
+      onClick={handleClick}
+      whileTap={{ scale: 0.99 }}
+      className={cn(
+        S.option.base,
+        isSelected && S.option.selected,
+        className
+      )}
+    >
+      <Check
         className={cn(
-          'relative flex w-full cursor-pointer select-none items-center rounded-theme-sm px-2 py-1.5',
-          'text-sm outline-none transition-colors',
-          'hover:bg-muted focus-visible:bg-muted',
-          isSelected && 'bg-muted',
-          className
+          S.checkIcon.base,
+          isSelected ? S.checkIcon.selected : S.checkIcon.unselected
         )}
-      >
-        <Check
-          className={cn(
-            'mr-2 h-4 w-4 transition-opacity duration-150',
-            isSelected ? 'opacity-100' : 'opacity-0'
-          )}
-        />
-        {children}
-      </motion.button>
-    )
-  }
-)
-SelectOption.displayName = 'Select.Option'
+      />
+      {children}
+    </motion.button>
+  )
+}
 
 // Namespace export
 export const Select = {

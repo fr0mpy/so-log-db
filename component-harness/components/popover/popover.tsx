@@ -6,7 +6,6 @@ import {
   useState,
   useRef,
   useCallback,
-  forwardRef,
   cloneElement,
   isValidElement,
   useEffect,
@@ -20,6 +19,7 @@ import {
   SPRING_CONFIG,
   type Side,
 } from '../../hooks'
+import { PopoverStyles as S } from './styles'
 import type {
   PopoverRootProps,
   PopoverTriggerProps,
@@ -81,63 +81,57 @@ function PopoverRoot({
   )
 }
 
-PopoverRoot.displayName = 'Popover.Root'
-
 // ============================================================================
 // Trigger
 // ============================================================================
 
-const PopoverTrigger = forwardRef<HTMLButtonElement, PopoverTriggerProps>(
-  ({ asChild, children, onClick, ...props }, ref) => {
-    const { open, setOpen, triggerRef } = usePopoverContext()
+function PopoverTrigger({ asChild, children, onClick, ref, ...props }: PopoverTriggerProps) {
+  const { open, setOpen, triggerRef } = usePopoverContext()
 
-    const handleClick = useCallback(
-      (e: React.MouseEvent<HTMLButtonElement>) => {
-        setOpen(!open)
-        onClick?.(e)
-      },
-      [open, setOpen, onClick]
-    )
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      setOpen(!open)
+      onClick?.(e)
+    },
+    [open, setOpen, onClick]
+  )
 
-    // Merge refs
-    const mergedRef = useCallback(
-      (node: HTMLButtonElement | null) => {
-        if (typeof ref === 'function') {
-          ref(node)
-        } else if (ref) {
-          ref.current = node
-        }
-        (triggerRef as React.MutableRefObject<HTMLButtonElement | null>).current = node
-      },
-      [ref, triggerRef]
-    )
+  // Merge refs
+  const mergedRef = useCallback(
+    (node: HTMLButtonElement | null) => {
+      if (typeof ref === 'function') {
+        ref(node)
+      } else if (ref) {
+        (ref as React.MutableRefObject<HTMLButtonElement | null>).current = node
+      }
+      (triggerRef as React.MutableRefObject<HTMLButtonElement | null>).current = node
+    },
+    [ref, triggerRef]
+  )
 
-    if (asChild && isValidElement(children)) {
-      return cloneElement(children as React.ReactElement<any>, {
-        ref: mergedRef,
-        onClick: handleClick,
-        'aria-expanded': open,
-        'aria-haspopup': 'dialog',
-        ...props,
-      })
-    }
-
-    return (
-      <button
-        ref={mergedRef}
-        type="button"
-        onClick={handleClick}
-        aria-expanded={open}
-        aria-haspopup="dialog"
-        {...props}
-      >
-        {children}
-      </button>
-    )
+  if (asChild && isValidElement(children)) {
+    return cloneElement(children as React.ReactElement<any>, {
+      ref: mergedRef,
+      onClick: handleClick,
+      'aria-expanded': open,
+      'aria-haspopup': 'dialog',
+      ...props,
+    })
   }
-)
 
-PopoverTrigger.displayName = 'Popover.Trigger'
+  return (
+    <button
+      ref={mergedRef}
+      type="button"
+      onClick={handleClick}
+      aria-expanded={open}
+      aria-haspopup="dialog"
+      {...props}
+    >
+      {children}
+    </button>
+  )
+}
 
 // ============================================================================
 // Portal
@@ -150,8 +144,6 @@ function PopoverPortal({ children, container }: PopoverPortalProps) {
 
   return createPortal(children, container ?? document.body)
 }
-
-PopoverPortal.displayName = 'Popover.Portal'
 
 // ============================================================================
 // Positioner
@@ -217,7 +209,7 @@ function PopoverPositioner({
   return (
     <div
       ref={positionerRef}
-      className={cn('z-50', className)}
+      className={cn(S.positioner, className)}
       style={getPositionStyles()}
     >
       {children}
@@ -225,43 +217,32 @@ function PopoverPositioner({
   )
 }
 
-PopoverPositioner.displayName = 'Popover.Positioner'
-
 // ============================================================================
 // Popup
 // ============================================================================
 
-const PopoverPopup = forwardRef<HTMLDivElement, PopoverPopupProps>(
-  ({ children, className }, ref) => {
-    const { side, open } = usePopoverContext()
-    const { originClass, initialOffset } = usePositioning(side)
+function PopoverPopup({ children, className, ref }: PopoverPopupProps) {
+  const { side, open } = usePopoverContext()
+  const { originClass, initialOffset } = usePositioning(side)
 
-    return (
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            ref={ref}
-            role="dialog"
-            initial={{ opacity: 0, scale: 0.95, ...initialOffset }}
-            animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, ...initialOffset }}
-            transition={SPRING_CONFIG.default}
-            className={cn(
-              'w-64 rounded-theme-lg',
-              'bg-neu-base shadow-neu-raised-lg p-4',
-              originClass,
-              className
-            )}
-          >
-            {children}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    )
-  }
-)
-
-PopoverPopup.displayName = 'Popover.Popup'
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          ref={ref}
+          role="dialog"
+          initial={{ opacity: 0, scale: 0.95, ...initialOffset }}
+          animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, ...initialOffset }}
+          transition={SPRING_CONFIG.default}
+          className={cn(S.popup.base, originClass, className)}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
 
 // ============================================================================
 // Arrow
@@ -273,55 +254,44 @@ function PopoverArrow({ className }: PopoverArrowProps) {
 
   return (
     <span
-      className={cn(
-        'absolute w-3 h-3 rotate-45',
-        'bg-neu-base shadow-neu-raised-sm',
-        arrowClasses,
-        className
-      )}
+      className={cn(S.arrow.base, arrowClasses, className)}
       style={{ transform: `rotate(${arrowRotation}deg)` }}
       aria-hidden="true"
     />
   )
 }
 
-PopoverArrow.displayName = 'Popover.Arrow'
-
 // ============================================================================
 // Close
 // ============================================================================
 
-const PopoverClose = forwardRef<HTMLButtonElement, PopoverCloseProps>(
-  ({ asChild, children, onClick, ...props }, ref) => {
-    const { setOpen } = usePopoverContext()
+function PopoverClose({ asChild, children, onClick, ref, ...props }: PopoverCloseProps) {
+  const { setOpen } = usePopoverContext()
 
-    const handleClick = useCallback(
-      (e: React.MouseEvent<HTMLButtonElement>) => {
-        setOpen(false)
-        onClick?.(e)
-      },
-      [setOpen, onClick]
-    )
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      setOpen(false)
+      onClick?.(e)
+    },
+    [setOpen, onClick]
+  )
 
-    if (asChild && isValidElement(children)) {
-      return cloneElement(children as React.ReactElement<any>, {
-        ref,
-        onClick: handleClick,
-        ...props,
-      })
-    }
-
-    return (
-      <button ref={ref} type="button" onClick={handleClick} {...props}>
-        {children ?? (
-          <span className="sr-only">Close</span>
-        )}
-      </button>
-    )
+  if (asChild && isValidElement(children)) {
+    return cloneElement(children as React.ReactElement<any>, {
+      ref,
+      onClick: handleClick,
+      ...props,
+    })
   }
-)
 
-PopoverClose.displayName = 'Popover.Close'
+  return (
+    <button ref={ref} type="button" onClick={handleClick} {...props}>
+      {children ?? (
+        <span className={S.srOnly}>Close</span>
+      )}
+    </button>
+  )
+}
 
 // ============================================================================
 // Simple Wrapper (backward compatibility)

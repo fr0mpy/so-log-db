@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import { ChevronDown } from 'lucide-react'
-import { forwardRef, createContext, useContext, cloneElement, isValidElement } from 'react'
+import { createContext, useContext, cloneElement, isValidElement } from 'react'
 import { useControlledState } from '../../hooks/useControlledState'
 import type {
   CollapsibleContextValue,
@@ -8,6 +8,7 @@ import type {
   CollapsibleTriggerProps,
   CollapsibleContentProps,
 } from './types'
+import { CollapsibleStyles as S } from './styles'
 
 const CollapsibleContext = createContext<CollapsibleContextValue | undefined>(undefined)
 
@@ -23,95 +24,75 @@ const useCollapsibleContext = () => {
 // Collapsible.Root
 // ============================================================================
 
-const CollapsibleRoot = forwardRef<HTMLDivElement, CollapsibleRootProps>(
-  ({ defaultOpen = false, open, onOpenChange, className, children, ...props }, ref) => {
-    const [isOpen, setIsOpen] = useControlledState<boolean>(
-      open,
-      defaultOpen,
-      onOpenChange
-    )
+function CollapsibleRoot({ defaultOpen = false, open, onOpenChange, className, children, ref, ...props }: CollapsibleRootProps) {
+  const [isOpen, setIsOpen] = useControlledState<boolean>(
+    open,
+    defaultOpen,
+    onOpenChange
+  )
 
-    return (
-      <CollapsibleContext.Provider value={{ open: isOpen, setOpen: setIsOpen }}>
-        <div ref={ref} data-state={isOpen ? 'open' : 'closed'} className={cn('w-full', className)} {...props}>
-          {children}
-        </div>
-      </CollapsibleContext.Provider>
-    )
-  }
-)
-CollapsibleRoot.displayName = 'Collapsible.Root'
+  return (
+    <CollapsibleContext.Provider value={{ open: isOpen, setOpen: setIsOpen }}>
+      <div ref={ref} data-state={isOpen ? 'open' : 'closed'} className={cn(S.root, className)} {...props}>
+        {children}
+      </div>
+    </CollapsibleContext.Provider>
+  )
+}
 
 // ============================================================================
 // Collapsible.Trigger
 // ============================================================================
 
-const CollapsibleTrigger = forwardRef<HTMLButtonElement, CollapsibleTriggerProps>(
-  ({ className, children, asChild, ...props }, ref) => {
-    const { open, setOpen } = useCollapsibleContext()
+function CollapsibleTrigger({ className, children, asChild, ref, ...props }: CollapsibleTriggerProps) {
+  const { open, setOpen } = useCollapsibleContext()
 
-    const handleClick = () => setOpen(!open)
+  const handleClick = () => setOpen(!open)
 
-    if (asChild && isValidElement(children)) {
-      return cloneElement(children as React.ReactElement<{ onClick?: () => void }>, {
-        onClick: handleClick,
-        'aria-expanded': open,
-        'data-state': open ? 'open' : 'closed',
-      } as Partial<unknown>)
-    }
-
-    return (
-      <button
-        ref={ref}
-        type="button"
-        onClick={handleClick}
-        aria-expanded={open}
-        data-state={open ? 'open' : 'closed'}
-        className={cn(
-          'flex w-full items-center justify-between cursor-pointer rounded-theme-md px-2 py-1',
-          'bg-transparent transition-all duration-200',
-          'hover:bg-muted',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
-          className
-        )}
-        {...props}
-      >
-        {children}
-        <ChevronDown
-          className={cn(
-            'h-4 w-4 shrink-0 transition-transform duration-200',
-            open && 'rotate-180'
-          )}
-        />
-      </button>
-    )
+  if (asChild && isValidElement(children)) {
+    return cloneElement(children as React.ReactElement<{ onClick?: () => void }>, {
+      onClick: handleClick,
+      'aria-expanded': open,
+      'data-state': open ? 'open' : 'closed',
+    } as Partial<unknown>)
   }
-)
-CollapsibleTrigger.displayName = 'Collapsible.Trigger'
+
+  return (
+    <button
+      ref={ref}
+      type="button"
+      onClick={handleClick}
+      aria-expanded={open}
+      data-state={open ? 'open' : 'closed'}
+      className={cn(S.trigger, className)}
+      {...props}
+    >
+      {children}
+      <ChevronDown className={cn(S.icon, open && S.iconOpen)} />
+    </button>
+  )
+}
 
 // ============================================================================
 // Collapsible.Content
 // ============================================================================
 
-const CollapsibleContent = forwardRef<HTMLDivElement, CollapsibleContentProps>(
-  ({ className, children, ...props }, ref) => {
-    const { open } = useCollapsibleContext()
+function CollapsibleContent({ className, children, ref, ...props }: CollapsibleContentProps) {
+  const { open } = useCollapsibleContext()
 
-    if (!open) return null
+  if (!open) return null
 
-    return (
-      <div
-        ref={ref}
-        data-state={open ? 'open' : 'closed'}
-        className={cn('animate-in slide-in-from-top-2', className)}
-        {...props}
-      >
-        {children}
-      </div>
-    )
-  }
-)
-CollapsibleContent.displayName = 'Collapsible.Content'
+  return (
+    <div
+      ref={ref}
+      data-state={open ? 'open' : 'closed'}
+      className={cn(S.content, className)}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
 
 // ============================================================================
 // Namespace Export

@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { forwardRef, createContext, useContext } from 'react'
+import { createContext, useContext } from 'react'
 import type {
   ToolbarOrientation,
   ToolbarRootProps,
@@ -8,6 +8,7 @@ import type {
   ToolbarGroupProps,
   ToolbarLinkProps,
 } from './types'
+import { ToolbarStyles as S } from './styles'
 
 interface ToolbarContextValue {
   orientation: ToolbarOrientation
@@ -17,17 +18,16 @@ const ToolbarContext = createContext<ToolbarContextValue>({ orientation: 'horizo
 
 const useToolbarContext = () => useContext(ToolbarContext)
 
-const ToolbarRoot = forwardRef<HTMLDivElement, ToolbarRootProps>(
-  ({ orientation = 'horizontal', className, children, ...props }, ref) => (
+function ToolbarRoot({ orientation = 'horizontal', className, children, ref, ...props }: ToolbarRootProps) {
+  return (
     <ToolbarContext.Provider value={{ orientation }}>
       <div
         ref={ref}
         role="toolbar"
         aria-orientation={orientation}
         className={cn(
-          'flex items-center gap-1 p-1 rounded-theme-lg',
-          'bg-neu-base shadow-neu-raised',
-          orientation === 'vertical' && 'flex-col',
+          S.root.base,
+          orientation === 'vertical' && S.root.vertical,
           className
         )}
         {...props}
@@ -36,24 +36,17 @@ const ToolbarRoot = forwardRef<HTMLDivElement, ToolbarRootProps>(
       </div>
     </ToolbarContext.Provider>
   )
-)
-ToolbarRoot.displayName = 'Toolbar.Root'
+}
 
-const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
-  ({ active, className, children, ...props }, ref) => (
+function ToolbarButton({ active, className, children, ref, ...props }: ToolbarButtonProps) {
+  return (
     <button
       ref={ref}
       type="button"
       data-state={active ? 'on' : 'off'}
       className={cn(
-        'inline-flex h-9 w-9 items-center justify-center rounded-theme-md',
-        'text-sm font-medium text-foreground cursor-pointer',
-        'transition-shadow duration-200',
-        'focus-visible:outline-none focus-visible:shadow-neu-focus',
-        'disabled:pointer-events-none disabled:opacity-50',
-        active
-          ? 'bg-primary/10 shadow-neu-pressed-sm text-primary'
-          : 'bg-transparent hover:bg-neu-base hover:shadow-neu-raised-sm active:shadow-neu-pressed-sm',
+        S.button.base,
+        active ? S.button.active : S.button.inactive,
         className
       )}
       {...props}
@@ -61,71 +54,56 @@ const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
       {children}
     </button>
   )
-)
-ToolbarButton.displayName = 'Toolbar.Button'
+}
 
-const ToolbarSeparator = forwardRef<HTMLDivElement, ToolbarSeparatorProps>(
-  ({ className, ...props }, ref) => {
-    const { orientation } = useToolbarContext()
+function ToolbarSeparator({ className, ref, ...props }: ToolbarSeparatorProps) {
+  const { orientation } = useToolbarContext()
 
-    return (
-      <div
-        ref={ref}
-        role="separator"
-        aria-orientation={orientation === 'horizontal' ? 'vertical' : 'horizontal'}
-        className={cn(
-          'bg-border',
-          orientation === 'horizontal' ? 'mx-1 h-5 w-px' : 'my-1 h-px w-5',
-          className
-        )}
-        {...props}
-      />
-    )
-  }
-)
-ToolbarSeparator.displayName = 'Toolbar.Separator'
-
-const ToolbarGroup = forwardRef<HTMLDivElement, ToolbarGroupProps>(
-  ({ className, children, ...props }, ref) => {
-    const { orientation } = useToolbarContext()
-
-    return (
-      <div
-        ref={ref}
-        role="group"
-        className={cn(
-          'flex items-center gap-0.5',
-          orientation === 'vertical' && 'flex-col',
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </div>
-    )
-  }
-)
-ToolbarGroup.displayName = 'Toolbar.Group'
-
-const ToolbarLink = forwardRef<HTMLAnchorElement, ToolbarLinkProps>(
-  ({ className, children, ...props }, ref) => (
-    <a
+  return (
+    <div
       ref={ref}
+      role="separator"
+      aria-orientation={orientation === 'horizontal' ? 'vertical' : 'horizontal'}
       className={cn(
-        'inline-flex h-9 items-center justify-center px-3 rounded-theme-md',
-        'text-sm font-medium text-foreground cursor-pointer',
-        'transition-shadow duration-200',
-        'hover:bg-neu-base hover:shadow-neu-raised-sm',
-        'focus-visible:outline-none focus-visible:shadow-neu-focus',
+        S.separator.base,
+        orientation === 'horizontal' ? S.separator.horizontal : S.separator.vertical,
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function ToolbarGroup({ className, children, ref, ...props }: ToolbarGroupProps) {
+  const { orientation } = useToolbarContext()
+
+  return (
+    <div
+      ref={ref}
+      role="group"
+      className={cn(
+        S.group.base,
+        orientation === 'vertical' && S.group.vertical,
         className
       )}
       {...props}
     >
       {children}
+    </div>
+  )
+}
+
+function ToolbarLink({ className, children, ref, ...props }: ToolbarLinkProps) {
+  return (
+    <a
+      ref={ref}
+      className={cn(S.link, className)}
+      {...props}
+    >
+      {children}
     </a>
   )
-)
-ToolbarLink.displayName = 'Toolbar.Link'
+}
 
 export const Toolbar = Object.assign(ToolbarRoot, {
   Button: ToolbarButton,

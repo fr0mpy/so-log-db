@@ -6,7 +6,6 @@ import {
   useState,
   useRef,
   useCallback,
-  forwardRef,
   cloneElement,
   isValidElement,
   useEffect,
@@ -15,6 +14,7 @@ import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { usePositioning, SPRING_CONFIG, type Side } from '../../hooks'
+import { HoverCardStyles as S } from './styles'
 import type {
   HoverCardRootProps,
   HoverCardTriggerProps,
@@ -54,8 +54,8 @@ function HoverCardRoot({
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen)
   const [side, setSide] = useState<Side>('bottom')
   const triggerRef = useRef<HTMLElement>(null)
-  const openTimerRef = useRef<ReturnType<typeof setTimeout>>()
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout>>()
+  const openTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   const isControlled = controlledOpen !== undefined
   const open = isControlled ? controlledOpen : uncontrolledOpen
@@ -113,69 +113,63 @@ function HoverCardRoot({
   )
 }
 
-HoverCardRoot.displayName = 'HoverCard.Root'
-
 // ============================================================================
 // Trigger
 // ============================================================================
 
-const HoverCardTrigger = forwardRef<HTMLDivElement, HoverCardTriggerProps>(
-  ({ asChild, children, onMouseEnter, onMouseLeave, ...props }, ref) => {
-    const { setOpen, triggerRef } = useHoverCardContext()
+function HoverCardTrigger({ asChild, children, onMouseEnter, onMouseLeave, ref, ...props }: HoverCardTriggerProps) {
+  const { setOpen, triggerRef } = useHoverCardContext()
 
-    const handleMouseEnter = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
-        setOpen(true)
-        onMouseEnter?.(e)
-      },
-      [setOpen, onMouseEnter]
-    )
+  const handleMouseEnter = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      setOpen(true)
+      onMouseEnter?.(e)
+    },
+    [setOpen, onMouseEnter]
+  )
 
-    const handleMouseLeave = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
-        setOpen(false)
-        onMouseLeave?.(e)
-      },
-      [setOpen, onMouseLeave]
-    )
+  const handleMouseLeave = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      setOpen(false)
+      onMouseLeave?.(e)
+    },
+    [setOpen, onMouseLeave]
+  )
 
-    // Merge refs
-    const mergedRef = useCallback(
-      (node: HTMLElement | null) => {
-        if (typeof ref === 'function') {
-          ref(node as HTMLDivElement)
-        } else if (ref) {
-          ref.current = node as HTMLDivElement
-        }
-        (triggerRef as React.MutableRefObject<HTMLElement | null>).current = node
-      },
-      [ref, triggerRef]
-    )
+  // Merge refs
+  const mergedRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (typeof ref === 'function') {
+        ref(node as HTMLDivElement)
+      } else if (ref) {
+        (ref as React.MutableRefObject<HTMLDivElement | null>).current = node as HTMLDivElement
+      }
+      (triggerRef as React.MutableRefObject<HTMLElement | null>).current = node
+    },
+    [ref, triggerRef]
+  )
 
-    if (asChild && isValidElement(children)) {
-      return cloneElement(children as React.ReactElement<any>, {
-        ref: mergedRef,
-        onMouseEnter: handleMouseEnter,
-        onMouseLeave: handleMouseLeave,
-        ...props,
-      })
-    }
-
-    return (
-      <div
-        ref={mergedRef as React.Ref<HTMLDivElement>}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        className="inline-block"
-        {...props}
-      >
-        {children}
-      </div>
-    )
+  if (asChild && isValidElement(children)) {
+    return cloneElement(children as React.ReactElement<any>, {
+      ref: mergedRef,
+      onMouseEnter: handleMouseEnter,
+      onMouseLeave: handleMouseLeave,
+      ...props,
+    })
   }
-)
 
-HoverCardTrigger.displayName = 'HoverCard.Trigger'
+  return (
+    <div
+      ref={mergedRef as React.Ref<HTMLDivElement>}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={S.trigger}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
 
 // ============================================================================
 // Portal
@@ -188,8 +182,6 @@ function HoverCardPortal({ children, container }: HoverCardPortalProps) {
 
   return createPortal(children, container ?? document.body)
 }
-
-HoverCardPortal.displayName = 'HoverCard.Portal'
 
 // ============================================================================
 // Positioner
@@ -261,7 +253,7 @@ function HoverCardPositioner({
   return (
     <div
       ref={positionerRef}
-      className={cn('z-50', className)}
+      className={cn(S.positioner, className)}
       style={getPositionStyles()}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -271,42 +263,31 @@ function HoverCardPositioner({
   )
 }
 
-HoverCardPositioner.displayName = 'HoverCard.Positioner'
-
 // ============================================================================
 // Popup
 // ============================================================================
 
-const HoverCardPopup = forwardRef<HTMLDivElement, HoverCardPopupProps>(
-  ({ children, className }, ref) => {
-    const { side, open } = useHoverCardContext()
-    const { originClass, initialOffset } = usePositioning(side)
+function HoverCardPopup({ children, className, ref }: HoverCardPopupProps) {
+  const { side, open } = useHoverCardContext()
+  const { originClass, initialOffset } = usePositioning(side)
 
-    return (
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            ref={ref}
-            initial={{ opacity: 0, scale: 0.95, ...initialOffset }}
-            animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, ...initialOffset }}
-            transition={SPRING_CONFIG.default}
-            className={cn(
-              'w-64 rounded-theme-lg border border-border',
-              'bg-surface shadow-theme-lg glass p-4',
-              originClass,
-              className
-            )}
-          >
-            {children}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    )
-  }
-)
-
-HoverCardPopup.displayName = 'HoverCard.Popup'
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, scale: 0.95, ...initialOffset }}
+          animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, ...initialOffset }}
+          transition={SPRING_CONFIG.default}
+          className={cn(S.popup, originClass, className)}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
 
 // ============================================================================
 // Arrow
@@ -318,19 +299,12 @@ function HoverCardArrow({ className }: HoverCardArrowProps) {
 
   return (
     <span
-      className={cn(
-        'absolute w-3 h-3 rotate-45',
-        'bg-surface border border-border shadow-theme-sm',
-        arrowClasses,
-        className
-      )}
+      className={cn(S.arrow.base, arrowClasses, className)}
       style={{ transform: `rotate(${arrowRotation}deg)` }}
       aria-hidden="true"
     />
   )
 }
-
-HoverCardArrow.displayName = 'HoverCard.Arrow'
 
 // ============================================================================
 // Simple Wrapper (backward compatibility)

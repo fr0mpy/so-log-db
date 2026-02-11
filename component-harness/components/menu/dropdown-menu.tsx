@@ -1,14 +1,8 @@
 import { cn } from '@/lib/utils'
-import { forwardRef, useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { SPRING, OFFSET } from '../../config'
-
-// Alignment classes for dropdown positioning
-const ALIGNMENTS = {
-  start: 'left-0',
-  center: 'left-1/2 -translate-x-1/2',
-  end: 'right-0',
-} as const
+import { DropdownMenuStyles as S } from './styles'
 
 interface DropdownMenuProps {
   trigger: React.ReactNode
@@ -16,7 +10,7 @@ interface DropdownMenuProps {
   align?: 'start' | 'center' | 'end'
 }
 
-const DropdownMenu = ({ trigger, children, align = 'start' }: DropdownMenuProps) => {
+function DropdownMenu({ trigger, children, align = 'start' }: DropdownMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -48,13 +42,13 @@ const DropdownMenu = ({ trigger, children, align = 'start' }: DropdownMenuProps)
   }, [])
 
   return (
-    <div ref={menuRef} className="relative inline-block">
+    <div ref={menuRef} className={S.wrapper}>
       <div
         role="button"
         tabIndex={0}
         onClick={handleTriggerClick}
         onKeyDown={handleTriggerKeyDown}
-        className="cursor-pointer"
+        className={S.trigger}
       >
         {trigger}
       </div>
@@ -66,11 +60,7 @@ const DropdownMenu = ({ trigger, children, align = 'start' }: DropdownMenuProps)
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -OFFSET.dropdown }}
             transition={SPRING.default}
-            className={cn(
-              'absolute z-50 mt-1 min-w-[12rem] rounded-theme-md border border-border',
-              'bg-background shadow-theme-lg glass p-1 origin-top',
-              ALIGNMENTS[align]
-            )}
+            className={cn(S.popup, S.alignment[align])}
           >
             {children}
           </motion.div>
@@ -80,51 +70,52 @@ const DropdownMenu = ({ trigger, children, align = 'start' }: DropdownMenuProps)
   )
 }
 
-DropdownMenu.displayName = 'DropdownMenu'
+interface DropdownMenuItemProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart' | 'onAnimationEnd'> {
+  ref?: React.Ref<HTMLButtonElement>
+}
 
-const DropdownMenuItem = forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
-  ({ className, children, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }, ref) => (
+function DropdownMenuItem({ className, children, ref, ...props }: DropdownMenuItemProps) {
+  return (
     <motion.button
       ref={ref}
       role="menuitem"
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
-      className={cn(
-        'relative flex w-full cursor-pointer select-none items-center rounded-theme-sm px-2 py-1.5',
-        'text-sm outline-none transition-colors',
-        'hover:bg-muted focus-visible:bg-muted',
-        'disabled:pointer-events-none disabled:opacity-50',
-        className
-      )}
+      className={cn(S.item, className)}
       {...props}
     >
       {children}
     </motion.button>
   )
-)
-DropdownMenuItem.displayName = 'DropdownMenuItem'
+}
 
-const DropdownMenuSeparator = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
+interface DropdownMenuSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
+  ref?: React.Ref<HTMLDivElement>
+}
+
+function DropdownMenuSeparator({ className, ref, ...props }: DropdownMenuSeparatorProps) {
+  return (
     <div
       ref={ref}
       role="separator"
-      className={cn('my-1 h-px bg-border', className)}
+      className={cn(S.separator, className)}
       {...props}
     />
   )
-)
-DropdownMenuSeparator.displayName = 'DropdownMenuSeparator'
+}
 
-const DropdownMenuLabel = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
+interface DropdownMenuLabelProps extends React.HTMLAttributes<HTMLDivElement> {
+  ref?: React.Ref<HTMLDivElement>
+}
+
+function DropdownMenuLabel({ className, ref, ...props }: DropdownMenuLabelProps) {
+  return (
     <div
       ref={ref}
-      className={cn('px-2 py-1.5 text-sm font-semibold text-foreground', className)}
+      className={cn(S.label, className)}
       {...props}
     />
   )
-)
-DropdownMenuLabel.displayName = 'DropdownMenuLabel'
+}
 
 export { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel }

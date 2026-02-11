@@ -1,69 +1,63 @@
 import { cn } from '@/lib/utils'
-import { forwardRef, useState, useId } from 'react'
-import { CONTROL_CHECKED, CONTROL_LABEL } from '../../styles'
-
-/** Switch-specific unchecked state (has border unlike checked) */
-const SWITCH_UNCHECKED = 'bg-neu-base border border-primary/30 shadow-neu-control-unchecked-inline'
+import { useState, useId } from 'react'
+import { SwitchStyles as S } from './styles'
 
 interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label?: string
   onCheckedChange?: (checked: boolean) => void
+  ref?: React.Ref<HTMLInputElement>
 }
 
-const Switch = forwardRef<HTMLInputElement, SwitchProps>(
-  ({ className, label, id, checked, defaultChecked, onCheckedChange, onChange, ...props }, ref) => {
-    const [isChecked, setIsChecked] = useState(defaultChecked || false)
-    const generatedId = useId()
-    const switchId = id || generatedId
-    const controlledChecked = checked !== undefined ? checked : isChecked
+function Switch({ className, label, id, checked, defaultChecked, onCheckedChange, onChange, ref, ...props }: SwitchProps) {
+  const [isChecked, setIsChecked] = useState(defaultChecked || false)
+  const generatedId = useId()
+  const switchId = id || generatedId
+  const controlledChecked = checked !== undefined ? checked : isChecked
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newChecked = e.target.checked
-      if (checked === undefined) {
-        setIsChecked(newChecked)
-      }
-      onCheckedChange?.(newChecked)
-      onChange?.(e)
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newChecked = e.target.checked
+    if (checked === undefined) {
+      setIsChecked(newChecked)
     }
-
-    return (
-      <div className="flex items-center gap-2">
-        <label
-          htmlFor={switchId}
-          className={cn(
-            'relative inline-flex h-4 w-8 cursor-pointer items-center rounded-full',
-            'transition-all duration-200',
-            controlledChecked ? CONTROL_CHECKED : SWITCH_UNCHECKED,
-            props.disabled && 'cursor-not-allowed opacity-50',
-            className
-          )}
-        >
-          <input
-            type="checkbox"
-            id={switchId}
-            ref={ref}
-            className="sr-only peer"
-            checked={controlledChecked}
-            onChange={handleChange}
-            {...props}
-          />
-          <span
-            className={cn(
-              'inline-block h-3 w-3 transform rounded-full bg-neu-base shadow-neu-raised-sm transition-transform duration-200',
-              controlledChecked ? 'translate-x-4' : 'translate-x-0.5'
-            )}
-          />
-        </label>
-        {label && (
-          <label htmlFor={switchId} className={CONTROL_LABEL}>
-            {label}
-          </label>
-        )}
-      </div>
-    )
+    onCheckedChange?.(newChecked)
+    onChange?.(e)
   }
-)
 
-Switch.displayName = 'Switch'
+  return (
+    <div className={S.container}>
+      <label
+        htmlFor={switchId}
+        className={cn(
+          S.track.base,
+          controlledChecked ? S.checked : S.unchecked,
+          !controlledChecked && S.track.uncheckedBorder,
+          props.disabled && S.track.disabled,
+          className
+        )}
+      >
+        <input
+          type="checkbox"
+          id={switchId}
+          ref={ref}
+          className={S.input}
+          checked={controlledChecked}
+          onChange={handleChange}
+          {...props}
+        />
+        <span
+          className={cn(
+            S.thumb.base,
+            controlledChecked ? S.thumb.checked : S.thumb.unchecked
+          )}
+        />
+      </label>
+      {label && (
+        <label htmlFor={switchId} className={S.label}>
+          {label}
+        </label>
+      )}
+    </div>
+  )
+}
 
 export { Switch }
