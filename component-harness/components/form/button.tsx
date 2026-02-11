@@ -5,7 +5,7 @@ import { Progress } from '../display/progress'
 import { LOADING, DURATION, LABEL } from '../../config'
 import { ButtonStyles as S } from './styles'
 
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive'
+export type ButtonVariant = 'primary' | 'secondary' | 'text' | 'ghost' | 'destructive'
 export type ButtonSize = 'sm' | 'md' | 'lg'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -64,11 +64,12 @@ function Button({
             className={S.loadingContent}
           >
             <span className={S.loadingText}>{loadingText}</span>
-            <Progress value={loadingProgress} max={LOADING.segments} segments={LOADING.segments} size="sm" />
+            <Progress value={loadingProgress} max={LOADING.segments} segments={LOADING.segments} size="sm" inverted />
           </motion.div>
         ) : (
           <motion.span
             key="content"
+            className={S.content}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

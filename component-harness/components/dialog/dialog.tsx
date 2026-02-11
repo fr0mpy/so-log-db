@@ -28,6 +28,7 @@ import type {
   DialogDescriptionProps,
   DialogFooterProps,
   DialogCloseProps,
+  DialogContentProps,
 } from './types'
 
 // Context
@@ -90,7 +91,7 @@ function DialogTrigger({ asChild, children, onClick, ref, ...props }: DialogTrig
   }
 
   return (
-    <Button ref={ref} variant="outline" onClick={handleClick} {...props}>
+    <Button ref={ref} variant="text" onClick={handleClick} {...props}>
       {children}
     </Button>
   )
@@ -254,6 +255,22 @@ function DialogClose({ asChild, children, onClick, className, ref, ...props }: D
   )
 }
 
+/**
+ * Composite DialogContent - wraps Portal + Backdrop + Popup for simple usage.
+ * Handles portal rendering, backdrop, and escape key automatically.
+ */
+function DialogContent({ className, children, showClose = true, ref, ...props }: DialogContentProps) {
+  return (
+    <DialogPortal>
+      <DialogBackdrop />
+      <DialogPopup ref={ref} className={className} {...props}>
+        {showClose && <DialogClose />}
+        {children}
+      </DialogPopup>
+    </DialogPortal>
+  )
+}
+
 // Namespace export (callable as Root + namespace)
 export const Dialog = Object.assign(DialogRoot, {
   Root: DialogRoot,
@@ -261,6 +278,7 @@ export const Dialog = Object.assign(DialogRoot, {
   Portal: DialogPortal,
   Backdrop: DialogBackdrop,
   Popup: DialogPopup,
+  Content: DialogContent,
   Header: DialogHeader,
   Title: DialogTitle,
   Description: DialogDescription,
@@ -275,6 +293,7 @@ export {
   DialogPortal,
   DialogBackdrop,
   DialogPopup,
+  DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,

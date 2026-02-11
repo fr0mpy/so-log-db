@@ -61,3 +61,9 @@ export interface DialogCloseProps extends ButtonHTMLAttributes<HTMLButtonElement
   asChild?: boolean
   ref?: Ref<HTMLButtonElement>
 }
+
+export interface DialogContentProps extends HTMLAttributes<HTMLDivElement> {
+  /** Show close button in top-right corner */
+  showClose?: boolean
+  ref?: Ref<HTMLDivElement>
+}

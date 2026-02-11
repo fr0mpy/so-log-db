@@ -78,6 +78,8 @@ export const ProgressStyles = {
     base: 'flex-1 rounded-full transition-all duration-200 ease-out',
     filled: 'bg-primary shadow-neu-raised-sm',
     empty: 'bg-neu-base shadow-neu-pressed-sm',
+    invertedFilled: 'bg-white',
+    invertedEmpty: 'bg-white/30',
   },
 } as const
 

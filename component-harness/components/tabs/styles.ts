@@ -23,7 +23,7 @@ export const TabsStyles = {
       Interactive.Focus.neu,
       Interactive.Disabled.base,
     ].join(' '),
-    active: TypographyTokens.textForeground,
+    active: TypographyTokens.textPrimary,
     inactive: [TypographyTokens.textMuted, 'hover:text-foreground'].join(' '),
   },
   indicator: 'absolute inset-0 rounded-theme-md bg-neu-base shadow-neu-raised-sm',

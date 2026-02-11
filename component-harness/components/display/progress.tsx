@@ -8,10 +8,11 @@ interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
   segments?: number
   indeterminate?: boolean
   size?: 'sm' | 'md'
+  inverted?: boolean
   ref?: React.Ref<HTMLDivElement>
 }
 
-function Progress({ value = 0, max = 100, segments = 10, indeterminate = false, size = 'md', className, ref, ...props }: ProgressProps) {
+function Progress({ value = 0, max = 100, segments = 10, indeterminate = false, size = 'md', inverted = false, className, ref, ...props }: ProgressProps) {
   const percentage = Math.min(100, Math.max(0, (value / max) * 100))
   const filledSegments = Math.round((percentage / 100) * segments)
 
@@ -48,7 +49,9 @@ function Progress({ value = 0, max = 100, segments = 10, indeterminate = false, 
             key={i}
             className={cn(
               S.segment.base,
-              i < filledSegments ? S.segment.filled : S.segment.empty
+              inverted
+                ? (i < filledSegments ? S.segment.invertedFilled : S.segment.invertedEmpty)
+                : (i < filledSegments ? S.segment.filled : S.segment.empty)
             )}
           />
         ))

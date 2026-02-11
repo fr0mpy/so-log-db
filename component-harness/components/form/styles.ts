@@ -25,12 +25,12 @@ export const ButtonStyles = {
     TypographyTokens.fontMedium,
     Interactive.Cursor.pointer,
     Interactive.Transition.color,
-    'outline-none',
+    'outline-none whitespace-nowrap',
     Interactive.Disabled.base,
   ].join(' '),
 
   /** Loading state modifier */
-  loading: 'flex-col py-2',
+  loading: 'flex-col py-2 disabled:opacity-100',
 
   /** Loading content wrapper */
   loadingContent: [
@@ -46,6 +46,12 @@ export const ButtonStyles = {
     TypographyTokens.textXs,
     TypographyTokens.fontSemibold,
     TypographyTokens.trackingWide,
+  ].join(' '),
+
+  /** Content wrapper for children */
+  content: [
+    Layout.Flex.inline,
+    SpacingTokens.gap1,
   ].join(' '),
 
   /** Size variants */
@@ -89,12 +95,11 @@ export const ButtonStyles = {
       'active:shadow-neu-pressed-sm',
       'focus-visible:shadow-[var(--shadow-variant-secondary),var(--shadow-focus)]',
     ].join(' '),
-    outline: [
-      'bg-neu-base text-foreground',
-      'shadow-neu-raised',
-      'hover:shadow-neu-raised-lg',
-      'active:shadow-neu-pressed-sm',
-      'focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]',
+    text: [
+      'bg-transparent text-foreground',
+      'hover:text-primary',
+      'active:opacity-80',
+      'focus-visible:shadow-neu-focus',
     ].join(' '),
     ghost: [
       'bg-transparent text-foreground',
