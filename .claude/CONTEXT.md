@@ -15,7 +15,7 @@
 | Deliverable              | Description                                        |
 | ------------------------ | -------------------------------------------------- |
 | **StackOne MFE**         | Multi-page MFE with log dashboard, search, and data exploration |
-| **Component Library**    | Shared UI components consumed by host and MFEs     |
+| **Component Library**    | Shared UI components consumed by shell and MFEs    |
 | **Theme Infrastructure** | Design tokens + runtime theming via CDN            |
 | **MFE Manifest System**  | Config that declares each MFE's theme and settings |
 
@@ -35,47 +35,42 @@
 
 ### MFE Pattern
 
-- **Module Federation** — MFEs are independently deployable
-- **Host provides shared deps** — React, component library available at runtime
-- **MFEs declare peer deps** — No bundling of shared libraries
+- **Multi-Zone** — Next.js zones with URL rewrites (not Module Federation)
+- **Shell proxies to MFE** — Rewrites `/connectors/*` requests to MFE server
+- **MFEs are standalone Next.js apps** — Each zone is independently deployable
+- **Shared UI via workspace package** — `@stackone-ui/core` with `transpilePackages`
 
 ### Monorepo
 
-- **Turborepo** — Monorepo tooling for caching and incremental builds
-- Structure TBD, likely:
+- **Turborepo + pnpm workspaces** — Monorepo tooling for caching and incremental builds
+- Structure:
   ```
   apps/
-    log-dashboard/     # MFE
+    shell/             # Shell app (port 3000)
+    mfe/
+      toolset/         # Toolset MFE (port 3001, basePath: /connectors)
   packages/
-    ui/                # Component library
-    theme/             # Theme provider + tokens
-    sync/              # PowerSync client (if shared)
+    ui-library/
+      core/            # @stackone-ui/core - Component library
+      harness/         # Component preview harness (Vite)
   ```
 
-### Host Relationship
+### Shell Relationship (Multi-Zone)
 
-- **Host is editable** — We can modify Host behavior when needed
-- **Host is server-rendered (SSR)** — Returns fully rendered HTML, then hydrates on client
-- **Host imports component library** — We publish, they consume
-- **Host reads MFE manifests** — Published config dictates MFE loading
-- **Host provides shared runtime** — React, router available at runtime
-- **Host handles all routing** — Direct visits go through Host first
-- **MFE loads on route match** — Host dynamically imports MFE when URL matches its routes
-- **Direct visits are primary traffic** — Users frequently visit MFE URLs directly (not just in-app navigation)
+- **Shell is editable** — We can modify Shell behavior when needed
+- **Shell is server-rendered (SSR)** — Returns fully rendered HTML, then hydrates on client
+- **Shell imports component library** — Uses `@stackone-ui/core` with `transpilePackages`
+- **Shell rewrites to MFE** — `/connectors/*` routes proxied to MFE server via `rewrites()`
+- **MFE uses `basePath`** — MFE serves all routes under `/connectors` prefix
+- **Each zone is independent** — Shell and MFE are separate Next.js apps with own builds
+- **Direct visits are primary traffic** — Users frequently visit MFE URLs directly
 
-### MFE Manifest
+### Multi-Zone Configuration
 
-- **Published separately** — Host fetches manifest to load MFE
-- **Contains:**
-  - `name` — MFE identifier
-  - `routes` — Route patterns this MFE handles (e.g., `["/stackone", "/stackone/*"]`)
-  - `entry` — Bundle URL with content hash
-  - `themeUrl` — Where to fetch theme config
-  - `themeName` — Which theme to apply
-  - `preload` — Whether Host should inject modulepreload hint for direct visits
-  - `assets.wasm` — Optional WASM preload config:
-    - `url` — WASM file URL
-    - `routes` — Routes requiring WASM (e.g., `["/stackone/search/*"]`)
+- **Shell `next.config.ts`** — Defines rewrites to proxy `/connectors/*` to MFE
+- **MFE `next.config.ts`** — Sets `basePath: '/connectors'` to serve under prefix
+- **No manifest required** — Routing handled via Next.js rewrites, not dynamic loading
+- **Environment variable** — `MFE_URL` controls MFE destination (default: `http://localhost:3001`)
 
 ---
 
@@ -90,7 +85,7 @@
 
 - **Owned by this team**
 - **Tailwind CSS** — Utility-first styling
-- **Consumed via peer deps** — Host imports, MFEs reference as peer
+- **Consumed via peer deps** — Shell imports, MFEs reference as peer
 
 ### Figma Integration
 
@@ -116,7 +111,7 @@
 | Next.js           | MFE framework       |
 | React             | UI library          |
 | Tailwind CSS      | Styling             |
-| Module Federation | MFE runtime sharing |
+| Multi-Zone        | Next.js zone routing |
 
 ### Local-First Data
 
@@ -164,10 +159,10 @@
 
 | Scenario | Route | Flow |
 |----------|-------|------|
-| **First visit** | Search | Host SSR → REST fetch → Render → Background: WASM + SQLite |
-| **First visit** | Other | Host SSR → REST fetch → Render (no SQLite) |
-| **Return visit** | Search | Host SSR → SQLite query → Instant render |
-| **Return visit** | Other | Host SSR → REST fetch → Render |
+| **First visit** | Search | Shell SSR → REST fetch → Render → Background: WASM + SQLite |
+| **First visit** | Other | Shell SSR → REST fetch → Render (no SQLite) |
+| **Return visit** | Search | Shell SSR → SQLite query → Instant render |
+| **Return visit** | Other | Shell SSR → REST fetch → Render |
 | **In-app nav** | → Search | Bootstrap SQLite on demand if not ready |
 
 See [architecture.md](../architecture.md) for detailed sequence diagrams.
@@ -191,7 +186,7 @@ See [architecture.md](../architecture.md) for detailed sequence diagrams.
 | **LCP** | Route-aware preload eliminates MFE fetch waterfall; local-first data via PowerSync |
 | **CLS** | Skeleton UI reserves layout; metric-matched font fallbacks |
 | **INP** | Theme/PowerSync init runs in parallel; defer non-critical work |
-| **FCP** | Host SSR provides early shell; skeleton renders before data |
+| **FCP** | Shell SSR provides early shell; skeleton renders before data |
 
 ### Remaining LCP Dependencies
 
@@ -205,13 +200,12 @@ PowerSync/SQLite are client-only and cannot be SSR'd. Local-first model means su
 
 ## Open Questions
 
-- [x] MFE manifest schema — Defined (name, routes, entry, themeUrl, themeName, preload)
-- [ ] Turborepo package structure — Exact layout TBD
+- [x] MFE architecture — Multi-Zone with rewrites (not Module Federation)
+- [x] Turborepo package structure — Defined (apps/shell, apps/mfe/toolset, packages/ui-library)
 - [ ] PowerSync scope — Shared package or MFE-specific?
 - [ ] Theme CDN implementation — Storage, versioning, invalidation
 - [ ] Storybook setup — Standalone or part of monorepo?
-- [x] Host rendering strategy — Server-rendered (SSR) with hydration
-- [ ] Host route-aware preload — We can implement this in Host
+- [x] Shell rendering strategy — Server-rendered (SSR) with hydration
 
 ---
 
@@ -227,20 +221,18 @@ PowerSync/SQLite are client-only and cannot be SSR'd. Local-first model means su
 
 ## Constraints
 
-1. **Host is editable** — Can modify host behavior when needed
+1. **Shell is editable** — Can modify shell behavior when needed
 2. **Peer deps required** — Must not bundle shared libraries
 3. **Runtime theming** — Themes applied via CSS variables, not build-time
 4. **Offline-capable** — PowerSync enables local-first data access
-5. **Direct visits through Host** — All MFE access goes through Host routing
+5. **Direct visits through Shell** — All MFE access goes through Shell routing
 6. **PowerSync is client-only** — SQLite WASM cannot run server-side, limits SSR options
 
-## Host Integration Requirements
+## Multi-Zone Setup
 
-For optimal direct visit performance, Host should:
+Shell and MFE are independent Next.js apps connected via rewrites:
 
-1. **Read MFE manifest at SSR time** — Match URL to MFE routes
-2. **Inject modulepreload hint** — `<link rel="modulepreload" href="[entry]">` for matched MFE
-3. **Inject WASM preload (if route matches)** — `<link rel="preload" href="[wasm.url]" as="fetch">` when URL matches `assets.wasm.routes`
-4. **Include mount point in SSR HTML** — MFE container exists before Host JS runs
-
-We can implement these directly in Host when needed.
+1. **Shell rewrites** — `next.config.ts` proxies `/connectors/*` to MFE server
+2. **MFE basePath** — MFE sets `basePath: '/connectors'` so all routes serve under prefix
+3. **Shared UI** — Both apps use `@stackone-ui/core` via `transpilePackages`
+4. **Environment config** — `MFE_URL` env var controls MFE destination in production

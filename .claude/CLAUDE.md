@@ -228,6 +228,103 @@ import { SPRING, DURATION, OPACITY, ARIA, LABEL, SR_ONLY } from '@/config'
 <span className="sr-only">{SR_ONLY.loading}</span>
 ```
 
+---
+
+## Theme Architecture
+
+### Two-Tier Theming
+
+The project uses a two-tier theming system:
+
+| Tier | Contains | Loaded |
+|------|----------|--------|
+| **Base Theme** | Spacing, shadows, motion, radii, z-index | Bundled with app |
+| **Brand Theme** | Colors, typography | Fetched per MFE |
+
+### CSS Variable Naming Convention
+
+**All theme tokens use category prefixes:**
+
+| Category | Prefix | Examples |
+|----------|--------|----------|
+| Colors | `--color-*` | `--color-primary`, `--color-neu-base` |
+| Shadows | `--shadow-*` | `--shadow-raised`, `--shadow-pressed` |
+| Radius | `--radius-*` | `--radius-sm`, `--radius-md` |
+| Spacing | `--spacing-*` | `--spacing-1`, `--spacing-4` |
+| Typography | `--font-*` | `--font-heading`, `--font-body` |
+| Motion | `--motion-*` | `--motion-duration-fast` |
+| Z-Index | `--z-*` | `--z-modal`, `--z-tooltip` |
+
+```css
+/* ❌ NEVER — unprefixed or inconsistent */
+--neu-base: #f0f0f0;
+--duration-fast: 150ms;
+
+/* ✅ ALWAYS — category-prefixed */
+--color-neu-base: #f0f0f0;
+--motion-duration-fast: 150ms;
+```
+
+### Theme Files
+
+```
+packages/ui-library/core/src/themes/
+├── base.json           # Structural tokens (bundled)
+├── schema.ts           # Token definitions + fallbacks
+├── apply-theme.ts      # JSON → CSS vars
+├── validate-theme.ts   # Warns on missing tokens
+└── index.ts            # Barrel export
+
+apps/shell/public/themes/
+└── stackone-green.json # Brand theme (fetched)
+```
+
+### Tailwind Preset
+
+Apps extend the shared preset instead of duplicating config:
+
+```ts
+// tailwind.config.ts
+import stackonePreset from '@stackone-ui/core/tailwind.preset'
+
+export default {
+  presets: [stackonePreset],
+  content: ['./src/**/*.{ts,tsx}'],
+}
+```
+
+### Adding New Tokens
+
+1. Add to `schema.ts` with fallback value
+2. Add to `base.json` or brand theme JSON
+3. Add to `tailwind.preset.ts` if Tailwind utility needed
+4. Use in components via Tailwind classes or CSS vars
+
+---
+
+### Multi-Zone Navigation (CRITICAL)
+
+This project uses **Next.js Multi-Zones** (not Module Federation). Cross-zone links require full page navigation.
+
+```tsx
+// ❌ NEVER — next/link for cross-zone routes
+import Link from 'next/link'
+<Link href="/connectors">MFE</Link>  // Causes webpack "call" error
+
+// ✅ ALWAYS — <a> tag for cross-zone navigation
+<a href="/connectors">MFE</a>  // Full page navigation via rewrite
+```
+
+**Why:** `next/link` performs client-side routing within the same zone. Routes served by different zones (via `rewrites()`) don't exist in the client router, causing webpack module errors.
+
+| Route Type | Use |
+|------------|-----|
+| Same zone (e.g., `/about` in Shell) | `<Link href="/about">` |
+| Cross zone (e.g., `/connectors` → MFE) | `<a href="/connectors">` |
+| Within MFE (e.g., `/logs` in MFE) | `<Link href="/logs">` |
+
+---
+
 ### Constructive Pushback
 
 When the user makes a claim or assumption, verify accuracy before agreeing.
