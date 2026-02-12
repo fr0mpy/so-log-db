@@ -177,9 +177,18 @@ export const BRAND_THEME_SCHEMA = {
   },
 
   font: {
-    heading: { fallback: "'Inter', ui-sans-serif, system-ui, sans-serif" },
-    body: { fallback: "'Inter', ui-sans-serif, system-ui, sans-serif" },
-    code: { fallback: "'IBM Plex Mono', ui-monospace, monospace" },
+    heading: {
+      fallback: "'Figtree', 'Figtree Fallback', ui-sans-serif, system-ui, sans-serif",
+      description: 'Heading font family',
+    },
+    body: {
+      fallback: "'Figtree', 'Figtree Fallback', ui-sans-serif, system-ui, sans-serif",
+      description: 'Body text font family',
+    },
+    code: {
+      fallback: "'IBM Plex Mono', 'IBM Plex Mono Fallback', ui-monospace, monospace",
+      description: 'Monospace font for code',
+    },
   },
 } as const
 

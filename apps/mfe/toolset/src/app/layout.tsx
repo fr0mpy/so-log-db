@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ThemeProvider } from '@stackone-ui/core/providers'
 import { Button } from '@stackone-ui/core'
+import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
 import './globals.css'
 import { AppLayout } from '../styles'
 
@@ -10,14 +11,17 @@ export const metadata: Metadata = {
   description: 'Log viewing, search, and data exploration',
 }
 
+/** Combined font CSS variable classes */
+const fontVariables = `${fontSans.variable} ${fontMono.variable}`
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
+    <html lang="en" className={fontVariables} suppressHydrationWarning>
+      <body className={fontSans.className}>
         <ThemeProvider>
           <div className={AppLayout.container}>
             <aside className={AppLayout.sidebar.base}>

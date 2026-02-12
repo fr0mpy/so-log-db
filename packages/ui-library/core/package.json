@@ -12,11 +12,15 @@
     "./utils": "./src/utils/index.ts",
     "./providers": "./src/providers/index.ts",
     "./themes": "./src/themes/index.ts",
+    "./fonts": "./src/fonts/index.ts",
+    "./fonts/next-loader": "./src/fonts/next-loader.ts",
+    "./fonts/css-loader": "./src/fonts/css-loader.ts",
     "./tailwind.preset": "./tailwind.preset.ts",
     "./tailwind.config": "./tailwind.config.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "generate:fonts": "tsx src/fonts/generate-next-loader.ts"
   },
   "peerDependencies": {
     "react": "^18.2.0 || ^19.0.0",
@@ -36,9 +40,11 @@
     "@tailwindcss/container-queries": "^0.1.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwindcss": "^3.4.0",
+    "tsx": "^4.0.0",
     "typescript": "^5.0.0"
   }
 }
