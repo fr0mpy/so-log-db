@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * CSS variables are injected by the theme system.
+ * See: @stackone-ui/core/themes
+ *
+ * Base theme: spacing, shadows, motion, z-index
+ * Brand theme: colors, typography
+ */
+
+@layer base {
+  html {
+    @apply bg-background text-foreground;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  /* Apply border color to form elements */
+  input,
+  textarea,
+  select,
+  button {
+    @apply border-border;
+  }
+}

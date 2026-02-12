@@ -1,12 +1,21 @@
 {
-  "name": "stackone---log-dashboard",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "stackone-monorepo",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean:ports": "for port in 3000 3001 5173; do lsof -ti :$port | xargs kill -9 2>/dev/null; done; echo '✅ Ports cleared'",
+    "predev:all": "pnpm clean:ports",
+    "dev": "turbo dev --no-daemon",
+    "dev:all": "echo '\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n  🚀 StackOne Dev Servers\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n  Harness:  http://localhost:5173\n  Shell:    http://localhost:3000\n  Toolset:  http://localhost:3001\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' && turbo dev --no-daemon",
+    "dev:shell": "turbo dev --no-daemon --filter @stackone/shell",
+    "dev:toolset": "turbo dev --no-daemon --filter @stackone/mfe-toolset",
+    "dev:harness": "turbo dev --no-daemon --filter @stackone-ui/harness",
+    "build": "turbo build",
+    "test": "turbo test",
+    "clean": "turbo clean && rm -rf node_modules"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "typescript": "^5.0.0"
+  }
 }
