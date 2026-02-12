@@ -15,9 +15,10 @@ export const DrawerStyles = {
   closeIcon: Layout.Size.iconSm,
 } as const
 
+// Responsive drawer positions - full width on mobile with max constraint, fixed on tablet+
 export const SIDE_POSITIONS: Record<DrawerSide, string> = {
-  left: 'left-0 top-0 h-full w-80',
-  right: 'right-0 top-0 h-full w-80',
-  top: 'top-0 left-0 w-full h-80',
-  bottom: 'bottom-0 left-0 w-full h-80',
+  left: 'left-0 top-0 h-full w-full max-w-[calc(100vw-3rem)] md:w-80 md:max-w-none',
+  right: 'right-0 top-0 h-full w-full max-w-[calc(100vw-3rem)] md:w-80 md:max-w-none',
+  top: 'top-0 left-0 w-full h-auto max-h-[80vh] md:h-80 md:max-h-none',
+  bottom: 'bottom-0 left-0 w-full h-auto max-h-[80vh] md:h-80 md:max-h-none',
 }

@@ -6,13 +6,15 @@ export const MenuStyles = {
     'bg-background shadow-theme-lg glass p-1 origin-top',
   ].join(' '),
   item: [
-    'relative flex w-full cursor-pointer select-none items-center rounded-theme-sm px-2 py-1.5',
+    'relative flex w-full cursor-pointer select-none items-center rounded-theme-sm',
+    'px-3 py-3 min-h-11', // Touch-friendly: 44px minimum height for WCAG 2.5.8
     'text-sm outline-none transition-colors',
     'hover:bg-muted focus-visible:bg-muted',
+    'active:bg-muted/80', // Touch feedback
     'disabled:pointer-events-none disabled:opacity-50',
   ].join(' '),
   separator: 'my-1 h-px bg-border',
-  label: 'px-2 py-1.5 text-sm font-semibold text-foreground',
+  label: 'px-3 py-2 text-sm font-semibold text-foreground',
   alignment: {
     start: 'left-0',
     center: 'left-1/2 -translate-x-1/2',

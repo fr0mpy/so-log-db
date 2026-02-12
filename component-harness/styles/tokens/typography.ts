@@ -37,3 +37,21 @@ export const Typography = {
   // Placeholder
   placeholder: 'placeholder:text-muted-foreground',
 } as const
+
+/**
+ * Responsive typography tokens - mobile-first breakpoint-aware text sizing.
+ * Prevents overly large text on small screens.
+ */
+export const ResponsiveTypography = {
+  // Page heading: scales from 2xl to 4xl
+  heading: 'text-2xl md:text-3xl lg:text-4xl',
+
+  // Section heading: scales from lg to 2xl
+  subheading: 'text-lg md:text-xl lg:text-2xl',
+
+  // Component title in gallery
+  componentTitle: 'text-xl md:text-2xl',
+
+  // Body text that scales slightly
+  bodyLg: 'text-base md:text-lg',
+} as const

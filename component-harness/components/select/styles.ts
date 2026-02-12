@@ -1,7 +1,7 @@
 export const SelectStyles = {
   trigger: {
     base: [
-      'relative flex h-10 w-full items-center justify-between rounded-theme-lg',
+      'relative flex h-11 w-full items-center justify-between rounded-theme-lg', // h-11 = 44px touch target
       'bg-neu-base shadow-neu-raised px-3 py-2 text-sm text-foreground cursor-pointer',
       'focus-visible:outline-none focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]',
       'disabled:cursor-not-allowed disabled:opacity-50',
@@ -23,9 +23,11 @@ export const SelectStyles = {
   optionsWrapper: 'p-1',
   option: {
     base: [
-      'relative flex w-full cursor-pointer select-none items-center rounded-theme-sm px-2 py-1.5',
+      'relative flex w-full cursor-pointer select-none items-center rounded-theme-sm',
+      'px-3 py-3 min-h-11', // Touch-friendly: 44px minimum height for WCAG 2.5.8
       'text-sm outline-none transition-colors',
       'hover:bg-muted focus-visible:bg-muted',
+      'active:bg-muted/80', // Touch feedback
     ].join(' '),
     selected: 'bg-muted',
   },

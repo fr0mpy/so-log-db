@@ -15,9 +15,28 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   projects: [
+    // Desktop
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+    },
+    // Mobile - iPhone 12
+    {
+      name: 'mobile-safari',
+      use: { ...devices['iPhone 12'] },
+    },
+    // Mobile - Pixel 5
+    {
+      name: 'mobile-chrome',
+      use: { ...devices['Pixel 5'] },
+    },
+    // Tablet - iPad
+    {
+      name: 'tablet',
+      use: {
+        ...devices['iPad (gen 7)'],
+        viewport: { width: 768, height: 1024 },
+      },
     },
   ],
   webServer: {

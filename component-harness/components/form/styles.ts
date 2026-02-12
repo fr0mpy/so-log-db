@@ -11,6 +11,7 @@ import {
   SpacingTokens,
   SizingTokens,
   TypographyTokens,
+  TouchTarget,
 } from '../../styles'
 
 // ============================================================================
@@ -151,9 +152,10 @@ export const CheckboxStyles = {
     SpacingTokens.gap2,
   ].join(' '),
 
-  /** Checkbox input */
+  /** Checkbox input - 16px visual size with expanded touch area for WCAG 2.5.8 compliance */
   input: [
     SizingTokens.square4,
+    TouchTarget.controlAreaLg, // Expands touch target to 44px+ while keeping 16px visual
     'rounded-theme-sm',
     Control.Toggle.base,
     Control.Toggle.unchecked,

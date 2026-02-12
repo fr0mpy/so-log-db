@@ -2,7 +2,7 @@
 export { Form, Label, Input, NumberInput, Textarea, Helper, Stepper, getInputStyles, getHelperStyles } from './form'
 
 // Layout patterns
-export { Layout, Flex, Spacing, Position, Size } from './layout'
+export { Layout, Flex, Spacing, Position, Size, Responsive } from './layout'
 
 // Interactive patterns
 export { Interactive, Transition, Focus, Disabled, Hover, Active, Cursor, Button, CloseButton } from './interactive'

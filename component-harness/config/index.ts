@@ -20,3 +20,6 @@ export {
 
 // Text configuration
 export { ARIA, LABEL, PLACEHOLDER, SR_ONLY } from './text'
+
+// Responsive breakpoints
+export { BREAKPOINTS, MEDIA_QUERIES } from './breakpoints'

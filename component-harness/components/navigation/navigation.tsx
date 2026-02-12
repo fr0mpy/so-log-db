@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import { ChevronDown } from 'lucide-react'
-import { useState, createContext, useContext } from 'react'
+import { useState, createContext, useContext, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import type {
   NavigationRootProps,
@@ -12,6 +12,7 @@ import type {
 } from './types'
 import { SPRING, OFFSET } from '../../config'
 import { NavigationStyles as S } from './styles'
+import { useIsTouchDevice, useClickOutside } from '../../hooks'
 
 // Context to share open state between NavigationItem and NavigationContent
 const NavigationItemContext = createContext<{ isOpen: boolean }>({ isOpen: false })
@@ -42,14 +43,33 @@ function NavigationList({ className, children, ref, ...props }: NavigationListPr
 
 function NavigationItem({ hasDropdown, className, children, ref, ...props }: NavigationItemProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const isTouchDevice = useIsTouchDevice()
+  const itemRef = useRef<HTMLLIElement>(null)
+
+  // Close dropdown when clicking outside (for touch devices)
+  useClickOutside(itemRef, useCallback(() => {
+    if (isTouchDevice && isOpen) {
+      setIsOpen(false)
+    }
+  }, [isTouchDevice, isOpen]))
+
+  // Touch devices: click to toggle
+  // Desktop: hover to open/close
+  const interactionHandlers = isTouchDevice
+    ? {
+        onClick: () => hasDropdown && setIsOpen((prev) => !prev),
+      }
+    : {
+        onMouseEnter: () => hasDropdown && setIsOpen(true),
+        onMouseLeave: () => hasDropdown && setIsOpen(false),
+      }
 
   return (
     <NavigationItemContext.Provider value={{ isOpen }}>
       <li
-        ref={ref}
+        ref={itemRef}
         className={cn(S.item, className)}
-        onMouseEnter={() => hasDropdown && setIsOpen(true)}
-        onMouseLeave={() => hasDropdown && setIsOpen(false)}
+        {...interactionHandlers}
         {...props}
       >
         {hasDropdown ? (

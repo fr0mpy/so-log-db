@@ -12,9 +12,9 @@
 // TOKEN EXPORTS (Primitives)
 // ============================================================================
 
-export { Spacing as SpacingTokens } from './tokens/spacing'
-export { Sizing as SizingTokens } from './tokens/sizing'
-export { Typography as TypographyTokens } from './tokens/typography'
+export { Spacing as SpacingTokens, ResponsiveSpacing } from './tokens/spacing'
+export { Sizing as SizingTokens, TouchTarget } from './tokens/sizing'
+export { Typography as TypographyTokens, ResponsiveTypography } from './tokens/typography'
 
 // ============================================================================
 // PATTERN EXPORTS (Compositions) - from patterns/ subdirectory
@@ -48,6 +48,7 @@ export {
   Spacing,
   Position,
   Size,
+  Responsive,
 } from './patterns'
 
 export {

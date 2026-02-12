@@ -9,7 +9,7 @@ export const Input = {
     'disabled:cursor-not-allowed disabled:opacity-50',
   ].join(' '),
 
-  height: 'h-10',
+  height: 'h-11', // 44px for WCAG 2.5.8 touch target compliance
 
   interactive: 'hover:shadow-neu-pressed hover:border-primary focus:shadow-neu-pressed focus:border-primary',
   error: 'border-destructive hover:shadow-neu-pressed focus:shadow-neu-pressed',

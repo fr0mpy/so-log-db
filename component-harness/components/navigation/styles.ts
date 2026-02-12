@@ -13,7 +13,7 @@ export const NavigationStyles = {
     Layout.Spacing.gap1,
     'rounded-theme-md',
     SpacingTokens.px4,
-    SpacingTokens.py2,
+    'py-3 min-h-11', // 44px minimum for touch targets
     Interactive.Cursor.pointer,
     TypographyTokens.textSm,
     TypographyTokens.fontMedium,
@@ -34,12 +34,13 @@ export const NavigationStyles = {
   link: [
     'block rounded-theme-md',
     SpacingTokens.px4,
-    SpacingTokens.py2,
+    'py-3 min-h-11', // 44px minimum for touch targets
     TypographyTokens.textSm,
     TypographyTokens.fontMedium,
     Interactive.Cursor.pointer,
     'transition-colors',
     'hover:text-primary',
+    'active:bg-muted/80', // Touch feedback
     Interactive.Focus.ring,
   ].join(' '),
 } as const

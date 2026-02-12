@@ -47,3 +47,20 @@ export const Sizing = {
   iconMd: 'h-5 w-5',
   iconLg: 'h-6 w-6',
 } as const
+
+/**
+ * Touch target tokens for WCAG 2.5.8 compliance.
+ * AA minimum: 24x24px, AAA enhanced: 44x44px (we target AAA).
+ */
+export const TouchTarget = {
+  // Minimum touch target (44px = h-11/w-11 in Tailwind)
+  min: 'min-h-11 min-w-11',
+
+  // Expanded touch area via pseudo-element (keeps visual size small)
+  // Use on small controls like checkboxes, radio buttons
+  // Adds invisible 12px padding around element (16px + 24px = 40px minimum)
+  controlArea: 'relative before:absolute before:-inset-3 before:content-[""]',
+
+  // Larger expansion for very small controls (14px padding = 44px+ total)
+  controlAreaLg: 'relative before:absolute before:-inset-3.5 before:content-[""]',
+} as const

@@ -46,3 +46,25 @@ export const Spacing = {
   spaceY1: 'space-y-1',
   spaceY2: 'space-y-2',
 } as const
+
+/**
+ * Responsive spacing tokens - mobile-first breakpoint-aware spacing.
+ * Base (unprefixed) applies to all screens, prefixed applies at breakpoint and above.
+ */
+export const ResponsiveSpacing = {
+  // Gallery/page padding: compact on mobile, roomier on larger screens
+  galleryPadding: 'p-4 md:p-6 lg:p-8',
+
+  // Card/panel padding: compact on mobile
+  cardPadding: 'p-4 lg:p-6',
+
+  // Section margins
+  sectionMargin: 'mb-4 md:mb-6 lg:mb-8',
+
+  // Stack/flex gaps: tighter on mobile
+  stackGap: 'gap-2 md:gap-4',
+  inlineGap: 'gap-2 md:gap-3',
+
+  // Preview panel padding
+  previewPadding: 'p-4 md:p-6 lg:p-8',
+} as const

@@ -1,24 +1,53 @@
 import { useState, useEffect, useCallback, Suspense, memo } from 'react'
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Menu } from 'lucide-react'
 import { ThemeSwitcher } from './components/ThemeSwitcher'
 import { ComponentErrorBoundary } from './ComponentErrorBoundary'
-import { Button, ScrollArea } from './components'
+import { Button, ScrollArea, Drawer } from './components'
+import { useIsMobile } from './hooks'
 import { componentRoutes, getAdjacentRoutes } from './routes/config'
+import { GalleryStyles as S } from './GalleryStyles'
 
 // Loading fallback for lazy components
 const ComponentSkeleton = memo(() => (
-  <div className="animate-pulse space-y-4">
-    <div className="h-8 bg-muted rounded-theme-md w-1/3" />
-    <div className="h-32 bg-muted rounded-theme-lg" />
+  <div className={S.skeleton.container}>
+    <div className={S.skeleton.title} />
+    <div className={S.skeleton.content} />
   </div>
 ))
 ComponentSkeleton.displayName = 'ComponentSkeleton'
 
+// Shared navigation content for sidebar and mobile drawer
+interface SidebarNavProps {
+  componentPath: string
+  onNavigate?: () => void
+}
+
+const SidebarNav = memo(({ componentPath, onNavigate }: SidebarNavProps) => (
+  <nav className={S.nav}>
+    {componentRoutes.map((route) => (
+      <Link
+        key={route.path}
+        to={`/${route.path}`}
+        onClick={onNavigate}
+        className={[
+          S.navLink.base,
+          route.path === componentPath ? S.navLink.active : S.navLink.inactive,
+        ].join(' ')}
+      >
+        {route.name}
+      </Link>
+    ))}
+  </nav>
+))
+SidebarNav.displayName = 'SidebarNav'
+
 export default function Gallery() {
   const location = useLocation()
   const navigate = useNavigate()
+  const isMobile = useIsMobile()
   const [isDark, setIsDark] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   // Extract component path from URL (remove leading slash)
   const componentPath = location.pathname.slice(1) || componentRoutes[0].path
@@ -31,6 +60,11 @@ export default function Gallery() {
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isDark)
   }, [isDark])
+
+  // Close sidebar on navigation (mobile)
+  const handleMobileNavigation = useCallback(() => {
+    setSidebarOpen(false)
+  }, [])
 
   // Navigation handlers
   const goToNext = useCallback(() => {
@@ -45,66 +79,95 @@ export default function Gallery() {
     setIsDark((prev) => !prev)
   }, [])
 
+  const openSidebar = useCallback(() => {
+    setSidebarOpen(true)
+  }, [])
+
+  const closeSidebar = useCallback(() => {
+    setSidebarOpen(false)
+  }, [])
+
   return (
-    <div className="h-screen flex bg-background overflow-hidden">
-      {/* Sidebar - neumorphic with smooth scroll */}
-      <aside className="w-64 border-r border-border bg-neu-base flex-shrink-0 overflow-hidden">
-        <ScrollArea className="h-full overflow-y-auto p-4">
-          <nav className="space-y-1">
-            {componentRoutes.map((route) => (
-              <Button
-                key={route.path}
-                variant={route.path === componentPath ? 'primary' : 'ghost'}
-                asChild
-                className="w-full justify-start"
-              >
-                <Link to={`/${route.path}`}>{route.name}</Link>
-              </Button>
-            ))}
-          </nav>
+    <div className={S.container}>
+      {/* Desktop Sidebar - hidden on mobile */}
+      <aside className={S.sidebar.desktop}>
+        <ScrollArea className={S.sidebar.scrollArea}>
+          <div className={S.sidebar.headerRow}>
+            <h2 className={S.sidebar.title}>Components</h2>
+            <ThemeSwitcher isDark={isDark} onToggle={toggleDarkMode} />
+          </div>
+          <SidebarNav componentPath={componentPath} />
         </ScrollArea>
       </aside>
 
-      {/* Main content with smooth scroll */}
-      <main className="flex-1 bg-background overflow-hidden">
-        <ScrollArea className="h-full overflow-y-auto p-8">
-          <header className="flex items-start justify-between mb-8">
-            <div>
-              <h1 className="font-heading text-4xl font-bold mb-2 text-foreground">Component Gallery</h1>
+      {/* Mobile Sidebar Drawer */}
+      <Drawer
+        open={sidebarOpen && isMobile}
+        onClose={closeSidebar}
+        title="Components"
+        side="left"
+      >
+        <div className={S.sidebar.drawerHeaderRow}>
+          <ThemeSwitcher isDark={isDark} onToggle={toggleDarkMode} />
+        </div>
+        <SidebarNav componentPath={componentPath} onNavigate={handleMobileNavigation} />
+      </Drawer>
+
+      {/* Mobile Menu Trigger */}
+      <Button
+        variant="secondary"
+        size="md"
+        className={S.sidebar.mobileTrigger}
+        onClick={openSidebar}
+        aria-label="Open navigation menu"
+      >
+        <Menu className="h-5 w-5" />
+      </Button>
+
+      {/* Main content */}
+      <main className={S.main}>
+        <ScrollArea className={S.scrollArea}>
+          {/* Header */}
+          <header className={S.header.wrapper}>
+            <div className={S.header.row}>
+              <h1 className={S.header.title}>Component Gallery</h1>
+              {/* Theme toggle in header on mobile (sidebar hidden) */}
+              <div className={S.header.mobileOnly}>
+                <ThemeSwitcher isDark={isDark} onToggle={toggleDarkMode} />
+              </div>
             </div>
-            {/* Dark mode toggle */}
-            <ThemeSwitcher isDark={isDark} onToggle={toggleDarkMode} />
+            <p className={S.header.subtitle}>
+              Neumorphic Theme - {total} Components
+            </p>
           </header>
 
-          {/* Navigation controls */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="text"
-                onClick={goToPrevious}
-                disabled={!previous}
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Previous
-              </Button>
-              <span className="font-heading text-2xl font-semibold text-foreground">
-                {currentRoute?.name ?? 'Select a component'}
-              </span>
-              <Button
-                variant="text"
-                onClick={goToNext}
-                disabled={!next}
-              >
-                Next
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
+          {/* Navigation controls - stack on mobile */}
+          <div className={S.navControls.wrapper}>
+            <Button
+              variant="text"
+              onClick={goToPrevious}
+              disabled={!previous}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span className={S.navControls.buttonText}>Previous</span>
+            </Button>
+            <span className={S.navControls.title}>
+              {currentRoute?.name ?? 'Select a component'}
+            </span>
+            <Button
+              variant="text"
+              onClick={goToNext}
+              disabled={!next}
+            >
+              <span className={S.navControls.buttonText}>Next</span>
+              <ChevronRight className="h-4 w-4" />
+            </Button>
           </div>
 
-          {/* Component preview - main neumorphic panel */}
+          {/* Component preview */}
           <div
             data-testid={`component-preview-${currentRoute?.name.toLowerCase() ?? 'empty'}`}
-            className="rounded-theme-2xl bg-neu-base shadow-neu-raised p-8"
+            className={S.preview}
           >
             <ComponentErrorBoundary name={currentRoute?.name ?? 'Component'}>
               <Suspense fallback={<ComponentSkeleton />}>
@@ -114,8 +177,8 @@ export default function Gallery() {
           </div>
 
           {/* Component info */}
-          <div className="mt-6 p-4 rounded-theme-lg bg-neu-base shadow-neu-raised-sm">
-            <p className="text-sm text-muted-foreground">
+          <div className={S.info.wrapper}>
+            <p className={S.info.text}>
               Component {currentIndex >= 0 ? currentIndex + 1 : '-'} of {total}
             </p>
           </div>
