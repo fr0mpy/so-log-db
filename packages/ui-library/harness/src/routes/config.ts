@@ -22,6 +22,7 @@ export const componentRoutes: ComponentRoute[] = [
   { name: 'Dialog', path: 'dialog', component: lazy(() => import('../pages/DialogPage')) },
   { name: 'Drawer', path: 'drawer', component: lazy(() => import('../pages/DrawerPage')) },
   { name: 'DropdownMenu', path: 'dropdown-menu', component: lazy(() => import('../pages/DropdownMenuPage')) },
+  { name: 'Font Showcase', path: 'font-showcase', component: lazy(() => import('../pages/FontShowcasePage')) },
   { name: 'HoverCard', path: 'hover-card', component: lazy(() => import('../pages/HoverCardPage')) },
   { name: 'Input', path: 'input', component: lazy(() => import('../pages/InputPage')) },
   { name: 'NavigationMenu', path: 'navigation-menu', component: lazy(() => import('../pages/NavigationMenuPage')) },
