@@ -1,0 +1,72 @@
+{
+  "brand": {
+    "name": "StackOne"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "logs": "Journaux",
+    "search": "Recherche",
+    "explore": "Explorer",
+    "connectors": "Connecteurs"
+  },
+  "aria": {
+    "close": "Fermer",
+    "loading": "Chargement...",
+    "search": "Rechercher",
+    "filterByType": "Filtrer par type",
+    "filterByTimeRange": "Filtrer par période",
+    "filterByLevel": "Filtrer par niveau",
+    "filterInput": "Filtrer",
+    "previousSlide": "Diapositive précédente",
+    "nextSlide": "Diapositive suivante",
+    "goToSlide": "Aller à la diapositive {index}",
+    "morePages": "Plus de pages",
+    "previousPage": "Aller à la page précédente",
+    "nextPage": "Aller à la page suivante",
+    "decreaseValue": "Diminuer la valeur",
+    "increaseValue": "Augmenter la valeur",
+    "breadcrumb": "fil d'Ariane",
+    "switchToLight": "Passer en mode clair",
+    "switchToDark": "Passer en mode sombre",
+    "pagination": "pagination",
+    "selectLanguage": "Sélectionner la langue"
+  },
+  "labels": {
+    "previous": "Précédent",
+    "next": "Suivant",
+    "loading": "Chargement"
+  },
+  "placeholder": {
+    "search": "Rechercher...",
+    "select": "Sélectionner..."
+  },
+  "srOnly": {
+    "loading": "Chargement...",
+    "close": "Fermer",
+    "morePages": "Plus de pages"
+  },
+  "logLevels": {
+    "all": "Tous les niveaux",
+    "error": "Erreur",
+    "warning": "Avertissement",
+    "info": "Info",
+    "debug": "Débogage"
+  },
+  "timeRanges": {
+    "last24Hours": "Dernières 24 heures",
+    "last7Days": "7 derniers jours",
+    "last30Days": "30 derniers jours",
+    "customRange": "Période personnalisée"
+  },
+  "dataTypes": {
+    "all": "Tous les types",
+    "logs": "Journaux",
+    "traces": "Traces",
+    "events": "Événements"
+  },
+  "status": {
+    "healthy": "opérationnel",
+    "unhealthy": "hors service",
+    "degraded": "dégradé"
+  }
+}

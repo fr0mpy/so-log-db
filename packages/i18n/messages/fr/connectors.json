@@ -1,0 +1,103 @@
+{
+  "metadata": {
+    "title": "Tableau de bord des journaux StackOne",
+    "description": "Visualisation en temps réel des journaux, recherche et exploration de données pour les systèmes distribués"
+  },
+  "sidebar": {
+    "title": "StackOne",
+    "subtitle": "Connecteurs"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "description": "Aperçu et accès rapide",
+    "metadata": {
+      "title": "Tableau de bord",
+      "description": "Aperçu des journaux, erreurs et état du système avec accès rapide aux fonctionnalités clés"
+    },
+    "stats": {
+      "totalLogs": "Total des journaux",
+      "errors24h": "Erreurs (24h)",
+      "warnings24h": "Avertissements (24h)"
+    },
+    "cards": {
+      "viewLogs": {
+        "title": "Voir les journaux",
+        "description": "Visualisation en temps réel des journaux avec filtres et streaming"
+      },
+      "search": {
+        "title": "Recherche",
+        "description": "Recherche locale rapide avec SQLite (milliers d'éléments)"
+      }
+    }
+  },
+  "logs": {
+    "title": "Journaux",
+    "description": "Visualisation et analyse en temps réel des journaux",
+    "metadata": {
+      "title": "Journaux",
+      "description": "Visualisation en temps réel des journaux avec filtrage par niveau, service et période"
+    },
+    "placeholder": "Filtrer les journaux...",
+    "emptyState": "Les entrées de journal apparaîtront ici",
+    "entryPlaceholder": "Entrée de journal placeholder {index}"
+  },
+  "logDetail": {
+    "title": "Détail du journal",
+    "breadcrumbLog": "Journal {id}",
+    "metadata": {
+      "title": "Journal {id}",
+      "description": "Vue détaillée de l'entrée de journal {id} avec horodatage, niveau, message et métadonnées"
+    },
+    "fields": {
+      "logId": "ID du journal",
+      "timestamp": "Horodatage",
+      "level": "Niveau",
+      "message": "Message",
+      "metadata": "Métadonnées"
+    },
+    "messagePlaceholder": "Message de journal placeholder pour l'entrée {id}"
+  },
+  "search": {
+    "title": "Recherche",
+    "description": "Recherche locale rapide avec SQLite (milliers d'éléments)",
+    "metadata": {
+      "title": "Recherche",
+      "description": "Recherche locale rapide dans les journaux, traces et événements avec SQLite"
+    },
+    "placeholder": "Rechercher journaux, traces, événements...",
+    "sqliteReady": "SQLite prêt",
+    "emptyState": {
+      "primary": "Entrez une requête de recherche pour trouver des journaux, traces et événements",
+      "secondary": "SQLite local permet une recherche instantanée sur de grands ensembles de données"
+    },
+    "dataStrategy": {
+      "title": "Stratégie de données : Hybride",
+      "items": {
+        "firstVisit": "Première visite : Récupération REST pour les données initiales + amorçage SQLite en arrière-plan",
+        "returnVisit": "Visite suivante : Requête SQLite locale instantanée (~5-10ms)",
+        "background": "Arrière-plan : PowerSync WebSocket maintient les données synchronisées"
+      }
+    }
+  },
+  "explore": {
+    "title": "Explorer",
+    "description": "Explorez les enregistrements, traces et données détaillées",
+    "metadata": {
+      "title": "Explorer",
+      "description": "Explorez les traces distribuées, l'état des services et les données système détaillées"
+    },
+    "traces": {
+      "title": "Traces",
+      "description": "Traces distribuées à travers les services",
+      "spans": "{count} spans"
+    },
+    "services": {
+      "title": "Services",
+      "description": "État et métriques des services"
+    },
+    "dataStrategy": {
+      "title": "Stratégie de données : REST uniquement",
+      "description": "Les vues détaillées récupèrent les données fraîches de l'API. Pas de filtrage lourd nécessaire, donc SQLite local n'est pas utilisé sur cette page."
+    }
+  }
+}

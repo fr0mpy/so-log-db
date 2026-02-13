@@ -1,0 +1,72 @@
+{
+  "brand": {
+    "name": "StackOne"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "logs": "Logs",
+    "search": "Search",
+    "explore": "Explore",
+    "connectors": "Connectors"
+  },
+  "aria": {
+    "close": "Close",
+    "loading": "Loading...",
+    "search": "Search",
+    "filterByType": "Filter by type",
+    "filterByTimeRange": "Filter by time range",
+    "filterByLevel": "Filter by level",
+    "filterInput": "Filter",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide",
+    "goToSlide": "Go to slide {index}",
+    "morePages": "More pages",
+    "previousPage": "Go to previous page",
+    "nextPage": "Go to next page",
+    "decreaseValue": "Decrease value",
+    "increaseValue": "Increase value",
+    "breadcrumb": "breadcrumb",
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode",
+    "pagination": "pagination",
+    "selectLanguage": "Select language"
+  },
+  "labels": {
+    "previous": "Previous",
+    "next": "Next",
+    "loading": "Loading"
+  },
+  "placeholder": {
+    "search": "Search...",
+    "select": "Select..."
+  },
+  "srOnly": {
+    "loading": "Loading...",
+    "close": "Close",
+    "morePages": "More pages"
+  },
+  "logLevels": {
+    "all": "All Levels",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Info",
+    "debug": "Debug"
+  },
+  "timeRanges": {
+    "last24Hours": "Last 24 hours",
+    "last7Days": "Last 7 days",
+    "last30Days": "Last 30 days",
+    "customRange": "Custom range"
+  },
+  "dataTypes": {
+    "all": "All Types",
+    "logs": "Logs",
+    "traces": "Traces",
+    "events": "Events"
+  },
+  "status": {
+    "healthy": "healthy",
+    "unhealthy": "unhealthy",
+    "degraded": "degraded"
+  }
+}

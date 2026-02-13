@@ -1,0 +1,22 @@
+{
+  "name": "@stackone/i18n",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./config": "./src/config.ts",
+    "./logger": "./src/logger.ts",
+    "./messages/*": "./messages/*"
+  },
+  "dependencies": {
+    "next-intl": "^3.26.3"
+  },
+  "peerDependencies": {
+    "next": "^14.0.0 || ^15.0.0",
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "metadata": {
+    "title": "StackOne Log Dashboard",
+    "description": "Real-time log viewing, search, and data exploration for distributed systems"
+  },
+  "sidebar": {
+    "title": "StackOne",
+    "subtitle": "Connectors"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "Overview and quick access",
+    "metadata": {
+      "title": "Dashboard",
+      "description": "Overview of logs, errors, and system health with quick access to key features"
+    },
+    "stats": {
+      "totalLogs": "Total Logs",
+      "errors24h": "Errors (24h)",
+      "warnings24h": "Warnings (24h)"
+    },
+    "cards": {
+      "viewLogs": {
+        "title": "View Logs",
+        "description": "Real-time log viewing with filters and streaming"
+      },
+      "search": {
+        "title": "Search",
+        "description": "Fast local search with SQLite (1000s of items)"
+      }
+    }
+  },
+  "logs": {
+    "title": "Logs",
+    "description": "Real-time log viewing and analysis",
+    "metadata": {
+      "title": "Logs",
+      "description": "Real-time log viewing with filtering by level, service, and time range"
+    },
+    "placeholder": "Filter logs...",
+    "emptyState": "Log entries will appear here",
+    "entryPlaceholder": "Log entry placeholder {index}"
+  },
+  "logDetail": {
+    "title": "Log Detail",
+    "breadcrumbLog": "Log {id}",
+    "metadata": {
+      "title": "Log {id}",
+      "description": "Detailed view of log entry {id} with timestamp, level, message, and metadata"
+    },
+    "fields": {
+      "logId": "Log ID",
+      "timestamp": "Timestamp",
+      "level": "Level",
+      "message": "Message",
+      "metadata": "Metadata"
+    },
+    "messagePlaceholder": "Log message placeholder for entry {id}"
+  },
+  "search": {
+    "title": "Search",
+    "description": "Fast local search with SQLite (1000s of items)",
+    "metadata": {
+      "title": "Search",
+      "description": "Fast local search across logs, traces, and events using SQLite"
+    },
+    "placeholder": "Search logs, traces, events...",
+    "sqliteReady": "SQLite ready",
+    "emptyState": {
+      "primary": "Enter a search query to find logs, traces, and events",
+      "secondary": "Local SQLite enables instant search across large datasets"
+    },
+    "dataStrategy": {
+      "title": "Data Strategy: Hybrid",
+      "items": {
+        "firstVisit": "First visit: REST fetch for initial data + background SQLite bootstrap",
+        "returnVisit": "Return visit: Instant local SQLite query (~5-10ms)",
+        "background": "Background: PowerSync WebSocket keeps data in sync"
+      }
+    }
+  },
+  "explore": {
+    "title": "Explore",
+    "description": "Drill into records, traces, and detailed data",
+    "metadata": {
+      "title": "Explore",
+      "description": "Explore distributed traces, service health, and detailed system data"
+    },
+    "traces": {
+      "title": "Traces",
+      "description": "Distributed traces across services",
+      "spans": "{count} spans"
+    },
+    "services": {
+      "title": "Services",
+      "description": "Service health and metrics"
+    },
+    "dataStrategy": {
+      "title": "Data Strategy: REST only",
+      "description": "Detail views fetch fresh data from the API. No heavy filtering needed, so local SQLite is not used on this page."
+    }
+  }
+}
