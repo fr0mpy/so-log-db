@@ -40,8 +40,8 @@ const nextConfig: NextConfig = {
     return config
   },
 
-  // Multi-Zone: MFE serves its routes under /connectors base path
-  basePath: '/connectors',
+  // Multi-Zone: MFE serves its routes under /agent-toolkit base path
+  basePath: '/agent-toolkit',
 }
 
 export default bundleAnalyzer(nextConfig)

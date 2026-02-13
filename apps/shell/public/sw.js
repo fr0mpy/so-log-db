@@ -1,11 +1,11 @@
 const CACHE_NAME = 'stackone-v2'
-const PRECACHE_URLS = ['/', '/connectors']
+const PRECACHE_URLS = ['/', '/agent-toolkit']
 
 // Destinations to cache with cache-first strategy
 const CACHEABLE_DESTINATIONS = ['script', 'style', 'image', 'font']
 
 // Pattern for translation JSON files
-const TRANSLATION_PATTERN = /\/(en|fr)\/(common|shell|connectors)\.json$/
+const TRANSLATION_PATTERN = /\/(en|fr)\/(common|shell|agent-toolkit)\.json$/
 
 // Debug flag - enabled via postMessage from main thread
 let debugEnabled = false

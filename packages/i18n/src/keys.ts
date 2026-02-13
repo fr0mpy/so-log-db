@@ -6,7 +6,7 @@ export const navigation = {
   logs: 'navigation.logs',
   search: 'navigation.search',
   explore: 'navigation.explore',
-  connectors: 'navigation.connectors',
+  agentToolkit: 'navigation.agentToolkit',
 } as const
 
 export const aria = {
@@ -77,7 +77,7 @@ export const status = {
   degraded: 'status.degraded',
 } as const
 
-// Connectors MFE keys
+// Agent Toolkit MFE keys
 export const metadata = {
   title: 'metadata.title',
   description: 'metadata.description',
@@ -190,5 +190,5 @@ export const explore = {
 export const home = {
   title: 'home.title',
   description: 'home.description',
-  connectors: 'home.connectors',
+  agentToolkit: 'home.agentToolkit',
 } as const

@@ -6,15 +6,15 @@
  *
  * @example
  * import { Routes } from '@/lib/routes'
- * <a href={Routes.connectors}>Connectors MFE</a>
+ * <a href={Routes.agentToolkit}>Agent Toolkit MFE</a>
  */
 
 export const Routes = {
   /** Shell home page */
   home: '/',
 
-  /** Connectors MFE (cross-zone - use <a> not <Link>) */
-  connectors: '/connectors',
+  /** Agent Toolkit MFE (cross-zone - use <a> not <Link>) */
+  agentToolkit: '/agent-toolkit',
 } as const
 
 /** Type for route keys */

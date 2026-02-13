@@ -10,17 +10,10 @@
  * - Background sync via PowerSync WebSocket
  */
 
-import type { Metadata } from 'next'
 import { ARIA } from '@stackone-ui/core/config'
 
-/** SEO: Page-specific metadata */
-export const metadata: Metadata = {
-  title: 'Search',
-  description: 'Fast local search across logs, traces, and events using SQLite',
-}
+export { metadata } from './metadata'
 
-/** Force static generation - page has no dynamic data */
-export const dynamic = 'force-static'
 import {
   PageHeader,
   Card,

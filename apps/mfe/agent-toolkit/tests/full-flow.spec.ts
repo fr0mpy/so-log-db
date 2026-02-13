@@ -7,7 +7,7 @@ test.describe('Complete Navigation Flow', () => {
     // 1. COLD START: First visit to dashboard
     console.log('1. Cold start - Dashboard')
     let start = Date.now()
-    await page.goto('/connectors')
+    await page.goto('/agent-toolkit')
     await page.waitForSelector('h1:has-text("Dashboard")', { timeout: 30000 })
     let time = Date.now() - start
     console.log(`   Initial load: ${time}ms`)
@@ -19,7 +19,7 @@ test.describe('Complete Navigation Flow', () => {
     // 2. Navigate to Logs
     console.log('\n2. Navigate Dashboard → Logs')
     start = Date.now()
-    await page.click('a[href="/connectors/logs"]')
+    await page.click('a[href="/agent-toolkit/logs"]')
     await page.waitForSelector('h1:has-text("Logs")', { timeout: 30000 })
     time = Date.now() - start
     console.log(`   Navigation time: ${time}ms`)
@@ -27,7 +27,7 @@ test.describe('Complete Navigation Flow', () => {
     // 3. Navigate to Search
     console.log('\n3. Navigate Logs → Search')
     start = Date.now()
-    await page.click('a[href="/connectors/search"]')
+    await page.click('a[href="/agent-toolkit/search"]')
     await page.waitForSelector('h1:has-text("Search")', { timeout: 30000 })
     time = Date.now() - start
     console.log(`   Navigation time: ${time}ms`)
@@ -35,7 +35,7 @@ test.describe('Complete Navigation Flow', () => {
     // 4. Navigate to Explore
     console.log('\n4. Navigate Search → Explore')
     start = Date.now()
-    await page.click('a[href="/connectors/explore"]')
+    await page.click('a[href="/agent-toolkit/explore"]')
     await page.waitForSelector('h1:has-text("Explore")', { timeout: 30000 })
     time = Date.now() - start
     console.log(`   Navigation time: ${time}ms`)
@@ -43,7 +43,7 @@ test.describe('Complete Navigation Flow', () => {
     // 5. Navigate back to Dashboard
     console.log('\n5. Navigate Explore → Dashboard')
     start = Date.now()
-    await page.click('a[href="/connectors"]')
+    await page.click('a[href="/agent-toolkit"]')
     await page.waitForSelector('h1:has-text("Dashboard")', { timeout: 30000 })
     time = Date.now() - start
     console.log(`   Navigation time: ${time}ms`)
@@ -51,7 +51,7 @@ test.describe('Complete Navigation Flow', () => {
     // 6. Second round - should be faster (cached)
     console.log('\n6. Second round (cached) - Dashboard → Logs')
     start = Date.now()
-    await page.click('a[href="/connectors/logs"]')
+    await page.click('a[href="/agent-toolkit/logs"]')
     await page.waitForSelector('h1:has-text("Logs")')
     time = Date.now() - start
     console.log(`   Navigation time: ${time}ms`)
@@ -59,7 +59,7 @@ test.describe('Complete Navigation Flow', () => {
 
     console.log('\n7. Cached - Logs → Search')
     start = Date.now()
-    await page.click('a[href="/connectors/search"]')
+    await page.click('a[href="/agent-toolkit/search"]')
     await page.waitForSelector('h1:has-text("Search")')
     time = Date.now() - start
     console.log(`   Navigation time: ${time}ms`)
@@ -67,7 +67,7 @@ test.describe('Complete Navigation Flow', () => {
 
     console.log('\n8. Cached - Search → Explore')
     start = Date.now()
-    await page.click('a[href="/connectors/explore"]')
+    await page.click('a[href="/agent-toolkit/explore"]')
     await page.waitForSelector('h1:has-text("Explore")')
     time = Date.now() - start
     console.log(`   Navigation time: ${time}ms`)
@@ -80,7 +80,7 @@ test.describe('Complete Navigation Flow', () => {
     console.log('=== SPINNER VISIBILITY TEST ===\n')
 
     // Go to dashboard first
-    await page.goto('/connectors')
+    await page.goto('/agent-toolkit')
     await page.waitForSelector('h1:has-text("Dashboard")')
 
     // Intercept RSC requests to add delay
@@ -97,7 +97,7 @@ test.describe('Complete Navigation Flow', () => {
       .catch(() => false)
 
     // Navigate
-    await page.click('a[href="/connectors/logs"]')
+    await page.click('a[href="/agent-toolkit/logs"]')
 
     const hasSpinner = await spinnerDetected
 

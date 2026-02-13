@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test'
 test.describe('Spinner Visibility During Navigation', () => {
   test('shows Spinner immediately during first navigation', async ({ page }) => {
     // Go to dashboard
-    await page.goto('/connectors')
+    await page.goto('/agent-toolkit')
     await page.waitForLoadState('networkidle')
 
     // Set up promise to detect Spinner before clicking (uses role="status")
@@ -13,7 +13,7 @@ test.describe('Spinner Visibility During Navigation', () => {
 
     // Click navigation link
     const clickTime = Date.now()
-    await page.click('a[href="/connectors/logs"]')
+    await page.click('a[href="/agent-toolkit/logs"]')
 
     // Check if Spinner appeared
     const spinner = await spinnerPromise
@@ -35,7 +35,7 @@ test.describe('Spinner Visibility During Navigation', () => {
   })
 
   test('shows Spinner with correct styling', async ({ page }) => {
-    await page.goto('/connectors')
+    await page.goto('/agent-toolkit')
     await page.waitForLoadState('networkidle')
 
     // Force slow network to ensure we see the Spinner
@@ -48,7 +48,7 @@ test.describe('Spinner Visibility During Navigation', () => {
     })
 
     // Click and immediately check for Spinner
-    await page.click('a[href="/connectors/explore"]')
+    await page.click('a[href="/agent-toolkit/explore"]')
 
     // Should see Spinner almost immediately
     const spinner = await page.waitForSelector('[role="status"]', { timeout: 1000 }).catch(() => null)
@@ -60,12 +60,12 @@ test.describe('Spinner Visibility During Navigation', () => {
   })
 
   test('measures time to first paint during navigation', async ({ page }) => {
-    await page.goto('/connectors')
+    await page.goto('/agent-toolkit')
     await page.waitForLoadState('networkidle')
 
     // Click and measure when ANY content change happens
     const clickTime = Date.now()
-    await page.click('a[href="/connectors/search"]')
+    await page.click('a[href="/agent-toolkit/search"]')
 
     // Wait for either Spinner or final content
     await Promise.race([

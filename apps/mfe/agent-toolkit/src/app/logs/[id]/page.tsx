@@ -8,18 +8,16 @@
 import type { Metadata } from 'next'
 import { ARIA } from '@stackone-ui/core/config'
 import { PageHeader, Card, Badge, Text, Code, Spacing } from '../../../styles'
+import { Routes } from '@/routes'
+import { createMetadata } from './metadata'
 
 interface PageProps {
   params: Promise<{ id: string }>
 }
 
-/** SEO: Dynamic metadata based on log ID */
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params
-  return {
-    title: `Log ${id}`,
-    description: `Detailed view of log entry ${id} with timestamp, level, message, and metadata`,
-  }
+  return createMetadata(id)
 }
 
 /** Generate static params for known log IDs */
@@ -35,7 +33,7 @@ export default async function LogDetailPage({ params }: PageProps) {
     <div>
       <header className={PageHeader.container}>
         <nav aria-label={ARIA.breadcrumb} className={PageHeader.breadcrumb.container}>
-          <a href="/logs" className={PageHeader.breadcrumb.link}>Logs</a>
+          <a href={Routes.logs.index} className={PageHeader.breadcrumb.link}>Logs</a>
           <span className={PageHeader.breadcrumb.separator}>/</span>
           <span>Log {id}</span>
         </nav>

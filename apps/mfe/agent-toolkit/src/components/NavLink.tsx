@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@stackone-ui/core/utils'
 import { NavLinkStyles } from './styles'
-import { BASE_PATH } from '../config'
+import { BASE_PATH } from '@/routes'
 
 interface NavLinkProps {
   href: string

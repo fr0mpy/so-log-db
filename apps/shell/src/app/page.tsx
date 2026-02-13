@@ -23,7 +23,7 @@ export default function HomePage() {
         <CardContent className={S.cardContent}>
           <nav className={S.nav}>
             <Button asChild>
-              <a href={Routes.connectors}>{t("navigation.connectors")}</a>
+              <a href={Routes.agentToolkit}>{t("navigation.agentToolkit")}</a>
             </Button>
           </nav>
         </CardContent>

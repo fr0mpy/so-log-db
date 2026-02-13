@@ -11,7 +11,7 @@ export const localeNames: Record<Locale, string> = {
 // Namespaces available for each app
 export const namespaces = {
   shell: ['common', 'shell'] as const,
-  connectors: ['common', 'connectors'] as const,
+  agentToolkit: ['common', 'agent-toolkit'] as const,
 }
 
 // Cookie name for locale persistence across multi-zone navigation

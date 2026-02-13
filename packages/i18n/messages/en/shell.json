@@ -4,6 +4,7 @@
     "description": "StackOne Shell Application"
   },
   "home": {
-    "title": "StackOne Shell"
+    "title": "StackOne Shell",
+    "agentToolkit": "Go to Agent Toolkit"
   }
 }

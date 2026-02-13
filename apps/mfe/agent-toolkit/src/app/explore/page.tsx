@@ -5,16 +5,7 @@
  * Drill into records, traces, and detailed data views
  */
 
-import type { Metadata } from 'next'
-
-/** SEO: Page-specific metadata */
-export const metadata: Metadata = {
-  title: 'Explore',
-  description: 'Explore distributed traces, service health, and detailed system data',
-}
-
-/** Force static generation - page has no dynamic data */
-export const dynamic = 'force-static'
+export { metadata } from './metadata'
 
 import {
   PageHeader,

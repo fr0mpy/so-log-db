@@ -1,27 +1,17 @@
-/**
- * Dashboard Home - Data Strategy: REST
- */
+import Link from "next/link";
+import { Routes } from "@/routes";
 
-import type { Metadata } from 'next'
-import Link from 'next/link'
+export { metadata } from './metadata'
 
-/** SEO: Page-specific metadata */
-export const metadata: Metadata = {
-  title: 'Dashboard',
-  description: 'Overview of logs, errors, and system health with quick access to key features',
-}
-
-/** Force static generation - page has no dynamic data */
-export const dynamic = 'force-static'
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-} from '@stackone-ui/core/card'
-import { Badge } from '@stackone-ui/core/badge'
-import { PageHeader, Stats, Grid, Card as CardStyles } from '../styles'
+} from "@stackone-ui/core/card";
+import { Badge } from "@stackone-ui/core/badge";
+import { PageHeader, Stats, Grid, Card as CardStyles } from "../styles";
 
 export default function DashboardPage() {
   return (
@@ -53,7 +43,7 @@ export default function DashboardPage() {
       </div>
 
       <div className={Grid.actionsRow}>
-        <Link href="/logs" prefetch={true}>
+        <Link href={Routes.logs.index} prefetch={true}>
           <Card className={CardStyles.interactive}>
             <CardHeader>
               <CardTitle>View Logs</CardTitle>
@@ -63,7 +53,7 @@ export default function DashboardPage() {
             </CardHeader>
           </Card>
         </Link>
-        <Link href="/search" prefetch={true}>
+        <Link href={Routes.search} prefetch={true}>
           <Card className={CardStyles.interactive}>
             <CardHeader>
               <CardTitle>Search</CardTitle>
@@ -75,5 +65,5 @@ export default function DashboardPage() {
         </Link>
       </div>
     </div>
-  )
+  );
 }

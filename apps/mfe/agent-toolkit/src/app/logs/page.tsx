@@ -5,17 +5,10 @@
  * Real-time log viewing with filters and streaming
  */
 
-import type { Metadata } from 'next'
 import Link from 'next/link'
 
-/** SEO: Page-specific metadata */
-export const metadata: Metadata = {
-  title: 'Logs',
-  description: 'Real-time log viewing with filtering by level, service, and time range',
-}
+export { metadata } from './metadata'
 
-/** Force static generation - page has no dynamic data */
-export const dynamic = 'force-static'
 import { ARIA } from '@stackone-ui/core/config'
 import {
   PageHeader,

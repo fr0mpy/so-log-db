@@ -6,8 +6,8 @@ Turborepo monorepo for the StackOne log dashboard MFE and component library.
 
 ```
 apps/
-  shell/           → Next.js SSR shell (port 3000)
-  mfe/connectors/  → Next.js MFE - Log Dashboard (port 3001)
+  shell/              → Next.js SSR shell (port 3000)
+  mfe/agent-toolkit/  → Next.js MFE - Log Dashboard (port 3001)
 packages/
   ui-library/
     core/          → Component library (stackone-ui)
@@ -24,20 +24,20 @@ pnpm install
 pnpm dev:all       # Run all three servers
 pnpm dev:harness   # http://localhost:5173 - Component gallery
 pnpm dev:shell     # http://localhost:3000 - Shell app
-pnpm dev:connectors   # http://localhost:3001 - Log dashboard
+pnpm dev:agent-toolkit   # http://localhost:3001 - Log dashboard
 
 # Production build
 pnpm build
-cd apps/shell && pnpm start        # http://localhost:3000
-cd apps/mfe/connectors && pnpm start   # http://localhost:3001
+cd apps/shell && pnpm start            # http://localhost:3000
+cd apps/mfe/agent-toolkit && pnpm start   # http://localhost:3001
 ```
 
 ## Apps
 
 ### Shell (`apps/shell`)
-SSR shell that mounts MFEs. Routes to `/connectors/*` load the MFE.
+SSR shell that mounts MFEs. Routes to `/agent-toolkit/*` load the MFE.
 
-### Connectors (`apps/mfe/connectors`)
+### Agent Toolkit (`apps/mfe/agent-toolkit`)
 Log dashboard with routes:
 - `/` - Dashboard home
 - `/logs` - Log list (REST + WebSocket)
@@ -167,7 +167,7 @@ This project is optimized for minimal JavaScript and fast load times.
 
 ```bash
 # Analyze bundle before shipping
-cd apps/mfe/connectors && ANALYZE=true pnpm build
+cd apps/mfe/agent-toolkit && ANALYZE=true pnpm build
 ```
 
 See [PERFORMANCE.md](./PERFORMANCE.md) for the full optimization guide.

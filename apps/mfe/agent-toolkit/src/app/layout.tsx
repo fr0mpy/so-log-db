@@ -6,6 +6,7 @@ import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
 import './globals.css'
 import { AppLayout, LoadingStyles } from '../styles'
 import { NavLink } from '../components'
+import { Routes } from '@/routes'
 
 /** SEO: Base metadata inherited by all pages */
 export const metadata: Metadata = {
@@ -47,10 +48,10 @@ export default function RootLayout({
                 <p className={AppLayout.sidebar.subtitle}>Connectors</p>
               </div>
               <nav className={AppLayout.sidebar.nav}>
-                <NavLink href="/">Dashboard</NavLink>
-                <NavLink href="/logs">Logs</NavLink>
-                <NavLink href="/search">Search</NavLink>
-                <NavLink href="/explore">Explore</NavLink>
+                <NavLink href={Routes.dashboard}>Dashboard</NavLink>
+                <NavLink href={Routes.logs.index}>Logs</NavLink>
+                <NavLink href={Routes.search}>Search</NavLink>
+                <NavLink href={Routes.explore}>Explore</NavLink>
               </nav>
             </aside>
             <main className={AppLayout.main}>

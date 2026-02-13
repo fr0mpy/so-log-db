@@ -18,13 +18,13 @@ const nextConfig: NextConfig = {
     return config
   },
 
-  // Multi-Zone: Proxy /connectors/* requests to MFE
+  // Multi-Zone: Proxy /agent-toolkit/* requests to MFE
   async rewrites() {
     return {
       beforeFiles: [
         {
-          source: '/connectors/:path*',
-          destination: `${MFE_URL}/connectors/:path*`,
+          source: '/agent-toolkit/:path*',
+          destination: `${MFE_URL}/agent-toolkit/:path*`,
         },
       ],
     }

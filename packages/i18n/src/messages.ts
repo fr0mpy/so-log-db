@@ -4,25 +4,25 @@ import type { AbstractIntlMessages } from 'next-intl'
 // Import all message files statically
 import enCommon from '../messages/en/common.json'
 import enShell from '../messages/en/shell.json'
-import enConnectors from '../messages/en/connectors.json'
+import enAgentToolkit from '../messages/en/agent-toolkit.json'
 import frCommon from '../messages/fr/common.json'
 import frShell from '../messages/fr/shell.json'
-import frConnectors from '../messages/fr/connectors.json'
+import frAgentToolkit from '../messages/fr/agent-toolkit.json'
 
 const messages = {
   en: {
     common: enCommon,
     shell: enShell,
-    connectors: enConnectors,
+    'agent-toolkit': enAgentToolkit,
   },
   fr: {
     common: frCommon,
     shell: frShell,
-    connectors: frConnectors,
+    'agent-toolkit': frAgentToolkit,
   },
 } as const
 
-export type MessageNamespace = 'common' | 'shell' | 'connectors'
+export type MessageNamespace = 'common' | 'shell' | 'agent-toolkit'
 
 /**
  * Get messages for a specific locale and namespace(s).
@@ -49,8 +49,8 @@ export function getShellMessages(locale: Locale): AbstractIntlMessages {
 }
 
 /**
- * Get Connectors MFE messages (common + connectors namespaces)
+ * Get Agent Toolkit MFE messages (common + agent-toolkit namespaces)
  */
-export function getConnectorsMessages(locale: Locale): AbstractIntlMessages {
-  return getMessages(locale, ['common', 'connectors'])
+export function getAgentToolkitMessages(locale: Locale): AbstractIntlMessages {
+  return getMessages(locale, ['common', 'agent-toolkit'])
 }

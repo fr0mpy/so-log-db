@@ -10,9 +10,9 @@ test.describe('Cold Start Performance', () => {
 
     // First visit to Dashboard
     let start = Date.now()
-    await page.goto('/connectors')
+    await page.goto('/agent-toolkit')
     await page.waitForSelector('h1:has-text("Dashboard")')
-    console.log(`Cold: /connectors (Dashboard): ${Date.now() - start}ms`)
+    console.log(`Cold: /agent-toolkit (Dashboard): ${Date.now() - start}ms`)
 
     await context.close()
 
@@ -21,9 +21,9 @@ test.describe('Cold Start Performance', () => {
     const page2 = await context2.newPage()
 
     start = Date.now()
-    await page2.goto('/connectors/logs')
+    await page2.goto('/agent-toolkit/logs')
     await page2.waitForSelector('h1:has-text("Logs")')
-    console.log(`Cold: /connectors/logs: ${Date.now() - start}ms`)
+    console.log(`Cold: /agent-toolkit/logs: ${Date.now() - start}ms`)
 
     await context2.close()
 
@@ -32,22 +32,22 @@ test.describe('Cold Start Performance', () => {
     const page3 = await context3.newPage()
 
     start = Date.now()
-    await page3.goto('/connectors/search')
+    await page3.goto('/agent-toolkit/search')
     await page3.waitForSelector('h1:has-text("Search")')
-    console.log(`Cold: /connectors/search: ${Date.now() - start}ms`)
+    console.log(`Cold: /agent-toolkit/search: ${Date.now() - start}ms`)
 
     await context3.close()
   })
 
   test('measures navigation WITH visible spinner timing', async ({ page }) => {
-    await page.goto('/connectors')
+    await page.goto('/agent-toolkit')
     await page.waitForLoadState('networkidle')
 
     console.log('\n=== Navigation with Spinner Detection ===')
 
     // Click and measure time until content appears
     const start = Date.now()
-    await page.click('a[href="/connectors/logs"]')
+    await page.click('a[href="/agent-toolkit/logs"]')
 
     // Check if spinner appears
     const spinnerAppeared = await page.locator('[role="status"]').isVisible().catch(() => false)

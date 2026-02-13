@@ -7,18 +7,18 @@
 | App | Config Location | Import |
 |-----|-----------------|--------|
 | Shell | `apps/shell/src/lib/routes.ts` | `import { Routes } from '@/lib/routes'` |
-| MFE Connectors | `apps/mfe/connectors/src/routes.ts` | `import { Routes } from '@/routes'` |
+| MFE Agent Toolkit | `apps/mfe/agent-toolkit/src/routes.ts` | `import { Routes } from '@/routes'` |
 
 ```tsx
 // ❌ NEVER — hardcoded route strings
 <Link href="/logs">Logs</Link>
-<a href="/connectors">MFE</a>
+<a href="/agent-toolkit">MFE</a>
 href={`/logs/${id}`}
 
 // ✅ ALWAYS — import from routes config
 import { Routes } from '@/routes'
 <Link href={Routes.logs.index}>Logs</Link>
-<a href={Routes.connectors}>MFE</a>
+<a href={Routes.agentToolkit}>MFE</a>
 href={Routes.logs.detail(id)}
 ```
 
@@ -54,16 +54,17 @@ This project uses **Next.js Multi-Zones** (not Module Federation). Cross-zone li
 ```tsx
 // ❌ NEVER — next/link for cross-zone routes
 import Link from 'next/link'
-<Link href="/connectors">MFE</Link>  // Causes webpack "call" error
+<Link href={Routes.agentToolkit}>MFE</Link>  // Causes webpack "call" error
 
 // ✅ ALWAYS — <a> tag for cross-zone navigation
-<a href="/connectors">MFE</a>  // Full page navigation via rewrite
+import { Routes } from '@/lib/routes'
+<a href={Routes.agentToolkit}>MFE</a>  // Full page navigation via rewrite
 ```
 
 **Why:** `next/link` performs client-side routing within the same zone. Routes served by different zones (via `rewrites()`) don't exist in the client router, causing webpack module errors.
 
 | Route Type | Use |
 |------------|-----|
-| Same zone (e.g., `/about` in Shell) | `<Link href="/about">` |
-| Cross zone (e.g., `/connectors` → MFE) | `<a href="/connectors">` |
-| Within MFE (e.g., `/logs` in MFE) | `<Link href="/logs">` |
+| Same zone (e.g., `/about` in Shell) | `<Link href={Routes.about}>` |
+| Cross zone (e.g., Agent Toolkit MFE) | `<a href={Routes.agentToolkit}>` |
+| Within MFE (e.g., `/logs` in MFE) | `<Link href={Routes.logs.index}>` |

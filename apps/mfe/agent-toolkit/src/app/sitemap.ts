@@ -6,29 +6,29 @@ import type { MetadataRoute } from 'next'
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://yourdomain.com'
-  const connectorBase = `${baseUrl}/connectors`
+  const agentToolkitBase = `${baseUrl}/agent-toolkit`
 
   return [
     {
-      url: connectorBase,
+      url: agentToolkitBase,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,
     },
     {
-      url: `${connectorBase}/logs`,
+      url: `${agentToolkitBase}/logs`,
       lastModified: new Date(),
       changeFrequency: 'hourly',
       priority: 0.9,
     },
     {
-      url: `${connectorBase}/search`,
+      url: `${agentToolkitBase}/search`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.8,
     },
     {
-      url: `${connectorBase}/explore`,
+      url: `${agentToolkitBase}/explore`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.8,
