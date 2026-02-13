@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Neutral Colors */
+  --color-primary: #00A060;
+  --color-primary-foreground: #FFFFFF;
+  --color-primary-hover: #008050;
+  --color-secondary: #6B7280;
+  --color-secondary-foreground: #FFFFFF;
+  --color-secondary-hover: #4B5563;
+  --color-background: #E8EAED;
+  --color-foreground: #1F2937;
+  --color-surface: #F3F4F6;
+  --color-muted: #9CA3AF;
+  --color-muted-foreground: #6B7280;
+  --color-border: #D1D5DB;
+
+  /* Status Colors */
+  --color-destructive: #DC2626;
+  --color-destructive-foreground: #FFFFFF;
+  --color-success: #16A34A;
+  --color-success-foreground: #FFFFFF;
+  --color-warning: #CA8A04;
+  --color-warning-foreground: #FFFFFF;
+  --color-info: #2563EB;
+  --color-info-foreground: #FFFFFF;
+
+  /* Neumorphic */
+  --neu-base: #E8EAED;
+  --neu-light: #FFFFFF;
+  --neu-dark: #D1D5DB;
+}
+
+.dark {
+  --color-background: #1F2937;
+  --color-foreground: #F9FAFB;
+  --color-surface: #374151;
+  --color-muted: #6B7280;
+  --color-muted-foreground: #9CA3AF;
+  --color-border: #4B5563;
+
+  --neu-base: #1F2937;
+  --neu-light: #374151;
+  --neu-dark: #111827;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
