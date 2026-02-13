@@ -7,7 +7,7 @@ Turborepo monorepo for the StackOne log dashboard MFE and component library.
 ```
 apps/
   shell/           → Next.js SSR shell (port 3000)
-  mfe/toolset/     → Next.js MFE - Log Dashboard (port 3001)
+  mfe/connectors/  → Next.js MFE - Log Dashboard (port 3001)
 packages/
   ui-library/
     core/          → Component library (stackone-ui)
@@ -24,12 +24,12 @@ pnpm install
 pnpm dev:all       # Run all three servers
 pnpm dev:harness   # http://localhost:5173 - Component gallery
 pnpm dev:shell     # http://localhost:3000 - Shell app
-pnpm dev:toolset   # http://localhost:3001 - Log dashboard
+pnpm dev:connectors   # http://localhost:3001 - Log dashboard
 
 # Production build
 pnpm build
-cd apps/shell && pnpm start     # http://localhost:3000
-cd apps/mfe/toolset && pnpm start   # http://localhost:3001
+cd apps/shell && pnpm start        # http://localhost:3000
+cd apps/mfe/connectors && pnpm start   # http://localhost:3001
 ```
 
 ## Apps
@@ -37,7 +37,7 @@ cd apps/mfe/toolset && pnpm start   # http://localhost:3001
 ### Shell (`apps/shell`)
 SSR shell that mounts MFEs. Routes to `/connectors/*` load the MFE.
 
-### Toolset (`apps/mfe/toolset`)
+### Connectors (`apps/mfe/connectors`)
 Log dashboard with routes:
 - `/` - Dashboard home
 - `/logs` - Log list (REST + WebSocket)
@@ -48,12 +48,20 @@ Log dashboard with routes:
 ## Packages
 
 ### Core (`packages/ui-library/core`)
-Published as `@stackone-ui/core`. Import components and utilities:
+Published as `@stackone-ui/core`. **Always use granular imports:**
 
 ```tsx
-import { Button, Dialog, useControlledState } from '@stackone-ui/core'
+// Components (use granular paths for tree-shaking)
+import { Card, CardHeader } from '@stackone-ui/core/card'
+import { Badge } from '@stackone-ui/core/badge'
+import { Spinner } from '@stackone-ui/core/spinner'
+
+// Config and styles (server-safe)
+import { ARIA, LABEL, SPRING } from '@stackone-ui/core/config'
 import { Form, Layout } from '@stackone-ui/core/styles'
-import { SPRING, DURATION } from '@stackone-ui/core/config'
+
+// Providers (client-only)
+import { ThemeProvider } from '@stackone-ui/core/providers'
 ```
 
 ### Harness (`packages/ui-library/harness`)
@@ -140,9 +148,33 @@ export const FONT_CONFIG = {
 
 Fallback fonts use metric adjustments (`size-adjust`, `ascent-override`, etc.) to match web font dimensions, minimizing layout shift when fonts swap. Metrics are defined in `fonts/schema.ts`.
 
+## Performance
+
+This project is optimized for minimal JavaScript and fast load times.
+
+| Metric | Target | Current |
+|--------|--------|---------|
+| First Load JS | <110KB | 102KB |
+| Lighthouse Performance | 90+ | 90 |
+| Total Blocking Time | <200ms | 250ms |
+
+### Key Rules
+
+1. **Always use granular imports** (never barrel `@stackone-ui/core`)
+2. **Server Components by default** (no `'use client'` unless required)
+3. **CSS animations only** (no Framer Motion in critical path)
+4. **Modern browsers only** (no legacy polyfills)
+
+```bash
+# Analyze bundle before shipping
+cd apps/mfe/connectors && ANALYZE=true pnpm build
+```
+
+See [PERFORMANCE.md](./PERFORMANCE.md) for the full optimization guide.
+
 ## Tech Stack
 
 - **Build**: Turborepo + pnpm workspaces
 - **Apps**: Next.js 15, React 19
 - **Styling**: Tailwind CSS, CSS variables
-- **Components**: Base UI, Framer Motion
+- **Components**: Base UI, CSS animations
