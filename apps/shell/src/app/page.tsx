@@ -1,7 +1,13 @@
-'use client'
+"use client";
 
-import { Button, Card, CardHeader, CardTitle, CardContent } from '@stackone-ui/core'
-import { HomeStyles as S } from './styles'
+import {
+  Button,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@stackone-ui/core";
+import { HomeStyles as S } from "./styles";
 
 export default function HomePage() {
   return (
@@ -19,5 +25,5 @@ export default function HomePage() {
         </CardContent>
       </Card>
     </main>
-  )
+  );
 }
