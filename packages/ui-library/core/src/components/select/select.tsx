@@ -68,6 +68,7 @@ function SelectRoot({
   disabled = false,
   searchable = false,
   triggerMode = 'hover',
+  width = 'full',
 }: SelectRootProps) {
   const [currentValue, setValue] = useControlledState(value, defaultValue, onValueChange)
   const [isOpen, setIsOpen] = useControlledState<boolean>(undefined, false)
@@ -124,6 +125,7 @@ function SelectRoot({
       disabled,
       searchable,
       triggerMode,
+      width,
     }),
     [
       isOpen,
@@ -136,6 +138,7 @@ function SelectRoot({
       disabled,
       searchable,
       triggerMode,
+      width,
     ]
   )
 
@@ -144,7 +147,7 @@ function SelectRoot({
 
 // Select.Trigger - The button that opens the dropdown
 function SelectTrigger({ children, className, ref }: SelectTriggerProps) {
-  const { isOpen, setIsOpen, triggerRef, disabled, triggerMode } = useSelectContext()
+  const { isOpen, setIsOpen, triggerRef, disabled, triggerMode, width } = useSelectContext()
 
   const handleMouseEnter = useCallback(() => {
     if (!disabled && triggerMode === 'hover') setIsOpen(true)
@@ -174,6 +177,7 @@ function SelectTrigger({ children, className, ref }: SelectTriggerProps) {
       whileTap={{ scale: 0.99 }}
       className={cn(
         S.trigger.base,
+        S.trigger.width[width],
         isOpen && S.trigger.open,
         className
       )}

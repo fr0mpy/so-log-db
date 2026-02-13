@@ -6,6 +6,7 @@ export interface SelectOption {
 }
 
 export type SelectTriggerMode = 'click' | 'hover'
+export type SelectWidth = 'full' | 'auto'
 
 export interface SelectRootProps {
   children: ReactNode
@@ -15,6 +16,7 @@ export interface SelectRootProps {
   disabled?: boolean
   searchable?: boolean
   triggerMode?: SelectTriggerMode
+  width?: SelectWidth
 }
 
 export interface SelectTriggerProps {
@@ -71,4 +73,5 @@ export interface SelectContextValue {
   disabled?: boolean
   searchable?: boolean
   triggerMode: SelectTriggerMode
+  width: SelectWidth
 }

@@ -14,6 +14,7 @@ export type {
   SelectSearchProps,
   SelectContextValue,
   SelectTriggerMode,
+  SelectWidth,
 } from './types'
 
 // =============================================================================
@@ -22,7 +23,7 @@ export type {
 import { useMemo } from 'react'
 import { Select as SelectNamespace } from './select'
 import { SelectStyles as S } from './styles'
-import type { SelectOption, SelectTriggerMode } from './types'
+import type { SelectOption, SelectTriggerMode, SelectWidth } from './types'
 
 export interface SelectProps {
   options: SelectOption[]
@@ -34,6 +35,7 @@ export interface SelectProps {
   searchable?: boolean
   className?: string
   triggerMode?: SelectTriggerMode
+  width?: SelectWidth
 }
 
 /**
@@ -50,6 +52,7 @@ export function Select({
   searchable,
   className,
   triggerMode,
+  width,
 }: SelectProps) {
   // Filter options based on search query (handled internally by context)
   const filteredOptions = useMemo(() => options, [options])
@@ -62,6 +65,7 @@ export function Select({
       disabled={disabled}
       searchable={searchable}
       triggerMode={triggerMode}
+      width={width}
     >
       <SelectNamespace.Trigger className={className}>
         <SelectNamespace.Value placeholder={placeholder} />
