@@ -12,6 +12,16 @@ export const ARIA = {
   close: 'Close',
   /** Loading state */
   loading: 'Loading...',
+  /** Search input */
+  search: 'Search',
+  /** Filter by type */
+  filterByType: 'Filter by type',
+  /** Filter by time range */
+  filterByTimeRange: 'Filter by time range',
+  /** Filter by level */
+  filterByLevel: 'Filter by level',
+  /** Filter input */
+  filterInput: 'Filter',
   /** Carousel previous */
   previousSlide: 'Previous slide',
   /** Carousel next */

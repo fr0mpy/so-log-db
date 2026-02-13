@@ -1,0 +1,39 @@
+'use client'
+
+import { cn } from '@/utils/cn'
+import { isValidElement, cloneElement } from 'react'
+import { ButtonStyles as S } from './styles'
+import type { ButtonVariant, ButtonSize, ButtonBaseProps } from './button-types'
+
+export type { ButtonVariant, ButtonSize }
+
+/**
+ * Static button without motion dependency.
+ * Used when loading prop is not needed - reduces bundle by ~30KB.
+ */
+export function ButtonStatic({
+  variant = 'primary',
+  size = 'md',
+  disabled,
+  className,
+  children,
+  asChild,
+  ref,
+  ...props
+}: ButtonBaseProps) {
+  const buttonClassName = cn(S.base, S.sizes[size], S.variants[variant], className)
+
+  // When asChild is true, clone the child element with button styles and accessibility attrs
+  if (asChild && isValidElement(children)) {
+    return cloneElement(children as React.ReactElement<Record<string, unknown>>, {
+      className: cn(buttonClassName, (children as React.ReactElement<{ className?: string }>).props.className),
+      'aria-disabled': disabled,
+    })
+  }
+
+  return (
+    <button type="button" ref={ref} className={buttonClassName} disabled={disabled} {...props}>
+      <span className={S.content}>{children}</span>
+    </button>
+  )
+}
