@@ -36,7 +36,7 @@
 ### MFE Pattern
 
 - **Multi-Zone** — Next.js zones with URL rewrites (not Module Federation)
-- **Shell proxies to MFE** — Rewrites `/connectors/*` requests to MFE server
+- **Shell proxies to MFE** — Rewrites `/agent-toolkit/*` requests to MFE server
 - **MFEs are standalone Next.js apps** — Each zone is independently deployable
 - **Shared UI via workspace package** — `@stackone-ui/core` with `transpilePackages`
 
@@ -48,7 +48,7 @@
   apps/
     shell/             # Shell app (port 3000)
     mfe/
-      connectors/      # Connectors MFE (port 3001, basePath: /connectors)
+      agent-toolkit/   # Agent Toolkit MFE (port 3001, basePath: /agent-toolkit)
   packages/
     ui-library/
       core/            # @stackone-ui/core - Component library
@@ -60,15 +60,15 @@
 - **Shell is editable** — We can modify Shell behavior when needed
 - **Shell is server-rendered (SSR)** — Returns fully rendered HTML, then hydrates on client
 - **Shell imports component library** — Uses `@stackone-ui/core` with `transpilePackages`
-- **Shell rewrites to MFE** — `/connectors/*` routes proxied to MFE server via `rewrites()`
-- **MFE uses `basePath`** — MFE serves all routes under `/connectors` prefix
+- **Shell rewrites to MFE** — `/agent-toolkit/*` routes proxied to MFE server via `rewrites()`
+- **MFE uses `basePath`** — MFE serves all routes under `/agent-toolkit` prefix
 - **Each zone is independent** — Shell and MFE are separate Next.js apps with own builds
 - **Direct visits are primary traffic** — Users frequently visit MFE URLs directly
 
 ### Multi-Zone Configuration
 
-- **Shell `next.config.ts`** — Defines rewrites to proxy `/connectors/*` to MFE
-- **MFE `next.config.ts`** — Sets `basePath: '/connectors'` to serve under prefix
+- **Shell `next.config.ts`** — Defines rewrites to proxy `/agent-toolkit/*` to MFE
+- **MFE `next.config.ts`** — Sets `basePath: '/agent-toolkit'` to serve under prefix
 - **No manifest required** — Routing handled via Next.js rewrites, not dynamic loading
 - **Environment variable** — `MFE_URL` controls MFE destination (default: `http://localhost:3001`)
 
@@ -201,7 +201,7 @@ PowerSync/SQLite are client-only and cannot be SSR'd. Local-first model means su
 ## Open Questions
 
 - [x] MFE architecture — Multi-Zone with rewrites (not Module Federation)
-- [x] Turborepo package structure — Defined (apps/shell, apps/mfe/connectors, packages/ui-library)
+- [x] Turborepo package structure — Defined (apps/shell, apps/mfe/agent-toolkit, packages/ui-library)
 - [ ] PowerSync scope — Shared package or MFE-specific?
 - [ ] Theme CDN implementation — Storage, versioning, invalidation
 - [ ] Storybook setup — Standalone or part of monorepo?
@@ -232,7 +232,7 @@ PowerSync/SQLite are client-only and cannot be SSR'd. Local-first model means su
 
 Shell and MFE are independent Next.js apps connected via rewrites:
 
-1. **Shell rewrites** — `next.config.ts` proxies `/connectors/*` to MFE server
-2. **MFE basePath** — MFE sets `basePath: '/connectors'` so all routes serve under prefix
+1. **Shell rewrites** — `next.config.ts` proxies `/agent-toolkit/*` to MFE server
+2. **MFE basePath** — MFE sets `basePath: '/agent-toolkit'` so all routes serve under prefix
 3. **Shared UI** — Both apps use `@stackone-ui/core` via `transpilePackages`
 4. **Environment config** — `MFE_URL` env var controls MFE destination in production
