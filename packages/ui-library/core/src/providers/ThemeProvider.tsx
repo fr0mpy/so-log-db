@@ -1,20 +1,36 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, useRef, type ReactNode } from 'react'
+import {
+  defaultBaseTheme,
+  applyBaseTheme,
+  applyBrandTheme,
+  updateThemeMode,
+  validateBrandTheme,
+  logWarnings,
+  type BrandTheme,
+  type ThemeMode,
+} from '../themes'
 
 // =============================================================================
 // Types
 // =============================================================================
 
-type Theme = 'light' | 'dark'
-
 interface ThemeContextValue {
   /** Current theme mode */
-  theme: Theme
+  theme: ThemeMode
   /** Toggle between light and dark mode */
   toggle: () => void
   /** Whether web fonts have finished loading */
   fontsLoaded: boolean
+  /** Whether themes have been applied */
+  themeReady: boolean
+}
+
+interface ThemeProviderProps {
+  children: ReactNode
+  /** URL to fetch brand theme JSON from. If not provided, uses schema fallbacks. */
+  brandThemeUrl?: string
 }
 
 // =============================================================================
@@ -29,20 +45,63 @@ const STORAGE_KEY = 'stackone-theme'
 // Provider
 // =============================================================================
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('light')
+export function ThemeProvider({ children, brandThemeUrl }: ThemeProviderProps) {
+  const [theme, setTheme] = useState<ThemeMode>('light')
   const [fontsLoaded, setFontsLoaded] = useState(false)
+  const [themeReady, setThemeReady] = useState(false)
 
-  // Initialize theme from localStorage
+  // Store validated brand theme for mode switching
+  const brandThemeRef = useRef<BrandTheme | null>(null)
+
+  // Initialize theme from localStorage and apply base theme
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as Theme | null
-    if (stored) setTheme(stored)
-  }, [])
+    const stored = localStorage.getItem(STORAGE_KEY) as ThemeMode | null
+    const initialMode = stored ?? 'light'
+    setTheme(initialMode)
 
-  // Apply theme class and persist
+    // Apply base theme immediately (structural tokens)
+    applyBaseTheme(defaultBaseTheme, { mode: initialMode })
+
+    // Load and apply brand theme
+    async function loadBrandTheme() {
+      let brandTheme: Partial<BrandTheme> = {}
+
+      if (brandThemeUrl) {
+        try {
+          const response = await fetch(brandThemeUrl)
+          if (response.ok) {
+            brandTheme = await response.json()
+          }
+        } catch {
+          // Fall through to use fallbacks
+        }
+      }
+
+      // Validate and fill in fallbacks for missing tokens
+      const { theme: validatedTheme, warnings } = validateBrandTheme(brandTheme)
+      brandThemeRef.current = validatedTheme
+
+      if (warnings.length > 0) {
+        logWarnings(warnings, brandThemeUrl ?? 'default')
+      }
+
+      // Apply brand theme (visual tokens)
+      applyBrandTheme(validatedTheme, { mode: initialMode })
+      setThemeReady(true)
+    }
+
+    loadBrandTheme()
+  }, [brandThemeUrl])
+
+  // Handle mode switching
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
     localStorage.setItem(STORAGE_KEY, theme)
+
+    // Update mode-specific tokens (shadows, colors)
+    if (brandThemeRef.current) {
+      updateThemeMode(defaultBaseTheme, brandThemeRef.current, theme)
+    }
   }, [theme])
 
   // Track font loading state
@@ -61,7 +120,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const toggle = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'))
 
   return (
-    <ThemeContext.Provider value={{ theme, toggle, fontsLoaded }}>
+    <ThemeContext.Provider value={{ theme, toggle, fontsLoaded, themeReady }}>
       {children}
     </ThemeContext.Provider>
   )
