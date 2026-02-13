@@ -1,5 +1,8 @@
 import type { NextConfig } from 'next'
 import path from 'path'
+import createNextIntlPlugin from 'next-intl/plugin'
+
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 
 const MFE_URL = process.env.MFE_URL || 'http://localhost:3001'
 
@@ -28,4 +31,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default nextConfig
+export default withNextIntl(nextConfig)

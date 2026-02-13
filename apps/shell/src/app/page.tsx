@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   Button,
   Card,
@@ -8,18 +9,21 @@ import {
   CardContent,
 } from "@stackone-ui/core";
 import { HomeStyles as S } from "./styles";
+import { Routes } from "../lib/routes";
 
 export default function HomePage() {
+  const t = useTranslations();
+
   return (
     <main className={S.main}>
       <Card className={S.card}>
-        <CardHeader>
-          <CardTitle>StackOne Shell</CardTitle>
+        <CardHeader className={S.cardHeader}>
+          <CardTitle>{t("home.title")}</CardTitle>
         </CardHeader>
         <CardContent className={S.cardContent}>
           <nav className={S.nav}>
             <Button asChild>
-              <a href="/connectors">Connectors</a>
+              <a href={Routes.connectors}>{t("navigation.connectors")}</a>
             </Button>
           </nav>
         </CardContent>
