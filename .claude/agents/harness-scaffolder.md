@@ -1,6 +1,6 @@
 ---
 name: harness-scaffolder
-description: USE WHEN user runs /component-harness, asks to create a component preview, or needs a visual gallery. Scaffolds the Vite harness from recipes.
+description: MUST BE USED when user runs /component-harness or asks to create a component preview. Scaffolds the Vite harness.
 tools: Grep, Glob, Read, Write, Edit, Bash
 model: sonnet
 ---

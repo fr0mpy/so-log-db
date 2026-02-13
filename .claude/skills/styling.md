@@ -6,6 +6,44 @@ description: USE WHEN generating, modifying, or reviewing UI components, working
 
 Apply this skill when generating, modifying, or reviewing UI components.
 
+## ⚠️ CRITICAL RULE: Use Text Component (No Raw HTML Text Elements)
+
+**NEVER use raw `<p>`, `<span>`, `<h1>`-`<h6>` tags. ALWAYS use the Text component.**
+
+```tsx
+// ❌ NEVER — Raw HTML text elements
+<p className={styles.description}>Description</p>
+<h1 className={styles.title}>Title</h1>
+<span className={styles.caption}>Caption</span>
+
+// ✅ ALWAYS — Text component from @stackone-ui/core/text
+import { Text } from '@stackone-ui/core/text'
+
+<Text variant="body2" color="muted">Description</Text>
+<Text variant="h1">Title</Text>
+<Text variant="caption" color="muted">Caption</Text>
+```
+
+**Text component variants:**
+
+| Variant | Renders As | Use For |
+|---------|------------|---------|
+| `h1`-`h6` | `<h1>`-`<h6>` | Headings |
+| `lead` | `<p>` | Large intro text |
+| `body1` | `<p>` | Standard body (default) |
+| `body2` | `<p>` | Smaller body text |
+| `subtitle` | `<p>` | Subtitle text |
+| `caption` | `<span>` | Small labels, timestamps |
+| `overline` | `<span>` | Category labels |
+| `code` | `<code>` | Inline code |
+| `kbd` | `<kbd>` | Keyboard shortcuts |
+
+**Props:** `color` (`muted`, `primary`, `destructive`, `success`), `weight`, `align`, `truncate`, `lineClamp`
+
+**Why:** Semantic HTML, consistent typography, responsive scaling, maintainable code.
+
+---
+
 ## ⚠️ CRITICAL RULE: Zero Inline Classnames
 
 **Components MUST NOT contain Tailwind className strings inline.**

@@ -1,6 +1,6 @@
 ---
 name: migration-planner
-description: Plans safe database/API migrations with rollback strategies. Use for schema changes, API versioning, or data migrations.
+description: Use PROACTIVELY for any schema change, API versioning, or data migration. Plans safe migrations with rollback strategies.
 ---
 
 You are a migration planner that ensures safe, reversible changes.

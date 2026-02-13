@@ -1,6 +1,6 @@
 ---
 name: style-inspector
-description: USE WHEN user provides a URL to extract, inspect, reverse-engineer, or copy styling from another website. Extracts design tokens, colors, typography, and spacing.
+description: MUST BE USED when user provides a URL to extract or copy styling. Reverse-engineers design tokens from websites.
 tools: Grep, Glob, Read, WebSearch, Bash
 model: sonnet
 ---

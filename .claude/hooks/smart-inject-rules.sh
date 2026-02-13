@@ -30,8 +30,7 @@ else
   [[ $file_age -gt 3600 ]] && echo "Context: stale ($(( file_age / 3600 ))h). Consider running context-loader."
 fi
 
-# Static rule reminder (condensed from CLAUDE.md behavioral rules)
+# Behavior reminder (rules now in .claude/rules/)
 cat << 'REMINDER'
-RULES: No hardcoded values (use config/theme/constants). Discover dynamically (Glob, not assumed paths). Iterate, don't index. Push back on incorrect assumptions with evidence. Announce actions with emojis. Each agent runs max ONCE per prompt.
-Before proceeding, invoke prompt-analyzer to determine which agents/skills are relevant to this task.
+Rules in .claude/rules/ — load relevant ones. Announce: 🔧/✅/❌. Agents run once per prompt.
 REMINDER

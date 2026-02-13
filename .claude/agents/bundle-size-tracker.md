@@ -1,6 +1,6 @@
 ---
 name: bundle-size-tracker
-description: Monitors bundle size and First Load JS. Use before shipping, after adding dependencies, or when performance degrades.
+description: MUST BE USED before shipping and after adding dependencies. Monitors bundle size and First Load JS.
 ---
 
 You are a bundle size specialist that prevents JavaScript bloat.

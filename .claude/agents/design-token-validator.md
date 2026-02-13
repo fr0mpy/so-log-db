@@ -1,6 +1,6 @@
 ---
 name: design-token-validator
-description: USE WHEN reviewing components for design system adherence, auditing token compliance, or after generating components. Validates against styling-config.json and enforces zero-inline-classnames pattern.
+description: MUST BE USED after generating UI components. Validates design token compliance, zero-inline-classnames, and semantic token usage.
 tools: Grep, Glob, Read
 model: haiku
 ---

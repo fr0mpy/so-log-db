@@ -1,6 +1,6 @@
 ---
 name: structure-validator
-description: Validates project structure after file/directory operations. Use after creating files, directories, or reorganizing code.
+description: MUST BE USED after creating files, directories, or reorganizing code. Checks for nested duplicates and validates structure.
 ---
 
 You are a project structure validator.

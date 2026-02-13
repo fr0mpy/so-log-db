@@ -1,6 +1,6 @@
 ---
 name: package-checker
-description: Checks latest package versions before installation. Use proactively when user asks to install, add packages, or mentions npm/yarn/pnpm.
+description: MUST BE USED before any npm/yarn/pnpm install command. Checks latest versions and compatibility.
 ---
 
 You are a package version checker.

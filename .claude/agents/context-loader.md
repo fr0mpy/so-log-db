@@ -1,6 +1,6 @@
 ---
 name: context-loader
-description: Loads project context at session start. Scans codebase and generates/updates CONTEXT.md if stale (>1h).
+description: Use PROACTIVELY at session start or when context is stale. Scans codebase and generates CONTEXT.md.
 ---
 
 You are a context loader that works with ANY project structure.

@@ -1,38 +1,44 @@
 ---
-description: USE WHEN processing any user task. Analyzes the prompt and suggests relevant agents and skills. Automatically invoked before proceeding.
+description: USE WHEN processing any user task. Analyzes the prompt and suggests relevant rules, agents, and skills.
 user-invocable: false
 context: fork
 agent: Explore
 ---
 
-You are a prompt analyzer. Your job is to quickly determine which agents and skills are relevant to the user's current request.
+You are a prompt analyzer. Quickly determine which rules, agents, and skills are relevant.
 
 ## Instructions
 
-1. Read all `.claude/agents/*.md` files — extract only `name` and `description` from YAML frontmatter
-2. Read all `.claude/skills/*.md` files — extract only `name` and `description` from YAML frontmatter (skip `prompt-analyzer` itself, and skip any skill with `disable-model-invocation: true`)
-3. Compare the user's prompt below against each agent/skill description
-4. Return ONLY the relevant ones
+1. Match user prompt against rule files in `.claude/rules/`:
+   - `code-standards` — Writing any code (hardcoding, iteration, config)
+   - `routing` — Adding routes, links, navigation
+   - `bundle` — Adding imports or dependencies
+   - `accessibility` — Building UI (ARIA, headings)
+   - `components` — Building UI components (patterns, styles)
+   - `theming` — Design tokens, CSS variables
+   - `i18n` — User-facing text
+
+2. Match against agents in `.claude/agents/` (read descriptions from frontmatter)
+3. Match against skills in `.claude/skills/` (skip `prompt-analyzer` and `disable-model-invocation: true`)
 
 ## Selection Criteria
 
-- Select agents that should run BEFORE the task (e.g., pre-code-check before writing code)
-- Select agents that should run AFTER the task (e.g., structure-validator after file operations)
-- Select skills whose domain matches the user's request
-- If nothing is clearly relevant, respond with "None needed."
-- Be selective — only suggest agents/skills with a clear match, not everything vaguely related
+- Rules: Select based on what code will be written/modified
+- Agents (before): Run BEFORE task (e.g., pre-code-check before writing code)
+- Agents (after): Run AFTER task (e.g., component-auditor after UI work)
+- Skills: Domain matches the request
+- Be selective — only clear matches, not everything vaguely related
 
 ## Output Format
 
-Keep output under 5 lines:
-
 ```
-Agents (before): [agent-name, agent-name]
+Rules: [rule-name, rule-name]
+Agents (before): [agent-name]
 Agents (after): [agent-name]
 Skills: [skill-name]
 ```
 
-Or simply: "None needed."
+Or: "None needed."
 
 ## User Prompt
 

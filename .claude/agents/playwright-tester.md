@@ -1,6 +1,6 @@
 ---
 name: playwright-tester
-description: USE WHEN user asks to test components, verify rendering, run visual checks, or validate accessibility. Tests the running harness via Playwright MCP.
+description: MUST BE USED when user asks to test components or verify rendering. Tests the harness via Playwright MCP.
 tools: Read, Glob, Grep
 model: sonnet
 ---

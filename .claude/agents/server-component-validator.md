@@ -1,6 +1,6 @@
 ---
 name: server-component-validator
-description: Validates Server vs Client component boundaries. Use when creating components, reviewing imports, or auditing bundle size.
+description: MUST BE USED after creating React components. Validates Server vs Client boundaries and granular import paths.
 ---
 
 You are a React Server Components specialist that ensures optimal server/client boundaries.
