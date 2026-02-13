@@ -24,7 +24,69 @@ Analyze code for:
 - Synchronous file operations
 - Unbounded list rendering
 - Missing pagination
-- Large bundle imports
+- Large bundle imports (barrel exports pulling entire libraries)
+- Non-composited CSS animations (width, height, top, left instead of transform/opacity)
+
+## Project-Specific Rules
+
+**ALWAYS use granular imports from @stackone-ui/core:**
+```tsx
+// ❌ NEVER import from barrel (pulls ALL components)
+import { Card, Badge, Spinner } from '@stackone-ui/core'
+
+// ✅ ALWAYS use granular paths
+import { Card } from '@stackone-ui/core/card'
+import { Badge } from '@stackone-ui/core/badge'
+import { Spinner } from '@stackone-ui/core/spinner'
+```
+
+**Check bundle size before shipping:**
+```bash
+# Run bundle analyzer
+cd apps/mfe/connectors && pnpm build:analyze
+```
+
+**Lighthouse targets:**
+- Performance: 90+
+- TBT: <200ms
+- First Load JS: <110KB (achieved: 102KB)
+- Unused JS: <500KB
+
+**Server Components by default:**
+```tsx
+// ❌ NEVER add 'use client' unless required
+'use client'  // Only if using: useState, useEffect, useRef, useContext,
+              // onClick, onChange, onSubmit, or browser APIs (localStorage, window)
+
+// ✅ Keep as Server Component when possible
+// No directive = Server Component (zero JS sent to client)
+export default function Page() { ... }
+
+// Note: React.memo doesn't require 'use client' - it's just a wrapper
+// React 19 compiler auto-memoizes anyway
+```
+
+**Modern browserslist (no legacy polyfills):**
+```json
+// package.json - eliminates ~10KB of polyfills
+{
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 Edge versions"
+  ]
+}
+```
+
+**CSS animations MUST use composited properties:**
+```css
+/* ❌ Non-composited (triggers layout) */
+animation: slide { width, height, top, left, margin, padding }
+
+/* ✅ Composited (GPU accelerated) */
+animation: slide { transform, opacity }
+```
 
 ## Output Format
 

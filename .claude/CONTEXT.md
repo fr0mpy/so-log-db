@@ -48,7 +48,7 @@
   apps/
     shell/             # Shell app (port 3000)
     mfe/
-      toolset/         # Toolset MFE (port 3001, basePath: /connectors)
+      connectors/      # Connectors MFE (port 3001, basePath: /connectors)
   packages/
     ui-library/
       core/            # @stackone-ui/core - Component library
@@ -201,7 +201,7 @@ PowerSync/SQLite are client-only and cannot be SSR'd. Local-first model means su
 ## Open Questions
 
 - [x] MFE architecture — Multi-Zone with rewrites (not Module Federation)
-- [x] Turborepo package structure — Defined (apps/shell, apps/mfe/toolset, packages/ui-library)
+- [x] Turborepo package structure — Defined (apps/shell, apps/mfe/connectors, packages/ui-library)
 - [ ] PowerSync scope — Shared package or MFE-specific?
 - [ ] Theme CDN implementation — Storage, versioning, invalidation
 - [ ] Storybook setup — Standalone or part of monorepo?

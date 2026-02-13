@@ -19,12 +19,42 @@ Review UI code for:
 
 - Images without alt text
 - Buttons/links without accessible names
-- Form inputs without labels
+- Form inputs without labels (use ARIA config constants, not hardcoded strings)
 - Missing focus indicators
 - Non-semantic div/span overuse
 - Color-only state indication
 - Missing skip links
 - Inaccessible modals/dialogs
+- Heading hierarchy violations (h1→h2→h3, no skipping levels)
+- Visual/semantic mismatch (h2 styled as h3)
+
+## Project-Specific Rules
+
+**ARIA Labels MUST use config constants:**
+```tsx
+// ❌ NEVER hardcode
+<input aria-label="Search" />
+<select aria-label="Filter by type" />
+
+// ✅ ALWAYS use ARIA config
+import { ARIA } from '@stackone-ui/core'
+<input aria-label={ARIA.search} />
+<select aria-label={ARIA.filterByType} />
+```
+
+**Heading hierarchy MUST match visual styling:**
+```tsx
+// ❌ Visual/semantic mismatch
+<h2 className={Text.h3}>Title</h2>
+
+// ✅ Semantic matches visual
+<h2 className={Text.h2}>Title</h2>
+```
+
+**Form controls MUST have labels:**
+- Use `aria-label={ARIA.xxx}` for hidden labels
+- Use `<label htmlFor>` for visible labels
+- Add missing ARIA constants to `@stackone-ui/core/config/text.ts`
 
 ## Output Format
 

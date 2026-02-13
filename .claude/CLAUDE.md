@@ -46,6 +46,101 @@ For every piece of code, follow these patterns:
 
 ---
 
+## Bundle Optimization (CRITICAL)
+
+**ALWAYS use granular imports from @stackone-ui/core:**
+
+```tsx
+// ❌ NEVER import from barrel (pulls ALL 24+ components into bundle)
+import { Card, Badge, Spinner } from '@stackone-ui/core'
+
+// ✅ ALWAYS use granular paths (tree-shakeable)
+import { Card, CardHeader } from '@stackone-ui/core/card'
+import { Badge } from '@stackone-ui/core/badge'
+import { Spinner } from '@stackone-ui/core/spinner'
+import { ARIA } from '@stackone-ui/core/config'
+```
+
+**Available granular exports:**
+
+| Export | Server-safe | Notes |
+|--------|-------------|-------|
+| `@stackone-ui/core/card` | ✅ Yes | Static display component |
+| `@stackone-ui/core/badge` | ✅ Yes | Static display component |
+| `@stackone-ui/core/spinner` | ✅ Yes | CSS animation only |
+| `@stackone-ui/core/button` | ❌ No | Has loading state with motion |
+| `@stackone-ui/core/config` | ✅ Yes | ARIA, LABEL constants |
+| `@stackone-ui/core/styles` | ✅ Yes | Style patterns |
+| `@stackone-ui/core/providers` | ❌ No | ThemeProvider uses hooks |
+| `@stackone-ui/core/hooks` | ❌ No | All hooks are client |
+
+**Interactive components are client-only:**
+- Select, Slider, Dialog, Drawer, Accordion, Menu, Tabs, Toast, Tooltip
+
+**Server vs Client rule:**
+- `@stackone-ui/core` barrel has `'use client'` - never import from it in server components
+- Check individual component files for `'use client'` directive
+
+**Performance targets:**
+- Lighthouse Performance: 90+
+- Total Blocking Time: <200ms
+- Unused JavaScript: <500KB
+
+---
+
+## Accessibility Rules (CRITICAL)
+
+### Form Controls MUST Have Labels
+
+```tsx
+// ❌ NEVER - bare form elements without labels
+<input type="search" placeholder="Search..." />
+<select><option>All</option></select>
+
+// ✅ ALWAYS - use ARIA config constants
+import { ARIA } from '@stackone-ui/core/config'
+<input aria-label={ARIA.search} placeholder="Search..." />
+<select aria-label={ARIA.filterByType}><option>All</option></select>
+```
+
+**Add missing ARIA constants to `@stackone-ui/core/config/text.ts`:**
+```ts
+export const ARIA = {
+  search: 'Search',
+  filterByType: 'Filter by type',
+  filterByLevel: 'Filter by level',
+  filterByTimeRange: 'Filter by time range',
+  filterInput: 'Filter',
+  // ... add new constants here as needed
+}
+```
+
+### Heading Hierarchy MUST Be Sequential
+
+```tsx
+// ❌ NEVER - skip heading levels or mismatch visual/semantic
+<h1>Page Title</h1>
+<h3>Section</h3>  // Skipped h2!
+<h2 className={Text.h3}>Title</h2>  // Visual/semantic mismatch
+
+// ✅ ALWAYS - sequential levels, matching visual style
+<h1>Page Title</h1>
+<h2>Section</h2>
+<h2 className={Text.h2}>Title</h2>  // h2 styled as h2
+```
+
+### CSS Animations MUST Use Composited Properties
+
+```css
+/* ❌ NEVER - triggers layout, causes jank */
+animation: slide { width, height, top, left, margin, padding }
+
+/* ✅ ALWAYS - GPU accelerated */
+animation: slide { transform, opacity }
+```
+
+---
+
 ## Component Architecture
 
 ### Directory Structure
