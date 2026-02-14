@@ -8,29 +8,24 @@
  * from the canonical configuration in config.ts.
  */
 
-import { Figtree, IBM_Plex_Mono } from 'next/font/google'
+import { Inter, IBM_Plex_Mono } from 'next/font/google'
 
 // =============================================================================
 // Font Instances (generated from config.ts)
 // =============================================================================
 
 /**
- * Primary sans-serif font (Figtree).
+ * Primary sans-serif font (Inter).
  * Used for body text and headings.
  */
-export const fontSans = Figtree({
+export const fontSans = Inter({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-body',
+  variable: '--font-sans',
   weight: ['400', '500', '600', '700'],
   adjustFontFallback: true,
   preload: true,
 })
-
-/**
- * Heading font (same as sans by default).
- */
-export const fontHeading = fontSans
 
 /**
  * Monospace font (IBM Plex Mono).
@@ -39,7 +34,7 @@ export const fontHeading = fontSans
 export const fontMono = IBM_Plex_Mono({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-code',
+  variable: '--font-mono',
   weight: ['400', '500'],
   adjustFontFallback: true,
   preload: true,
@@ -60,6 +55,5 @@ export const fontVariables = `${fontSans.variable} ${fontMono.variable}`
  */
 export const fontClassNames = {
   sans: fontSans.className,
-  heading: fontHeading.className,
   mono: fontMono.className,
 } as const

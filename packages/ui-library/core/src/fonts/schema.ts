@@ -131,7 +131,7 @@ export function generateFallbackFontFace(
  * Generates all fallback @font-face rules for the default font families.
  */
 export function generateAllFallbackFontFaces(
-  fontNames: string[] = ['Figtree', 'IBM Plex Mono']
+  fontNames: string[] = ['Inter', 'IBM Plex Mono']
 ): string {
   return fontNames
     .map((name) => generateFallbackFontFace(name))

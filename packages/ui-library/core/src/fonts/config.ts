@@ -47,27 +47,21 @@ export const FONT_CONFIG: FontConfig = {
 
 /**
  * Font family definitions.
- * These are the DEFAULT fonts - brands can override via theme JSON.
+ * These define the LOADED fonts (--font-sans, --font-mono).
+ * Theme system maps these to semantic tokens (--font-body, --font-heading, --font-code).
  */
 export const FONT_FAMILIES = {
   sans: {
-    name: 'Figtree',
+    name: 'Inter',
     weights: [400, 500, 600, 700] as const,
-    variable: '--font-body',
+    variable: '--font-sans',
     fallback: 'ui-sans-serif, system-ui, -apple-system, sans-serif',
-    googleFamily: 'Figtree',
-  },
-  heading: {
-    name: 'Figtree',
-    weights: [500, 600, 700] as const,
-    variable: '--font-heading',
-    fallback: 'ui-sans-serif, system-ui, -apple-system, sans-serif',
-    googleFamily: 'Figtree',
+    googleFamily: 'Inter',
   },
   mono: {
     name: 'IBM Plex Mono',
     weights: [400, 500] as const,
-    variable: '--font-code',
+    variable: '--font-mono',
     fallback: 'ui-monospace, SFMono-Regular, Menlo, monospace',
     googleFamily: 'IBM+Plex+Mono',
   },

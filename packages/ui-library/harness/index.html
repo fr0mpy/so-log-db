@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -22,11 +22,11 @@
          Metric-adjusted system fonts to match web font dimensions
          ================================================================ */
       @font-face {
-        font-family: 'Figtree Fallback';
+        font-family: 'Inter Fallback';
         src: local('Arial'), local('Helvetica Neue'), local('Helvetica');
-        size-adjust: 105%;
-        ascent-override: 95%;
-        descent-override: 25%;
+        size-adjust: 107%;
+        ascent-override: 90%;
+        descent-override: 22%;
         line-gap-override: 0%;
       }
 
@@ -126,10 +126,14 @@
         --z-tooltip: 600;
         --z-toast: 9900;
 
-        /* Typography */
-        --font-heading: 'Figtree', 'Figtree Fallback', ui-sans-serif, system-ui, sans-serif;
-        --font-body: 'Figtree', 'Figtree Fallback', ui-sans-serif, system-ui, sans-serif;
-        --font-code: 'IBM Plex Mono', 'IBM Plex Mono Fallback', ui-monospace, monospace;
+        /* Typography - Loaded fonts */
+        --font-sans: 'Inter', 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
+        --font-mono: 'IBM Plex Mono', 'IBM Plex Mono Fallback', ui-monospace, monospace;
+
+        /* Typography - Semantic tokens (reference loaded fonts) */
+        --font-heading: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+        --font-body: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+        --font-code: var(--font-mono), ui-monospace, monospace;
       }
 
       /* ================================================================
