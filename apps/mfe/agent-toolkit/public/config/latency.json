@@ -1,0 +1,24 @@
+{
+  "thresholds": {
+    "fast": {
+      "max": 100,
+      "color": "success",
+      "label": "Fast"
+    },
+    "medium": {
+      "max": 500,
+      "color": "warning",
+      "label": "Medium"
+    },
+    "slow": {
+      "max": null,
+      "color": "destructive",
+      "label": "Slow"
+    }
+  },
+  "display": {
+    "segmentMs": 100,
+    "maxSegments": 10,
+    "maxDisplayMs": 1000
+  }
+}

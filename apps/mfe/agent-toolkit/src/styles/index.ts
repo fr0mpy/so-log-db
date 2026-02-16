@@ -24,12 +24,14 @@ export const Text = {
   h3: 'text-xl font-semibold',
   body: Typography.textSm,
   muted: [Typography.textSm, Typography.textMuted].join(' '),
-  mono: 'font-mono text-sm',
-  monoTruncate: 'font-mono text-sm flex-1 truncate',
+  value: 'text-sm',
+  valueTruncate: 'text-sm flex-1 truncate',
   label: [Typography.textSm, Typography.fontMedium, Typography.textMuted].join(' '),
   medium: Typography.fontMedium,
   center: 'text-center',
   pre: 'whitespace-pre',
+  /** Page title in filter row */
+  pageTitle: 'text-2xl font-bold whitespace-nowrap mr-5',
 } as const
 
 // ============================================================================
@@ -37,26 +39,11 @@ export const Text = {
 // ============================================================================
 
 export const AppLayout = {
-  container: 'min-h-screen flex',
-  sidebar: {
-    base: 'w-64 bg-surface border-r border-border p-4',
-    header: 'mb-8',
-    title: 'text-xl font-bold text-primary',
-    subtitle: Text.muted,
-    nav: 'space-y-1',
-  },
-  main: 'flex-1 p-8',
-} as const
-
-export const NavLink = {
-  base: [
-    'block',
-    Layout.Spacing.input,
-    'rounded-lg',
-    Interactive.Transition.color,
-  ].join(' '),
-  active: 'bg-primary/10 text-primary',
-  inactive: 'hover:bg-muted/20',
+  container: 'min-h-screen',
+  /** Main content area - uses ml-16 (64px) to account for collapsed SideNav */
+  main: 'flex-1 p-8 ml-16',
+  /** Animated main content - flex-1 shrinks when sidebar expands */
+  mainAnimated: 'flex-1 min-h-screen p-8 transition-[margin] duration-200 ease-out',
 } as const
 
 // ============================================================================
@@ -64,7 +51,7 @@ export const NavLink = {
 // ============================================================================
 
 export const PageHeader = {
-  container: 'mb-8',
+  container: 'mb-2',
   title: Text.h1,
   description: Text.muted,
   breadcrumb: {
@@ -191,6 +178,275 @@ export const Grid = {
   cols2: 'grid grid-cols-1 lg:grid-cols-2 gap-6',
   cols3: 'grid grid-cols-1 md:grid-cols-3 gap-6',
   actionsRow: 'grid grid-cols-1 md:grid-cols-2 gap-6',
+  /** Chart on left (70%), stats on right (30%) */
+  chartStats: 'grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4',
+} as const
+
+// ============================================================================
+// Log Stats Panel - Bento Grid Layout
+// ============================================================================
+
+export const LogStats = {
+  /** 2x2 grid with separate cards */
+  grid: 'grid grid-cols-2 gap-2 h-full',
+  /** Card content padding */
+  cell: 'py-2 px-3 flex flex-col justify-center h-full',
+  /** Label text - small, muted, uppercase */
+  label: [Typography.textXs, Typography.textMuted, Typography.fontMedium, 'uppercase tracking-wide'].join(' '),
+  /** Row for value + optional inline content (items-center for vertical centering with breakdown) */
+  valueRow: 'flex flex-row flex-nowrap items-center justify-between gap-2 mt-0.5',
+  /** Primary value - medium and bold */
+  value: 'text-lg font-bold',
+  valueSuccess: 'text-lg font-bold text-success',
+  valueDestructive: 'text-lg font-bold text-destructive',
+  /** Trend indicator row */
+  trend: 'flex items-center gap-1 mt-1',
+  trendUp: 'text-[10px] text-success flex items-center gap-0.5',
+  trendDown: 'text-[10px] text-destructive flex items-center gap-0.5',
+  trendNeutral: 'text-[10px] text-muted-foreground flex items-center gap-0.5',
+  /** Arrow icons */
+  trendArrow: 'w-2.5 h-2.5',
+  /** Secondary info text */
+  subtext: [Typography.textXs, Typography.textMuted].join(' '),
+  /** Error breakdown section - vertical stack, left-aligned labels */
+  breakdown: 'flex flex-col items-start gap-0',
+  breakdownItem: 'flex items-center gap-1',
+  breakdownLabel: [Typography.textXs, Typography.textMuted].join(' '),
+  breakdownValue: [Typography.textXs, 'font-semibold'].join(' '),
+  breakdownValueWarning: [Typography.textXs, 'text-warning font-bold'].join(' '),
+  breakdownValueDestructive: [Typography.textXs, 'text-destructive font-bold'].join(' '),
+} as const
+
+// ============================================================================
+// Data Table
+// ============================================================================
+
+export const DataTable = {
+  container: 'w-full',
+  /** Wrapper - no scroll, responsive columns fit viewport */
+  scrollWrapper: 'rounded-lg shadow-neu-raised-highlight',
+  /** No minimum width - columns shrink responsively */
+  innerWrapper: 'w-full',
+  header: 'text-left text-xs font-semibold text-foreground uppercase tracking-wider',
+  /** Card wrapper for header with no bottom border-radius */
+  headerCard: 'rounded-b-none rounded-t-lg border-b-0',
+  /** Paper wrapper for body with no top border-radius, overflow-hidden clips content */
+  bodyPaper: 'rounded-t-none rounded-b-lg -mt-px overflow-hidden',
+  /** Responsive header row - no min-width */
+  headerRow: 'flex w-full',
+  /** Responsive cell padding - smaller on mobile */
+  headerCell: 'px-2 sm:px-3 py-3 whitespace-nowrap',
+  headerCellSortable: [
+    'px-2 sm:px-3 py-3 whitespace-nowrap',
+    'cursor-pointer hover:bg-muted/10 select-none',
+  ].join(' '),
+  headerCellRight: 'px-2 sm:px-3 py-3 whitespace-nowrap text-right',
+  /** Responsive row - clips overflow */
+  row: ['group flex items-center w-full overflow-hidden', 'hover:bg-black/5', Interactive.Transition.color, 'cursor-pointer'].join(' '),
+  /** Row wrapper that includes separator */
+  rowWrapper: 'border-b border-border last:border-b-0',
+  /** Responsive cell padding */
+  cell: 'px-2 sm:px-3 py-3 flex items-center overflow-hidden',
+  cellRight: 'px-2 sm:px-3 py-3 text-right text-sm flex items-center justify-end',
+  cellTruncate: 'px-2 sm:px-3 py-3 truncate flex items-center overflow-hidden',
+  scrollArea: 'max-h-[60vh] overflow-auto',
+} as const
+
+// ============================================================================
+// Log Table Column Widths
+// ============================================================================
+
+/**
+ * Responsive column widths:
+ * - lg (1024px+): Full table
+ * - md (768px-1023px): Hide originOwner, truncate text
+ * - sm (640px-767px): Hide source, provider icon-only
+ * - xs (<640px): Hide duration, request name - show icons/badges only
+ */
+export const LogTableColumns = {
+  requested: 'w-[110px] shrink-0',
+  provider: 'w-[160px] shrink-0',
+  originOwner: 'hidden lg:flex lg:flex-1 lg:min-w-[120px]',
+  source: 'hidden md:flex md:w-[120px] shrink-0',
+  request: 'flex-1 min-w-[180px]',
+  duration: 'hidden sm:flex sm:w-[100px] shrink-0',
+  status: 'w-[70px] shrink-0',
+  /** Actions column - fixed width, right-aligned */
+  actions: 'w-[160px] shrink-0 justify-end',
+} as const
+
+// ============================================================================
+// Provider Avatar
+// ============================================================================
+
+export const ProviderAvatar = {
+  container: [Layout.Flex.center, 'gap-2'].join(' '),
+  icon: 'w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold text-white',
+  /** Wrapper for name + version - hidden below md for icon-only mode */
+  textWrapper: 'hidden md:flex flex-col',
+  name: 'font-medium leading-tight truncate max-w-[100px]',
+  version: 'text-[10px] text-muted-foreground leading-tight',
+  /** Provider-specific colors use semantic tokens */
+  primary: 'bg-primary',
+  secondary: 'bg-secondary',
+  accent: 'bg-accent',
+  muted: 'bg-muted-foreground',
+} as const
+
+// ============================================================================
+// Method Badge (for HTTP methods) - Swagger UI color conventions
+// GET=Blue, POST=Green, PUT=Orange, DELETE=Red, PATCH=Teal
+// ============================================================================
+
+export const MethodBadge = {
+  base: Feedback.Tag.base,
+  GET: Feedback.Tag.info,
+  POST: Feedback.Tag.success,
+  PUT: Feedback.Tag.warning,
+  DELETE: Feedback.Tag.destructive,
+  PATCH: Feedback.Tag.accent,
+  HEAD: Feedback.Tag.primary,
+  OPTIONS: Feedback.Tag.secondary,
+} as const
+
+// ============================================================================
+// Status Badge (for HTTP status codes) - solid backgrounds with white text
+// ============================================================================
+
+export const StatusBadge = {
+  base: Feedback.TagSolid.base,
+  success: Feedback.TagSolid.success,
+  warning: Feedback.TagSolid.warning,
+  error: Feedback.TagSolid.destructive,
+} as const
+
+// ============================================================================
+// Version Badge
+// ============================================================================
+
+export const VersionBadge = {
+  base: 'inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-muted/50 text-muted-foreground ml-2',
+} as const
+
+// ============================================================================
+// Source Cell
+// ============================================================================
+
+export const SourceCell = {
+  container: [Layout.Flex.center, 'gap-2'].join(' '),
+  icon: 'w-4 h-4 rounded bg-muted/30 flex items-center justify-center text-[10px] text-muted-foreground shrink-0',
+  /** Source text - hidden below lg for icon-only mode */
+  text: 'hidden lg:block text-sm truncate max-w-[100px]',
+} as const
+
+// ============================================================================
+// Timestamp Cell
+// ============================================================================
+
+export const TimestampCell = {
+  container: 'block',
+  date: 'block text-xs text-muted-foreground',
+  time: 'block text-sm',
+} as const
+
+// ============================================================================
+// Request Cell
+// ============================================================================
+
+export const RequestCell = {
+  container: [Layout.Flex.center, 'gap-2 overflow-hidden'].join(' '),
+  /** Fixed width for method badge so all names align */
+  methodWrapper: 'w-14 flex justify-center shrink-0',
+  /** Request name - truncates to fit available space */
+  name: 'hidden sm:block truncate text-sm text-muted-foreground',
+} as const
+
+// ============================================================================
+// Row Action (chevron)
+// ============================================================================
+
+export const RowAction = {
+  chevron: 'w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity',
+} as const
+
+// ============================================================================
+// Row Actions (hover menu icons)
+// ============================================================================
+
+export const RowActions = {
+  /** Container for action icons - appears on row hover, right-aligned */
+  container: 'flex items-center justify-end gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-150',
+  /** Individual action button */
+  button: [
+    'p-1 rounded',
+    'text-muted-foreground hover:text-foreground hover:bg-muted/20',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+  ].join(' '),
+  /** Action icon */
+  icon: 'w-3.5 h-3.5',
+  /** External link indicator */
+  external: 'w-2.5 h-2.5 ml-0.5 opacity-60',
+} as const
+
+// ============================================================================
+// Latency Bar - Mini progress bar for duration visualization
+// ============================================================================
+
+export const LatencyBar = {
+  /** Container for duration value + bar */
+  container: 'flex flex-col items-center gap-0.5',
+  /** Duration text value */
+  value: 'text-sm tabular-nums',
+  /** Bar container - segments in a row */
+  bar: 'flex gap-px w-16 h-1',
+  /** Individual segment */
+  segment: {
+    base: 'flex-1 rounded-full transition-colors',
+    empty: 'bg-muted/30',
+    success: 'bg-success',
+    warning: 'bg-warning',
+    destructive: 'bg-destructive',
+  },
+} as const
+
+// ============================================================================
+// Table Icons
+// ============================================================================
+
+export const TableIcon = {
+  sortIndicator: 'w-4 h-4 ml-1 inline-block text-muted-foreground',
+} as const
+
+// ============================================================================
+// Log Pagination
+// ============================================================================
+
+export const LogPagination = {
+  container: 'flex items-center justify-end mt-4 px-2 sm:px-4 py-3',
+  controls: 'flex items-center gap-4',
+} as const
+
+// ============================================================================
+// Filter Cards Row
+// ============================================================================
+
+export const FilterRow = {
+  /** Container for filter cards row - sticky header */
+  container: 'flex items-center gap-3 sticky top-0 z-10 bg-background py-4 -mt-4 -mx-8 px-8 transition-shadow duration-200',
+  /** Shadow applied when scrolled */
+  scrolled: 'shadow-neu-raised',
+  /** Individual filter card */
+  card: 'bg-surface rounded-lg border border-border px-4 py-2.5 flex items-center gap-2',
+  /** Search wrapper - takes remaining space */
+  searchWrapper: 'flex-1',
+  /** Filter label */
+  label: [Typography.textSm, Typography.fontMedium].join(' '),
+  /** Muted filter label for secondary info */
+  labelMuted: [Typography.textSm, Typography.textMuted].join(' '),
+  /** Toggle wrapper for switch + label */
+  toggleWrapper: 'flex items-center gap-2',
+  /** Icon for filter cards */
+  icon: 'w-4 h-4 text-muted-foreground',
 } as const
 
 // ============================================================================

@@ -6,9 +6,9 @@
  */
 
 import type { Metadata } from 'next'
-import { ARIA } from '@stackone-ui/core/config'
+import { getTranslations, navigation, logDetail, aria } from '@stackone/i18n'
 import { PageHeader, Card, Badge, Text, Code, Spacing } from '../../../styles'
-import { Routes } from '@/routes'
+import { Routes } from '../../../routes'
 import { createMetadata } from './metadata'
 
 interface PageProps {
@@ -28,42 +28,45 @@ export function generateStaticParams() {
 
 export default async function LogDetailPage({ params }: PageProps) {
   const { id } = await params
+  const t = await getTranslations()
 
   return (
     <div>
       <header className={PageHeader.container}>
-        <nav aria-label={ARIA.breadcrumb} className={PageHeader.breadcrumb.container}>
-          <a href={Routes.logs.index} className={PageHeader.breadcrumb.link}>Logs</a>
+        <nav aria-label={t(aria.breadcrumb)} className={PageHeader.breadcrumb.container}>
+          <a href={Routes.logs.index} className={PageHeader.breadcrumb.link}>
+            {t(navigation.logs)}
+          </a>
           <span className={PageHeader.breadcrumb.separator}>/</span>
-          <span>Log {id}</span>
+          <span>{t(logDetail.breadcrumbLog, { id })}</span>
         </nav>
-        <h1 className={PageHeader.title}>Log Detail</h1>
+        <h1 className={PageHeader.title}>{t(logDetail.title)}</h1>
       </header>
 
       <div className={Card.padded}>
         <dl className={Spacing.spaceY4}>
           <div>
-            <dt className={Text.label}>Log ID</dt>
-            <dd className={Text.mono}>{id}</dd>
+            <dt className={Text.label}>{t(logDetail.fields.logId)}</dt>
+            <dd className={Text.value}>{id}</dd>
           </div>
           <div>
-            <dt className={Text.label}>Timestamp</dt>
+            <dt className={Text.label}>{t(logDetail.fields.timestamp)}</dt>
             <dd>{new Date().toISOString()}</dd>
           </div>
           <div>
-            <dt className={Text.label}>Level</dt>
+            <dt className={Text.label}>{t(logDetail.fields.level)}</dt>
             <dd>
               <span className={Badge.info}>INFO</span>
             </dd>
           </div>
           <div>
-            <dt className={Text.label}>Message</dt>
+            <dt className={Text.label}>{t(logDetail.fields.message)}</dt>
             <dd className={Code.block}>
-              Log message placeholder for entry {id}
+              {t(logDetail.messagePlaceholder, { id })}
             </dd>
           </div>
           <div>
-            <dt className={Text.label}>Metadata</dt>
+            <dt className={Text.label}>{t(logDetail.fields.metadata)}</dt>
             <dd className={[Code.block, Text.pre].join(' ')}>
               {JSON.stringify({ service: 'api', traceId: 'abc123', spanId: 'def456' }, null, 2)}
             </dd>
