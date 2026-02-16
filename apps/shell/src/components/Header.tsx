@@ -101,8 +101,8 @@ export function Header() {
     <header className={styles.header}>
       <div />
       <div className={styles.controls}>
-        <LocaleSwitcher />
         <ThemeSwitcher isDark={theme === 'dark'} onToggle={toggle} />
+        <LocaleSwitcher />
       </div>
     </header>
   )

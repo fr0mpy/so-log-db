@@ -10,7 +10,7 @@
  * - Background sync via PowerSync WebSocket
  */
 
-import { ARIA } from '@stackone-ui/core/config'
+import { getTranslations, search, dataTypes, timeRanges, aria } from '@stackone/i18n'
 
 export { metadata } from './metadata'
 
@@ -25,13 +25,15 @@ import {
   Position,
 } from '../../styles'
 
-export default function SearchPage() {
+export default async function SearchPage() {
+  const t = await getTranslations()
+
   return (
     <div>
       <header className={PageHeader.container}>
-        <h1 className={PageHeader.title}>Search</h1>
+        <h1 className={PageHeader.title}>{t(search.title)}</h1>
         <p className={PageHeader.description}>
-          Fast local search with SQLite (1000s of items)
+          {t(search.description)}
         </p>
       </header>
 
@@ -39,46 +41,46 @@ export default function SearchPage() {
         <div className={Position.relative}>
           <input
             type="search"
-            placeholder="Search logs, traces, events..."
-            aria-label={ARIA.search}
+            placeholder={t(search.placeholder)}
+            aria-label={t(aria.search)}
             className={FormInput.large}
           />
           <div className={Position.searchIcon}>
-            <span className={Text.muted}>SQLite ready</span>
+            <span className={Text.muted}>{t(search.sqliteReady)}</span>
           </div>
         </div>
       </div>
 
       <div className={[Layout.Flex.center, Spacing.gap4, Spacing.mb6].join(' ')}>
-        <select aria-label={ARIA.filterByType} className={FormInput.select}>
-          <option>All Types</option>
-          <option>Logs</option>
-          <option>Traces</option>
-          <option>Events</option>
+        <select aria-label={t(aria.filterByType)} className={FormInput.select}>
+          <option>{t(dataTypes.all)}</option>
+          <option>{t(dataTypes.logs)}</option>
+          <option>{t(dataTypes.traces)}</option>
+          <option>{t(dataTypes.events)}</option>
         </select>
-        <select aria-label={ARIA.filterByTimeRange} className={FormInput.select}>
-          <option>Last 24 hours</option>
-          <option>Last 7 days</option>
-          <option>Last 30 days</option>
-          <option>Custom range</option>
+        <select aria-label={t(aria.filterByTimeRange)} className={FormInput.select}>
+          <option>{t(timeRanges.last24Hours)}</option>
+          <option>{t(timeRanges.last7Days)}</option>
+          <option>{t(timeRanges.last30Days)}</option>
+          <option>{t(timeRanges.customRange)}</option>
         </select>
       </div>
 
       <div className={Card.paddedCenter}>
         <p className={[Text.muted, Spacing.mb4].join(' ')}>
-          Enter a search query to find logs, traces, and events
+          {t(search.emptyState.primary)}
         </p>
         <p className={Text.muted}>
-          Local SQLite enables instant search across large datasets
+          {t(search.emptyState.secondary)}
         </p>
       </div>
 
       <div className={InfoBox.info}>
-        <h3 className={InfoBox.titleInfo}>Data Strategy: Hybrid</h3>
+        <h3 className={InfoBox.titleInfo}>{t(search.dataStrategy.title)}</h3>
         <ul className={InfoBox.content}>
-          <li>First visit: REST fetch for initial data + background SQLite bootstrap</li>
-          <li>Return visit: Instant local SQLite query (~5-10ms)</li>
-          <li>Background: PowerSync WebSocket keeps data in sync</li>
+          <li>{t(search.dataStrategy.items.firstVisit)}</li>
+          <li>{t(search.dataStrategy.items.returnVisit)}</li>
+          <li>{t(search.dataStrategy.items.background)}</li>
         </ul>
       </div>
     </div>
