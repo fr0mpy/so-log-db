@@ -1,2 +1,8 @@
 export { NavLink } from './NavLink'
+export { MainContent } from './MainContent'
+export { Sidebar } from './Sidebar'
+export { SidebarNav } from './SidebarNav'
+export { SidebarProvider, useSidebar } from './SidebarContext'
+export { SidebarThemeToggle } from './SidebarThemeToggle'
+export { ProviderIcon } from './ProviderIcon'
 export { NavLinkStyles } from './styles'

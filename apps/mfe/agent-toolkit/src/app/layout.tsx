@@ -1,12 +1,11 @@
 import type { Metadata, Viewport } from 'next'
-import { Suspense } from 'react'
+import { NextIntlClientProvider } from 'next-intl'
+import { getLocale, getMessages } from 'next-intl/server'
 import { ThemeProvider } from '@stackone-ui/core/providers'
-import { Spinner } from '@stackone-ui/core/spinner'
 import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
+import { Sidebar, SidebarProvider, MainContent } from '@/components'
+import { ProviderIconPreloader } from '@/components/ProviderIcon'
 import './globals.css'
-import { AppLayout, LoadingStyles } from '../styles'
-import { NavLink } from '../components'
-import { Routes } from '@/routes'
 
 /** SEO: Base metadata inherited by all pages */
 export const metadata: Metadata = {
@@ -32,35 +31,26 @@ export const viewport: Viewport = {
 /** Combined font CSS variable classes */
 const fontVariables = `${fontSans.variable} ${fontMono.variable}`
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const locale = await getLocale()
+  const messages = await getMessages()
+
   return (
-    <html lang="en" className={fontVariables} suppressHydrationWarning>
+    <html lang={locale} className={fontVariables} suppressHydrationWarning>
       <body className={fontSans.className}>
-        <ThemeProvider>
-          <div className={AppLayout.container}>
-            <aside className={AppLayout.sidebar.base}>
-              <div className={AppLayout.sidebar.header}>
-                <h1 className={AppLayout.sidebar.title}>StackOne</h1>
-                <p className={AppLayout.sidebar.subtitle}>Connectors</p>
-              </div>
-              <nav className={AppLayout.sidebar.nav}>
-                <NavLink href={Routes.dashboard}>Dashboard</NavLink>
-                <NavLink href={Routes.logs.index}>Logs</NavLink>
-                <NavLink href={Routes.search}>Search</NavLink>
-                <NavLink href={Routes.explore}>Explore</NavLink>
-              </nav>
-            </aside>
-            <main className={AppLayout.main}>
-              <Suspense fallback={<div className={LoadingStyles.page}><Spinner size="lg" /></div>}>
-                {children}
-              </Suspense>
-            </main>
-          </div>
-        </ThemeProvider>
+        <NextIntlClientProvider messages={messages}>
+          <ThemeProvider>
+            <ProviderIconPreloader />
+            <SidebarProvider>
+              <Sidebar />
+              <MainContent>{children}</MainContent>
+            </SidebarProvider>
+          </ThemeProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   )

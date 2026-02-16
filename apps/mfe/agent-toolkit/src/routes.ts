@@ -5,19 +5,14 @@
  *
  * @example
  * import { Routes, BASE_PATH } from '@/routes'
- * <Link href={Routes.dashboard}>Dashboard</Link>
  * <Link href={Routes.logs.index}>Logs</Link>
- * <Link href={Routes.search}>Search</Link>
  */
 
 /** Base path for this MFE (matches next.config.ts basePath) */
 export const BASE_PATH = '/agent-toolkit'
 
 export const Routes = {
-  /** Dashboard page (home) */
-  dashboard: '/',
-
-  /** Logs section */
+  /** Logs section (default landing page) */
   logs: {
     index: '/logs',
     detail: (id: string | number) => `/logs/${id}` as const,
