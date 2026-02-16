@@ -245,6 +245,8 @@ export const DataTable = {
   row: ['group flex items-center w-full overflow-hidden', 'hover:bg-black/5', Interactive.Transition.color, 'cursor-pointer'].join(' '),
   /** Row wrapper that includes separator */
   rowWrapper: 'border-b border-border last:border-b-0',
+  /** Skeleton row wrapper - no borders to prevent flash before animation starts */
+  rowWrapperSkeleton: '',
   /** Responsive cell padding */
   cell: 'px-2 sm:px-3 py-3 flex items-center overflow-hidden',
   cellRight: 'px-2 sm:px-3 py-3 text-right text-sm flex items-center justify-end',

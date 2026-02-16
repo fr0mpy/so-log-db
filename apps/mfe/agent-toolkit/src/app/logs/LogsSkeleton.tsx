@@ -90,7 +90,7 @@ export function LogsSkeleton() {
         <Paper className={DataTable.bodyPaper}>
           <div className={DataTable.scrollArea}>
             {[...Array(10)].map((_, i) => (
-              <div key={i} className={DataTable.rowWrapper}>
+              <div key={i} className={DataTable.rowWrapperSkeleton}>
                 <div className="flex items-center min-w-[900px] py-3">
                   <div className={`${DataTable.cell} ${LogTableColumns.requested}`}>
                     <Skeleton className="h-10 w-full" />
