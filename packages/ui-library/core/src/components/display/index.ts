@@ -1,5 +1,6 @@
 export { Avatar } from './avatar'
 export { Badge } from './badge'
+export { Tag } from './tag'
 export { Spinner } from './spinner'
 export { Skeleton } from './skeleton'
 export { Separator } from './separator'

@@ -9,6 +9,16 @@ export const Button = {
     'disabled:pointer-events-none disabled:opacity-50',
   ].join(' '),
 
+  inset: [
+    'flex items-center justify-center',
+    'h-10 w-10 rounded-full cursor-pointer',
+    'bg-neu-base shadow-neu-pressed-sm',
+    'text-foreground transition-shadow duration-200',
+    'hover:shadow-neu-raised active:shadow-neu-pressed-sm',
+    'focus-visible:outline-none focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]',
+    'disabled:pointer-events-none disabled:opacity-50',
+  ].join(' '),
+
   nav: [
     'inline-flex items-center justify-center gap-1',
     'h-9 px-3 rounded-theme-lg',

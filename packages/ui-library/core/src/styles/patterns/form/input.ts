@@ -15,8 +15,8 @@ export const Input = {
   error: 'border-destructive hover:shadow-neu-pressed focus:shadow-neu-pressed',
   success: 'border-success hover:shadow-neu-pressed focus:shadow-neu-pressed',
 
-  iconLeft: 'absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground',
-  iconRight: 'absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground',
+  iconLeft: 'absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-primary group-focus-within:text-primary',
+  iconRight: 'absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-primary group-focus-within:text-primary',
 
   withIconLeft: 'pl-10',
   withIconRight: 'pr-10',

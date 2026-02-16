@@ -72,9 +72,10 @@ export {
 } from './patterns'
 
 export {
-  // Badge, Alert available via Feedback.Badge / Feedback.Alert
+  // Badge, Alert, Tag available via Feedback.Badge / Feedback.Alert / Feedback.Tag
   type BadgeVariant,
   type AlertVariant,
+  type TagVariant,
 } from './patterns'
 
 // ============================================================================

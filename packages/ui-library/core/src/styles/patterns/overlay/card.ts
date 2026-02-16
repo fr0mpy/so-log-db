@@ -1,6 +1,6 @@
 export const Card = {
   container: [
-    'rounded-theme-xl bg-neu-base shadow-neu-raised',
+    'rounded-theme-xl bg-neu-base shadow-neu-raised-highlight',
     'transition-shadow duration-200 ease-neu',
   ].join(' '),
   header: 'flex flex-col space-y-1.5 p-6',

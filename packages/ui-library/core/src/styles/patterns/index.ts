@@ -14,7 +14,7 @@ export { Overlay, Dialog, Drawer, Card, Paper } from './overlay'
 export { Control, Toggle, Slider } from './control'
 
 // Feedback patterns
-export { Feedback, Badge, Alert, type BadgeVariant, type AlertVariant } from './feedback'
+export { Feedback, Badge, Alert, Tag, type BadgeVariant, type AlertVariant, type TagVariant } from './feedback'
 
 // Import all namespaces for combined export
 import { Form } from './form'
