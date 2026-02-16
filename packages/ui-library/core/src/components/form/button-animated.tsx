@@ -16,6 +16,7 @@ import type { ButtonProps } from './button-types'
 export function ButtonAnimated({
   variant = 'primary',
   size = 'md',
+  iconOnly,
   loading,
   loadingText = LABEL.loading,
   disabled,
@@ -38,9 +39,10 @@ export function ButtonAnimated({
     return () => clearInterval(interval)
   }, [loading])
 
+  const sizeStyles = iconOnly ? S.iconOnly[size] : S.sizes[size]
   const buttonClassName = cn(
     S.base,
-    S.sizes[size],
+    sizeStyles,
     S.variants[variant],
     loading && S.loading,
     className

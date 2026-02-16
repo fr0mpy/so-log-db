@@ -33,8 +33,8 @@
       "variant-destructive": "inset 0 1px 0 rgba(255,255,255,0.2), -4px -4px 10px rgba(255,255,255,0.3), 4px 4px 10px rgba(180,40,40,0.3)",
       "variant-success": "inset 0 1px 0 rgba(255,255,255,0.2), -4px -4px 10px rgba(255,255,255,0.3), 4px 4px 10px rgba(0,100,60,0.2)",
       "variant-warning": "inset 0 1px 0 rgba(255,255,255,0.2), -4px -4px 10px rgba(255,255,255,0.3), 4px 4px 10px rgba(180,80,0,0.2)",
-      "control-unchecked": "inset -2px -2px 4px rgba(255,255,255,0.4), inset 2px 2px 4px rgba(0,60,40,0.25)",
-      "control-checked": "inset 0 1px 0 rgba(255,255,255,0.2), inset 2px 2px 4px rgba(0,80,50,0.3)"
+      "control-unchecked": "inset -2px -2px 4px rgba(255,255,255,0.7), inset 2px 2px 5px rgba(0,60,40,0.35)",
+      "control-checked": "inset 0 1px 0 rgba(255,255,255,0.25), inset 2px 2px 5px rgba(0,80,50,0.35)"
     },
     "dark": {
       "raised": "-6px -6px 14px rgba(255,255,255,0.06), 6px 6px 14px rgba(0,0,0,0.5)",
@@ -50,8 +50,8 @@
       "variant-destructive": "inset 0 1px 0 rgba(255,255,255,0.1), -3px -3px 8px rgba(255,255,255,0.1), 3px 3px 8px rgba(0,0,0,0.4)",
       "variant-success": "inset 0 1px 0 rgba(255,255,255,0.1), -3px -3px 8px rgba(255,255,255,0.1), 3px 3px 8px rgba(0,0,0,0.4)",
       "variant-warning": "inset 0 1px 0 rgba(255,255,255,0.1), -3px -3px 8px rgba(255,255,255,0.1), 3px 3px 8px rgba(0,0,0,0.4)",
-      "control-unchecked": "inset -2px -2px 4px rgba(255,255,255,0.05), inset 2px 2px 4px rgba(0,0,0,0.3)",
-      "control-checked": "inset 0 1px 0 rgba(255,255,255,0.1), inset 2px 2px 4px rgba(0,0,0,0.3)"
+      "control-unchecked": "inset -2px -2px 4px rgba(255,255,255,0.08), inset 2px 2px 5px rgba(0,0,0,0.45)",
+      "control-checked": "inset 0 1px 0 rgba(255,255,255,0.15), inset 2px 2px 5px rgba(0,0,0,0.4)"
     }
   },
   "motion": {

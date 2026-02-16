@@ -194,6 +194,8 @@ function TooltipTrigger({ asChild, children, onMouseEnter, onMouseLeave, onFocus
 function TooltipPortal({ children, container }: TooltipPortalProps) {
   const { open } = useTooltipContext()
 
+  // Guard against SSR - document not available on server
+  if (typeof document === 'undefined') return null
   if (!open) return null
 
   return createPortal(children, container ?? document.body)

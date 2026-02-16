@@ -42,10 +42,17 @@ const preset: Partial<Config> = {
         'accent-foreground': 'var(--color-accent-foreground)',
         success: 'var(--color-success)',
         'success-foreground': 'var(--color-success-foreground)',
+        'success-muted': 'color-mix(in srgb, var(--color-success) 30%, transparent)',
         warning: 'var(--color-warning)',
         'warning-foreground': 'var(--color-warning-foreground)',
+        'warning-muted': 'color-mix(in srgb, var(--color-warning) 30%, transparent)',
         info: 'var(--color-info)',
         'info-foreground': 'var(--color-info-foreground)',
+        'info-muted': 'color-mix(in srgb, var(--color-info) 30%, transparent)',
+        'destructive-muted': 'color-mix(in srgb, var(--color-destructive) 30%, transparent)',
+        'primary-muted': 'color-mix(in srgb, var(--color-primary) 30%, transparent)',
+        'secondary-muted': 'color-mix(in srgb, var(--color-secondary) 30%, transparent)',
+        'accent-muted': 'color-mix(in srgb, var(--color-accent) 30%, transparent)',
         neu: {
           base: 'var(--color-neu-base)',
           light: 'var(--color-neu-light)',
@@ -63,8 +70,10 @@ const preset: Partial<Config> = {
 
       // =======================================================================
       // Typography — mapped to --font-* CSS variables
+      // Override 'sans' to use our custom font instead of system fonts
       // =======================================================================
       fontFamily: {
+        sans: 'var(--font-body)',
         heading: 'var(--font-heading)',
         body: 'var(--font-body)',
         mono: 'var(--font-code)',
@@ -89,6 +98,8 @@ const preset: Partial<Config> = {
         'neu-raised': 'var(--shadow-raised)',
         'neu-raised-sm': 'var(--shadow-raised-sm)',
         'neu-raised-lg': 'var(--shadow-raised-lg)',
+        // Raised with top highlight (for cards/panels)
+        'neu-raised-highlight': 'var(--shadow-inset-highlight), var(--shadow-raised)',
         'neu-pressed': 'var(--shadow-pressed)',
         'neu-pressed-sm': 'var(--shadow-pressed-sm)',
         'neu-flat': 'var(--shadow-flat)',

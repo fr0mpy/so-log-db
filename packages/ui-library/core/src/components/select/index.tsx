@@ -15,6 +15,7 @@ export type {
   SelectContextValue,
   SelectTriggerMode,
   SelectWidth,
+  SelectPlacement,
 } from './types'
 
 // =============================================================================
@@ -57,6 +58,13 @@ export function Select({
   // Filter options based on search query (handled internally by context)
   const filteredOptions = useMemo(() => options, [options])
 
+  // Find the label for the current value
+  const currentValue = value ?? defaultValue
+  const selectedLabel = useMemo(() => {
+    const option = options.find((opt) => opt.value === currentValue)
+    return option?.label
+  }, [options, currentValue])
+
   return (
     <SelectNamespace.Root
       value={value}
@@ -68,7 +76,9 @@ export function Select({
       width={width}
     >
       <SelectNamespace.Trigger className={className}>
-        <SelectNamespace.Value placeholder={placeholder} />
+        <span className={!selectedLabel ? S.value.placeholder : undefined}>
+          {selectedLabel || placeholder}
+        </span>
         <SelectNamespace.Icon />
       </SelectNamespace.Trigger>
       <SelectNamespace.Portal>

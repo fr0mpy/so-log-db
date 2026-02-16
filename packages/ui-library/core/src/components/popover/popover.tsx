@@ -140,6 +140,8 @@ function PopoverTrigger({ asChild, children, onClick, ref, ...props }: PopoverTr
 function PopoverPortal({ children, container }: PopoverPortalProps) {
   const { open } = usePopoverContext()
 
+  // Guard against SSR - document not available on server
+  if (typeof document === 'undefined') return null
   if (!open) return null
 
   return createPortal(children, container ?? document.body)

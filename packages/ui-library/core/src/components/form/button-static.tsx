@@ -14,6 +14,7 @@ export type { ButtonVariant, ButtonSize }
 export function ButtonStatic({
   variant = 'primary',
   size = 'md',
+  iconOnly,
   disabled,
   className,
   children,
@@ -21,7 +22,8 @@ export function ButtonStatic({
   ref,
   ...props
 }: ButtonBaseProps) {
-  const buttonClassName = cn(S.base, S.sizes[size], S.variants[variant], className)
+  const sizeStyles = iconOnly ? S.iconOnly[size] : S.sizes[size]
+  const buttonClassName = cn(S.base, sizeStyles, S.variants[variant], className)
 
   // When asChild is true, clone the child element with button styles and accessibility attrs
   if (asChild && isValidElement(children)) {

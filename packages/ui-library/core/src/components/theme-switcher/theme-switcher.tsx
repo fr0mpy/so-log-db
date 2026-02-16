@@ -1,5 +1,6 @@
 'use client'
 
+import { useRef, useEffect } from 'react'
 import { Sun, Moon } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import { cn } from '../../utils'
@@ -7,23 +8,68 @@ import { THEME_TIMING, OFFSET, SPRING, OPACITY, ARIA, DURATION } from '../../con
 import { ThemeSwitcherStyles as S } from './styles'
 import type { ThemeSwitcherProps } from './types'
 
-export function ThemeSwitcher({ isDark, onToggle, className, ...props }: ThemeSwitcherProps) {
+/** Width: compact fits knob + padding, full allows knob to slide */
+const SWITCHER_WIDTH = { compact: 32, full: 56 } as const
+
+/** Soft spring for size transitions */
+const SIZE_SPRING = { type: 'spring', stiffness: 300, damping: 30 } as const
+
+/** Smooth transition for layout-driven changes (no bounce) */
+const LAYOUT_TRANSITION = { type: 'tween', duration: DURATION.fast, ease: 'easeOut' } as const
+
+export function ThemeSwitcher({
+  isDark,
+  onToggle,
+  compact = false,
+  className,
+  // Destructure conflicting Framer Motion props
+  onDrag,
+  onDragStart,
+  onDragEnd,
+  onAnimationStart,
+  onAnimationEnd,
+  ...props
+}: ThemeSwitcherProps) {
+  // Track if toggle was user-initiated (should bounce) vs layout change (no bounce)
+  const wasUserToggle = useRef(false)
+  const prevIsDark = useRef(isDark)
+
+  // Detect theme changes (user toggle) vs compact changes (layout)
+  useEffect(() => {
+    if (prevIsDark.current !== isDark) {
+      wasUserToggle.current = true
+      prevIsDark.current = isDark
+    }
+  }, [isDark])
+
+  // Reset after animation completes
+  const handleAnimationComplete = () => {
+    wasUserToggle.current = false
+  }
+
+  // Knob position: centered when compact, left/right based on theme when expanded
+  const knobX = compact ? 0 : isDark ? OFFSET.knob : 0
+
+  // Bounce only on user toggle, smooth transition on layout changes
+  const knobTransition = wasUserToggle.current ? SPRING.snappy : LAYOUT_TRANSITION
+
   return (
-    <button
+    <motion.button
       role="switch"
       aria-checked={isDark}
       aria-label={isDark ? ARIA.switchToLight : ARIA.switchToDark}
       onClick={onToggle}
       className={cn(S.button, className)}
+      animate={{ width: compact ? SWITCHER_WIDTH.compact : SWITCHER_WIDTH.full }}
+      transition={SIZE_SPRING}
       {...props}
     >
+      {/* Knob with icon - always visible, animates to center when compact */}
       <motion.span
         className={S.knob}
-        animate={{ x: isDark ? OFFSET.knob : 0 }}
-        transition={{
-          ...SPRING.snappy,
-          delay: THEME_TIMING.knobDelay,
-        }}
+        animate={{ x: knobX }}
+        transition={knobTransition}
+        onAnimationComplete={handleAnimationComplete}
       >
         <span className={S.iconContainer}>
           <AnimatePresence mode="wait" initial={false}>
@@ -36,8 +82,15 @@ export function ThemeSwitcher({ isDark, onToggle, className, ...props }: ThemeSw
                   y: 0,
                   opacity: 1,
                   transition: {
-                    y: { duration: THEME_TIMING.iconEntry, delay: THEME_TIMING.iconEntryDelay, ease: 'easeOut' },
-                    opacity: { duration: THEME_TIMING.iconEntry * 0.6, delay: THEME_TIMING.iconEntryDelay + 0.05 },
+                    y: {
+                      duration: THEME_TIMING.iconEntry,
+                      delay: THEME_TIMING.iconEntryDelay,
+                      ease: 'easeOut',
+                    },
+                    opacity: {
+                      duration: THEME_TIMING.iconEntry * 0.6,
+                      delay: THEME_TIMING.iconEntryDelay + 0.05,
+                    },
                   },
                 }}
                 exit={{
@@ -60,8 +113,15 @@ export function ThemeSwitcher({ isDark, onToggle, className, ...props }: ThemeSw
                   y: 0,
                   opacity: 1,
                   transition: {
-                    y: { duration: THEME_TIMING.iconEntry, delay: THEME_TIMING.iconEntryDelay, ease: 'easeOut' },
-                    opacity: { duration: THEME_TIMING.iconEntry * 0.6, delay: THEME_TIMING.iconEntryDelay + 0.05 },
+                    y: {
+                      duration: THEME_TIMING.iconEntry,
+                      delay: THEME_TIMING.iconEntryDelay,
+                      ease: 'easeOut',
+                    },
+                    opacity: {
+                      duration: THEME_TIMING.iconEntry * 0.6,
+                      delay: THEME_TIMING.iconEntryDelay + 0.05,
+                    },
                   },
                 }}
                 exit={{
@@ -80,7 +140,12 @@ export function ThemeSwitcher({ isDark, onToggle, className, ...props }: ThemeSw
         </span>
       </motion.span>
 
-      <motion.span className={S.trackIndicators}>
+      {/* Track indicators - fade based on compact prop */}
+      <motion.span
+        className={S.trackIndicators}
+        animate={{ opacity: compact ? 0 : 1 }}
+        transition={{ duration: DURATION.fast }}
+      >
         <motion.span
           animate={{ opacity: isDark ? OPACITY.highlight : 0 }}
           transition={{ duration: DURATION.slow }}
@@ -94,6 +159,6 @@ export function ThemeSwitcher({ isDark, onToggle, className, ...props }: ThemeSw
           <Moon className={S.trackIcon} />
         </motion.span>
       </motion.span>
-    </button>
+    </motion.button>
   )
 }

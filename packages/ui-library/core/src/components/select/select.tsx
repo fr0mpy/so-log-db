@@ -1,10 +1,11 @@
 'use client'
 
 import { cn } from '@/utils/cn'
-import { Check, ChevronDown, Search } from 'lucide-react'
+import { ChevronDown, Search } from 'lucide-react'
 import {
   useRef,
   useLayoutEffect,
+  useEffect,
   useMemo,
   useCallback,
   createContext,
@@ -17,17 +18,39 @@ import { useControlledState } from '../../hooks/useControlledState'
 import { useClickOutsideMultiple } from '../../hooks/useClickOutside'
 import { SPRING, PLACEHOLDER } from '../../config'
 
-// Animation variants - scaleY from top keeps dropdown under trigger
-const positionerVariants = {
-  initial: { opacity: 0, scaleY: 0 },
+// Animation variants - slide out from behind trigger (last item appears first)
+// Shadow fades in only once expanded to avoid visible clip edge
+const slideDownVariants = {
+  initial: {
+    y: '-100%',
+    boxShadow: 'none',
+  },
   animate: {
-    opacity: 1,
-    scaleY: 1,
+    y: 0,
+    boxShadow: 'var(--shadow-raised-lg)',
     transition: SPRING.selectOpen,
   },
   exit: {
-    opacity: 0,
-    scaleY: 0,
+    y: '-100%',
+    boxShadow: 'none',
+    transition: SPRING.selectClose,
+  },
+}
+
+// Animation variants for top placement - slide up from behind trigger
+const slideUpVariants = {
+  initial: {
+    y: '100%',
+    boxShadow: 'none',
+  },
+  animate: {
+    y: 0,
+    boxShadow: 'var(--shadow-raised-lg)',
+    transition: SPRING.selectOpen,
+  },
+  exit: {
+    y: '100%',
+    boxShadow: 'none',
     transition: SPRING.selectClose,
   },
 }
@@ -69,31 +92,36 @@ function SelectRoot({
   searchable = false,
   triggerMode = 'hover',
   width = 'full',
+  placement = 'bottom',
 }: SelectRootProps) {
   const [currentValue, setValue] = useControlledState(value, defaultValue, onValueChange)
   const [isOpen, setIsOpen] = useControlledState<boolean>(undefined, false)
   const [searchQuery, setSearchQuery] = useControlledState<string>(undefined, '')
   const triggerRef = useRef<HTMLButtonElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // Use ref to lock position during entire animation lifecycle (including exit)
+  const lockedPositionRef = useRef<{ top: number; left: number; minWidth: number } | null>(null)
   const [dropdownPosition, setDropdownPosition] = useControlledState<{
     top: number
     left: number
-    width: number
-  }>(undefined, { top: 0, left: 0, width: 0 })
+    minWidth: number
+  }>(undefined, { top: 0, left: 0, minWidth: 0 })
 
-  // Update dropdown position when opening
+  // Update dropdown position when opening - lock it in ref
   useLayoutEffect(() => {
     if (isOpen && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect()
-      const dropdownWidth = rect.width * 0.98
-      const horizontalOffset = (rect.width - dropdownWidth) / 2
-      setDropdownPosition({
-        top: rect.bottom - 4, // -4 for the overlap effect
-        left: rect.left + horizontalOffset,
-        width: dropdownWidth,
-      })
+      const position = {
+        // For 'top' placement, dropdown ends at trigger top; for 'bottom', starts at trigger bottom
+        top: placement === 'top' ? rect.top : rect.bottom,
+        left: rect.left,
+        minWidth: rect.width,
+      }
+      lockedPositionRef.current = position
+      setDropdownPosition(position)
     }
-  }, [isOpen, setDropdownPosition])
+  }, [isOpen, setDropdownPosition, placement])
 
   // Close on click outside
   useClickOutsideMultiple(
@@ -106,6 +134,20 @@ function SelectRoot({
     },
     isOpen
   )
+
+  // Close on scroll to prevent dropdown from detaching from trigger
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handleScroll = () => {
+      setIsOpen(false)
+      setSearchQuery('')
+    }
+
+    // Listen on window and capture phase to catch all scroll events
+    window.addEventListener('scroll', handleScroll, true)
+    return () => window.removeEventListener('scroll', handleScroll, true)
+  }, [isOpen, setIsOpen, setSearchQuery])
 
   const contextValue = useMemo<SelectContextValue>(
     () => ({
@@ -122,10 +164,12 @@ function SelectRoot({
       triggerRef,
       dropdownRef,
       dropdownPosition,
+      lockedPositionRef,
       disabled,
       searchable,
       triggerMode,
       width,
+      placement,
     }),
     [
       isOpen,
@@ -139,6 +183,7 @@ function SelectRoot({
       searchable,
       triggerMode,
       width,
+      placement,
     ]
   )
 
@@ -147,11 +192,27 @@ function SelectRoot({
 
 // Select.Trigger - The button that opens the dropdown
 function SelectTrigger({ children, className, ref }: SelectTriggerProps) {
-  const { isOpen, setIsOpen, triggerRef, disabled, triggerMode, width } = useSelectContext()
+  const { isOpen, setIsOpen, triggerRef, dropdownRef, setSearchQuery, disabled, triggerMode, width } = useSelectContext()
 
   const handleMouseEnter = useCallback(() => {
     if (!disabled && triggerMode === 'hover') setIsOpen(true)
   }, [disabled, setIsOpen, triggerMode])
+
+  const handleMouseLeave = useCallback(
+    (e: React.MouseEvent) => {
+      // Only handle for hover mode
+      if (triggerMode !== 'hover') return
+
+      // Check if moving into the dropdown
+      const relatedTarget = e.relatedTarget as Node
+      if (dropdownRef.current?.contains(relatedTarget)) {
+        return
+      }
+      setIsOpen(false)
+      setSearchQuery('')
+    },
+    [setIsOpen, setSearchQuery, dropdownRef, triggerMode]
+  )
 
   const handleClick = useCallback(() => {
     if (!disabled && triggerMode === 'click') setIsOpen(!isOpen)
@@ -173,6 +234,7 @@ function SelectTrigger({ children, className, ref }: SelectTriggerProps) {
       type="button"
       disabled={disabled}
       onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       onClick={handleClick}
       whileTap={{ scale: 0.99 }}
       className={cn(
@@ -215,6 +277,9 @@ function SelectIcon({ className }: SelectIconProps) {
 function SelectPortal({ children }: SelectPortalProps) {
   const { isOpen } = useSelectContext()
 
+  // Guard against SSR - document not available on server
+  if (typeof document === 'undefined') return null
+
   return createPortal(
     <AnimatePresence>{isOpen && children}</AnimatePresence>,
     document.body
@@ -223,7 +288,7 @@ function SelectPortal({ children }: SelectPortalProps) {
 
 // Select.Positioner - Positions the dropdown
 function SelectPositioner({ children }: SelectPositionerProps) {
-  const { dropdownPosition, dropdownRef, setIsOpen, triggerRef, setSearchQuery, triggerMode } = useSelectContext()
+  const { dropdownPosition, lockedPositionRef, dropdownRef, setIsOpen, triggerRef, setSearchQuery, triggerMode, placement } = useSelectContext()
 
   const handleMouseLeave = useCallback(
     (e: React.MouseEvent) => {
@@ -241,37 +306,53 @@ function SelectPositioner({ children }: SelectPositionerProps) {
     [setIsOpen, setSearchQuery, triggerRef, triggerMode]
   )
 
-  return (
-    <motion.div
-      ref={dropdownRef}
-      variants={positionerVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      onMouseLeave={handleMouseLeave}
-      style={{
-        position: 'fixed',
-        top: dropdownPosition.top,
-        left: dropdownPosition.left,
-        width: dropdownPosition.width,
-      }}
-      className={S.positioner}
-    >
-      {children}
-    </motion.div>
-  )
-}
+  // Use locked position (ref) to ensure animation returns to origin point
+  const position = lockedPositionRef.current ?? dropdownPosition
 
-// Select.Popup - The dropdown container
-function SelectPopup({ children, className, ref }: SelectPopupProps) {
+  // For 'top' placement, position using bottom instead of top
+  const positionStyle = placement === 'top'
+    ? {
+        position: 'fixed' as const,
+        bottom: typeof window !== 'undefined' ? window.innerHeight - position.top : 0,
+        left: position.left,
+        width: position.minWidth,
+      }
+    : {
+        position: 'fixed' as const,
+        top: position.top,
+        left: position.left,
+        width: position.minWidth,
+      }
+
   return (
     <div
-      ref={ref}
-      role="listbox"
-      className={cn(S.popup, className)}
+      ref={dropdownRef}
+      onMouseLeave={handleMouseLeave}
+      style={positionStyle}
+      className={cn(S.positioner.base, placement === 'top' ? S.positioner.top : S.positioner.bottom)}
     >
       {children}
     </div>
+  )
+}
+
+// Select.Popup - The dropdown container with slide animation (last item appears first)
+function SelectPopup({ children, className, ref }: SelectPopupProps) {
+  const { placement } = useSelectContext()
+  const variants = placement === 'top' ? slideUpVariants : slideDownVariants
+
+  return (
+    <motion.div
+      ref={ref}
+      role="listbox"
+      variants={variants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className={cn(S.popup, className)}
+    >
+      {children}
+    </motion.div>
   )
 }
 
@@ -317,12 +398,6 @@ function SelectOption({ value: optionValue, children, className, ref }: SelectOp
         className
       )}
     >
-      <Check
-        className={cn(
-          S.checkIcon.base,
-          isSelected ? S.checkIcon.selected : S.checkIcon.unselected
-        )}
-      />
       {children}
     </motion.button>
   )

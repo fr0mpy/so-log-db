@@ -5,4 +5,6 @@ export interface ThemeSwitcherProps extends Omit<ComponentPropsWithRef<'button'>
   isDark: boolean
   /** Callback when the theme is toggled */
   onToggle: () => void
+  /** Hides track indicators when true - knob and icon always visible */
+  compact?: boolean
 }

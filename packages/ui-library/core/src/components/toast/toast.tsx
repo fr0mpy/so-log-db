@@ -111,6 +111,9 @@ function ToastProvider({ children }: ToastProviderProps) {
 }
 
 function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
+  // Guard against SSR - document not available on server
+  if (typeof document === 'undefined') return null
+
   return createPortal(
     <>
       {positions.map((position) => {

@@ -1,3 +1,5 @@
+'use client'
+
 import { type ReactNode, useRef, useEffect } from 'react'
 import Lenis from 'lenis'
 import { SCROLL } from '../../config'

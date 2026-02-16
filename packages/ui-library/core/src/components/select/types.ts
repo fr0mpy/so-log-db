@@ -7,6 +7,7 @@ export interface SelectOption {
 
 export type SelectTriggerMode = 'click' | 'hover'
 export type SelectWidth = 'full' | 'auto'
+export type SelectPlacement = 'bottom' | 'top'
 
 export interface SelectRootProps {
   children: ReactNode
@@ -17,6 +18,7 @@ export interface SelectRootProps {
   searchable?: boolean
   triggerMode?: SelectTriggerMode
   width?: SelectWidth
+  placement?: SelectPlacement
 }
 
 export interface SelectTriggerProps {
@@ -69,9 +71,11 @@ export interface SelectContextValue {
   setSearchQuery: (query: string) => void
   triggerRef: React.RefObject<HTMLButtonElement | null>
   dropdownRef: React.RefObject<HTMLDivElement | null>
-  dropdownPosition: { top: number; left: number; width: number }
+  dropdownPosition: { top: number; left: number; minWidth: number }
+  lockedPositionRef: React.RefObject<{ top: number; left: number; minWidth: number } | null>
   disabled?: boolean
   searchable?: boolean
   triggerMode: SelectTriggerMode
   width: SelectWidth
+  placement: SelectPlacement
 }

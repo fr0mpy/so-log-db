@@ -1,12 +1,14 @@
 import { Layout, Interactive, SizingTokens } from '../../styles'
 
 export const ThemeSwitcherStyles = {
+  /** Toggle button - width animated via JS */
   button: [
-    'relative w-14 h-8 rounded-full',
+    'relative h-8 rounded-full',
     Interactive.Cursor.pointer,
     'bg-neu-base shadow-neu-pressed',
     Interactive.Focus.ring,
     'focus-visible:ring-offset-background',
+    'overflow-hidden',
   ].join(' '),
 
   knob: [

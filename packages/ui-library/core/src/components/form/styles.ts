@@ -77,22 +77,22 @@ export const ButtonStyles = {
     ].join(' '),
   },
 
-  /** Icon-only button sizes (square) */
+  /** Icon-only button sizes (circular) */
   iconOnly: {
     sm: [
       SizingTokens.square8,
       SpacingTokens.p0,
-      'rounded-theme-md',
+      'rounded-full',
     ].join(' '),
     md: [
       SizingTokens.square9,
       SpacingTokens.p0,
-      'rounded-theme-md',
+      'rounded-full',
     ].join(' '),
     lg: [
       SizingTokens.square10,
       SpacingTokens.p0,
-      'rounded-theme-md',
+      'rounded-full',
     ].join(' '),
   },
 
@@ -131,12 +131,26 @@ export const ButtonStyles = {
       'active:shadow-neu-pressed-sm',
       'focus-visible:shadow-neu-focus',
     ].join(' '),
+    outline: [
+      'bg-neu-base text-foreground',
+      'shadow-neu-raised',
+      'hover:shadow-neu-raised-lg',
+      'active:shadow-neu-pressed-sm',
+      'focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]',
+    ].join(' '),
     destructive: [
       'bg-destructive text-destructive-foreground',
       'shadow-neu-variant-destructive',
       'hover:bg-destructive-hover hover:shadow-neu-raised-lg',
       'active:shadow-neu-pressed-sm',
       'focus-visible:shadow-[var(--shadow-variant-destructive),var(--shadow-focus)]',
+    ].join(' '),
+    inset: [
+      'bg-neu-base text-foreground',
+      'shadow-neu-pressed-sm rounded-full',
+      'hover:shadow-neu-raised',
+      'active:shadow-neu-pressed-sm',
+      'focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]',
     ].join(' '),
   },
 } as const
@@ -183,14 +197,14 @@ export const SwitchStyles = {
   track: {
     base: [
       Layout.Position.relative,
-      'inline-flex',
-      SizingTokens.h4,
-      SizingTokens.w8,
+      'inline-flex group',
+      SizingTokens.h5,
+      SizingTokens.w10,
       Interactive.Cursor.pointer,
       'items-center rounded-full',
       Interactive.Transition.all,
     ].join(' '),
-    uncheckedBorder: 'border border-primary/30',
+    uncheckedBorder: 'border border-border hover:border-primary hover:shadow-[inset_-2px_-2px_4px_rgba(0,175,102,0.15),inset_2px_2px_5px_rgba(0,100,60,0.25)]',
     disabled: 'cursor-not-allowed opacity-50',
   },
 
@@ -201,13 +215,13 @@ export const SwitchStyles = {
   thumb: {
     base: [
       'inline-block',
-      SizingTokens.square3,
+      SizingTokens.square4,
       'transform rounded-full',
-      'bg-neu-base shadow-neu-raised-sm',
-      Interactive.Transition.transform,
+      'shadow-neu-raised-sm',
+      'transition-all duration-200',
     ].join(' '),
-    checked: 'translate-x-4',
-    unchecked: 'translate-x-0.5',
+    checked: 'translate-x-5 bg-white',
+    unchecked: 'translate-x-0.5 bg-foreground dark:bg-white group-hover:bg-primary',
   },
 
   /** Track states */
@@ -263,10 +277,11 @@ export const InputStyles = {
   /** Container wrapper */
   container: SizingTokens.wFull,
 
-  /** Input wrapper (relative for icons) */
+  /** Input wrapper (relative for icons, group for hover states) */
   wrapper: [
     Layout.Position.relative,
     SizingTokens.wFull,
+    'group',
   ].join(' '),
 
   /** Disabled compound variants */
