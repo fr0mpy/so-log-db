@@ -16,6 +16,7 @@
     "filterByType": "Filtrer par type",
     "filterByTimeRange": "Filtrer par période",
     "filterByLevel": "Filtrer par niveau",
+    "filterByStatus": "Filtrer par statut",
     "filterInput": "Filtrer",
     "previousSlide": "Diapositive précédente",
     "nextSlide": "Diapositive suivante",
@@ -29,7 +30,10 @@
     "switchToLight": "Passer en mode clair",
     "switchToDark": "Passer en mode sombre",
     "pagination": "pagination",
-    "selectLanguage": "Sélectionner la langue"
+    "selectLanguage": "Sélectionner la langue",
+    "viewLogDetails": "Voir les détails du journal",
+    "sortByColumn": "Trier par {column}",
+    "mainNavigation": "Navigation principale"
   },
   "labels": {
     "previous": "Précédent",

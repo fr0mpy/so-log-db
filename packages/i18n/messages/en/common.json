@@ -16,6 +16,7 @@
     "filterByType": "Filter by type",
     "filterByTimeRange": "Filter by time range",
     "filterByLevel": "Filter by level",
+    "filterByStatus": "Filter by status",
     "filterInput": "Filter",
     "previousSlide": "Previous slide",
     "nextSlide": "Next slide",
@@ -29,7 +30,10 @@
     "switchToLight": "Switch to light mode",
     "switchToDark": "Switch to dark mode",
     "pagination": "pagination",
-    "selectLanguage": "Select language"
+    "selectLanguage": "Select language",
+    "viewLogDetails": "View log details",
+    "sortByColumn": "Sort by {column}",
+    "mainNavigation": "Main navigation"
   },
   "labels": {
     "previous": "Previous",

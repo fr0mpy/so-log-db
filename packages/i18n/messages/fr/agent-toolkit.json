@@ -32,14 +32,73 @@
   },
   "logs": {
     "title": "Journaux",
-    "description": "Visualisation et analyse en temps réel des journaux",
     "metadata": {
       "title": "Journaux",
       "description": "Visualisation en temps réel des journaux avec filtrage par niveau, service et période"
     },
-    "placeholder": "Filtrer les journaux...",
+    "placeholder": "Filtrer...",
     "emptyState": "Les entrées de journal apparaîtront ici",
-    "entryPlaceholder": "Entrée de journal placeholder {index}"
+    "entryPlaceholder": "Entrée de journal placeholder {index}",
+    "table": {
+      "requested": "Demandé",
+      "provider": "Fournisseur",
+      "originOwner": "Propriétaire d'origine",
+      "source": "Source",
+      "request": "Requête",
+      "duration": "Durée",
+      "status": "Statut"
+    },
+    "filters": {
+      "allStatuses": "Tous",
+      "success2xx": "2xx",
+      "clientError4xx": "4xx",
+      "serverError5xx": "5xx",
+      "dateRange": "Période",
+      "backgroundLogs": "Journaux en arrière-plan",
+      "fullWidth": "Pleine largeur",
+      "refresh": "Actualiser",
+      "last24Hours": "24h",
+      "last7Days": "7j",
+      "last30Days": "30j",
+      "customRange": "Personnalisé"
+    },
+    "dates": {
+      "today": "Aujourd'hui",
+      "yesterday": "Hier"
+    },
+    "chart": {
+      "title": "Requêtes API",
+      "success": "Succès (2xx)",
+      "clientError": "Erreur client (4xx)",
+      "serverError": "Erreur serveur (5xx)"
+    },
+    "stats": {
+      "successRate": "Taux de succès",
+      "avgLatency": "Latence moy.",
+      "totalRequests": "Total requêtes",
+      "errorRate": "Taux d'erreur",
+      "success": "Succès",
+      "errors": "Erreurs",
+      "clientErrors": "4xx",
+      "serverErrors": "5xx",
+      "vsLastPeriod": "vs période préc.",
+      "ms": "ms"
+    },
+    "pagination": {
+      "showing": "Affichage de {start} à {end} sur {total} résultats",
+      "rowsPerPage": "Lignes par page",
+      "show": "Afficher {count}"
+    },
+    "actions": {
+      "replay": "Rejouer",
+      "replayDescription": "Rejouer la requête unifiée",
+      "batchReplay": "Rejouer en lot",
+      "batchReplayDescription": "Rejouer toutes les requêtes sous-jacentes",
+      "requestTester": "Testeur de requêtes",
+      "requestTesterDescription": "Remplir le testeur avec les données du journal",
+      "integration": "Intégration",
+      "account": "Compte"
+    }
   },
   "logDetail": {
     "title": "Détail du journal",

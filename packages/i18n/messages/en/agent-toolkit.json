@@ -32,14 +32,73 @@
   },
   "logs": {
     "title": "Logs",
-    "description": "Real-time log viewing and analysis",
     "metadata": {
       "title": "Logs",
       "description": "Real-time log viewing with filtering by level, service, and time range"
     },
-    "placeholder": "Filter logs...",
+    "placeholder": "Filter...",
     "emptyState": "Log entries will appear here",
-    "entryPlaceholder": "Log entry placeholder {index}"
+    "entryPlaceholder": "Log entry placeholder {index}",
+    "table": {
+      "requested": "Requested",
+      "provider": "Provider",
+      "originOwner": "Origin Owner",
+      "source": "Source",
+      "request": "Request",
+      "duration": "Duration",
+      "status": "Status"
+    },
+    "filters": {
+      "allStatuses": "All",
+      "success2xx": "2xx",
+      "clientError4xx": "4xx",
+      "serverError5xx": "5xx",
+      "dateRange": "Date Range",
+      "backgroundLogs": "Background Logs",
+      "fullWidth": "Full Width",
+      "refresh": "Refresh",
+      "last24Hours": "24h",
+      "last7Days": "7d",
+      "last30Days": "30d",
+      "customRange": "Custom"
+    },
+    "dates": {
+      "today": "Today",
+      "yesterday": "Yesterday"
+    },
+    "chart": {
+      "title": "API Requests",
+      "success": "Success (2xx)",
+      "clientError": "Client Error (4xx)",
+      "serverError": "Server Error (5xx)"
+    },
+    "stats": {
+      "successRate": "Success Rate",
+      "avgLatency": "Avg Latency",
+      "totalRequests": "Total Requests",
+      "errorRate": "Error Rate",
+      "success": "Success",
+      "errors": "Errors",
+      "clientErrors": "4xx",
+      "serverErrors": "5xx",
+      "vsLastPeriod": "vs last period",
+      "ms": "ms"
+    },
+    "pagination": {
+      "showing": "Showing {start} to {end} of {total} results",
+      "rowsPerPage": "Rows per page",
+      "show": "Show {count}"
+    },
+    "actions": {
+      "replay": "Replay",
+      "replayDescription": "Replay the unified request",
+      "batchReplay": "Batch-Replay",
+      "batchReplayDescription": "Replay all underlying requests",
+      "requestTester": "Request Tester",
+      "requestTesterDescription": "Populate request tester with log data",
+      "integration": "Integration",
+      "account": "Account"
+    }
   },
   "logDetail": {
     "title": "Log Detail",
