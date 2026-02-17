@@ -25,6 +25,9 @@ export default function HomePage() {
             <Button asChild>
               <a href={Routes.agentToolkit}>{t("navigation.agentToolkit")}</a>
             </Button>
+            <Button asChild variant="secondary">
+              <a href={Routes.componentLibrary}>{t("navigation.componentLibrary")}</a>
+            </Button>
           </nav>
         </CardContent>
       </Card>

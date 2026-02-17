@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import { ThemeProvider } from '@stackone-ui/core/providers'
 import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
-import { Sidebar, SidebarProvider, MainContent } from '@/components'
+import { Sidebar, SidebarProvider, MainContent, SkipLinks } from '@/components'
 import { ProviderIconPreloader } from '@/components/ProviderIcon'
 import './globals.css'
 
@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+  },
+  icons: {
+    icon: '/agent-toolkit/logo.png',
   },
 }
 
@@ -43,6 +46,7 @@ export default async function RootLayout({
     <html lang={locale} className={fontVariables} suppressHydrationWarning>
       <body className={fontSans.className}>
         <NextIntlClientProvider messages={messages}>
+          <SkipLinks />
           <ThemeProvider>
             <ProviderIconPreloader />
             <SidebarProvider>

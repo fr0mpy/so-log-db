@@ -15,6 +15,9 @@ export const Routes = {
 
   /** Agent Toolkit MFE (cross-zone - use <a> not <Link>) */
   agentToolkit: '/agent-toolkit',
+
+  /** Component Library MFE (cross-zone - use <a> not <Link>) */
+  componentLibrary: '/component-library',
 } as const
 
 /** Type for route keys */

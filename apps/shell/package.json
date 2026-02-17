@@ -14,7 +14,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "@stackone-ui/core": "workspace:*",
-    "@stackone/i18n": "workspace:*"
+    "@stackone/i18n": "workspace:*",
+    "@stackone/utils": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

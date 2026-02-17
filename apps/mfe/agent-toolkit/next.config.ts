@@ -11,6 +11,7 @@ const bundleAnalyzer = withBundleAnalyzer({
 
 const nextConfig: NextConfig = {
   experimental: {
+    reactCompiler: true,
     staleTimes: {
       dynamic: 30,
       static: 180,
@@ -36,6 +37,24 @@ const nextConfig: NextConfig = {
           name: 'motion',
           chunks: 'all',
           priority: 30,
+        },
+        recharts: {
+          test: /[\\/]node_modules[\\/](recharts|d3-.*|victory-vendor)[\\/]/,
+          name: 'recharts',
+          chunks: 'all',
+          priority: 25,
+        },
+        virtualizer: {
+          test: /[\\/]node_modules[\\/]@tanstack[\\/]react-virtual[\\/]/,
+          name: 'virtualizer',
+          chunks: 'all',
+          priority: 25,
+        },
+        lucide: {
+          test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
+          name: 'lucide',
+          chunks: 'all',
+          priority: 20,
         },
       }
     }

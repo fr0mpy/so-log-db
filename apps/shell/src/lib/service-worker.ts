@@ -1,55 +1,22 @@
-/** Debug flag key in localStorage */
-const DEBUG_KEY = 'stackone:debug'
+import { createLogger, isLoggingEnabled } from '@stackone/utils'
 
-/** Check if debug mode is enabled */
-function isDebugEnabled(): boolean {
-  if (typeof window === 'undefined') return false
-  // Support both localStorage (persists) and window.logger (session)
-  return (
-    localStorage.getItem(DEBUG_KEY) === 'true' ||
-    (window as unknown as { logger?: boolean }).logger === true
-  )
-}
-
-/** Simple logger for service worker registration */
-const log = {
-  info: (msg: string, data?: object) => {
-    if (isDebugEnabled()) {
-      data ? console.log(`[ServiceWorker] ${msg}`, data) : console.log(`[ServiceWorker] ${msg}`)
-    }
-  },
-  error: (msg: string, data?: object) => {
-    // Always log errors
-    data ? console.error(`[ServiceWorker] ${msg}`, data) : console.error(`[ServiceWorker] ${msg}`)
-  },
-}
-
-/** Enable debug logging (call from console) */
-function enableDebug(): void {
-  localStorage.setItem(DEBUG_KEY, 'true')
-  console.log('[ServiceWorker] Debug mode enabled - refresh to apply to service worker')
-}
-
-/** Disable debug logging */
-function disableDebug(): void {
-  localStorage.removeItem(DEBUG_KEY)
-  console.log('[ServiceWorker] Debug mode disabled')
-}
+const log = createLogger('ServiceWorker')
 
 export function registerServiceWorker() {
   if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
     return
   }
 
-  // Expose debug helpers on window
+  // Backwards compat: expose legacy debug helpers as aliases
+  const stackone = (window as unknown as Record<string, unknown>).__stackone as Record<string, unknown> | undefined
   const win = window as unknown as {
-    enableStackOneDebug: typeof enableDebug
-    disableStackOneDebug: typeof disableDebug
+    enableStackOneDebug: () => void
+    disableStackOneDebug: () => void
   }
-  win.enableStackOneDebug = enableDebug
-  win.disableStackOneDebug = disableDebug
+  win.enableStackOneDebug = () => stackone?.logs && (stackone.logs as { enable: () => void }).enable()
+  win.disableStackOneDebug = () => stackone?.logs && (stackone.logs as { disable: () => void }).disable()
 
-  const debug = isDebugEnabled()
+  const debug = isLoggingEnabled()
 
   window.addEventListener('load', () => {
     navigator.serviceWorker

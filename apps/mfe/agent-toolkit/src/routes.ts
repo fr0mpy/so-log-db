@@ -23,6 +23,11 @@ export const Routes = {
 
   /** Explore page */
   explore: '/explore',
+
+  /** Shell home (cross-zone - use <a> not <Link>) */
+  shell: {
+    home: '/',
+  },
 } as const
 
 /** Type for route keys */
