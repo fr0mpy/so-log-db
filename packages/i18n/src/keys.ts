@@ -1,12 +1,20 @@
 // Common keys
 export const brand = { name: 'brand.name' } as const
 
+export const skipLinks = {
+  ariaLabel: 'skipLinks.ariaLabel',
+  filters: 'skipLinks.filters',
+  table: 'skipLinks.table',
+  pagination: 'skipLinks.pagination',
+} as const
+
 export const navigation = {
   dashboard: 'navigation.dashboard',
   logs: 'navigation.logs',
   search: 'navigation.search',
   explore: 'navigation.explore',
   agentToolkit: 'navigation.agentToolkit',
+  componentLibrary: 'navigation.componentLibrary',
 } as const
 
 export const aria = {
