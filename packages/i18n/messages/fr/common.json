@@ -14,12 +14,15 @@
     "search": "Recherche",
     "explore": "Explorer",
     "agentToolkit": "Boîte à outils Agent",
-    "componentLibrary": "Bibliothèque de composants"
+    "componentLibrary": "Bibliothèque de composants",
+    "settings": "Paramètres",
+    "theme": "Thème"
   },
   "aria": {
     "close": "Fermer",
     "loading": "Chargement...",
     "search": "Rechercher",
+    "settings": "Paramètres",
     "filterByType": "Filtrer par type",
     "filterByTimeRange": "Filtrer par période",
     "filterByLevel": "Filtrer par niveau",
@@ -56,6 +59,10 @@
     "close": "Fermer",
     "morePages": "Plus de pages"
   },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue"
+  },
   "logLevels": {
     "all": "Tous les niveaux",
     "error": "Erreur",
@@ -79,5 +86,32 @@
     "healthy": "opérationnel",
     "unhealthy": "hors service",
     "degraded": "dégradé"
+  },
+  "datePicker": {
+    "aria": {
+      "dialog": "Sélecteur de date",
+      "calendar": "Calendrier",
+      "previousMonth": "Mois précédent",
+      "nextMonth": "Mois suivant",
+      "selectDate": "Sélectionner une date",
+      "selectRange": "Sélectionner une période"
+    },
+    "presets": {
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
+      "last7Days": "7 derniers jours",
+      "last30Days": "30 derniers jours",
+      "thisMonth": "Ce mois-ci",
+      "lastMonth": "Mois dernier"
+    },
+    "labels": {
+      "startDate": "Date de début",
+      "endDate": "Date de fin",
+      "selectDate": "Sélectionner une date",
+      "selectRange": "Sélectionner une période",
+      "apply": "Appliquer",
+      "cancel": "Annuler",
+      "clear": "Effacer"
+    }
   }
 }

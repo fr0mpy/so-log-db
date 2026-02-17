@@ -87,7 +87,8 @@
     "pagination": {
       "showing": "Showing {start} to {end} of {total} results",
       "rowsPerPage": "Rows per page",
-      "show": "Show {count}"
+      "show": "Show {count}",
+      "showRowsPerPage": "Show rows per page"
     },
     "actions": {
       "replay": "Replay",
@@ -114,7 +115,58 @@
       "message": "Message",
       "metadata": "Metadata"
     },
-    "messagePlaceholder": "Log message placeholder for entry {id}"
+    "messagePlaceholder": "Log message placeholder for entry {id}",
+    "dialog": {
+      "title": "Request Details"
+    },
+    "tabs": {
+      "details": "Details",
+      "underlyingRequests": "Underlying Requests"
+    },
+    "sections": {
+      "url": "URL",
+      "request": "Request",
+      "response": "Response",
+      "headers": "Headers",
+      "queryParams": "Query Parameters",
+      "body": "Body"
+    },
+    "labels": {
+      "provider": "Provider",
+      "organization": "Organization",
+      "source": "Source",
+      "expires": "Expires",
+      "notAvailable": "Not available",
+      "copyUrl": "Copy URL",
+      "copied": "Copied!"
+    },
+    "errorExplainer": {
+      "title": "Error Explainer",
+      "openToGenerate": "Open to Generate",
+      "generating": "Generating Explainer & Resolution Steps",
+      "viaAdvancedLogs": "via Advanced Logs",
+      "feedbackHelpful": "Helpful",
+      "feedbackNotHelpful": "Not helpful"
+    },
+    "underlying": {
+      "requested": "Requested",
+      "request": "Request",
+      "duration": "Duration",
+      "status": "Status",
+      "detailsNotAvailable": "Details not available for this request"
+    },
+    "aria": {
+      "dialogTitle": "Log details dialog",
+      "copyUrl": "Copy URL to clipboard",
+      "toggleSection": "Toggle {section} section",
+      "expandRow": "Expand underlying request details",
+      "navigatePrevious": "Navigate to previous log",
+      "navigateNext": "Navigate to next log"
+    },
+    "actions": {
+      "close": "Close",
+      "navigate": "Navigate"
+    }
   },
   "search": {
     "title": "Search",

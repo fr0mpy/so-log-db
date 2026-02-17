@@ -15,12 +15,15 @@ export const navigation = {
   explore: 'navigation.explore',
   agentToolkit: 'navigation.agentToolkit',
   componentLibrary: 'navigation.componentLibrary',
+  settings: 'navigation.settings',
+  theme: 'navigation.theme',
 } as const
 
 export const aria = {
   close: 'aria.close',
   loading: 'aria.loading',
   search: 'aria.search',
+  settings: 'aria.settings',
   filterByType: 'aria.filterByType',
   filterByTimeRange: 'aria.filterByTimeRange',
   filterByLevel: 'aria.filterByLevel',
@@ -59,6 +62,11 @@ export const srOnly = {
   loading: 'srOnly.loading',
   close: 'srOnly.close',
   morePages: 'srOnly.morePages',
+} as const
+
+export const settings = {
+  title: 'settings.title',
+  language: 'settings.language',
 } as const
 
 export const logLevels = {
@@ -182,6 +190,7 @@ export const logs = {
     showing: 'logs.pagination.showing',
     rowsPerPage: 'logs.pagination.rowsPerPage',
     show: 'logs.pagination.show',
+    showRowsPerPage: 'logs.pagination.showRowsPerPage',
   },
   actions: {
     replay: 'logs.actions.replay',
@@ -210,6 +219,58 @@ export const logDetail = {
     metadata: 'logDetail.fields.metadata',
   },
   messagePlaceholder: 'logDetail.messagePlaceholder',
+  // Dialog-specific keys
+  dialog: {
+    title: 'logDetail.dialog.title',
+  },
+  tabs: {
+    details: 'logDetail.tabs.details',
+    underlyingRequests: 'logDetail.tabs.underlyingRequests',
+  },
+  sections: {
+    url: 'logDetail.sections.url',
+    request: 'logDetail.sections.request',
+    response: 'logDetail.sections.response',
+    headers: 'logDetail.sections.headers',
+    queryParams: 'logDetail.sections.queryParams',
+    body: 'logDetail.sections.body',
+  },
+  labels: {
+    provider: 'logDetail.labels.provider',
+    organization: 'logDetail.labels.organization',
+    source: 'logDetail.labels.source',
+    expires: 'logDetail.labels.expires',
+    notAvailable: 'logDetail.labels.notAvailable',
+    copyUrl: 'logDetail.labels.copyUrl',
+    copied: 'logDetail.labels.copied',
+  },
+  errorExplainer: {
+    title: 'logDetail.errorExplainer.title',
+    openToGenerate: 'logDetail.errorExplainer.openToGenerate',
+    generating: 'logDetail.errorExplainer.generating',
+    viaAdvancedLogs: 'logDetail.errorExplainer.viaAdvancedLogs',
+    feedbackHelpful: 'logDetail.errorExplainer.feedbackHelpful',
+    feedbackNotHelpful: 'logDetail.errorExplainer.feedbackNotHelpful',
+  },
+  underlying: {
+    requested: 'logDetail.underlying.requested',
+    request: 'logDetail.underlying.request',
+    duration: 'logDetail.underlying.duration',
+    status: 'logDetail.underlying.status',
+    detailsNotAvailable: 'logDetail.underlying.detailsNotAvailable',
+  },
+  aria: {
+    dialogTitle: 'logDetail.aria.dialogTitle',
+    copyUrl: 'logDetail.aria.copyUrl',
+    toggleSection: 'logDetail.aria.toggleSection',
+    expandRow: 'logDetail.aria.expandRow',
+    navigatePrevious: 'logDetail.aria.navigatePrevious',
+    navigateNext: 'logDetail.aria.navigateNext',
+  },
+  actions: {
+    close: 'logDetail.actions.close',
+    navigate: 'logDetail.actions.navigate',
+  },
 } as const
 
 export const search = {
@@ -254,6 +315,35 @@ export const explore = {
   dataStrategy: {
     title: 'explore.dataStrategy.title',
     description: 'explore.dataStrategy.description',
+  },
+} as const
+
+// DatePicker keys
+export const datePicker = {
+  aria: {
+    dialog: 'datePicker.aria.dialog',
+    calendar: 'datePicker.aria.calendar',
+    previousMonth: 'datePicker.aria.previousMonth',
+    nextMonth: 'datePicker.aria.nextMonth',
+    selectDate: 'datePicker.aria.selectDate',
+    selectRange: 'datePicker.aria.selectRange',
+  },
+  presets: {
+    today: 'datePicker.presets.today',
+    yesterday: 'datePicker.presets.yesterday',
+    last7Days: 'datePicker.presets.last7Days',
+    last30Days: 'datePicker.presets.last30Days',
+    thisMonth: 'datePicker.presets.thisMonth',
+    lastMonth: 'datePicker.presets.lastMonth',
+  },
+  labels: {
+    startDate: 'datePicker.labels.startDate',
+    endDate: 'datePicker.labels.endDate',
+    selectDate: 'datePicker.labels.selectDate',
+    selectRange: 'datePicker.labels.selectRange',
+    apply: 'datePicker.labels.apply',
+    cancel: 'datePicker.labels.cancel',
+    clear: 'datePicker.labels.clear',
   },
 } as const
 

@@ -87,7 +87,8 @@
     "pagination": {
       "showing": "Affichage de {start} à {end} sur {total} résultats",
       "rowsPerPage": "Lignes par page",
-      "show": "Afficher {count}"
+      "show": "Afficher {count}",
+      "showRowsPerPage": "Afficher les lignes par page"
     },
     "actions": {
       "replay": "Rejouer",
@@ -114,7 +115,58 @@
       "message": "Message",
       "metadata": "Métadonnées"
     },
-    "messagePlaceholder": "Message de journal placeholder pour l'entrée {id}"
+    "messagePlaceholder": "Message de journal placeholder pour l'entrée {id}",
+    "dialog": {
+      "title": "Détails de la requête"
+    },
+    "tabs": {
+      "details": "Détails",
+      "underlyingRequests": "Requêtes sous-jacentes"
+    },
+    "sections": {
+      "url": "URL",
+      "request": "Requête",
+      "response": "Réponse",
+      "headers": "En-têtes",
+      "queryParams": "Paramètres de requête",
+      "body": "Corps"
+    },
+    "labels": {
+      "provider": "Fournisseur",
+      "organization": "Organisation",
+      "source": "Source",
+      "expires": "Expire",
+      "notAvailable": "Non disponible",
+      "copyUrl": "Copier l'URL",
+      "copied": "Copié !"
+    },
+    "errorExplainer": {
+      "title": "Explication d'erreur",
+      "openToGenerate": "Ouvrir pour générer",
+      "generating": "Génération de l'explication et des étapes de résolution",
+      "viaAdvancedLogs": "via Journaux avancés",
+      "feedbackHelpful": "Utile",
+      "feedbackNotHelpful": "Pas utile"
+    },
+    "underlying": {
+      "requested": "Demandé",
+      "request": "Requête",
+      "duration": "Durée",
+      "status": "Statut",
+      "detailsNotAvailable": "Détails non disponibles pour cette requête"
+    },
+    "aria": {
+      "dialogTitle": "Dialogue des détails du journal",
+      "copyUrl": "Copier l'URL dans le presse-papiers",
+      "toggleSection": "Basculer la section {section}",
+      "expandRow": "Développer les détails de la requête sous-jacente",
+      "navigatePrevious": "Aller au journal précédent",
+      "navigateNext": "Aller au journal suivant"
+    },
+    "actions": {
+      "close": "Fermer",
+      "navigate": "Naviguer"
+    }
   },
   "search": {
     "title": "Recherche",
