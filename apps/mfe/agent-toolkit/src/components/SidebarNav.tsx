@@ -9,11 +9,15 @@ import { Routes, BASE_PATH } from '../routes'
 import { useSidebar } from './SidebarContext'
 import { SidebarNavStyles as S } from './styles'
 
-/** Navigation items */
+/** Active navigation items (with links) */
 const NAV_ITEMS = [
   { href: Routes.logs.index, labelKey: navigation.logs, icon: FileText },
-  { href: Routes.search, labelKey: navigation.search, icon: Search },
-  { href: Routes.explore, labelKey: navigation.explore, icon: Compass },
+] as const
+
+/** Decorative items (coming soon - no navigation) */
+const DECORATIVE_ITEMS = [
+  { labelKey: navigation.search, icon: Search },
+  { labelKey: navigation.explore, icon: Compass },
 ] as const
 
 interface NavItemProps {
@@ -53,6 +57,36 @@ function NavItem({
   )
 }
 
+interface DecorativeNavItemProps {
+  icon: LucideIcon
+  isExpanded: boolean
+  children: React.ReactNode
+}
+
+/** Decorative nav item - styled like a link but non-functional */
+function DecorativeNavItem({
+  icon: Icon,
+  isExpanded,
+  children,
+}: DecorativeNavItemProps) {
+  return (
+    <span
+      className={cn(S.item.base, S.item.inactive)}
+      role="presentation"
+    >
+      <Icon className={S.item.icon} strokeWidth={2.5} aria-hidden="true" />
+      <span
+        className={cn(
+          S.item.label,
+          isExpanded ? S.item.labelVisible : S.item.labelHidden
+        )}
+      >
+        {children}
+      </span>
+    </span>
+  )
+}
+
 /**
  * Client-side sidebar navigation
  * Uses app-level context for expand state
@@ -78,6 +112,15 @@ export function SidebarNav() {
         >
           {t(item.labelKey)}
         </NavItem>
+      ))}
+      {DECORATIVE_ITEMS.map((item) => (
+        <DecorativeNavItem
+          key={item.labelKey}
+          icon={item.icon}
+          isExpanded={isExpanded}
+        >
+          {t(item.labelKey)}
+        </DecorativeNavItem>
       ))}
     </nav>
   )

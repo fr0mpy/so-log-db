@@ -4,9 +4,17 @@ import { useState, useEffect } from 'react'
 import { Search, RefreshCw } from 'lucide-react'
 import { Switch } from '@stackone-ui/core/switch'
 import { Button } from '@stackone-ui/core/button'
-import { Select } from '@stackone-ui/core/select'
+import { Select, type SelectOption } from '@stackone-ui/core/select'
 import { Input } from '@stackone-ui/core/input'
-import { FilterRow, Text, LoadingStyles, FilterSelect } from '../../styles'
+import { Dialog } from '@stackone-ui/core/dialog'
+import {
+  DatePicker,
+  Calendar,
+  DateInput,
+  type DateRange,
+} from '@stackone-ui/core/date-picker'
+import { FilterRow, Text, LoadingStyles, FilterSelect, DialogOverrides } from '../../styles'
+import { DatePickerStyles } from '@stackone-ui/core/date-picker'
 
 interface LogFiltersProps {
   title: string
@@ -56,6 +64,10 @@ export function LogFilters({
   const [backgroundLogs, setBackgroundLogs] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
 
+  // DatePicker state
+  const [datePickerOpen, setDatePickerOpen] = useState(false)
+  const [customRange, setCustomRange] = useState<DateRange | null>(null)
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 8)
@@ -64,11 +76,24 @@ export function LogFilters({
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const dateRangeOptions = [
+  // Handle custom range selection (just update state, don't close)
+  const handleRangeChange = (range: DateRange | null) => {
+    setCustomRange(range)
+  }
+
+  const dateRangeOptions: SelectOption[] = [
     { value: 'last24Hours', label: translations.last24Hours },
     { value: 'last7Days', label: translations.last7Days },
     { value: 'last30Days', label: translations.last30Days },
-    { value: 'customRange', label: translations.customRange },
+    {
+      value: 'customRange',
+      label: translations.customRange,
+      onSelect: ({ closePopup }) => {
+        closePopup()
+        setDatePickerOpen(true)
+        return true // Prevent default setValue
+      },
+    },
   ]
 
   const statusOptions = [
@@ -104,9 +129,15 @@ export function LogFilters({
         <Select
           options={dateRangeOptions}
           value={dateRange}
-          onValueChange={onDateRangeChange}
+          onValueChange={(value) => {
+            if (value !== 'customRange') {
+              setCustomRange(null)
+            }
+            onDateRangeChange(value)
+          }}
           triggerMode="hover"
           width="auto"
+          variant="ghost"
           className={FilterSelect.dateRange}
         />
 
@@ -117,6 +148,7 @@ export function LogFilters({
           onValueChange={onStatusChange}
           triggerMode="hover"
           width="auto"
+          variant="ghost"
           className={FilterSelect.status}
         />
 
@@ -132,7 +164,7 @@ export function LogFilters({
 
         {/* Refresh Button */}
         <Button
-          variant="outline"
+          variant="inset"
           size="sm"
           iconOnly
           onClick={onRefresh}
@@ -146,6 +178,50 @@ export function LogFilters({
           />
         </Button>
       </div>
+
+      {/* Date Range Picker Dialog */}
+      <Dialog.Root open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+        <Dialog.Content>
+          <Dialog.Header className={DialogOverrides.headerCentered}>
+            <Dialog.Title>{translations.customRange}</Dialog.Title>
+          </Dialog.Header>
+          <DatePicker.Root
+            mode="range"
+            rangeValue={customRange}
+            onRangeChange={handleRangeChange}
+            maxDate={new Date()}
+          >
+            <div className={DatePickerStyles.header.base}>
+              <Calendar.Header />
+              <Calendar.Nav />
+            </div>
+            <Calendar.Root>
+              <Calendar.Grid />
+            </Calendar.Root>
+            <DateInput
+              startPlaceholder="Filter from"
+              endPlaceholder="Filter to"
+            />
+          </DatePicker.Root>
+          <Dialog.Footer className={DialogOverrides.footerCentered}>
+            <Button variant="ghost" onClick={() => setDatePickerOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => {
+                if (customRange?.start && customRange?.end) {
+                  onDateRangeChange('customRange')
+                  setDatePickerOpen(false)
+                }
+              }}
+              disabled={!customRange?.start || !customRange?.end}
+            >
+              Apply
+            </Button>
+          </Dialog.Footer>
+        </Dialog.Content>
+      </Dialog.Root>
     </>
   )
 }

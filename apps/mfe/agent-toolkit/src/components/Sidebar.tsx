@@ -1,12 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslations, aria } from '@stackone/i18n'
+import { Settings } from 'lucide-react'
+import { useTranslations, aria, navigation } from '@stackone/i18n'
 import { SIDENAV_DIMENSIONS } from '@stackone-ui/core/sidenav'
 import { Select } from '@stackone-ui/core/select'
+import { cn } from '@stackone-ui/core/utils'
+import { ThemeSwitcher } from '@stackone-ui/core/theme-switcher'
+import { useTheme } from '@stackone-ui/core/providers'
 import { SidebarLogo } from './SidebarLogo'
 import { SidebarNav } from './SidebarNav'
-import { SidebarThemeToggle } from './SidebarThemeToggle'
+import { SettingsDialog } from './SettingsDialog'
 import { useSidebar } from './SidebarContext'
 import { SidebarStyles as S } from './styles'
 
@@ -26,7 +30,14 @@ const PROJECTS = [
 export function Sidebar() {
   const { isExpanded, expand, collapse } = useSidebar()
   const t = useTranslations()
+  const { theme, toggle: toggleTheme } = useTheme()
   const [selectedProject, setSelectedProject] = useState<string>('project-a')
+  const [settingsOpen, setSettingsOpen] = useState(false)
+
+  const labelClasses = cn(
+    S.footerLabel,
+    isExpanded ? S.footerLabelVisible : S.footerLabelHidden
+  )
 
   return (
     <aside
@@ -62,8 +73,24 @@ export function Sidebar() {
       <SidebarNav />
 
       <div className={S.footer}>
-        <SidebarThemeToggle />
+        <button
+          className={S.footerItem}
+          aria-label={t(aria.settings)}
+          onClick={() => setSettingsOpen(true)}
+        >
+          <Settings className={S.footerIcon} />
+          <span className={labelClasses}>{t(navigation.settings)}</span>
+        </button>
+        <div className={cn(S.footerTheme, isExpanded ? S.footerThemeExpanded : S.footerThemeCollapsed)}>
+          <ThemeSwitcher
+            isDark={theme === 'dark'}
+            onToggle={toggleTheme}
+            compact={!isExpanded}
+          />
+        </div>
       </div>
+
+      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </aside>
   )
 }

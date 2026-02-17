@@ -56,39 +56,79 @@ const STATUS_WEIGHTS = [
   { status: 503, weight: 2 },
 ] as const
 
+// Generate a seed that stays constant for the entire day but changes daily
+function generateDateSeed(): number {
+  const dateString = new Date().toISOString().slice(0, 10) // "2026-02-17"
+  let hash = 0
+  for (let i = 0; i < dateString.length; i++) {
+    hash = ((hash << 5) - hash) + dateString.charCodeAt(i)
+    hash = hash & hash
+  }
+  return Math.abs(hash)
+}
+
 // Seeded random for consistent mock data
 function seededRandom(seed: number) {
   const x = Math.sin(seed) * 10000
   return x - Math.floor(x)
 }
 
-function generateMockLogs(count: number, timeSeed: number) {
+function generateMockLogs(count: number, baseSeed: number) {
   const logsData = []
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  const now = new Date()
 
-  // Generate time slots programmatically for dense x-axis coverage
-  const TIME_SLOTS: Array<{ hour: number; minute: number }> = []
-  for (let hour = 8; hour <= 17; hour++) {
-    const minuteSlots = [0, 3, 7, 12, 15, 18, 22, 27, 30, 33, 38, 42, 45, 48, 52, 55, 58]
-    for (const minute of minuteSlots) {
-      const duplicates = (hour === 9 || hour === 12 || hour === 16) ? 3 :
-                         (minute % 15 === 0) ? 2 : 1
-      for (let d = 0; d < duplicates; d++) {
-        TIME_SLOTS.push({ hour, minute })
-      }
+  // Date boundaries
+  const todayStart = new Date(now)
+  todayStart.setHours(0, 0, 0, 0)
+
+  const yesterdayStart = new Date(todayStart)
+  yesterdayStart.setDate(yesterdayStart.getDate() - 1)
+
+  const threeMonthsAgo = new Date(todayStart)
+  threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3)
+
+  // Distribution: 30% today, 20% yesterday, 50% past 3 months
+  const todayCount = Math.floor(count * 0.3)
+  const yesterdayCount = Math.floor(count * 0.2)
+  const pastCount = count - todayCount - yesterdayCount
+
+  function generateTimestamp(seed: number, bucket: 'today' | 'yesterday' | 'past'): Date {
+    if (bucket === 'today') {
+      // Business hours today (8am - now or 6pm, whichever is earlier)
+      const hour = 8 + Math.floor(seededRandom(seed) * Math.min(10, Math.max(1, now.getHours() - 7)))
+      const minute = Math.floor(seededRandom(seed * 2) * 60)
+      const second = Math.floor(seededRandom(seed * 3) * 60)
+      const ts = new Date(todayStart)
+      ts.setHours(hour, minute, second)
+      return ts
+    } else if (bucket === 'yesterday') {
+      // Business hours yesterday (8am - 6pm)
+      const hour = 8 + Math.floor(seededRandom(seed) * 10)
+      const minute = Math.floor(seededRandom(seed * 2) * 60)
+      const second = Math.floor(seededRandom(seed * 3) * 60)
+      const ts = new Date(yesterdayStart)
+      ts.setHours(hour, minute, second)
+      return ts
+    } else {
+      // Random date in past 3 months (excluding today and yesterday)
+      const twoDaysAgo = new Date(yesterdayStart)
+      twoDaysAgo.setDate(twoDaysAgo.getDate() - 1)
+      const rangeMs = twoDaysAgo.getTime() - threeMonthsAgo.getTime()
+      const offsetMs = Math.floor(seededRandom(seed) * rangeMs)
+      const ts = new Date(threeMonthsAgo.getTime() + offsetMs)
+      // Random time of day
+      ts.setHours(
+        Math.floor(seededRandom(seed * 2) * 24),
+        Math.floor(seededRandom(seed * 3) * 60),
+        Math.floor(seededRandom(seed * 4) * 60)
+      )
+      return ts
     }
   }
 
-  for (let i = 0; i < count; i++) {
-    const seed = i + timeSeed
-
-    const slotIndex = Math.floor(seededRandom(seed * 1) * TIME_SLOTS.length)
-    const slot = TIME_SLOTS[slotIndex]
-    const second = Math.floor(seededRandom(seed * 3) * 60)
-
-    const timestamp = new Date(today)
-    timestamp.setHours(slot.hour, slot.minute, second)
+  function createLog(index: number, bucket: 'today' | 'yesterday' | 'past') {
+    const seed = index + baseSeed
+    const timestamp = generateTimestamp(seed * 11, bucket)
 
     const providerIndex = Math.floor(seededRandom(seed * 4) * PROVIDERS.length)
     const provider = PROVIDERS[providerIndex]
@@ -120,8 +160,100 @@ function generateMockLogs(count: number, timeSeed: number) {
     const baseDuration = 50 + Math.floor(seededRandom(seed * 9) * 200)
     const duration = status >= 400 ? baseDuration + Math.floor(seededRandom(seed * 10) * 500) : baseDuration
 
-    logsData.push({
-      id: `log_${String(i + 1).padStart(3, '0')}`,
+    // Generate URL based on provider and request
+    const providerSlug = provider.name.toLowerCase().replace(/\s+/g, '-')
+    const url = `https://api.${providerSlug}.com/v1/${baseRequest.name.toLowerCase().replace(/\s+/g, '/')}?page=1&per_page=50`
+
+    // Generate expires (random 1-30 days)
+    const expiresDay = Math.floor(seededRandom(seed * 12) * 30) + 1
+    const expires = `${expiresDay} Day${expiresDay > 1 ? 's' : ''}`
+
+    // Generate request details
+    const requestDetails = {
+      method: baseRequest.method,
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Connection': 'keep-alive',
+        'User-Agent': 'stackone-sdk/2.35.1',
+        'Authorization': '<redacted>',
+        'X-Request-ID': `req_${seed.toString(16)}`,
+        'Cache-Control': 'no-cache',
+      } as Record<string, string>,
+      queryParams: {
+        page: 1,
+        per_page: 50,
+        ...(seededRandom(seed * 13) > 0.5 ? { include: 'metadata' } : {}),
+      } as Record<string, string | number>,
+      body: baseRequest.method === 'POST' || baseRequest.method === 'PUT' ? {
+        data: {
+          id: `rec_${seed.toString(16)}`,
+          name: 'Sample Record',
+          created_at: timestamp.toISOString(),
+        },
+      } : undefined,
+    }
+
+    // Generate response details
+    const responseBodyAvailable = status < 400 || seededRandom(seed * 14) > 0.3
+    const responseDetails = {
+      status,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Request-ID': `req_${seed.toString(16)}`,
+        'X-RateLimit-Remaining': String(Math.floor(seededRandom(seed * 15) * 1000)),
+        'X-RateLimit-Reset': String(Math.floor(Date.now() / 1000) + 3600),
+      } as Record<string, string>,
+      body: responseBodyAvailable ? {
+        data: status < 400 ? [
+          { id: 'rec_001', name: 'John Doe', email: 'john@example.com' },
+          { id: 'rec_002', name: 'Jane Smith', email: 'jane@example.com' },
+        ] : {
+          error: {
+            code: status === 401 ? 'unauthorized' : status === 404 ? 'not_found' : 'bad_request',
+            message: status === 401 ? 'Invalid or expired access token' :
+                     status === 404 ? 'Resource not found' : 'Invalid request parameters',
+          },
+        },
+        meta: { page: 1, per_page: 50, total: 25 },
+      } : undefined,
+      bodyAvailable: responseBodyAvailable,
+    }
+
+    // Generate underlying requests (1-3 per log, only for some logs)
+    const hasUnderlyingRequests = seededRandom(seed * 16) > 0.4
+    const underlyingRequestCount = hasUnderlyingRequests ? Math.floor(seededRandom(seed * 17) * 3) + 1 : 0
+    const underlyingRequests = hasUnderlyingRequests ? Array.from({ length: underlyingRequestCount }, (_, i) => {
+      const urSeed = seed * 100 + i
+      const urTimestamp = new Date(timestamp.getTime() + Math.floor(seededRandom(urSeed) * duration))
+      const urDuration = Math.floor(seededRandom(urSeed * 2) * (duration / underlyingRequestCount))
+      const urStatus = seededRandom(urSeed * 3) > 0.2 ? 200 : status
+      return {
+        id: `ur_${seed}_${i + 1}`,
+        timestamp: urTimestamp.toISOString(),
+        method: i === 0 ? 'GET' : seededRandom(urSeed * 4) > 0.5 ? 'POST' : 'GET',
+        url: `https://api.${providerSlug}.com/v1/internal/${i === 0 ? 'auth' : 'data'}`,
+        duration: urDuration,
+        status: urStatus,
+        requestDetails: {
+          method: i === 0 ? 'GET' : seededRandom(urSeed * 4) > 0.5 ? 'POST' : 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': '<redacted>',
+          },
+        },
+        responseDetails: {
+          status: urStatus,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: urStatus === 200 ? { success: true } : { error: 'Request failed' },
+          bodyAvailable: true,
+        },
+      }
+    }) : undefined
+
+    return {
+      id: `log_${String(index + 1).padStart(3, '0')}`,
       timestamp: timestamp.toISOString(),
       provider,
       originOwner,
@@ -129,7 +261,30 @@ function generateMockLogs(count: number, timeSeed: number) {
       request,
       duration,
       status,
-    })
+      // Extended fields for LogEntryDetail
+      url,
+      expires,
+      requestDetails,
+      responseDetails,
+      underlyingRequests,
+    }
+  }
+
+  let logIndex = 0
+
+  // Generate today's logs
+  for (let i = 0; i < todayCount; i++) {
+    logsData.push(createLog(logIndex++, 'today'))
+  }
+
+  // Generate yesterday's logs
+  for (let i = 0; i < yesterdayCount; i++) {
+    logsData.push(createLog(logIndex++, 'yesterday'))
+  }
+
+  // Generate past 3 months logs
+  for (let i = 0; i < pastCount; i++) {
+    logsData.push(createLog(logIndex++, 'past'))
   }
 
   return logsData.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
@@ -181,8 +336,8 @@ function calculateStats(logEntries: LogEntry[]) {
 export default async function LogsPage() {
   const t = await getTranslations()
 
-  // Generate fresh mock data on each request
-  const logsData = generateMockLogs(100, Date.now())
+  // Generate stable mock data - same data for entire day, refreshes daily
+  const logsData = generateMockLogs(100, generateDateSeed())
   const statsData = calculateStats(logsData)
 
   const translations = {
@@ -240,12 +395,12 @@ export default async function LogsPage() {
       },
       pagination: {
         showing: t(logs.pagination.showing),
-        rowsPerPage: t(logs.pagination.rowsPerPage),
+        rowsPerPage: t(logs.pagination.showRowsPerPage),
         show: {
-          10: t(logs.pagination.show, { count: 10 }),
-          20: t(logs.pagination.show, { count: 20 }),
-          50: t(logs.pagination.show, { count: 50 }),
-          100: t(logs.pagination.show, { count: 100 }),
+          10: '10',
+          20: '20',
+          50: '50',
+          100: '100',
         },
       },
       actions: {

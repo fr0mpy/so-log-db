@@ -42,12 +42,28 @@ export const AppLayout = {
   container: 'min-h-screen',
   /** Main content area - uses ml-16 (64px) to account for collapsed SideNav */
   main: 'flex-1 p-8 ml-16',
-  /** Animated main content - flex-1 shrinks when sidebar expands */
+  /** Main content - flex-1 naturally fills remaining space beside sidebar */
   mainAnimated: [
-    'flex-1 min-h-screen p-8',
-    'transition-[margin] duration-200 ease-out',
-    '[contain:layout_style]', // Isolate layout/paint recalculations
+    'flex-1 min-w-0 min-h-screen overflow-x-clip',
   ].join(' '),
+  /** Inner content wrapper with padding */
+  content: 'p-8',
+} as const
+
+// ============================================================================
+// App Header
+// ============================================================================
+
+export const AppHeader = {
+  /** Fixed header bar at top of main content */
+  container: [
+    'flex items-center justify-end',
+    'h-14 px-6',
+    'border-b border-border',
+    'bg-background/80 backdrop-blur-sm',
+  ].join(' '),
+  /** Right-aligned actions area */
+  actions: 'flex items-center gap-3',
 } as const
 
 // ============================================================================
@@ -182,8 +198,10 @@ export const Grid = {
   cols2: 'grid grid-cols-1 lg:grid-cols-2 gap-6',
   cols3: 'grid grid-cols-1 md:grid-cols-3 gap-6',
   actionsRow: 'grid grid-cols-1 md:grid-cols-2 gap-6',
-  /** Chart on left (70%), stats on right (30%) */
-  chartStats: 'grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4',
+  /** Chart on left (flexible), stats on right (fixed 280px) */
+  chartStats: 'grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_280px] gap-4',
+  /** Grid/flex child that can shrink below content size */
+  shrinkable: 'min-w-0',
 } as const
 
 // ============================================================================
@@ -269,22 +287,28 @@ export const DataTable = {
 // ============================================================================
 
 /**
- * Responsive column widths:
- * - lg (1024px+): Full table
- * - md (768px-1023px): Hide originOwner, truncate text
- * - sm (640px-767px): Hide source, provider icon-only
- * - xs (<640px): Hide duration, request name - show icons/badges only
+ * Responsive column widths - fluid scaling to fit viewport
+ * - lg (1024px+): Full table, all columns ~1000px total
+ * - md (768px): ~730px total (fits 768px viewport)
+ * - sm (640px): ~525px total (fits 640px viewport)
  */
 export const LogTableColumns = {
-  requested: 'w-[110px] shrink-0',
-  provider: 'w-[160px] shrink-0',
-  originOwner: 'hidden lg:flex lg:flex-1 lg:min-w-[120px]',
-  source: 'hidden md:flex md:w-[120px] shrink-0',
-  request: 'flex-1 min-w-[180px]',
-  duration: 'hidden sm:flex sm:w-[100px] shrink-0',
-  status: 'w-[70px] shrink-0',
-  /** Actions column - fixed width, right-aligned */
-  actions: 'w-[160px] shrink-0 justify-end',
+  /** Timestamp: responsive width, always visible */
+  requested: 'w-[90px] md:w-[100px] lg:w-[110px] shrink-0',
+  /** Provider: shrink allowed, responsive width */
+  provider: 'w-[100px] md:w-[130px] lg:w-[160px] shrink',
+  /** Origin: hidden <lg */
+  originOwner: 'hidden lg:flex lg:flex-1 lg:min-w-[100px]',
+  /** Source: hidden <md, reduced width */
+  source: 'hidden md:flex md:w-[90px] lg:w-[120px] shrink',
+  /** Request: reduced min-width for flexibility */
+  request: 'flex-1 min-w-[120px] md:min-w-[150px] lg:min-w-[180px]',
+  /** Duration: hidden <sm, reduced width */
+  duration: 'hidden sm:flex sm:w-[80px] lg:w-[100px] shrink',
+  /** Status: compact, fixed */
+  status: 'w-[55px] md:w-[60px] lg:w-[70px] shrink-0',
+  /** Actions: responsive width, right-aligned */
+  actions: 'w-[80px] md:w-[120px] lg:w-[160px] shrink-0 justify-end',
 } as const
 
 // ============================================================================
@@ -294,9 +318,10 @@ export const LogTableColumns = {
 export const ProviderAvatar = {
   container: [Layout.Flex.center, 'gap-2'].join(' '),
   icon: 'w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold text-white',
-  /** Wrapper for name + version - hidden below md for icon-only mode */
-  textWrapper: 'hidden md:flex flex-col',
-  name: 'font-medium leading-tight truncate max-w-[100px]',
+  /** Wrapper for name + version - hidden below md for icon-only mode, min-w-0 enables truncation */
+  textWrapper: 'hidden md:flex flex-col min-w-0',
+  /** Progressive truncation: tighter at md, wider at lg */
+  name: 'font-medium leading-tight truncate max-w-[60px] md:max-w-[80px] lg:max-w-[100px]',
   version: 'text-[10px] text-muted-foreground leading-tight',
   /** Provider-specific colors use semantic tokens */
   primary: 'bg-primary',
@@ -399,6 +424,20 @@ export const RowActions = {
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
     '[&:focus-visible>svg]:text-primary [&:focus-visible>svg]:fill-primary',
   ].join(' '),
+  /** Primary action button - always visible */
+  buttonPrimary: [
+    'p-1 rounded',
+    'hover:bg-muted/20',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
+    '[&:focus-visible>svg]:text-primary [&:focus-visible>svg]:fill-primary',
+  ].join(' '),
+  /** Secondary action button - hidden on <lg to save space */
+  buttonSecondary: [
+    'hidden lg:block p-1 rounded',
+    'hover:bg-muted/20',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
+    '[&:focus-visible>svg]:text-primary [&:focus-visible>svg]:fill-primary',
+  ].join(' '),
   /** Action icon - grey to match row text, adapts to theme */
   icon: 'size-5 flex-shrink-0 text-muted-foreground transition-colors duration-150',
   /** External link indicator */
@@ -412,8 +451,8 @@ export const RowActions = {
 export const LatencyBar = {
   /** Container for duration value + bar */
   container: 'flex flex-col items-center gap-0.5',
-  /** Duration text value */
-  value: 'text-sm tabular-nums',
+  /** Duration text value - muted to contrast with foreground date/time */
+  value: 'text-sm tabular-nums text-muted-foreground',
   /** Bar container - segments in a row */
   bar: 'flex gap-px w-16 h-1',
   /** Individual segment */
@@ -477,6 +516,17 @@ export const FilterSelect = {
   status: 'w-[5rem]',
   /** Refresh icon with hover transition */
   refreshIcon: 'w-4 h-4 transition-colors group-hover:text-primary',
+} as const
+
+// ============================================================================
+// Dialog Overrides
+// ============================================================================
+
+export const DialogOverrides = {
+  /** Centered header for dialogs */
+  headerCentered: '!justify-center text-center',
+  /** Centered footer for dialogs */
+  footerCentered: '!justify-center',
 } as const
 
 // ============================================================================

@@ -77,6 +77,8 @@ interface LogTableProps {
       account: string
     }
   }
+  /** Callback when a row is clicked */
+  onRowClick?: (log: LogEntry) => void
 }
 
 // Chevron components for sortable headers and row actions
@@ -197,7 +199,7 @@ function generatePaginationNumbers(current: number, total: number, siblings = 1)
   return [1, 'ellipsis', ...middleRange, 'ellipsis', total]
 }
 
-export function LogTable({ logs, translations }: LogTableProps) {
+export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
   const { table, dates, aria, pagination: paginationLabels, actions } = translations
   const { setHoveredTime } = useLogHover()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
@@ -270,14 +272,13 @@ export function LogTable({ logs, translations }: LogTableProps) {
         })
         break
       case 'Enter':
-        // Focus first action button in the focused row
-        if (focusedRowIndex >= 0) {
+        // Open log detail dialog for the focused row
+        if (focusedRowIndex >= 0 && onRowClick) {
           e.preventDefault()
-          const row = scrollContainerRef.current?.querySelector(
-            `[data-row-index="${focusedRowIndex}"]`
-          )
-          const firstButton = row?.querySelector('button') as HTMLButtonElement
-          firstButton?.focus()
+          const log = paginatedLogs[focusedRowIndex]
+          if (log) {
+            onRowClick(log)
+          }
         }
         break
       case 'Home':
@@ -436,6 +437,7 @@ export function LogTable({ logs, translations }: LogTableProps) {
                   }}
                   onMouseEnter={() => handleRowMouseEnter(log.timestamp)}
                   onMouseLeave={handleRowMouseLeave}
+                  onClick={() => onRowClick?.(log)}
                 >
                   <div className={[DataTable.cell, LogTableColumns.requested].join(' ')} data-ui="cell-requested">
                     <div className={TimestampCell.container}>
@@ -480,10 +482,11 @@ export function LogTable({ logs, translations }: LogTableProps) {
                   </div>
                   <div className={[DataTable.cell, LogTableColumns.actions].join(' ')} role="gridcell">
                     <div className={RowActions.container}>
+                      {/* Primary actions - always visible */}
                       <Tooltip content={actions.replayDescription}>
                         <button
                           type="button"
-                          className={RowActions.button}
+                          className={RowActions.buttonPrimary}
                           aria-label={actions.replay}
                           onClick={(e) => e.stopPropagation()}
                           onKeyDown={handleActionKeyDown}
@@ -491,21 +494,10 @@ export function LogTable({ logs, translations }: LogTableProps) {
                           <ReplayIcon className={RowActions.icon} />
                         </button>
                       </Tooltip>
-                      <Tooltip content={actions.batchReplayDescription}>
-                        <button
-                          type="button"
-                          className={RowActions.button}
-                          aria-label={actions.batchReplay}
-                          onClick={(e) => e.stopPropagation()}
-                          onKeyDown={handleActionKeyDown}
-                        >
-                          <BatchReplayIcon className={RowActions.icon} />
-                        </button>
-                      </Tooltip>
                       <Tooltip content={actions.requestTesterDescription}>
                         <button
                           type="button"
-                          className={RowActions.button}
+                          className={RowActions.buttonPrimary}
                           aria-label={actions.requestTester}
                           onClick={(e) => e.stopPropagation()}
                           onKeyDown={handleActionKeyDown}
@@ -513,10 +505,22 @@ export function LogTable({ logs, translations }: LogTableProps) {
                           <RequestTesterIcon className={RowActions.icon} />
                         </button>
                       </Tooltip>
+                      {/* Secondary actions - hidden on <lg screens */}
+                      <Tooltip content={actions.batchReplayDescription}>
+                        <button
+                          type="button"
+                          className={RowActions.buttonSecondary}
+                          aria-label={actions.batchReplay}
+                          onClick={(e) => e.stopPropagation()}
+                          onKeyDown={handleActionKeyDown}
+                        >
+                          <BatchReplayIcon className={RowActions.icon} />
+                        </button>
+                      </Tooltip>
                       <Tooltip content={actions.integration}>
                         <button
                           type="button"
-                          className={RowActions.button}
+                          className={RowActions.buttonSecondary}
                           aria-label={actions.integration}
                           onClick={(e) => e.stopPropagation()}
                           onKeyDown={handleActionKeyDown}
@@ -527,7 +531,7 @@ export function LogTable({ logs, translations }: LogTableProps) {
                       <Tooltip content={actions.account}>
                         <button
                           type="button"
-                          className={RowActions.button}
+                          className={RowActions.buttonSecondary}
                           aria-label={actions.account}
                           onClick={(e) => e.stopPropagation()}
                           onKeyDown={handleActionKeyDown}
@@ -553,6 +557,7 @@ export function LogTable({ logs, translations }: LogTableProps) {
             triggerMode="hover"
             width="auto"
             placement="top"
+            variant="ghost"
           >
             <Select.Trigger aria-label={paginationLabels.rowsPerPage}>
               <span className={PaginationSelect.triggerText}>{paginationLabels.show[pageSize]}</span>

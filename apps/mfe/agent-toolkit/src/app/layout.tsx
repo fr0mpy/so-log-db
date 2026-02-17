@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   icons: {
-    icon: '/agent-toolkit/logo.png',
+    icon: '/agent-toolkit/favicon.png',
   },
 }
 

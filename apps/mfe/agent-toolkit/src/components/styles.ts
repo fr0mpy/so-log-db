@@ -26,7 +26,7 @@ export const NavLinkStyles = {
 
 export const SidebarStyles = {
   root: [
-    'fixed left-0 top-0 h-full z-40',
+    'sticky top-0 h-screen z-40 flex-shrink-0',
     'flex flex-col',
     'bg-neu-base shadow-neu-pressed-sm',
     'rounded-r-theme-xl overflow-hidden',
@@ -50,8 +50,40 @@ export const SidebarStyles = {
     'hover:bg-muted/50',
   ].join(' '),
   footer: [
+    'flex flex-col gap-1',
+    'mt-auto p-2 border-t border-border/50',
+  ].join(' '),
+  footerTheme: [
+    'flex items-center',
+    'p-3 h-12 w-full',
+    'rounded-theme-md',
+  ].join(' '),
+  footerThemeCollapsed: 'justify-center',
+  footerThemeExpanded: 'justify-start',
+  footerItem: [
     'flex items-center justify-start',
-    'mt-auto p-3 border-t border-border/50',
+    'gap-3 p-3 h-12 w-full',
+    'rounded-theme-md',
+    'text-muted-foreground',
+    Interactive.Cursor.pointer,
+    Interactive.Transition.color,
+    Interactive.Hover.ghost,
+    'focus-visible:shadow-neu-focus outline-none',
+    'whitespace-nowrap overflow-hidden',
+  ].join(' '),
+  footerIcon: 'size-5 flex-shrink-0',
+  footerLabel: 'flex-1 text-left transition-[opacity,transform] duration-200 ease-out',
+  footerLabelVisible: 'opacity-100 translate-x-0',
+  footerLabelHidden: 'opacity-0 -translate-x-2',
+  /** @deprecated Use footerItem instead */
+  footerButton: [
+    'flex items-center justify-center',
+    'size-9 rounded-theme-md',
+    'text-muted-foreground',
+    Interactive.Cursor.pointer,
+    Interactive.Transition.color,
+    Interactive.Hover.ghost,
+    'focus-visible:shadow-neu-focus outline-none',
   ].join(' '),
 } as const
 

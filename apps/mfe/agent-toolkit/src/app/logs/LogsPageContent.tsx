@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { LogTableLazy as LogTable } from './LogTableLazy'
 import { StatCard } from './StatCard'
@@ -8,6 +8,8 @@ import { LogFiltersLazy as LogFilters } from './LogFiltersLazy'
 import { LogsContentSkeleton } from './LogsContentSkeleton'
 import { LogsChart } from '../../components/LogsChart'
 import { LogsContent } from './LogsContent'
+import { LogDetailDialog } from '../../components/LogDetailDialog'
+import type { LogEntryDetail } from '../../components/LogDetailDialog'
 import { Grid, LogStats } from '../../styles'
 
 interface LogEntry {
@@ -123,6 +125,22 @@ export function LogsPageContent({ logs, stats, translations }: LogsPageContentPr
   const [status, setStatus] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
 
+  // Log detail dialog state
+  const [selectedLog, setSelectedLog] = useState<LogEntryDetail | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  // Handle row click - open dialog with selected log
+  const handleRowClick = useCallback((log: LogEntry) => {
+    // Cast to LogEntryDetail since our mock data includes full details
+    setSelectedLog(log as LogEntryDetail)
+    setIsDialogOpen(true)
+  }, [])
+
+  // Handle navigation within dialog
+  const handleNavigate = useCallback((log: LogEntryDetail) => {
+    setSelectedLog(log)
+  }, [])
+
   const handleRefresh = () => {
     startTransition(() => {
       router.refresh()
@@ -171,7 +189,7 @@ export function LogsPageContent({ logs, stats, translations }: LogsPageContentPr
           <>
             <div className={Grid.chartStats}>
               {/* Chart */}
-              <div>
+              <div className={Grid.shrinkable}>
                 <LogsChart logs={filteredLogs} translations={chart} />
               </div>
 
@@ -203,10 +221,19 @@ export function LogsPageContent({ logs, stats, translations }: LogsPageContentPr
             </div>
 
             {/* Table */}
-            <LogTable logs={filteredLogs} translations={table} />
+            <LogTable logs={filteredLogs} translations={table} onRowClick={handleRowClick} />
           </>
         )}
       </LogsContent>
+
+      {/* Log Detail Dialog */}
+      <LogDetailDialog
+        log={selectedLog}
+        logs={filteredLogs as unknown as readonly LogEntryDetail[]}
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        onNavigate={handleNavigate}
+      />
     </>
   )
 }

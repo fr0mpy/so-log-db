@@ -2,11 +2,10 @@ import { Card } from '@stackone-ui/core/card'
 import { Paper } from '@stackone-ui/core/paper'
 import { Skeleton } from '@stackone-ui/core/skeleton'
 import { Grid, LogStats, DataTable, LogTableColumns, TableRowSkeleton } from '../../styles'
-import { LogsChartStyles } from '../../components/LogsChart/styles'
 
 /**
  * Content skeleton for logs page - stats and table.
- * Chart area has matching height but no skeleton (renders instantly).
+ * Chart renders instantly so no skeleton needed for it.
  * Used by LogsSkeleton (full page) and LogsPageContent (refresh state).
  */
 export function LogsContentSkeleton() {
@@ -14,12 +13,8 @@ export function LogsContentSkeleton() {
     <div>
       {/* Chart + Stats Row */}
       <div className={Grid.chartStats} data-skel="chart-stats">
-        {/* Chart area - matches LogsChart wrapper structure */}
-        <div data-skel="chart">
-          <div className={LogsChartStyles.container}>
-            <div className={LogsChartStyles.wrapper} data-skel="chart-wrapper" />
-          </div>
-        </div>
+        {/* Chart area - empty placeholder, chart renders instantly */}
+        <div data-skel="chart" className="flex-1 min-w-0 h-[220px]" />
 
         {/* Stats 2x2 Grid */}
         <div className={LogStats.grid} data-skel="stats">

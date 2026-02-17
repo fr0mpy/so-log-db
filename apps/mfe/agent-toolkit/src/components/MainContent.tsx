@@ -2,7 +2,6 @@
 
 import { Suspense } from 'react'
 import { Skeleton } from '@stackone-ui/core/skeleton'
-import { useSidebar } from './SidebarContext'
 import { AppLayout, Spacing, PageSkeleton } from '../styles'
 
 interface MainContentProps {
@@ -25,21 +24,18 @@ function PageSkeletonFallback() {
 
 /**
  * Main content area that responds to sidebar expansion
- * Uses CSS margin transition - flex-1 makes it shrink when sidebar expands
+ * Uses flex-1 to naturally fill remaining space beside sticky sidebar
  */
 export function MainContent({ children }: MainContentProps) {
-  const { isExpanded, collapsedWidth, expandedWidth } = useSidebar()
-
   return (
     <main
       id="main-content"
       tabIndex={-1}
       className={AppLayout.mainAnimated}
-      style={{
-        marginLeft: isExpanded ? expandedWidth : collapsedWidth,
-      }}
     >
-      <Suspense fallback={<PageSkeletonFallback />}>{children}</Suspense>
+      <div className={AppLayout.content}>
+        <Suspense fallback={<PageSkeletonFallback />}>{children}</Suspense>
+      </div>
     </main>
   )
 }
