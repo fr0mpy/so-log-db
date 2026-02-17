@@ -43,7 +43,11 @@ export const AppLayout = {
   /** Main content area - uses ml-16 (64px) to account for collapsed SideNav */
   main: 'flex-1 p-8 ml-16',
   /** Animated main content - flex-1 shrinks when sidebar expands */
-  mainAnimated: 'flex-1 min-h-screen p-8 transition-[margin] duration-200 ease-out',
+  mainAnimated: [
+    'flex-1 min-h-screen p-8',
+    'transition-[margin] duration-200 ease-out',
+    '[contain:layout_style]', // Isolate layout/paint recalculations
+  ].join(' '),
 } as const
 
 // ============================================================================
@@ -135,12 +139,12 @@ export const FormInput = {
     'w-full',
     Layout.Spacing.input,
     'bg-surface border border-border rounded-lg',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+    'focus-visible:outline-none focus-visible:shadow-neu-focus',
   ].join(' '),
   large: [
     'w-full px-4 py-3',
     'bg-surface border border-border rounded-lg',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+    'focus-visible:outline-none focus-visible:shadow-neu-focus',
     'text-lg',
   ].join(' '),
   select: [
@@ -187,10 +191,10 @@ export const Grid = {
 // ============================================================================
 
 export const LogStats = {
-  /** 2x2 grid with separate cards */
-  grid: 'grid grid-cols-2 gap-2 h-full',
-  /** Card content padding */
-  cell: 'py-2 px-3 flex flex-col justify-center h-full',
+  /** 2x2 grid with separate cards - self-center for vertical alignment */
+  grid: 'grid grid-cols-2 gap-2 self-center',
+  /** Card content padding - fixed height for skeleton alignment, centered vertically */
+  cell: 'p-4 h-[78px] flex flex-col justify-center',
   /** Label text - small, muted, uppercase */
   label: [Typography.textXs, Typography.textMuted, Typography.fontMedium, 'uppercase tracking-wide'].join(' '),
   /** Row for value + optional inline content (items-center for vertical centering with breakdown) */
@@ -223,15 +227,15 @@ export const LogStats = {
 
 export const DataTable = {
   container: 'w-full',
-  /** Wrapper - no scroll, responsive columns fit viewport */
-  scrollWrapper: 'rounded-lg shadow-neu-raised-highlight',
+  /** Wrapper - relative for absolute header positioning */
+  scrollWrapper: 'relative rounded-lg mt-4',
   /** No minimum width - columns shrink responsively */
   innerWrapper: 'w-full',
   header: 'text-left text-xs font-semibold text-foreground uppercase tracking-wider',
-  /** Card wrapper for header with no bottom border-radius */
-  headerCard: 'rounded-b-none rounded-t-lg border-b-0',
-  /** Paper wrapper for body with no top border-radius, overflow-hidden clips content */
-  bodyPaper: 'rounded-t-none rounded-b-lg -mt-px overflow-hidden',
+  /** Card wrapper for header - absolute positioned so shadow can leak out */
+  headerCard: 'absolute top-0 left-0 right-0 z-10 rounded-t-lg rounded-b-none border-b-0 shadow-neu-raised-highlight',
+  /** Paper wrapper for body - padding-top accounts for absolute header height */
+  bodyPaper: 'pt-11 rounded-lg overflow-hidden',
   /** Responsive header row - no min-width */
   headerRow: 'flex w-full',
   /** Responsive cell padding - smaller on mobile */
@@ -241,17 +245,23 @@ export const DataTable = {
     'cursor-pointer hover:bg-muted/10 select-none',
   ].join(' '),
   headerCellRight: 'px-2 sm:px-3 py-3 whitespace-nowrap text-right',
-  /** Responsive row - clips overflow */
-  row: ['group flex items-center w-full overflow-hidden', 'hover:bg-black/5', Interactive.Transition.color, 'cursor-pointer'].join(' '),
-  /** Row wrapper that includes separator */
-  rowWrapper: 'border-b border-border last:border-b-0',
+  /** Responsive row - clips overflow, raises on hover, presses on click */
+  row: ['group flex items-center w-full overflow-hidden', 'hover:bg-muted/10', 'hover:shadow-neu-raised-sm', 'active:shadow-neu-pressed-sm', 'transition-[background-color,box-shadow,border-color] duration-200 ease-neu', 'motion-reduce:transition-none', 'cursor-pointer'].join(' '),
+  /** Row focused state for keyboard navigation - uses inset ring to avoid overflow clipping */
+  rowFocused: 'ring-2 ring-inset ring-primary',
+  /** Row wrapper that includes separator - hides borders adjacent to hovered row */
+  rowWrapper: [
+    'border-b border-border last:border-b-0',
+    'hover:border-transparent',                // Hide own border when hovered
+    '[&:has(+_div:hover)]:border-transparent', // Hide border when next sibling is hovered
+  ].join(' '),
   /** Skeleton row wrapper - no borders to prevent flash before animation starts */
   rowWrapperSkeleton: '',
   /** Responsive cell padding */
   cell: 'px-2 sm:px-3 py-3 flex items-center overflow-hidden',
   cellRight: 'px-2 sm:px-3 py-3 text-right text-sm flex items-center justify-end',
   cellTruncate: 'px-2 sm:px-3 py-3 truncate flex items-center overflow-hidden',
-  scrollArea: 'max-h-[60vh] overflow-auto',
+  scrollArea: 'max-h-[60vh] overflow-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
 } as const
 
 // ============================================================================
@@ -358,7 +368,7 @@ export const TimestampCell = {
 export const RequestCell = {
   container: [Layout.Flex.center, 'gap-2 overflow-hidden'].join(' '),
   /** Fixed width for method badge so all names align */
-  methodWrapper: 'w-14 flex justify-center shrink-0',
+  methodWrapper: 'w-[4.5rem] flex justify-center shrink-0',
   /** Request name - truncates to fit available space */
   name: 'hidden sm:block truncate text-sm text-muted-foreground',
 } as const
@@ -376,18 +386,23 @@ export const RowAction = {
 // ============================================================================
 
 export const RowActions = {
-  /** Container for action icons - appears on row hover, right-aligned */
-  container: 'flex items-center justify-end gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-150',
-  /** Individual action button */
+  /** Container for action icons - appears on row hover or when any button is focused, right-aligned */
+  container: [
+    'flex items-center justify-end gap-0.5',
+    'opacity-0 group-hover:opacity-100 has-[:focus-visible]:opacity-100',
+    'transition-opacity duration-150',
+  ].join(' '),
+  /** Individual action button - shows primary icon fill when focused */
   button: [
     'p-1 rounded',
-    'text-muted-foreground hover:text-foreground hover:bg-muted/20',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+    'hover:bg-muted/20',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
+    '[&:focus-visible>svg]:text-primary [&:focus-visible>svg]:fill-primary',
   ].join(' '),
-  /** Action icon */
-  icon: 'w-3.5 h-3.5',
+  /** Action icon - grey to match row text, adapts to theme */
+  icon: 'size-5 flex-shrink-0 text-muted-foreground transition-colors duration-150',
   /** External link indicator */
-  external: 'w-2.5 h-2.5 ml-0.5 opacity-60',
+  external: 'size-3 ml-0.5 opacity-60',
 } as const
 
 // ============================================================================
@@ -433,8 +448,8 @@ export const LogPagination = {
 // ============================================================================
 
 export const FilterRow = {
-  /** Container for filter cards row - sticky header */
-  container: 'flex items-center gap-3 sticky top-0 z-10 bg-background py-4 -mt-4 -mx-8 px-8 transition-shadow duration-200',
+  /** Container for filter cards row - sticky header, clip-path prevents shadow overflow on top/left */
+  container: 'flex items-center gap-3 sticky top-0 z-10 bg-background py-4 -mt-4 -mx-8 px-8 transition-shadow duration-200 [clip-path:inset(0_-100%_-100%_0)]',
   /** Shadow applied when scrolled */
   scrolled: 'shadow-neu-raised',
   /** Individual filter card */
@@ -452,15 +467,70 @@ export const FilterRow = {
 } as const
 
 // ============================================================================
+// Filter Select Widths
+// ============================================================================
+
+export const FilterSelect = {
+  /** Date range select width */
+  dateRange: 'w-[6.5rem]',
+  /** Status filter select width */
+  status: 'w-[5rem]',
+  /** Refresh icon with hover transition */
+  refreshIcon: 'w-4 h-4 transition-colors group-hover:text-primary',
+} as const
+
+// ============================================================================
+// Table Row Skeleton
+// ============================================================================
+
+export const TableRowSkeleton = {
+  /** Stacked layout for date/time cells */
+  stack: 'flex flex-col gap-0.5',
+  /** Row layout for icon + text */
+  rowWithIcon: 'flex items-center gap-2',
+  /** Hidden on small, visible on md+ */
+  hiddenMdStack: 'hidden md:flex flex-col gap-0.5',
+  /** Centered column stack for duration */
+  centeredStack: 'flex flex-col items-center gap-0.5',
+  /** Min width for inner row */
+  innerRow: 'flex items-center min-w-[900px]',
+} as const
+
+// ============================================================================
+// Pagination Select
+// ============================================================================
+
+export const PaginationSelect = {
+  /** No-wrap for select trigger text */
+  triggerText: 'whitespace-nowrap',
+  /** Options container */
+  optionsContainer: 'flex flex-col gap-2 p-2',
+} as const
+
+// ============================================================================
 // Spacing Utilities
 // ============================================================================
 
 export const Spacing = {
+  mt4: 'mt-4',
   mb4: 'mb-4',
   mb6: 'mb-6',
   spaceY2: 'space-y-2',
   spaceY4: 'space-y-4',
   gap4: 'gap-4',
+} as const
+
+// ============================================================================
+// Page Skeleton (Generic)
+// ============================================================================
+
+export const PageSkeleton = {
+  /** Page title skeleton */
+  title: 'h-10 w-64',
+  /** Chart area skeleton */
+  chart: 'h-64 w-full',
+  /** Table area skeleton */
+  table: 'h-96 w-full',
 } as const
 
 // ============================================================================
@@ -478,4 +548,4 @@ export const Position = {
 export { Layout, Interactive, Overlay, Feedback, Form }
 
 // Loading styles
-export { LoadingStyles } from './loading'
+export { LoadingStyles, SkeletonHeight } from './loading'

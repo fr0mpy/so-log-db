@@ -1,7 +1,8 @@
 'use client'
 
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
+import { cn } from '@stackone-ui/core/utils'
 import { Card } from '@stackone-ui/core/card'
 import { Paper } from '@stackone-ui/core/paper'
 import { Pagination } from '@stackone-ui/core/pagination'
@@ -25,6 +26,8 @@ import {
   RowActions,
   TableIcon,
   LogPagination,
+  TableRowSkeleton,
+  PaginationSelect,
 } from '../../styles'
 
 interface LogEntry {
@@ -90,38 +93,32 @@ const ChevronDown = () => (
 
 // Action Icons for row hover menu
 const ReplayIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
   </svg>
 )
 
 const BatchReplayIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
   </svg>
 )
 
 const RequestTesterIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
   </svg>
 )
 
 const IntegrationIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
   </svg>
 )
 
 const AccountIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-  </svg>
-)
-
-const ExternalLinkIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
   </svg>
 )
 
@@ -209,27 +206,27 @@ export function LogTable({ logs, translations }: LogTableProps) {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState<number>(PAGINATION.defaultPageSize)
 
+  // Keyboard navigation state for roving tabindex
+  const [focusedRowIndex, setFocusedRowIndex] = useState<number>(-1)
+
   // Calculate pagination
   const totalPages = Math.ceil(logs.length / pageSize)
   const startIndex = (currentPage - 1) * pageSize
   const endIndex = Math.min(startIndex + pageSize, logs.length)
-  const paginatedLogs = useMemo(
-    () => logs.slice(startIndex, endIndex),
-    [logs, startIndex, endIndex]
-  )
+  const paginatedLogs = logs.slice(startIndex, endIndex)
 
   // Reset to page 1 when page size changes
-  const handlePageSizeChange = useCallback((newSize: number) => {
+  const handlePageSizeChange = (newSize: number) => {
     setPageSize(newSize)
     setCurrentPage(1)
     scrollContainerRef.current?.scrollTo({ top: 0 })
-  }, [])
+  }
 
   // Handle page change
-  const handlePageChange = useCallback((page: number) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page)
     scrollContainerRef.current?.scrollTo({ top: 0 })
-  }, [])
+  }
 
   // Virtualize rows for performance
   const virtualizer = useVirtualizer({
@@ -239,16 +236,74 @@ export function LogTable({ logs, translations }: LogTableProps) {
     overscan: 5, // Render 5 extra rows above/below viewport
   })
 
-  const handleRowMouseEnter = useCallback(
-    (timestamp: string) => {
-      setHoveredTime(getTimeSlot(timestamp))
-    },
-    [setHoveredTime]
-  )
+  const handleRowMouseEnter = (timestamp: string) => {
+    setHoveredTime(getTimeSlot(timestamp))
+  }
 
-  const handleRowMouseLeave = useCallback(() => {
+  const handleRowMouseLeave = () => {
     setHoveredTime(null)
-  }, [setHoveredTime])
+  }
+
+  // Keyboard navigation for table rows (roving tabindex pattern)
+  const handleTableKeyDown = (e: React.KeyboardEvent) => {
+    const rowCount = paginatedLogs.length
+    if (rowCount === 0) return
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault()
+        setFocusedRowIndex((prev) => {
+          const next = prev < 0 ? 0 : Math.min(prev + 1, rowCount - 1)
+          // Scroll row into view
+          const row = scrollContainerRef.current?.querySelector(`[data-row-index="${next}"]`)
+          row?.scrollIntoView({ block: 'nearest' })
+          return next
+        })
+        break
+      case 'ArrowUp':
+        e.preventDefault()
+        setFocusedRowIndex((prev) => {
+          const next = prev < 0 ? 0 : Math.max(prev - 1, 0)
+          const row = scrollContainerRef.current?.querySelector(`[data-row-index="${next}"]`)
+          row?.scrollIntoView({ block: 'nearest' })
+          return next
+        })
+        break
+      case 'Enter':
+        // Focus first action button in the focused row
+        if (focusedRowIndex >= 0) {
+          e.preventDefault()
+          const row = scrollContainerRef.current?.querySelector(
+            `[data-row-index="${focusedRowIndex}"]`
+          )
+          const firstButton = row?.querySelector('button') as HTMLButtonElement
+          firstButton?.focus()
+        }
+        break
+      case 'Home':
+        e.preventDefault()
+        setFocusedRowIndex(0)
+        scrollContainerRef.current?.scrollTo({ top: 0 })
+        break
+      case 'End':
+        e.preventDefault()
+        setFocusedRowIndex(rowCount - 1)
+        break
+    }
+  }
+
+  // Handle Escape from action buttons to return focus to table
+  const handleActionKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      scrollContainerRef.current?.focus()
+    }
+  }
+
+  // Reset focused row when page changes
+  useEffect(() => {
+    setFocusedRowIndex(-1)
+  }, [currentPage, pageSize])
 
   // Static row classes - hover is handled by CSS only for smooth scrolling
   const rowClasses = [DataTable.rowWrapper, DataTable.row].join(' ')
@@ -256,40 +311,50 @@ export function LogTable({ logs, translations }: LogTableProps) {
   return (
     <div className={DataTable.scrollWrapper}>
       {/* Sticky Header Card - no bottom border-radius */}
-      <Card className={DataTable.headerCard}>
-        <div className={DataTable.header}>
-          <div className={DataTable.headerRow}>
-            <div className={[DataTable.headerCellSortable, LogTableColumns.requested].join(' ')}>
+      <Card className={DataTable.headerCard} data-ui="header">
+        <div className={DataTable.header} data-ui="header-inner">
+          <div className={DataTable.headerRow} data-ui="header-row">
+            <div className={[DataTable.headerCellSortable, LogTableColumns.requested].join(' ')} data-ui="hcell-requested">
               {table.requested}
               <ChevronDown />
             </div>
-            <div className={[DataTable.headerCell, LogTableColumns.provider].join(' ')}>
+            <div className={[DataTable.headerCell, LogTableColumns.provider].join(' ')} data-ui="hcell-provider">
               {table.provider}
             </div>
-            <div className={[DataTable.headerCell, LogTableColumns.originOwner].join(' ')}>
+            <div className={[DataTable.headerCell, LogTableColumns.originOwner].join(' ')} data-ui="hcell-owner">
               {table.originOwner}
             </div>
-            <div className={[DataTable.headerCell, LogTableColumns.source].join(' ')}>
+            <div className={[DataTable.headerCell, LogTableColumns.source].join(' ')} data-ui="hcell-source">
               {table.source}
             </div>
-            <div className={[DataTable.headerCell, LogTableColumns.request].join(' ')}>
+            <div className={[DataTable.headerCell, LogTableColumns.request].join(' ')} data-ui="hcell-request">
               {table.request}
             </div>
-            <div className={[DataTable.headerCellSortable, LogTableColumns.duration].join(' ')}>
+            <div className={[DataTable.headerCellSortable, LogTableColumns.duration].join(' ')} data-ui="hcell-duration">
               {table.duration}
               <ChevronDown />
             </div>
-            <div className={[DataTable.headerCell, LogTableColumns.status].join(' ')}>
+            <div className={[DataTable.headerCell, LogTableColumns.status].join(' ')} data-ui="hcell-status">
               {table.status}
             </div>
-            <div className={[DataTable.headerCell, LogTableColumns.actions].join(' ')} />
+            <div className={[DataTable.headerCell, LogTableColumns.actions].join(' ')} data-ui="hcell-actions" />
           </div>
         </div>
       </Card>
 
       {/* Virtualized Scrollable Body */}
-      <Paper className={DataTable.bodyPaper}>
-        <div ref={scrollContainerRef} className={DataTable.scrollArea}>
+      <Paper className={DataTable.bodyPaper} data-ui="body">
+        <div
+          id="table"
+          ref={scrollContainerRef}
+          className={DataTable.scrollArea}
+          data-ui="scroll-area"
+          tabIndex={0}
+          role="grid"
+          aria-label={aria.viewLogDetails}
+          aria-rowcount={paginatedLogs.length}
+          onKeyDown={handleTableKeyDown}
+        >
           {/* Total height container for scroll */}
           <div
             style={{
@@ -302,27 +367,49 @@ export function LogTable({ logs, translations }: LogTableProps) {
             {virtualizer.getVirtualItems().length === 0 &&
               [...Array(pageSize)].map((_, i) => (
                 <div key={`skeleton-${i}`} className={DataTable.rowWrapper}>
-                  <div className={DataTable.row}>
+                  <div className={DataTable.row} style={{ height: `${TABLE.rowHeight}px` }}>
+                    {/* Requested: date + time stacked */}
                     <div className={[DataTable.cell, LogTableColumns.requested].join(' ')}>
-                      <Skeleton className="h-10 w-full" />
+                      <div className={TableRowSkeleton.stack}>
+                        <Skeleton className="h-3 w-12" />
+                        <Skeleton className="h-4 w-16" />
+                      </div>
                     </div>
+                    {/* Provider: icon + text */}
                     <div className={[DataTable.cell, LogTableColumns.provider].join(' ')}>
-                      <Skeleton className="h-10 w-full" />
+                      <div className={TableRowSkeleton.rowWithIcon}>
+                        <Skeleton className="h-6 w-6 rounded-full" />
+                        <div className={TableRowSkeleton.hiddenMdStack}>
+                          <Skeleton className="h-3.5 w-16" />
+                          <Skeleton className="h-2.5 w-8" />
+                        </div>
+                      </div>
                     </div>
+                    {/* Origin Owner: single line */}
                     <div className={[DataTable.cell, LogTableColumns.originOwner].join(' ')}>
                       <Skeleton className="h-4 w-3/4" />
                     </div>
+                    {/* Source: single line */}
                     <div className={[DataTable.cell, LogTableColumns.source].join(' ')}>
                       <Skeleton className="h-4 w-3/4" />
                     </div>
+                    {/* Request: method badge + name */}
                     <div className={[DataTable.cell, LogTableColumns.request].join(' ')}>
-                      <Skeleton className="h-4 w-full" />
+                      <div className={TableRowSkeleton.rowWithIcon}>
+                        <Skeleton className="h-5 w-12 rounded" />
+                        <Skeleton className="hidden sm:block h-4 flex-1" />
+                      </div>
                     </div>
+                    {/* Duration: text + bar */}
                     <div className={[DataTable.cell, LogTableColumns.duration].join(' ')}>
-                      <Skeleton className="h-4 w-16" />
+                      <div className={TableRowSkeleton.centeredStack}>
+                        <Skeleton className="h-4 w-10" />
+                        <Skeleton className="h-1 w-16 rounded-full" />
+                      </div>
                     </div>
+                    {/* Status: badge */}
                     <div className={[DataTable.cell, LogTableColumns.status].join(' ')}>
-                      <Skeleton className="h-6 w-12 rounded-full" />
+                      <Skeleton className="h-6 w-10 rounded-full" />
                     </div>
                   </div>
                 </div>
@@ -330,10 +417,15 @@ export function LogTable({ logs, translations }: LogTableProps) {
             {/* Render visible rows once virtualizer is ready */}
             {virtualizer.getVirtualItems().map((virtualRow) => {
               const log = paginatedLogs[virtualRow.index]
+              const isFocused = focusedRowIndex === virtualRow.index
               return (
                 <div
                   key={log.id}
-                  className={rowClasses}
+                  role="row"
+                  data-row-index={virtualRow.index}
+                  aria-rowindex={virtualRow.index + 1}
+                  className={cn(rowClasses, isFocused && DataTable.rowFocused)}
+                  data-ui={`row-${virtualRow.index}`}
                   style={{
                     position: 'absolute',
                     top: 0,
@@ -345,7 +437,7 @@ export function LogTable({ logs, translations }: LogTableProps) {
                   onMouseEnter={() => handleRowMouseEnter(log.timestamp)}
                   onMouseLeave={handleRowMouseLeave}
                 >
-                  <div className={[DataTable.cell, LogTableColumns.requested].join(' ')}>
+                  <div className={[DataTable.cell, LogTableColumns.requested].join(' ')} data-ui="cell-requested">
                     <div className={TimestampCell.container}>
                       <span className={TimestampCell.date}>
                         {formatDate(log.timestamp, dates.today, dates.yesterday)}
@@ -353,7 +445,7 @@ export function LogTable({ logs, translations }: LogTableProps) {
                       <span className={TimestampCell.time}>{formatTime(log.timestamp)}</span>
                     </div>
                   </div>
-                  <div className={[DataTable.cell, LogTableColumns.provider].join(' ')}>
+                  <div className={[DataTable.cell, LogTableColumns.provider].join(' ')} data-ui="cell-provider">
                     <div className={ProviderAvatar.container}>
                       <ProviderIcon name={log.provider.name} size="sm" />
                       <div className={ProviderAvatar.textWrapper}>
@@ -362,13 +454,13 @@ export function LogTable({ logs, translations }: LogTableProps) {
                       </div>
                     </div>
                   </div>
-                  <div className={[DataTable.cellTruncate, LogTableColumns.originOwner].join(' ')}>
+                  <div className={[DataTable.cellTruncate, LogTableColumns.originOwner].join(' ')} data-ui="cell-owner">
                     <span className={Text.muted}>{log.originOwner}</span>
                   </div>
-                  <div className={[DataTable.cell, LogTableColumns.source].join(' ')}>
+                  <div className={[DataTable.cell, LogTableColumns.source].join(' ')} data-ui="cell-source">
                     <span className={SourceCell.text}>{log.source}</span>
                   </div>
-                  <div className={[DataTable.cell, LogTableColumns.request].join(' ')}>
+                  <div className={[DataTable.cell, LogTableColumns.request].join(' ')} data-ui="cell-request">
                     <div className={RequestCell.container}>
                       <div className={RequestCell.methodWrapper}>
                         <span className={[MethodBadge.base, getMethodBadgeStyle(log.request.method)].join(' ')}>
@@ -378,15 +470,15 @@ export function LogTable({ logs, translations }: LogTableProps) {
                       <span className={RequestCell.name}>{log.request.name}</span>
                     </div>
                   </div>
-                  <div className={[DataTable.cellRight, LogTableColumns.duration].join(' ')}>
+                  <div className={[DataTable.cellRight, LogTableColumns.duration].join(' ')} data-ui="cell-duration">
                     <LatencyBar duration={log.duration} />
                   </div>
-                  <div className={[DataTable.cell, LogTableColumns.status].join(' ')}>
+                  <div className={[DataTable.cell, LogTableColumns.status].join(' ')} data-ui="cell-status">
                     <span className={[StatusBadge.base, getStatusBadgeStyle(log.status)].join(' ')}>
                       {log.status}
                     </span>
                   </div>
-                  <div className={[DataTable.cell, LogTableColumns.actions].join(' ')}>
+                  <div className={[DataTable.cell, LogTableColumns.actions].join(' ')} role="gridcell">
                     <div className={RowActions.container}>
                       <Tooltip content={actions.replayDescription}>
                         <button
@@ -394,6 +486,7 @@ export function LogTable({ logs, translations }: LogTableProps) {
                           className={RowActions.button}
                           aria-label={actions.replay}
                           onClick={(e) => e.stopPropagation()}
+                          onKeyDown={handleActionKeyDown}
                         >
                           <ReplayIcon className={RowActions.icon} />
                         </button>
@@ -404,6 +497,7 @@ export function LogTable({ logs, translations }: LogTableProps) {
                           className={RowActions.button}
                           aria-label={actions.batchReplay}
                           onClick={(e) => e.stopPropagation()}
+                          onKeyDown={handleActionKeyDown}
                         >
                           <BatchReplayIcon className={RowActions.icon} />
                         </button>
@@ -414,9 +508,9 @@ export function LogTable({ logs, translations }: LogTableProps) {
                           className={RowActions.button}
                           aria-label={actions.requestTester}
                           onClick={(e) => e.stopPropagation()}
+                          onKeyDown={handleActionKeyDown}
                         >
                           <RequestTesterIcon className={RowActions.icon} />
-                          <ExternalLinkIcon className={RowActions.external} />
                         </button>
                       </Tooltip>
                       <Tooltip content={actions.integration}>
@@ -425,9 +519,9 @@ export function LogTable({ logs, translations }: LogTableProps) {
                           className={RowActions.button}
                           aria-label={actions.integration}
                           onClick={(e) => e.stopPropagation()}
+                          onKeyDown={handleActionKeyDown}
                         >
                           <IntegrationIcon className={RowActions.icon} />
-                          <ExternalLinkIcon className={RowActions.external} />
                         </button>
                       </Tooltip>
                       <Tooltip content={actions.account}>
@@ -436,9 +530,9 @@ export function LogTable({ logs, translations }: LogTableProps) {
                           className={RowActions.button}
                           aria-label={actions.account}
                           onClick={(e) => e.stopPropagation()}
+                          onKeyDown={handleActionKeyDown}
                         >
                           <AccountIcon className={RowActions.icon} />
-                          <ExternalLinkIcon className={RowActions.external} />
                         </button>
                       </Tooltip>
                     </div>
@@ -451,7 +545,7 @@ export function LogTable({ logs, translations }: LogTableProps) {
       </Paper>
 
       {/* Pagination */}
-      <div className={LogPagination.container}>
+      <div id="pagination" tabIndex={-1} className={LogPagination.container}>
         <div className={LogPagination.controls}>
           <Select.Root
             value={String(pageSize)}
@@ -461,13 +555,13 @@ export function LogTable({ logs, translations }: LogTableProps) {
             placement="top"
           >
             <Select.Trigger aria-label={paginationLabels.rowsPerPage}>
-              <span className="whitespace-nowrap">{paginationLabels.show[pageSize]}</span>
+              <span className={PaginationSelect.triggerText}>{paginationLabels.show[pageSize]}</span>
               <Select.Icon />
             </Select.Trigger>
             <Select.Portal>
               <Select.Positioner>
                 <Select.Popup>
-                  <div className="flex flex-col gap-2 p-2">
+                  <div className={PaginationSelect.optionsContainer}>
                     {PAGINATION.pageSizeOptions.map((size) => (
                       <Select.Option key={size} value={String(size)}>
                         {size}

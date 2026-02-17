@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Search, RefreshCw } from 'lucide-react'
 import { Switch } from '@stackone-ui/core/switch'
 import { Button } from '@stackone-ui/core/button'
 import { Select } from '@stackone-ui/core/select'
 import { Input } from '@stackone-ui/core/input'
-import { FilterRow, Text } from '../../styles'
+import { FilterRow, Text, LoadingStyles, FilterSelect } from '../../styles'
 
 interface LogFiltersProps {
   title: string
@@ -29,12 +29,31 @@ interface LogFiltersProps {
       filterByTimeRange: string
     }
   }
+  // Filter state
+  dateRange: string
+  status: string
+  searchQuery: string
+  // Callbacks
+  onDateRangeChange: (value: string) => void
+  onStatusChange: (value: string) => void
+  onSearchChange: (value: string) => void
+  onRefresh: () => void
+  isRefreshing: boolean
 }
 
-export function LogFilters({ title, translations }: LogFiltersProps) {
+export function LogFilters({
+  title,
+  translations,
+  dateRange,
+  status,
+  searchQuery,
+  onDateRangeChange,
+  onStatusChange,
+  onSearchChange,
+  onRefresh,
+  isRefreshing,
+}: LogFiltersProps) {
   const [backgroundLogs, setBackgroundLogs] = useState(false)
-  const [dateRange, setDateRange] = useState('last24Hours')
-  const [status, setStatus] = useState('all')
   const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
@@ -45,30 +64,19 @@ export function LogFilters({ title, translations }: LogFiltersProps) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const handleRefresh = () => {
-    // Trigger refresh - would be connected to data fetching in real implementation
-    window.location.reload()
-  }
+  const dateRangeOptions = [
+    { value: 'last24Hours', label: translations.last24Hours },
+    { value: 'last7Days', label: translations.last7Days },
+    { value: 'last30Days', label: translations.last30Days },
+    { value: 'customRange', label: translations.customRange },
+  ]
 
-  const dateRangeOptions = useMemo(
-    () => [
-      { value: 'last24Hours', label: translations.last24Hours },
-      { value: 'last7Days', label: translations.last7Days },
-      { value: 'last30Days', label: translations.last30Days },
-      { value: 'customRange', label: translations.customRange },
-    ],
-    [translations]
-  )
-
-  const statusOptions = useMemo(
-    () => [
-      { value: 'all', label: translations.allStatuses },
-      { value: '2xx', label: translations.success2xx },
-      { value: '4xx', label: translations.clientError4xx },
-      { value: '5xx', label: translations.serverError5xx },
-    ],
-    [translations]
-  )
+  const statusOptions = [
+    { value: 'all', label: translations.allStatuses },
+    { value: '2xx', label: translations.success2xx },
+    { value: '4xx', label: translations.clientError4xx },
+    { value: '5xx', label: translations.serverError5xx },
+  ]
 
   const containerClass = isScrolled
     ? `${FilterRow.container} ${FilterRow.scrolled}`
@@ -76,7 +84,7 @@ export function LogFilters({ title, translations }: LogFiltersProps) {
 
   return (
     <>
-      <div className={containerClass}>
+      <div id="filters" tabIndex={-1} className={containerClass}>
         {/* Page Title */}
         <h1 className={Text.pageTitle}>{title}</h1>
 
@@ -86,7 +94,9 @@ export function LogFilters({ title, translations }: LogFiltersProps) {
             type="search"
             placeholder={translations.placeholder}
             aria-label={translations.aria.filterInput}
-            leftIcon={<Search className="h-4 w-4" />}
+            leftIcon={<Search className="h-4 w-4" strokeWidth={2.5} />}
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
           />
         </div>
 
@@ -94,18 +104,20 @@ export function LogFilters({ title, translations }: LogFiltersProps) {
         <Select
           options={dateRangeOptions}
           value={dateRange}
-          onValueChange={setDateRange}
+          onValueChange={onDateRangeChange}
           triggerMode="hover"
           width="auto"
+          className={FilterSelect.dateRange}
         />
 
         {/* Status Filter Select */}
         <Select
           options={statusOptions}
           value={status}
-          onValueChange={setStatus}
+          onValueChange={onStatusChange}
           triggerMode="hover"
           width="auto"
+          className={FilterSelect.status}
         />
 
         {/* Background Logs Toggle */}
@@ -123,10 +135,15 @@ export function LogFilters({ title, translations }: LogFiltersProps) {
           variant="outline"
           size="sm"
           iconOnly
-          onClick={handleRefresh}
+          onClick={onRefresh}
+          disabled={isRefreshing}
           aria-label={translations.refresh}
+          className="group"
         >
-          <RefreshCw className="w-4 h-4" strokeWidth={2.5} />
+          <RefreshCw
+            className={`${FilterSelect.refreshIcon} ${isRefreshing ? LoadingStyles.spinning : ''}`}
+            strokeWidth={2.5}
+          />
         </Button>
       </div>
     </>

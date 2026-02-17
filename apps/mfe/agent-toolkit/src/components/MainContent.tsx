@@ -3,7 +3,7 @@
 import { Suspense } from 'react'
 import { Skeleton } from '@stackone-ui/core/skeleton'
 import { useSidebar } from './SidebarContext'
-import { AppLayout, Spacing } from '../styles'
+import { AppLayout, Spacing, PageSkeleton } from '../styles'
 
 interface MainContentProps {
   children: React.ReactNode
@@ -13,12 +13,12 @@ interface MainContentProps {
  * Generic skeleton fallback for page loading states
  * Provides structural placeholder to prevent CLS during hydration
  */
-function PageSkeleton() {
+function PageSkeletonFallback() {
   return (
     <div className={Spacing.spaceY4}>
-      <Skeleton className="h-10 w-64" />
-      <Skeleton className="h-64 w-full" />
-      <Skeleton className="h-96 w-full" />
+      <Skeleton className={PageSkeleton.title} />
+      <Skeleton className={PageSkeleton.chart} />
+      <Skeleton className={PageSkeleton.table} />
     </div>
   )
 }
@@ -32,12 +32,14 @@ export function MainContent({ children }: MainContentProps) {
 
   return (
     <main
+      id="main-content"
+      tabIndex={-1}
       className={AppLayout.mainAnimated}
       style={{
         marginLeft: isExpanded ? expandedWidth : collapsedWidth,
       }}
     >
-      <Suspense fallback={<PageSkeleton />}>{children}</Suspense>
+      <Suspense fallback={<PageSkeletonFallback />}>{children}</Suspense>
     </main>
   )
 }
