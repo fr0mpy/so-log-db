@@ -86,7 +86,6 @@ function LogTableSkeleton() {
 export const LogTableLazy = dynamic<LogTableProps>(
   () => import('./LogTable').then((mod) => mod.LogTable),
   {
-    ssr: false,
     loading: () => <LogTableSkeleton />,
   }
 )

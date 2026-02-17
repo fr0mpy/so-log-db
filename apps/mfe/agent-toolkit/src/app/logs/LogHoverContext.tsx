@@ -6,8 +6,6 @@ import {
   useRef,
   useState,
   useEffect,
-  useCallback,
-  useMemo,
   type ReactNode,
 } from 'react'
 
@@ -29,7 +27,7 @@ export function LogHoverProvider({ children }: { children: ReactNode }) {
   const listenersRef = useRef<Set<HoverCallback>>(new Set())
   const rafIdRef = useRef<number | null>(null)
 
-  const setHoveredTime = useCallback((time: string | null) => {
+  const setHoveredTime = (time: string | null) => {
     // Skip if unchanged
     if (hoveredTimeRef.current === time) return
 
@@ -44,14 +42,14 @@ export function LogHoverProvider({ children }: { children: ReactNode }) {
         listenersRef.current.forEach((cb) => cb(currentTime))
       })
     }
-  }, [])
+  }
 
-  const subscribe = useCallback((callback: HoverCallback) => {
+  const subscribe = (callback: HoverCallback) => {
     listenersRef.current.add(callback)
     return () => {
       listenersRef.current.delete(callback)
     }
-  }, [])
+  }
 
   // Cleanup RAF on unmount
   useEffect(() => {
@@ -62,10 +60,7 @@ export function LogHoverProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const value = useMemo(
-    () => ({ hoveredTimeRef, setHoveredTime, subscribe }),
-    [setHoveredTime, subscribe]
-  )
+  const value = { hoveredTimeRef, setHoveredTime, subscribe }
 
   return <LogHoverContext.Provider value={value}>{children}</LogHoverContext.Provider>
 }

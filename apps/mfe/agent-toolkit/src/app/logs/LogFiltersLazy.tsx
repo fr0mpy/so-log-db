@@ -46,7 +46,6 @@ function LogFiltersSkeleton() {
 export const LogFiltersLazy = dynamic<LogFiltersProps>(
   () => import('./LogFilters').then((mod) => mod.LogFilters),
   {
-    ssr: false,
     loading: () => <LogFiltersSkeleton />,
   }
 )

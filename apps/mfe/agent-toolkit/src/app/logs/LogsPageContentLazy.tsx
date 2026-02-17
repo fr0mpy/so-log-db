@@ -8,15 +8,12 @@ import { LogsSkeleton } from './LogsSkeleton'
 type LogsPageContentProps = ComponentProps<typeof LogsPageContentType>
 
 /**
- * Lazy-loaded entire page content with full skeleton fallback.
- *
- * ssr: false ensures the server sends the skeleton HTML,
- * then the full content loads client-side.
+ * Lazy-loaded page content with SSR enabled.
+ * Server renders immediately, children with DOM deps load lazily.
  */
 export const LogsPageContentLazy = dynamic<LogsPageContentProps>(
   () => import('./LogsPageContent').then((mod) => mod.LogsPageContent),
   {
-    ssr: false,
     loading: () => <LogsSkeleton />,
   }
 )

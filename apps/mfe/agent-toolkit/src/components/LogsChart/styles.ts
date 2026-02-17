@@ -11,7 +11,8 @@ export const LogsChartStyles = {
   // Container - removed paint containment to allow tooltip shadows to render
   container: 'w-full [contain:layout_style]',
   // Allow tooltip shadow to escape, disable transitions on SVG elements to prevent resize glitches
-  wrapper: 'h-[220px] overflow-visible [&_svg]:![transition:none] [&_rect]:![transition:none]',
+  // Remove focus outline and focusability from SVG elements - chart is not keyboard interactive
+  wrapper: 'h-[220px] overflow-visible [&_svg]:![transition:none] [&_rect]:![transition:none] [&_svg]:![outline:none] [&_svg_*]:![outline:none] [&_svg]:focus:![outline:none] [&_*:focus]:![outline:none]',
 
   // Neumorphic Tooltip
   tooltip: [

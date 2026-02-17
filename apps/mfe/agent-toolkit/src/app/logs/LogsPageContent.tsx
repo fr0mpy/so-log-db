@@ -1,9 +1,12 @@
 'use client'
 
-import { LogTable } from './LogTable'
+import { useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
+import { LogTableLazy as LogTable } from './LogTableLazy'
 import { StatCard } from './StatCard'
-import { LogFilters } from './LogFilters'
-import { LogsChart } from '../../components/LogsChart/LogsChart'
+import { LogFiltersLazy as LogFilters } from './LogFiltersLazy'
+import { LogsContentSkeleton } from './LogsContentSkeleton'
+import { LogsChart } from '../../components/LogsChart'
 import { LogsContent } from './LogsContent'
 import { Grid, LogStats } from '../../styles'
 
@@ -112,47 +115,97 @@ interface LogsPageContentProps {
  */
 export function LogsPageContent({ logs, stats, translations }: LogsPageContentProps) {
   const { title, filter, chart, stats: statsLabels, table } = translations
+  const router = useRouter()
+  const [isRefreshing, startTransition] = useTransition()
+
+  // Filter state
+  const [dateRange, setDateRange] = useState('last24Hours')
+  const [status, setStatus] = useState('all')
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const handleRefresh = () => {
+    startTransition(() => {
+      router.refresh()
+    })
+  }
+
+  // Filter logs based on status and search query
+  const filteredLogs = logs.filter((log) => {
+    // Status filter
+    if (status !== 'all') {
+      const statusBand = Math.floor(log.status / 100) + 'xx'
+      if (statusBand !== status) return false
+    }
+    // Search filter
+    if (searchQuery) {
+      const searchLower = searchQuery.toLowerCase()
+      const matchesRequest = log.request.name.toLowerCase().includes(searchLower)
+      const matchesProvider = log.provider.name.toLowerCase().includes(searchLower)
+      const matchesSource = log.source.toLowerCase().includes(searchLower)
+      if (!matchesRequest && !matchesProvider && !matchesSource) return false
+    }
+    return true
+  })
 
   return (
     <>
       {/* Filters */}
-      <LogFilters title={title} translations={filter} />
+      <LogFilters
+        title={title}
+        translations={filter}
+        dateRange={dateRange}
+        status={status}
+        searchQuery={searchQuery}
+        onDateRangeChange={setDateRange}
+        onStatusChange={setStatus}
+        onSearchChange={setSearchQuery}
+        onRefresh={handleRefresh}
+        isRefreshing={isRefreshing}
+      />
 
       {/* Chart + Stats with hover coordination */}
       <LogsContent>
-        <div className={Grid.chartStats}>
-          {/* Chart */}
-          <LogsChart logs={logs} translations={chart} />
+        {isRefreshing ? (
+          <LogsContentSkeleton />
+        ) : (
+          <>
+            <div className={Grid.chartStats}>
+              {/* Chart */}
+              <div>
+                <LogsChart logs={filteredLogs} translations={chart} />
+              </div>
 
-          {/* Stats 2x2 Grid */}
-          <div className={LogStats.grid}>
-            <StatCard
-              label={statsLabels.totalRequests}
-              value={stats.total}
-              trend={{ delta: stats.trends.totalRequests.delta, isPositive: true, prefix: '+', suffix: '%' }}
-            />
-            <StatCard
-              label={statsLabels.avgLatency}
-              value={`${stats.avgLatency}${statsLabels.ms}`}
-              trend={{ delta: stats.trends.avgLatency.delta, isPositive: false, prefix: '-', suffix: statsLabels.ms }}
-            />
-            <StatCard
-              label={statsLabels.successRate}
-              value={`${stats.successRate}%`}
-              variant="success"
-              trend={{ delta: stats.trends.successRate.delta, isPositive: true, prefix: '+', suffix: '%' }}
-            />
-            <StatCard
-              label={statsLabels.errorRate}
-              value={`${stats.errorRate}%`}
-              variant="destructive"
-              trend={{ delta: stats.trends.errorRate.delta, isPositive: false, prefix: '-', suffix: '%' }}
-            />
-          </div>
-        </div>
+              {/* Stats 2x2 Grid */}
+              <div className={LogStats.grid}>
+                <StatCard
+                  label={statsLabels.totalRequests}
+                  value={stats.total}
+                  trend={{ delta: stats.trends.totalRequests.delta, isPositive: true, prefix: '+', suffix: '%' }}
+                />
+                <StatCard
+                  label={statsLabels.avgLatency}
+                  value={`${stats.avgLatency}${statsLabels.ms}`}
+                  trend={{ delta: stats.trends.avgLatency.delta, isPositive: false, prefix: '-', suffix: statsLabels.ms }}
+                />
+                <StatCard
+                  label={statsLabels.successRate}
+                  value={`${stats.successRate}%`}
+                  variant="success"
+                  trend={{ delta: stats.trends.successRate.delta, isPositive: true, prefix: '+', suffix: '%' }}
+                />
+                <StatCard
+                  label={statsLabels.errorRate}
+                  value={`${stats.errorRate}%`}
+                  variant="destructive"
+                  trend={{ delta: stats.trends.errorRate.delta, isPositive: false, prefix: '-', suffix: '%' }}
+                />
+              </div>
+            </div>
 
-        {/* Table */}
-        <LogTable logs={logs} translations={table} />
+            {/* Table */}
+            <LogTable logs={filteredLogs} translations={table} />
+          </>
+        )}
       </LogsContent>
     </>
   )

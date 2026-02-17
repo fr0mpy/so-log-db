@@ -62,7 +62,7 @@ function seededRandom(seed: number) {
   return x - Math.floor(x)
 }
 
-function generateMockLogs(count: number) {
+function generateMockLogs(count: number, timeSeed: number) {
   const logsData = []
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -81,7 +81,7 @@ function generateMockLogs(count: number) {
   }
 
   for (let i = 0; i < count; i++) {
-    const seed = i + 42
+    const seed = i + timeSeed
 
     const slotIndex = Math.floor(seededRandom(seed * 1) * TIME_SLOTS.length)
     const slot = TIME_SLOTS[slotIndex]
@@ -135,9 +135,9 @@ function generateMockLogs(count: number) {
   return logsData.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
 }
 
-const LOGS = generateMockLogs(100)
+type LogEntry = ReturnType<typeof generateMockLogs>[number]
 
-function calculateStats(logEntries: typeof LOGS) {
+function calculateStats(logEntries: LogEntry[]) {
   let success = 0
   let clientErrors = 0
   let serverErrors = 0
@@ -178,10 +178,12 @@ function calculateStats(logEntries: typeof LOGS) {
   }
 }
 
-const STATS = calculateStats(LOGS)
-
 export default async function LogsPage() {
   const t = await getTranslations()
+
+  // Generate fresh mock data on each request
+  const logsData = generateMockLogs(100, Date.now())
+  const statsData = calculateStats(logsData)
 
   const translations = {
     title: t(logs.title),
@@ -261,8 +263,8 @@ export default async function LogsPage() {
 
   return (
     <LogsPageContentLazy
-      logs={LOGS}
-      stats={STATS}
+      logs={logsData}
+      stats={statsData}
       translations={translations}
     />
   )

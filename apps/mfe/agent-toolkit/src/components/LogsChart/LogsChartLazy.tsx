@@ -1,26 +1,17 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { Skeleton } from '@stackone-ui/core/skeleton'
 import type { LogsChartProps } from './types'
-import { LogsChartStyles } from './styles'
+import { LogsChartSkeleton } from './LogsChartSkeleton'
 
 /**
- * Lazy-loaded LogsChart component
- *
- * Performance: Recharts (~50KB gzipped) is code-split and loaded on-demand.
- * The skeleton maintains layout while the chart loads.
+ * Lazy-loaded chart - splits Recharts (~200KB) into separate chunk.
+ * ssr: false is appropriate since charts require DOM for rendering.
  */
 export const LogsChartLazy = dynamic<LogsChartProps>(
   () => import('./LogsChart').then((mod) => mod.LogsChart),
   {
-    ssr: false, // Charts need client-side rendering
-    loading: () => (
-      <div className={LogsChartStyles.container}>
-        <div className={LogsChartStyles.wrapper}>
-          <Skeleton variant="rectangular" className="w-full h-full" />
-        </div>
-      </div>
-    ),
+    ssr: false,
+    loading: () => <LogsChartSkeleton />,
   }
 )
