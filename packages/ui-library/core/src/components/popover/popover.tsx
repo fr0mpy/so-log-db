@@ -15,6 +15,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import { cn } from '@/utils/cn'
 import {
   usePositioning,
+  useFloatingPosition,
   useClickOutside,
   SPRING_CONFIG,
   type Side,
@@ -54,6 +55,8 @@ function PopoverRoot({
   open: controlledOpen,
   onOpenChange,
   defaultOpen = false,
+  collisionDetection = true,
+  collisionPadding = 8,
 }: PopoverRootProps) {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen)
   const [side, setSide] = useState<Side>('bottom')
@@ -61,6 +64,23 @@ function PopoverRoot({
 
   const isControlled = controlledOpen !== undefined
   const open = isControlled ? controlledOpen : uncontrolledOpen
+
+  // Use floating position hook for collision-aware positioning
+  const {
+    setReference,
+    setFloating,
+    arrowRef,
+    floatingStyles,
+    actualSide,
+    arrowData,
+  } = useFloatingPosition({
+    side,
+    anchor: 'center',
+    gap: 8,
+    collisionDetection,
+    collisionPadding,
+    open,
+  })
 
   const setOpen = useCallback(
     (value: boolean) => {
@@ -74,7 +94,19 @@ function PopoverRoot({
 
   return (
     <PopoverContext.Provider
-      value={{ open, setOpen, triggerRef, side, setSide }}
+      value={{
+        open,
+        setOpen,
+        triggerRef,
+        side,
+        setSide,
+        actualSide,
+        arrowRef,
+        arrowData,
+        setReference,
+        setFloating,
+        floatingStyles,
+      }}
     >
       {children}
     </PopoverContext.Provider>
@@ -86,7 +118,7 @@ function PopoverRoot({
 // ============================================================================
 
 function PopoverTrigger({ asChild, children, onClick, ref, ...props }: PopoverTriggerProps) {
-  const { open, setOpen, triggerRef } = usePopoverContext()
+  const { open, setOpen, triggerRef, setReference } = usePopoverContext()
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -96,7 +128,7 @@ function PopoverTrigger({ asChild, children, onClick, ref, ...props }: PopoverTr
     [open, setOpen, onClick]
   )
 
-  // Merge refs
+  // Merge refs - include setReference for floating-ui positioning
   const mergedRef = useCallback(
     (node: HTMLButtonElement | null) => {
       if (typeof ref === 'function') {
@@ -105,8 +137,9 @@ function PopoverTrigger({ asChild, children, onClick, ref, ...props }: PopoverTr
         (ref as React.MutableRefObject<HTMLButtonElement | null>).current = node
       }
       (triggerRef as React.MutableRefObject<HTMLButtonElement | null>).current = node
+      setReference(node)
     },
-    [ref, triggerRef]
+    [ref, triggerRef, setReference]
   )
 
   if (asChild && isValidElement(children)) {
@@ -156,10 +189,10 @@ function PopoverPositioner({
   side = 'bottom',
   className,
 }: PopoverPositionerProps) {
-  const { setSide, triggerRef, setOpen } = usePopoverContext()
+  const { setSide, setOpen, setFloating, floatingStyles } = usePopoverContext()
   const positionerRef = useRef<HTMLDivElement>(null)
 
-  // Update side in context when prop changes
+  // Update preferred side in context when prop changes
   useEffect(() => {
     setSide(side)
   }, [side, setSide])
@@ -167,52 +200,20 @@ function PopoverPositioner({
   // Close on click outside
   useClickOutside(positionerRef, () => setOpen(false), true)
 
-  // Get trigger position for absolute positioning
-  const triggerRect = triggerRef.current?.getBoundingClientRect()
-
-  if (!triggerRect) return null
-
-  // Calculate position relative to viewport
-  const getPositionStyles = (): React.CSSProperties => {
-    const gap = 8
-
-    switch (side) {
-      case 'top':
-        return {
-          position: 'fixed',
-          left: triggerRect.left + triggerRect.width / 2,
-          top: triggerRect.top - gap,
-          transform: 'translate(-50%, -100%)',
-        }
-      case 'bottom':
-        return {
-          position: 'fixed',
-          left: triggerRect.left + triggerRect.width / 2,
-          top: triggerRect.bottom + gap,
-          transform: 'translateX(-50%)',
-        }
-      case 'left':
-        return {
-          position: 'fixed',
-          left: triggerRect.left - gap,
-          top: triggerRect.top + triggerRect.height / 2,
-          transform: 'translate(-100%, -50%)',
-        }
-      case 'right':
-        return {
-          position: 'fixed',
-          left: triggerRect.right + gap,
-          top: triggerRect.top + triggerRect.height / 2,
-          transform: 'translateY(-50%)',
-        }
-    }
-  }
+  // Merge setFloating with local ref for click outside detection
+  const mergedRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      (positionerRef as React.MutableRefObject<HTMLDivElement | null>).current = node
+      setFloating(node)
+    },
+    [setFloating]
+  )
 
   return (
     <div
-      ref={positionerRef}
+      ref={mergedRef}
       className={cn(S.positioner, className)}
-      style={getPositionStyles()}
+      style={floatingStyles}
     >
       {children}
     </div>
@@ -224,8 +225,9 @@ function PopoverPositioner({
 // ============================================================================
 
 function PopoverPopup({ children, className, ref }: PopoverPopupProps) {
-  const { side, open } = usePopoverContext()
-  const { originClass, initialOffset } = usePositioning(side)
+  const { actualSide, open } = usePopoverContext()
+  // Use actualSide (post-flip) for animation direction
+  const { originClass, initialOffset } = usePositioning(actualSide)
 
   return (
     <AnimatePresence>
@@ -251,13 +253,30 @@ function PopoverPopup({ children, className, ref }: PopoverPopupProps) {
 // ============================================================================
 
 function PopoverArrow({ className }: PopoverArrowProps) {
-  const { side } = usePopoverContext()
-  const { arrowClasses, arrowRotation } = usePositioning(side)
+  const { actualSide, arrowRef, arrowData } = usePopoverContext()
+  const { arrowRotation } = usePositioning(actualSide)
+
+  // Calculate arrow position based on floating-ui data
+  const staticSide: Record<Side, string> = {
+    top: 'bottom',
+    right: 'left',
+    bottom: 'top',
+    left: 'right',
+  }
+
+  const arrowStyles: React.CSSProperties = {
+    position: 'absolute',
+    left: arrowData?.x != null ? `${arrowData.x}px` : '',
+    top: arrowData?.y != null ? `${arrowData.y}px` : '',
+    [staticSide[actualSide]]: '-6px', // Half arrow size (w-3 = 12px)
+    transform: `rotate(${arrowRotation + 45}deg)`, // +45° for diamond shape
+  }
 
   return (
     <span
-      className={cn(S.arrow.base, arrowClasses, className)}
-      style={{ transform: `rotate(${arrowRotation}deg)` }}
+      ref={arrowRef as React.Ref<HTMLSpanElement>}
+      className={cn(S.arrow.base, className)}
+      style={arrowStyles}
       aria-hidden="true"
     />
   )
@@ -304,6 +323,10 @@ interface PopoverSimpleProps {
   children: React.ReactNode
   side?: Side
   showArrow?: boolean
+  /** Enable viewport collision detection (default: true) */
+  collisionDetection?: boolean
+  /** Padding from viewport edges in pixels (default: 8) */
+  collisionPadding?: number
 }
 
 function PopoverSimple({
@@ -311,9 +334,14 @@ function PopoverSimple({
   children,
   side = 'bottom',
   showArrow = true,
+  collisionDetection,
+  collisionPadding,
 }: PopoverSimpleProps) {
   return (
-    <PopoverRoot>
+    <PopoverRoot
+      collisionDetection={collisionDetection}
+      collisionPadding={collisionPadding}
+    >
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
       <PopoverPortal>
         <PopoverPositioner side={side}>

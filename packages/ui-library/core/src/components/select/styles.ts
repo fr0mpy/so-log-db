@@ -1,7 +1,9 @@
+import { ComponentHeight } from '../../styles/tokens/sizing'
+
 export const SelectStyles = {
   trigger: {
     base: [
-      'relative flex h-11 items-center justify-between gap-3 rounded-theme-lg', // h-11 = 44px touch target
+      `relative flex ${ComponentHeight.select} items-center justify-between gap-3 rounded-theme-lg`,
       'bg-neu-base shadow-neu-raised px-4 py-2 text-sm text-foreground cursor-pointer',
       'focus-visible:outline-none focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]',
       'disabled:cursor-not-allowed disabled:opacity-50',

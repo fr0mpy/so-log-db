@@ -15,6 +15,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import { cn } from '@/utils/cn'
 import {
   usePositioning,
+  useFloatingPosition,
   type Side,
   type Anchor,
 } from '../../hooks'
@@ -54,6 +55,8 @@ function TooltipRoot({
   onOpenChange,
   defaultOpen = false,
   delayDuration = 0,
+  collisionDetection = true,
+  collisionPadding = 8,
 }: TooltipRootProps) {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen)
   const [side, setSide] = useState<Side>('top')
@@ -63,6 +66,24 @@ function TooltipRoot({
 
   const isControlled = controlledOpen !== undefined
   const open = isControlled ? controlledOpen : uncontrolledOpen
+
+  // Use floating position hook for collision-aware positioning
+  const {
+    setReference,
+    setFloating,
+    arrowRef,
+    floatingStyles,
+    actualSide,
+    actualAnchor,
+    arrowData,
+  } = useFloatingPosition({
+    side,
+    anchor,
+    gap: 8,
+    collisionDetection,
+    collisionPadding,
+    open,
+  })
 
   const setOpen = useCallback(
     (value: boolean) => {
@@ -102,7 +123,22 @@ function TooltipRoot({
 
   return (
     <TooltipContext.Provider
-      value={{ open, setOpen, triggerRef, side, setSide, anchor, setAnchor }}
+      value={{
+        open,
+        setOpen,
+        triggerRef,
+        side,
+        setSide,
+        anchor,
+        setAnchor,
+        actualSide,
+        actualAnchor,
+        arrowRef,
+        arrowData,
+        setReference,
+        setFloating,
+        floatingStyles,
+      }}
     >
       {children}
     </TooltipContext.Provider>
@@ -114,7 +150,7 @@ function TooltipRoot({
 // ============================================================================
 
 function TooltipTrigger({ asChild, children, onMouseEnter, onMouseLeave, onFocus, onBlur, ref, ...props }: TooltipTriggerProps) {
-  const { setOpen, triggerRef } = useTooltipContext()
+  const { setOpen, triggerRef, setReference } = useTooltipContext()
 
   const handleMouseEnter = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -148,7 +184,7 @@ function TooltipTrigger({ asChild, children, onMouseEnter, onMouseLeave, onFocus
     [setOpen, onBlur]
   )
 
-  // Merge refs
+  // Merge refs - include setReference for floating-ui positioning
   const mergedRef = useCallback(
     (node: HTMLElement | null) => {
       if (typeof ref === 'function') {
@@ -157,8 +193,9 @@ function TooltipTrigger({ asChild, children, onMouseEnter, onMouseLeave, onFocus
         (ref as React.MutableRefObject<HTMLDivElement | null>).current = node as HTMLDivElement
       }
       (triggerRef as React.MutableRefObject<HTMLElement | null>).current = node
+      setReference(node)
     },
-    [ref, triggerRef]
+    [ref, triggerRef, setReference]
   )
 
   if (asChild && isValidElement(children)) {
@@ -211,74 +248,20 @@ function TooltipPositioner({
   anchor = 'center',
   className,
 }: TooltipPositionerProps) {
-  const { setSide, setAnchor, triggerRef } = useTooltipContext()
+  const { setSide, setAnchor, setFloating, floatingStyles } = useTooltipContext()
 
-  // Update context when props change
+  // Update preferred side/anchor in context when props change
   useEffect(() => {
     setSide(side)
     setAnchor(anchor)
   }, [side, anchor, setSide, setAnchor])
 
-  // Get trigger position for absolute positioning
-  const triggerRect = triggerRef.current?.getBoundingClientRect()
-
-  if (!triggerRect) return null
-
-  // Calculate position relative to viewport
-  const getPositionStyles = (): React.CSSProperties => {
-    const gap = 8
-
-    // Get anchor offset
-    const getAnchorOffset = () => {
-      const isHorizontal = side === 'top' || side === 'bottom'
-      const dimension = isHorizontal ? triggerRect.width : triggerRect.height
-
-      switch (anchor) {
-        case 'start':
-          return -dimension / 2 + 16
-        case 'end':
-          return dimension / 2 - 16
-        default:
-          return 0
-      }
-    }
-
-    const anchorOffset = getAnchorOffset()
-
-    switch (side) {
-      case 'top':
-        return {
-          position: 'fixed',
-          left: triggerRect.left + triggerRect.width / 2 + anchorOffset,
-          top: triggerRect.top - gap,
-          transform: 'translate(-50%, -100%)',
-        }
-      case 'bottom':
-        return {
-          position: 'fixed',
-          left: triggerRect.left + triggerRect.width / 2 + anchorOffset,
-          top: triggerRect.bottom + gap,
-          transform: 'translateX(-50%)',
-        }
-      case 'left':
-        return {
-          position: 'fixed',
-          left: triggerRect.left - gap,
-          top: triggerRect.top + triggerRect.height / 2 + anchorOffset,
-          transform: 'translate(-100%, -50%)',
-        }
-      case 'right':
-        return {
-          position: 'fixed',
-          left: triggerRect.right + gap,
-          top: triggerRect.top + triggerRect.height / 2 + anchorOffset,
-          transform: 'translateY(-50%)',
-        }
-    }
-  }
-
   return (
-    <div className={cn(S.positioner, className)} style={getPositionStyles()}>
+    <div
+      ref={setFloating}
+      className={cn(S.positioner, className)}
+      style={floatingStyles}
+    >
       {children}
     </div>
   )
@@ -289,8 +272,9 @@ function TooltipPositioner({
 // ============================================================================
 
 function TooltipPopup({ children, className, ref }: TooltipPopupProps) {
-  const { side, open } = useTooltipContext()
-  const { initialOffset } = usePositioning(side)
+  const { actualSide, open } = useTooltipContext()
+  // Use actualSide (post-flip) for animation direction
+  const { initialOffset } = usePositioning(actualSide)
 
   // Bouncy spring config for tooltip
   const bouncySpring = SPRING.tooltip
@@ -319,12 +303,30 @@ function TooltipPopup({ children, className, ref }: TooltipPopupProps) {
 // ============================================================================
 
 function TooltipArrow({ className }: TooltipArrowProps) {
-  const { side } = useTooltipContext()
-  const { arrowClasses } = usePositioning(side)
+  const { actualSide, arrowRef, arrowData } = useTooltipContext()
+  const { arrowRotation } = usePositioning(actualSide)
+
+  // Calculate arrow position based on floating-ui data
+  const staticSide: Record<Side, string> = {
+    top: 'bottom',
+    right: 'left',
+    bottom: 'top',
+    left: 'right',
+  }
+
+  const arrowStyles: React.CSSProperties = {
+    position: 'absolute',
+    left: arrowData?.x != null ? `${arrowData.x}px` : '',
+    top: arrowData?.y != null ? `${arrowData.y}px` : '',
+    [staticSide[actualSide]]: '-4px', // Half arrow size (w-2 = 8px)
+    transform: `rotate(${arrowRotation + 45}deg)`, // +45° for diamond shape
+  }
 
   return (
     <span
-      className={cn(S.arrow.base, arrowClasses, className)}
+      ref={arrowRef as React.Ref<HTMLSpanElement>}
+      className={cn(S.arrow.base, className)}
+      style={arrowStyles}
       aria-hidden="true"
     />
   )
@@ -341,6 +343,10 @@ interface TooltipSimpleProps {
   showArrow?: boolean
   children: React.ReactNode
   delayDuration?: number
+  /** Enable viewport collision detection (default: true) */
+  collisionDetection?: boolean
+  /** Padding from viewport edges in pixels (default: 8) */
+  collisionPadding?: number
 }
 
 function TooltipSimple({
@@ -350,14 +356,22 @@ function TooltipSimple({
   showArrow = true,
   children,
   delayDuration,
+  collisionDetection,
+  collisionPadding,
 }: TooltipSimpleProps) {
   return (
-    <TooltipRoot delayDuration={delayDuration}>
+    <TooltipRoot
+      delayDuration={delayDuration}
+      collisionDetection={collisionDetection}
+      collisionPadding={collisionPadding}
+    >
       <TooltipTrigger>{children}</TooltipTrigger>
       <TooltipPortal>
         <TooltipPositioner side={side} anchor={anchor}>
-          <TooltipPopup>{content}</TooltipPopup>
-          {showArrow && <TooltipArrow />}
+          <TooltipPopup>
+            {content}
+            {showArrow && <TooltipArrow />}
+          </TooltipPopup>
         </TooltipPositioner>
       </TooltipPortal>
     </TooltipRoot>

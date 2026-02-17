@@ -46,23 +46,24 @@ const STORAGE_KEY = 'stackone-theme'
 // =============================================================================
 
 export function ThemeProvider({ children, brandThemeUrl }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<ThemeMode>('light')
+  // Initialize theme synchronously from localStorage to match inline script
+  const [theme, setTheme] = useState<ThemeMode>(() => {
+    if (typeof window === 'undefined') return 'light'
+    return (localStorage.getItem(STORAGE_KEY) as ThemeMode) ?? 'light'
+  })
+
   const [fontsLoaded, setFontsLoaded] = useState(false)
   const [themeReady, setThemeReady] = useState(false)
 
   // Store validated brand theme for mode switching
   const brandThemeRef = useRef<BrandTheme | null>(null)
 
-  // Initialize theme from localStorage and apply base theme
+  // Apply base theme and load brand theme (non-blocking)
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as ThemeMode | null
-    const initialMode = stored ?? 'light'
-    setTheme(initialMode)
-
     // Apply base theme immediately (structural tokens)
-    applyBaseTheme(defaultBaseTheme, { mode: initialMode })
+    applyBaseTheme(defaultBaseTheme, { mode: theme })
 
-    // Load and apply brand theme
+    // Load and apply brand theme in background
     async function loadBrandTheme() {
       let brandTheme: Partial<BrandTheme> = {}
 
@@ -86,12 +87,14 @@ export function ThemeProvider({ children, brandThemeUrl }: ThemeProviderProps) {
       }
 
       // Apply brand theme (visual tokens)
-      applyBrandTheme(validatedTheme, { mode: initialMode })
+      applyBrandTheme(validatedTheme, { mode: theme })
+
+      // Mark theme as ready
       setThemeReady(true)
     }
 
     loadBrandTheme()
-  }, [brandThemeUrl])
+  }, [brandThemeUrl, theme])
 
   // Handle mode switching
   useEffect(() => {
@@ -107,11 +110,9 @@ export function ThemeProvider({ children, brandThemeUrl }: ThemeProviderProps) {
   // Track font loading state
   useEffect(() => {
     if (typeof document !== 'undefined' && document.fonts) {
-      // Check if already loaded
       if (document.fonts.status === 'loaded') {
         setFontsLoaded(true)
       } else {
-        // Wait for fonts to load
         document.fonts.ready.then(() => setFontsLoaded(true))
       }
     }

@@ -4,6 +4,9 @@
  */
 
 export const Sizing = {
+  // Additional height (h-6, h-11 for form components)
+  h6: 'h-6',
+  h11: 'h-11',
   // Height
   h1: 'h-1',
   h2: 'h-2',
@@ -46,6 +49,60 @@ export const Sizing = {
   iconSm: 'h-4 w-4',
   iconMd: 'h-5 w-5',
   iconLg: 'h-6 w-6',
+} as const
+
+/**
+ * Component height tokens - single source of truth for form component heights.
+ * Import this in both actual components AND skeleton components to stay in sync.
+ *
+ * @example
+ * // In component styles:
+ * import { ComponentHeight } from '@stackone-ui/core/styles'
+ * const base = `${ComponentHeight.input} px-3 py-2`
+ *
+ * // In skeleton:
+ * <Skeleton className={`${ComponentHeight.input} w-full`} />
+ */
+export const ComponentHeight = {
+  // Form inputs (WCAG 2.5.8 AAA compliant - 44px)
+  input: 'h-11',
+  select: 'h-11',
+
+  // Buttons
+  buttonSm: 'h-8',
+  buttonMd: 'h-9',
+  buttonLg: 'h-10',
+
+  // Icon buttons (square)
+  iconButtonSm: 'h-8 w-8',
+  iconButtonMd: 'h-9 w-9',
+  iconButtonLg: 'h-10 w-10',
+
+  // Controls
+  switch: 'h-5 w-10',
+  checkbox: 'h-4 w-4',
+  radio: 'h-4 w-4',
+} as const
+
+/**
+ * Typography line-height tokens - matches Tailwind's text-* line-heights.
+ * Use for skeleton placeholders matching actual text heights.
+ */
+export const TextHeight = {
+  /** text-xs: 12px font, 16px line-height */
+  xs: 'h-4',
+  /** text-sm: 14px font, 20px line-height */
+  sm: 'h-5',
+  /** text-base: 16px font, 24px line-height */
+  base: 'h-6',
+  /** text-lg: 18px font, 28px line-height */
+  lg: 'h-7',
+  /** text-xl: 20px font, 28px line-height */
+  xl: 'h-7',
+  /** text-2xl: 24px font, 32px line-height */
+  '2xl': 'h-8',
+  /** text-3xl: 30px font, 36px line-height */
+  '3xl': 'h-9',
 } as const
 
 /**

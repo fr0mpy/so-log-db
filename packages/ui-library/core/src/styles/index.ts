@@ -13,7 +13,7 @@
 // ============================================================================
 
 export { Spacing as SpacingTokens, ResponsiveSpacing } from './tokens/spacing'
-export { Sizing as SizingTokens, TouchTarget } from './tokens/sizing'
+export { Sizing as SizingTokens, TouchTarget, ComponentHeight, TextHeight } from './tokens/sizing'
 export { Typography as TypographyTokens, ResponsiveTypography } from './tokens/typography'
 
 // ============================================================================

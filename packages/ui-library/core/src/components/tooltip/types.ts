@@ -10,6 +10,10 @@ export interface TooltipRootProps {
   defaultOpen?: boolean
   /** Delay before showing tooltip (ms) */
   delayDuration?: number
+  /** Enable viewport collision detection (default: true) */
+  collisionDetection?: boolean
+  /** Padding from viewport edges in pixels (default: 8) */
+  collisionPadding?: number
 }
 
 export interface TooltipTriggerProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -51,4 +55,12 @@ export interface TooltipContextValue {
   setSide: (side: Side) => void
   anchor: Anchor
   setAnchor: (anchor: Anchor) => void
+  // Collision-aware positioning
+  actualSide: Side
+  actualAnchor: Anchor
+  arrowRef: React.RefObject<HTMLElement | null>
+  arrowData: { x?: number; y?: number } | null
+  setReference: (node: HTMLElement | null) => void
+  setFloating: (node: HTMLElement | null) => void
+  floatingStyles: React.CSSProperties
 }

@@ -1,3 +1,5 @@
+import { ComponentHeight } from '../../tokens/sizing'
+
 export const Input = {
   base: [
     'flex w-full rounded-theme-lg px-3 py-2',
@@ -9,7 +11,7 @@ export const Input = {
     'disabled:cursor-not-allowed disabled:opacity-50',
   ].join(' '),
 
-  height: 'h-11', // 44px for WCAG 2.5.8 touch target compliance
+  height: ComponentHeight.input,
 
   interactive: 'hover:shadow-neu-pressed hover:border-primary focus:shadow-neu-pressed focus:border-primary',
   error: 'border-destructive hover:shadow-neu-pressed focus:shadow-neu-pressed',
