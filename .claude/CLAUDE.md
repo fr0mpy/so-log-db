@@ -9,10 +9,16 @@ Central index for rules, skills, and agents. Hook reads this every 3 prompts for
 | `rules/code-standards.md` | hardcode, magic number, config, pattern, iterate, discover, assume |
 | `rules/routing.md` | route, Link, href, navigate, url, path, navigation, redirect |
 | `rules/bundle.md` | import, dependency, barrel, tree-shake, package, granular, export |
-| `rules/accessibility.md` | aria, a11y, label, focus, keyboard, heading, screen reader, wcag |
-| `rules/components.md` | component, ui, style, className, ref, compound, pattern, forwardRef |
+| `rules/accessibility.md` | aria, a11y, label, focus, keyboard, heading, screen reader, wcag, tab, role, semantic |
+| `rules/components.md` | component, ui, style, className, ref, compound, pattern, forwardRef, props, children, slot |
 | `rules/theming.md` | theme, token, css var, color, design, variable, dark mode, light mode |
-| `rules/i18n.md` | text, translation, t(), locale, string, getTranslations, language, i18n |
+| `rules/i18n.md` | text, translation, t(), locale, string, getTranslations, language, i18n, hardcode string, string literal, message |
+| `rules/error-handling.md` | error, catch, boundary, fallback, try, throw, exception, error state |
+| `rules/data-fetching.md` | fetch, query, cache, revalidate, server action, SWR, loading, suspense |
+| `rules/testing.md` | test, spec, mock, fixture, describe, it, expect, vitest, playwright |
+| `rules/security.md` | sanitize, escape, xss, inject, validate, auth, csrf, secret, env |
+| `rules/git.md` | commit, branch, merge, pr, rebase, squash, push, git |
+| `rules/performance.md` | memo, useMemo, useCallback, virtualize, lazy, optimize, re-render, debounce, lighthouse, LCP, TBT, CLS, core web vitals, ssr: false, FOUC, bundle size |
 
 ## Skills
 
@@ -51,6 +57,8 @@ Central index for rules, skills, and agents. Hook reads this every 3 prompts for
 | `server-component-validator` | AFTER creating React component, RSC, client boundary |
 | `structure-validator` | AFTER creating files, directories, reorganizing code |
 | `bundle-size-tracker` | AFTER adding dependency, before shipping, build |
+| `security-auditor` | AFTER user input handling, forms, dangerouslySetInnerHTML, dynamic content |
+| `test-writer` | AFTER creating functions, hooks, utils, components |
 
 ### On-Demand
 
@@ -58,11 +66,15 @@ Central index for rules, skills, and agents. Hook reads this every 3 prompts for
 |-------|----------|
 | `context-loader` | context stale, refresh context, load context, CONTEXT.md |
 | `harness-scaffolder` | /component-harness, preview component, visual harness |
+| `skeleton-builder` | skeleton, loading.tsx, CLS, layout shift, loading state, Suspense fallback |
 | `style-inspector` | extract styles from URL, copy design, reverse engineer |
 | `playwright-tester` | test component, verify rendering, e2e test, playwright |
 | `pr-narrator` | create PR, pull request, write PR description |
 | `scope-guard` | long session, scope drift, rabbit hole, refocus |
 | `session-manager` | session end, handoff, summarize progress, context limit |
+| `dead-code-finder` | unused exports, orphaned files, dead code, cleanup |
+| `type-narrower` | TypeScript error, type issue, type narrowing, as any |
+| `performance-profiler` | lighthouse, performance score, LCP, TBT, slow page, optimize performance, core web vitals |
 
 ## Behavior
 

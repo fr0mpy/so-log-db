@@ -3,8 +3,14 @@
 # - Silent on cache hits (no repeated output)
 # - Context warning only once per session
 # - Only outputs when classification changes
+# - User feedback via stderr
 
 set -euo pipefail
+
+# User feedback helper (writes to stderr so user sees it)
+notify() {
+  echo "$1" >&2
+}
 
 # Load .env file if exists (project root or .claude/)
 for envfile in ".env" ".claude/.env"; do
@@ -52,6 +58,7 @@ if [[ ! -f "$WARNED_FILE" ]]; then
     fi
     if [[ $file_age -gt 3600 ]]; then
       echo "Context: stale ($(( file_age / 3600 ))h). Consider running context-loader."
+      notify "⚠️  Context stale ($(( file_age / 3600 ))h) - run context-loader to refresh"
       touch "$WARNED_FILE"
     fi
   fi
@@ -59,6 +66,10 @@ fi
 
 # Cache hit? Stay silent (no output = no context bloat)
 if [[ -f "$RULES_FILE" ]] && [[ $(( COUNT % 3 )) -ne 1 ]]; then
+  CACHED=$(cat "$RULES_FILE")
+  if [[ "$CACHED" != "no-api" ]]; then
+    notify "📋 Using cached: $CACHED"
+  fi
   exit 0
 fi
 
@@ -66,10 +77,13 @@ fi
 if [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
   if [[ ! -f "$RULES_FILE" ]]; then
     echo "Rules in .claude/rules/. Announce: 🔧/✅/❌."
+    notify "⚠️  No ANTHROPIC_API_KEY - smart classification disabled"
     echo "no-api" > "$RULES_FILE"
   fi
   exit 0
 fi
+
+notify "🔍 Classifying prompt..."
 
 # Read map from CLAUDE.md
 CLAUDE_MD="$CLAUDE_DIR/CLAUDE.md"
@@ -95,7 +109,10 @@ RESPONSE=$(curl -s --max-time 3 https://api.anthropic.com/v1/messages \
 }" 2>/dev/null || echo "")
 
 RESULT=$(echo "$RESPONSE" | jq -r '.content[0].text // empty' 2>/dev/null || echo "")
-[[ -z "$RESULT" ]] && exit 0
+if [[ -z "$RESULT" ]]; then
+  notify "⚠️  Classification failed (API timeout or error)"
+  exit 0
+fi
 
 # Only output if classification CHANGED
 PREV=""
@@ -103,4 +120,12 @@ PREV=""
 if [[ "$RESULT" != "$PREV" ]]; then
   echo "$RESULT"
   echo "$RESULT" > "$RULES_FILE"
+  # Show user what was matched
+  if [[ "$RESULT" == *"none"* ]] && [[ "$RESULT" == *"Rules: none"* ]]; then
+    notify "📋 No rules/agents matched"
+  else
+    notify "✅ Matched: $RESULT"
+  fi
+else
+  notify "📋 Unchanged: $RESULT"
 fi
