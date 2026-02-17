@@ -18,3 +18,8 @@ export {
   useIsTouchDevice,
   useBreakpoint,
 } from './useMediaQuery'
+export { useCopyToClipboard } from './useCopyToClipboard'
+export type {
+  UseCopyToClipboardOptions,
+  UseCopyToClipboardReturn,
+} from './useCopyToClipboard'

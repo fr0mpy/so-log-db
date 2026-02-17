@@ -53,6 +53,13 @@ const preset: Partial<Config> = {
         'primary-muted': 'color-mix(in srgb, var(--color-primary) 30%, transparent)',
         'secondary-muted': 'color-mix(in srgb, var(--color-secondary) 30%, transparent)',
         'accent-muted': 'color-mix(in srgb, var(--color-accent) 30%, transparent)',
+        // AI feature colors - purple gradient for AI-powered features
+        ai: 'var(--color-ai)',
+        'ai-foreground': 'var(--color-ai-foreground)',
+        'ai-hover': 'var(--color-ai-hover)',
+        'ai-from': 'var(--color-ai-from)',
+        'ai-to': 'var(--color-ai-to)',
+        'ai-muted': 'color-mix(in srgb, var(--color-ai) 20%, transparent)',
         neu: {
           base: 'var(--color-neu-base)',
           light: 'var(--color-neu-light)',
@@ -126,6 +133,7 @@ const preset: Partial<Config> = {
         'neu-badge-success': 'inset 0 1px 0 rgba(255,255,255,0.2), -2px -2px 4px rgba(255,255,255,0.2), 2px 2px 4px rgba(0,100,60,0.2)',
         'neu-badge-warning': 'inset 0 1px 0 rgba(255,255,255,0.2), -2px -2px 4px rgba(255,255,255,0.2), 2px 2px 4px rgba(180,80,0,0.2)',
         'neu-badge-info': 'inset 0 1px 0 rgba(255,255,255,0.2), -2px -2px 4px rgba(255,255,255,0.2), 2px 2px 4px rgba(59,130,246,0.3)',
+        'neu-badge-ai': 'inset 0 1px 0 rgba(255,255,255,0.2), -2px -2px 4px rgba(255,255,255,0.2), 2px 2px 4px rgba(139,92,246,0.3)',
         'neu-control-unchecked-inline': 'inset 2px 2px 4px rgba(0,60,40,0.25), inset -1px -1px 2px rgba(255,255,255,0.4)',
         'neu-control-checked-inline': 'inset -2px -2px 5px rgba(255,255,255,0.2), inset 2px 2px 5px rgba(0,80,50,0.3)',
         'neu-radio-indicator': 'inset -1px -1px 2px rgba(255,255,255,0.3), inset 1px 1px 2px rgba(0,80,50,0.3)',

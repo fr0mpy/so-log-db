@@ -1,13 +1,40 @@
 import type { ReactNode, Ref } from 'react'
 
+/**
+ * Utilities provided to custom option onSelect handlers
+ */
+export interface SelectOptionUtils {
+  /** Close the dropdown popup */
+  closePopup: () => void
+  /** Set the Select's value (default behavior) */
+  setValue: (value: string) => void
+  /** Set a custom display value without changing the actual value */
+  setDisplayValue: (display: string | null) => void
+  /** Reference to trigger element for positioning */
+  triggerRef: React.RefObject<HTMLButtonElement | null>
+}
+
 export interface SelectOption {
   value: string
   label: string
+  /**
+   * Custom action when option is selected.
+   * Return `true` to prevent default setValue behavior.
+   */
+  onSelect?: (utils: SelectOptionUtils) => boolean | void
+  /**
+   * Custom display value override (e.g., "Mar 1 - Mar 15" for custom range).
+   * When set, this displays instead of the option label.
+   */
+  displayValue?: string
+  /** Disable this option */
+  disabled?: boolean
 }
 
 export type SelectTriggerMode = 'click' | 'hover'
 export type SelectWidth = 'full' | 'auto'
 export type SelectPlacement = 'bottom' | 'top'
+export type SelectVariant = 'default' | 'ghost'
 
 export interface SelectRootProps {
   children: ReactNode
@@ -19,6 +46,8 @@ export interface SelectRootProps {
   triggerMode?: SelectTriggerMode
   width?: SelectWidth
   placement?: SelectPlacement
+  /** Visual variant - 'ghost' removes background/shadow for inline use */
+  variant?: SelectVariant
 }
 
 export interface SelectTriggerProps {
@@ -55,6 +84,8 @@ export interface SelectOptionProps {
   children: ReactNode
   className?: string
   ref?: Ref<HTMLButtonElement>
+  /** Internal: option config for custom onSelect handling */
+  _optionConfig?: SelectOption
 }
 
 export interface SelectSearchProps {
@@ -67,6 +98,9 @@ export interface SelectContextValue {
   setIsOpen: (open: boolean) => void
   value: string
   setValue: (value: string) => void
+  /** Custom display value override (for options with displayValue) */
+  displayValue: string | null
+  setDisplayValue: (display: string | null) => void
   searchQuery: string
   setSearchQuery: (query: string) => void
   triggerRef: React.RefObject<HTMLButtonElement | null>
@@ -78,4 +112,5 @@ export interface SelectContextValue {
   triggerMode: SelectTriggerMode
   width: SelectWidth
   placement: SelectPlacement
+  variant: SelectVariant
 }

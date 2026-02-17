@@ -8,6 +8,13 @@ export const SelectStyles = {
       'focus-visible:outline-none focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]',
       'disabled:cursor-not-allowed disabled:opacity-50',
     ].join(' '),
+    ghost: [
+      `relative flex ${ComponentHeight.select} items-center gap-1 rounded-theme-lg`,
+      'bg-transparent px-2 py-2 text-sm font-medium text-foreground cursor-pointer',
+      'hover:bg-muted/20 transition-colors duration-150',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+      'disabled:cursor-not-allowed disabled:opacity-50',
+    ].join(' '),
     open: 'z-popover',
     width: {
       full: 'w-full',
@@ -17,17 +24,14 @@ export const SelectStyles = {
   value: {
     placeholder: 'text-muted-foreground',
   },
-  icon: 'h-4 w-4 opacity-50',
-  // clip-path: clips content outside positioner, shadow fades in via animation
+  icon: {
+    base: 'h-4 w-4 opacity-50',
+    primary: 'h-4 w-4 text-primary',
+  },
   positioner: {
     base: 'z-dropdown',
-    bottom: '[clip-path:inset(0_-24px_-24px_-24px)]', // clips above for bottom placement
-    top: '[clip-path:inset(-24px_-24px_0_-24px)]', // clips below for top placement
   },
-  popup: [
-    'rounded-theme-md bg-neu-base',
-    // shadow-neu-raised-lg removed - shadow is animated via slideVariants
-  ].join(' '),
+  popup: 'rounded-theme-md bg-neu-base shadow-neu-raised-lg',
   search: {
     wrapper: 'p-2 pt-4 border-b border-border/30',
     input: 'h-9',
@@ -42,5 +46,6 @@ export const SelectStyles = {
       'active:bg-muted/80', // Touch feedback
     ].join(' '),
     selected: 'bg-primary text-primary-foreground hover:bg-primary',
+    disabled: 'opacity-50 cursor-not-allowed hover:bg-transparent',
   },
 } as const

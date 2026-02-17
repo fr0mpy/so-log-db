@@ -3,6 +3,7 @@
 export { Select as SelectCompound, useSelectContext } from './select'
 export type {
   SelectOption,
+  SelectOptionUtils,
   SelectRootProps,
   SelectTriggerProps,
   SelectValueProps,
@@ -16,15 +17,15 @@ export type {
   SelectTriggerMode,
   SelectWidth,
   SelectPlacement,
+  SelectVariant,
 } from './types'
 
 // =============================================================================
 // Convenience wrapper for simple Select usage
 // =============================================================================
-import { useMemo } from 'react'
 import { Select as SelectNamespace } from './select'
 import { SelectStyles as S } from './styles'
-import type { SelectOption, SelectTriggerMode, SelectWidth } from './types'
+import type { SelectOption, SelectTriggerMode, SelectWidth, SelectVariant } from './types'
 
 export interface SelectProps {
   options: SelectOption[]
@@ -37,11 +38,16 @@ export interface SelectProps {
   className?: string
   triggerMode?: SelectTriggerMode
   width?: SelectWidth
+  /** Visual variant - 'ghost' removes background/shadow for inline use */
+  variant?: SelectVariant
 }
 
 /**
  * Convenience Select component that accepts options array.
  * For advanced usage, use SelectCompound (namespace pattern).
+ *
+ * Options can include `onSelect` callback and `displayValue` for custom behaviors
+ * like opening a date picker when "Custom Range" is selected.
  */
 export function Select({
   options,
@@ -54,16 +60,14 @@ export function Select({
   className,
   triggerMode,
   width,
+  variant,
 }: SelectProps) {
-  // Filter options based on search query (handled internally by context)
-  const filteredOptions = useMemo(() => options, [options])
-
-  // Find the label for the current value
+  // Find the selected option and resolve display value
   const currentValue = value ?? defaultValue
-  const selectedLabel = useMemo(() => {
-    const option = options.find((opt) => opt.value === currentValue)
-    return option?.label
-  }, [options, currentValue])
+  const selectedOption = options.find((opt) => opt.value === currentValue)
+
+  // Use displayValue override if present, otherwise fall back to label
+  const displayLabel = selectedOption?.displayValue ?? selectedOption?.label
 
   return (
     <SelectNamespace.Root
@@ -74,10 +78,11 @@ export function Select({
       searchable={searchable}
       triggerMode={triggerMode}
       width={width}
+      variant={variant}
     >
       <SelectNamespace.Trigger className={className}>
-        <span className={!selectedLabel ? S.value.placeholder : undefined}>
-          {selectedLabel || placeholder}
+        <span className={!displayLabel ? S.value.placeholder : undefined}>
+          {displayLabel || placeholder}
         </span>
         <SelectNamespace.Icon />
       </SelectNamespace.Trigger>
@@ -86,8 +91,12 @@ export function Select({
           <SelectNamespace.Popup>
             <SelectNamespace.Search />
             <div className={S.optionsWrapper}>
-              {filteredOptions.map((option) => (
-                <SelectNamespace.Option key={option.value} value={option.value}>
+              {options.map((option) => (
+                <SelectNamespace.Option
+                  key={option.value}
+                  value={option.value}
+                  _optionConfig={option}
+                >
                   {option.label}
                 </SelectNamespace.Option>
               ))}

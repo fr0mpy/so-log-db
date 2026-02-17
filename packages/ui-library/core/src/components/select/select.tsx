@@ -4,6 +4,7 @@ import { cn } from '@/utils/cn'
 import { ChevronDown, Search } from 'lucide-react'
 import {
   useRef,
+  useState,
   useLayoutEffect,
   useEffect,
   useMemo,
@@ -16,42 +17,20 @@ import { motion, AnimatePresence } from 'motion/react'
 import { Input } from '../form/input'
 import { useControlledState } from '../../hooks/useControlledState'
 import { useClickOutsideMultiple } from '../../hooks/useClickOutside'
-import { SPRING, PLACEHOLDER } from '../../config'
+import { SPRING, DURATION, PLACEHOLDER } from '../../config'
 
-// Animation variants - slide out from behind trigger (last item appears first)
-// Shadow fades in only once expanded to avoid visible clip edge
-const slideDownVariants = {
-  initial: {
-    y: '-100%',
-    boxShadow: 'none',
-  },
+// Simple fade animation - options appear smoothly without complex slide
+const fadeVariants = {
+  initial: { opacity: 0, scale: 0.95 },
   animate: {
-    y: 0,
-    boxShadow: 'var(--shadow-raised-lg)',
-    transition: SPRING.selectOpen,
+    opacity: 1,
+    scale: 1,
+    transition: SPRING.snappy,
   },
   exit: {
-    y: '-100%',
-    boxShadow: 'none',
-    transition: SPRING.selectClose,
-  },
-}
-
-// Animation variants for top placement - slide up from behind trigger
-const slideUpVariants = {
-  initial: {
-    y: '100%',
-    boxShadow: 'none',
-  },
-  animate: {
-    y: 0,
-    boxShadow: 'var(--shadow-raised-lg)',
-    transition: SPRING.selectOpen,
-  },
-  exit: {
-    y: '100%',
-    boxShadow: 'none',
-    transition: SPRING.selectClose,
+    opacity: 0,
+    scale: 0.95,
+    transition: { duration: DURATION.instant },
   },
 }
 import { SelectStyles as S } from './styles'
@@ -66,6 +45,7 @@ import type {
   SelectPopupProps,
   SelectOptionProps,
   SelectSearchProps,
+  SelectOptionUtils,
 } from './types'
 
 // Shared spring config for consistent motion
@@ -93,10 +73,12 @@ function SelectRoot({
   triggerMode = 'hover',
   width = 'full',
   placement = 'bottom',
+  variant = 'default',
 }: SelectRootProps) {
   const [currentValue, setValue] = useControlledState(value, defaultValue, onValueChange)
   const [isOpen, setIsOpen] = useControlledState<boolean>(undefined, false)
   const [searchQuery, setSearchQuery] = useControlledState<string>(undefined, '')
+  const [displayValue, setDisplayValue] = useState<string | null>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -159,6 +141,8 @@ function SelectRoot({
         setIsOpen(false)
         setSearchQuery('')
       },
+      displayValue,
+      setDisplayValue,
       searchQuery,
       setSearchQuery,
       triggerRef,
@@ -170,12 +154,14 @@ function SelectRoot({
       triggerMode,
       width,
       placement,
+      variant,
     }),
     [
       isOpen,
       setIsOpen,
       currentValue,
       setValue,
+      displayValue,
       searchQuery,
       setSearchQuery,
       dropdownPosition,
@@ -184,6 +170,7 @@ function SelectRoot({
       triggerMode,
       width,
       placement,
+      variant,
     ]
   )
 
@@ -192,7 +179,7 @@ function SelectRoot({
 
 // Select.Trigger - The button that opens the dropdown
 function SelectTrigger({ children, className, ref }: SelectTriggerProps) {
-  const { isOpen, setIsOpen, triggerRef, dropdownRef, setSearchQuery, disabled, triggerMode, width } = useSelectContext()
+  const { isOpen, setIsOpen, triggerRef, dropdownRef, setSearchQuery, disabled, triggerMode, width, variant } = useSelectContext()
 
   const handleMouseEnter = useCallback(() => {
     if (!disabled && triggerMode === 'hover') setIsOpen(true)
@@ -238,7 +225,7 @@ function SelectTrigger({ children, className, ref }: SelectTriggerProps) {
       onClick={handleClick}
       whileTap={{ scale: 0.99 }}
       className={cn(
-        S.trigger.base,
+        variant === 'ghost' ? S.trigger.ghost : S.trigger.base,
         S.trigger.width[width],
         isOpen && S.trigger.open,
         className
@@ -264,11 +251,11 @@ function SelectValue({ placeholder = PLACEHOLDER.select }: SelectValueProps) {
 
 // Select.Icon - The chevron icon
 function SelectIcon({ className }: SelectIconProps) {
-  const { isOpen } = useSelectContext()
+  const { isOpen, variant } = useSelectContext()
 
   return (
     <motion.span animate={{ rotate: isOpen ? 180 : 0 }} transition={spring}>
-      <ChevronDown className={cn(S.icon, className)} />
+      <ChevronDown className={cn(variant === 'ghost' ? S.icon.primary : S.icon.base, className)} />
     </motion.span>
   )
 }
@@ -329,23 +316,20 @@ function SelectPositioner({ children }: SelectPositionerProps) {
       ref={dropdownRef}
       onMouseLeave={handleMouseLeave}
       style={positionStyle}
-      className={cn(S.positioner.base, placement === 'top' ? S.positioner.top : S.positioner.bottom)}
+      className={S.positioner.base}
     >
       {children}
     </div>
   )
 }
 
-// Select.Popup - The dropdown container with slide animation (last item appears first)
+// Select.Popup - The dropdown container with smooth fade animation
 function SelectPopup({ children, className, ref }: SelectPopupProps) {
-  const { placement } = useSelectContext()
-  const variants = placement === 'top' ? slideUpVariants : slideDownVariants
-
   return (
     <motion.div
       ref={ref}
       role="listbox"
-      variants={variants}
+      variants={fadeVariants}
       initial="initial"
       animate="animate"
       exit="exit"
@@ -368,7 +352,7 @@ function SelectSearch({ placeholder = PLACEHOLDER.search, className }: SelectSea
         placeholder={placeholder}
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        leftIcon={<Search className={S.icon} />}
+        leftIcon={<Search className={S.icon.base} />}
         className={cn(S.search.input, className)}
       />
     </div>
@@ -376,13 +360,35 @@ function SelectSearch({ placeholder = PLACEHOLDER.search, className }: SelectSea
 }
 
 // Select.Option - Individual option
-function SelectOption({ value: optionValue, children, className, ref }: SelectOptionProps) {
-  const { value, setValue } = useSelectContext()
+function SelectOption({ value: optionValue, children, className, ref, _optionConfig }: SelectOptionProps) {
+  const { value, setValue, setIsOpen, setSearchQuery, setDisplayValue, triggerRef } = useSelectContext()
   const isSelected = value === optionValue
+  const isDisabled = _optionConfig?.disabled
 
   const handleClick = useCallback(() => {
+    if (isDisabled) return
+
+    // Check for custom onSelect handler
+    if (_optionConfig?.onSelect) {
+      const utils: SelectOptionUtils = {
+        closePopup: () => {
+          setIsOpen(false)
+          setSearchQuery('')
+        },
+        setValue: (newValue: string) => {
+          setValue(newValue)
+        },
+        setDisplayValue,
+        triggerRef,
+      }
+
+      const preventDefault = _optionConfig.onSelect(utils)
+      if (preventDefault) return
+    }
+
+    // Default behavior
     setValue(optionValue)
-  }, [setValue, optionValue])
+  }, [setValue, optionValue, _optionConfig, setIsOpen, setSearchQuery, setDisplayValue, triggerRef, isDisabled])
 
   return (
     <motion.button
@@ -390,11 +396,13 @@ function SelectOption({ value: optionValue, children, className, ref }: SelectOp
       type="button"
       role="option"
       aria-selected={isSelected}
+      aria-disabled={isDisabled}
       onClick={handleClick}
-      whileTap={{ scale: 0.99 }}
+      whileTap={isDisabled ? undefined : { scale: 0.99 }}
       className={cn(
         S.option.base,
         isSelected && S.option.selected,
+        isDisabled && S.option.disabled,
         className
       )}
     >

@@ -238,8 +238,9 @@ function DialogClose({ asChild, children, onClick, className, ref, ...props }: D
     return (
       <Button
         ref={ref}
-        variant="ghost"
+        variant="inset"
         size="sm"
+        iconOnly
         onClick={handleClick}
         className={cn(S.closeButton, className)}
         aria-label={ARIA.close}

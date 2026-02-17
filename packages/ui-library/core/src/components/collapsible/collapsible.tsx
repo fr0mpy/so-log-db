@@ -1,11 +1,11 @@
 'use client'
 
-import { cn } from '@/utils/cn'
+import { cn } from '../../utils/cn'
 import { ChevronDown } from 'lucide-react'
 import { createContext, useContext, cloneElement, isValidElement } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { useControlledState } from '../../hooks/useControlledState'
-import { SPRING, DURATION } from '@/config'
+import { SPRING, DURATION } from '../../config'
 import type {
   CollapsibleContextValue,
   CollapsibleRootProps,
@@ -71,14 +71,29 @@ function CollapsibleTrigger({ className, children, asChild, ref, ...props }: Col
       className={cn(S.trigger, className)}
       {...props}
     >
-      {children}
-      <motion.span
-        animate={{ rotate: open ? 180 : 0 }}
-        transition={SPRING.default}
-        className={S.iconWrapper}
-      >
-        <ChevronDown className={S.icon} />
-      </motion.span>
+      {/* Animated indicator - shows when expanded */}
+      <AnimatePresence>
+        {open && (
+          <motion.span
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={SPRING.default}
+            className={S.indicator}
+          />
+        )}
+      </AnimatePresence>
+      {/* Trigger content above indicator */}
+      <span className={S.triggerContent}>
+        {children}
+        <motion.span
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={SPRING.default}
+          className={S.iconWrapper}
+        >
+          <ChevronDown className={S.icon} />
+        </motion.span>
+      </span>
     </button>
   )
 }

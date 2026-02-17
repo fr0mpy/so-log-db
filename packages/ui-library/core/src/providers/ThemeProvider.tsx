@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, useRef, type ReactNode } from 'react'
+import { getStorageString, setStorageString } from '@stackone/utils'
 import {
   defaultBaseTheme,
   applyBaseTheme,
@@ -41,16 +42,31 @@ const ThemeContext = createContext<ThemeContextValue | null>(null)
 
 const STORAGE_KEY = 'stackone-theme'
 
+/**
+ * Get the system color scheme preference
+ */
+function getSystemTheme(): ThemeMode {
+  if (typeof window === 'undefined') return 'light'
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
+/**
+ * Get initial theme: localStorage > system preference > light
+ */
+function getInitialTheme(): ThemeMode {
+  if (typeof window === 'undefined') return 'light'
+  const stored = getStorageString<string>(STORAGE_KEY, '')
+  if (stored === 'light' || stored === 'dark') return stored
+  return getSystemTheme()
+}
+
 // =============================================================================
 // Provider
 // =============================================================================
 
 export function ThemeProvider({ children, brandThemeUrl }: ThemeProviderProps) {
-  // Initialize theme synchronously from localStorage to match inline script
-  const [theme, setTheme] = useState<ThemeMode>(() => {
-    if (typeof window === 'undefined') return 'light'
-    return (localStorage.getItem(STORAGE_KEY) as ThemeMode) ?? 'light'
-  })
+  // Initialize theme: localStorage > system preference > light
+  const [theme, setTheme] = useState<ThemeMode>(getInitialTheme)
 
   const [fontsLoaded, setFontsLoaded] = useState(false)
   const [themeReady, setThemeReady] = useState(false)
@@ -99,7 +115,7 @@ export function ThemeProvider({ children, brandThemeUrl }: ThemeProviderProps) {
   // Handle mode switching
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
-    localStorage.setItem(STORAGE_KEY, theme)
+    setStorageString(STORAGE_KEY, theme)
 
     // Update mode-specific tokens (shadows, colors)
     if (brandThemeRef.current) {
