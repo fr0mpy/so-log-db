@@ -18,12 +18,6 @@ export const Routes = {
     detail: (id: string | number) => `/logs/${id}` as const,
   },
 
-  /** Search page */
-  search: '/search',
-
-  /** Explore page */
-  explore: '/explore',
-
   /** Shell home (cross-zone - use <a> not <Link>) */
   shell: {
     home: '/',
