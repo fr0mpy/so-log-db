@@ -36,11 +36,7 @@ function NavItem({
   return (
     <Link
       href={href}
-      className={cn(
-        S.item.base,
-        isExpanded ? S.item.widthExpanded : S.item.widthCollapsed,
-        isActive ? S.item.active : S.item.inactive
-      )}
+      className={cn(S.item.base, isActive ? S.item.active : S.item.inactive)}
       aria-label={ariaLabel}
       aria-current={isActive ? 'page' : undefined}
     >

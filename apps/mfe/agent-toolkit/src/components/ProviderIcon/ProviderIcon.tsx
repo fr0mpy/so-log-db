@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { cn } from '@stackone-ui/core/utils'
 import { getProviderLogoUrl, isKnownProvider } from '../../config/providers'
 import {
@@ -44,13 +44,13 @@ export function ProviderIcon({ name, size = 'sm', className, fallbackColor }: Pr
   const resolvedFallbackColor = fallbackColor ?? getFallbackColorForProvider(name)
   const fallbackLetter = name.charAt(0).toUpperCase()
 
-  const handleImageLoad = useCallback(() => {
+  const handleImageLoad = () => {
     setImageStatus('loaded')
-  }, [])
+  }
 
-  const handleImageError = useCallback(() => {
+  const handleImageError = () => {
     setImageStatus('error')
-  }, [])
+  }
 
   // Reset status when name changes
   useEffect(() => {
