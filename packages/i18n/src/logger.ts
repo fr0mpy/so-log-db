@@ -1,3 +1,7 @@
+import { createLogger } from '@stackone/utils'
+
+const log = createLogger('i18n')
+
 type MissingTranslation = {
   key: string
   locale: string
@@ -10,8 +14,8 @@ let reportTimeout: ReturnType<typeof setTimeout> | undefined
 
 /**
  * Log a missing translation key.
- * In development: console.warn immediately
- * In production: batch and optionally report to monitoring
+ * Uses central logger (respects __stackone.logs toggle).
+ * In production: batch and optionally report to monitoring.
  */
 export function logMissingTranslation(
   key: string,
@@ -27,14 +31,9 @@ export function logMissingTranslation(
 
   missingTranslations.push(entry)
 
-  // Console warning in development
-  if (process.env.NODE_ENV === 'development') {
-    console.warn(
-      `[i18n] Missing translation:\n` +
-        `  Key: ${namespace ? `${namespace}.${key}` : key}\n` +
-        `  Locale: ${locale}`
-    )
-  }
+  // Log via central logger (respects toggle)
+  const fullKey = namespace ? `${namespace}.${key}` : key
+  log.warn(`Missing translation: ${fullKey} (${locale})`)
 
   // In production, batch and report (optional endpoint)
   if (process.env.NODE_ENV === 'production' && process.env.I18N_REPORT_ENDPOINT) {

@@ -10,6 +10,7 @@
     "./messages/*": "./messages/*"
   },
   "dependencies": {
+    "@stackone/utils": "workspace:*",
     "next-intl": "^3.26.3"
   },
   "peerDependencies": {

@@ -2,12 +2,19 @@
   "brand": {
     "name": "StackOne"
   },
+  "skipLinks": {
+    "ariaLabel": "Skip links",
+    "filters": "Skip to filters",
+    "table": "Skip to table",
+    "pagination": "Skip to pagination"
+  },
   "navigation": {
     "dashboard": "Dashboard",
     "logs": "Logs",
     "search": "Search",
     "explore": "Explore",
-    "agentToolkit": "Agent Toolkit"
+    "agentToolkit": "Agent Toolkit",
+    "componentLibrary": "Component Library"
   },
   "aria": {
     "close": "Close",
