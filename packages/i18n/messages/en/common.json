@@ -19,11 +19,6 @@
     "settings": "Settings",
     "theme": "Theme"
   },
-  "home": {
-    "designReviewDescription": "A quick review of the current log dashboard designs",
-    "agentToolkitDescription": "Here you'll find the logs dashboard build",
-    "componentLibraryDescription": "The components + design system used for our Agent Toolkit"
-  },
   "designReview": {
     "title": "Design Review",
     "screenA": "Screen A",

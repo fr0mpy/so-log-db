@@ -5,6 +5,9 @@
   },
   "home": {
     "title": "StackOne Shell",
-    "agentToolkit": "Aller à Boîte à outils Agent"
+    "agentToolkit": "Aller à Boîte à outils Agent",
+    "designReviewDescription": "Un aperçu rapide des designs actuels du tableau de bord des logs",
+    "agentToolkitDescription": "Ici vous trouverez le tableau de bord des logs",
+    "componentLibraryDescription": "Les composants + système de design utilisés pour notre Agent Toolkit"
   }
 }

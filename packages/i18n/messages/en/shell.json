@@ -5,6 +5,9 @@
   },
   "home": {
     "title": "StackOne Shell",
-    "agentToolkit": "Go to Agent Toolkit"
+    "agentToolkit": "Go to Agent Toolkit",
+    "designReviewDescription": "A quick review of the current log dashboard designs",
+    "agentToolkitDescription": "Here you'll find the logs dashboard build",
+    "componentLibraryDescription": "The components + design system used for our Agent Toolkit"
   }
 }
