@@ -13,6 +13,7 @@ export const navigation = {
   logs: 'navigation.logs',
   search: 'navigation.search',
   explore: 'navigation.explore',
+  designReview: 'navigation.designReview',
   agentToolkit: 'navigation.agentToolkit',
   componentLibrary: 'navigation.componentLibrary',
   settings: 'navigation.settings',
@@ -352,7 +353,15 @@ export const datePicker = {
 
 // Shell keys
 export const home = {
-  title: 'home.title',
   description: 'home.description',
-  agentToolkit: 'home.agentToolkit',
+  designReviewDescription: 'home.designReviewDescription',
+  agentToolkitDescription: 'home.agentToolkitDescription',
+  componentLibraryDescription: 'home.componentLibraryDescription',
+} as const
+
+// Design Review MFE keys
+export const designReview = {
+  title: 'designReview.title',
+  screenA: 'designReview.screenA',
+  screenB: 'designReview.screenB',
 } as const

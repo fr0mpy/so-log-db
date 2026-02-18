@@ -6,5 +6,5 @@ export { getShellMessages, getAgentToolkitMessages } from './messages'
 export {
   brand, skipLinks, navigation, aria, labels, placeholder, srOnly, settings,
   logLevels, timeRanges, dataTypes, status, datePicker,
-  metadata, sidebar, dashboard, logs, logDetail, search, explore, home,
+  metadata, sidebar, dashboard, logs, logDetail, search, explore, home, designReview,
 } from './keys'

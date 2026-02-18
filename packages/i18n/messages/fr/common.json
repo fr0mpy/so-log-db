@@ -13,10 +13,21 @@
     "logs": "Journaux",
     "search": "Recherche",
     "explore": "Explorer",
+    "designReview": "Revue de conception",
     "agentToolkit": "Boîte à outils Agent",
     "componentLibrary": "Bibliothèque de composants",
     "settings": "Paramètres",
     "theme": "Thème"
+  },
+  "home": {
+    "designReviewDescription": "Un aperçu rapide des designs actuels du tableau de bord des logs",
+    "agentToolkitDescription": "Ici vous trouverez le tableau de bord des logs",
+    "componentLibraryDescription": "Les composants + système de design utilisés pour notre Agent Toolkit"
+  },
+  "designReview": {
+    "title": "Revue de conception",
+    "screenA": "Écran A",
+    "screenB": "Écran B"
   },
   "aria": {
     "close": "Fermer",

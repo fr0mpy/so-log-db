@@ -42,10 +42,11 @@ export function getMessages(
 }
 
 /**
- * Get Shell-specific messages (common + shell namespaces)
+ * Get Shell messages (common + shell + agent-toolkit namespaces)
+ * Includes all namespaces for the unified app
  */
 export function getShellMessages(locale: Locale): AbstractIntlMessages {
-  return getMessages(locale, ['common', 'shell'])
+  return getMessages(locale, ['common', 'shell', 'agent-toolkit'])
 }
 
 /**

@@ -1,12 +1,12 @@
 import type en from '../messages/en/common.json'
 import type enShell from '../messages/en/shell.json'
-import type enConnectors from '../messages/en/connectors.json'
+import type enAgentToolkit from '../messages/en/agent-toolkit.json'
 
 type CommonMessages = typeof en
 type ShellMessages = typeof enShell
-type ConnectorsMessages = typeof enConnectors
+type AgentToolkitMessages = typeof enAgentToolkit
 
-type Messages = CommonMessages & ShellMessages & ConnectorsMessages
+type Messages = CommonMessages & ShellMessages & AgentToolkitMessages
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
