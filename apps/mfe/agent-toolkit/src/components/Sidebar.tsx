@@ -6,8 +6,6 @@ import { useTranslations, aria, navigation } from '@stackone/i18n'
 import { SIDENAV_DIMENSIONS } from '@stackone-ui/core/sidenav'
 import { Select } from '@stackone-ui/core/select'
 import { cn } from '@stackone-ui/core/utils'
-import { ThemeSwitcher } from '@stackone-ui/core/theme-switcher'
-import { useTheme } from '@stackone-ui/core/providers'
 import { SidebarLogo } from './SidebarLogo'
 import { SidebarNav } from './SidebarNav'
 import { SettingsDialog } from './SettingsDialog'
@@ -30,7 +28,6 @@ const PROJECTS = [
 export function Sidebar() {
   const { isExpanded, expand, collapse } = useSidebar()
   const t = useTranslations()
-  const { theme, toggle: toggleTheme } = useTheme()
   const [selectedProject, setSelectedProject] = useState<string>('project-a')
   const [settingsOpen, setSettingsOpen] = useState(false)
 
@@ -81,13 +78,6 @@ export function Sidebar() {
           <Settings className={S.footerIcon} />
           <span className={labelClasses}>{t(navigation.settings)}</span>
         </button>
-        <div className={cn(S.footerTheme, isExpanded ? S.footerThemeExpanded : S.footerThemeCollapsed)}>
-          <ThemeSwitcher
-            isDark={theme === 'dark'}
-            onToggle={toggleTheme}
-            compact={!isExpanded}
-          />
-        </div>
       </div>
 
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />

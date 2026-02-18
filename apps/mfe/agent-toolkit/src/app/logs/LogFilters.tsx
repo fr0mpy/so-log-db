@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { Search, RefreshCw } from 'lucide-react'
 import { Switch } from '@stackone-ui/core/switch'
 import { Button } from '@stackone-ui/core/button'
+import { ThemeSwitcher } from '@stackone-ui/core/theme-switcher'
+import { useTheme } from '@stackone-ui/core/providers'
 import { Select, type SelectOption } from '@stackone-ui/core/select'
 import { Input } from '@stackone-ui/core/input'
 import { Dialog } from '@stackone-ui/core/dialog'
@@ -63,6 +65,7 @@ export function LogFilters({
 }: LogFiltersProps) {
   const [backgroundLogs, setBackgroundLogs] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const { theme, toggle: toggleTheme } = useTheme()
 
   // DatePicker state
   const [datePickerOpen, setDatePickerOpen] = useState(false)
@@ -162,21 +165,27 @@ export function LogFilters({
           <span className={FilterRow.label}>{translations.backgroundLogs}</span>
         </div>
 
-        {/* Refresh Button */}
-        <Button
-          variant="inset"
-          size="sm"
-          iconOnly
-          onClick={onRefresh}
-          disabled={isRefreshing}
-          aria-label={translations.refresh}
-          className="group"
-        >
-          <RefreshCw
-            className={`${FilterSelect.refreshIcon} ${isRefreshing ? LoadingStyles.spinning : ''}`}
-            strokeWidth={2.5}
+        {/* Actions Group (Theme + Refresh) */}
+        <div className={FilterRow.actionsGroup}>
+          <ThemeSwitcher
+            isDark={theme === 'dark'}
+            onToggle={toggleTheme}
           />
-        </Button>
+          <Button
+            variant="inset"
+            size="sm"
+            iconOnly
+            onClick={onRefresh}
+            disabled={isRefreshing}
+            aria-label={translations.refresh}
+            className="group"
+          >
+            <RefreshCw
+              className={`${FilterSelect.refreshIcon} ${isRefreshing ? LoadingStyles.spinning : ''}`}
+              strokeWidth={2.5}
+            />
+          </Button>
+        </div>
       </div>
 
       {/* Date Range Picker Dialog */}

@@ -53,13 +53,6 @@ export const SidebarStyles = {
     'flex flex-col gap-1',
     'mt-auto p-2 border-t border-border/50',
   ].join(' '),
-  footerTheme: [
-    'flex items-center',
-    'p-3 h-12 w-full',
-    'rounded-theme-md',
-  ].join(' '),
-  footerThemeCollapsed: 'justify-center',
-  footerThemeExpanded: 'justify-start',
   footerItem: [
     'flex items-center justify-start',
     'gap-3 p-3 h-12 w-full',
