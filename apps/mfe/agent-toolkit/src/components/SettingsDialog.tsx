@@ -13,12 +13,12 @@ import {
 } from '@stackone/i18n'
 import { Dialog } from '@stackone-ui/core/dialog'
 import { SelectCompound as Select } from '@stackone-ui/core/select'
+import { Text } from '@stackone-ui/core/text'
 import { Layout } from '@stackone-ui/core/styles'
 
 const S = {
-  body: 'flex flex-col gap-4 py-4',
-  field: 'flex flex-col gap-2',
-  label: 'text-sm font-medium text-foreground',
+  body: 'flex flex-col gap-4 py-4 items-center text-center',
+  field: 'flex flex-col gap-2 items-center w-full',
   flag: 'w-5 h-4 rounded-sm overflow-hidden shrink-0',
   flagOption: [Layout.Flex.center, 'gap-2'].join(' '),
 } as const
@@ -85,18 +85,22 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Content>
+      <Dialog.Content className="max-w-[200px]">
         <Dialog.Header>
           <Dialog.Title>{t(settingsKeys.title)}</Dialog.Title>
         </Dialog.Header>
 
         <div className={S.body}>
           <div className={S.field}>
-            <label className={S.label}>{t(settingsKeys.language)}</label>
+            <Text as="label" variant="subtitle">
+              {t(settingsKeys.language)}
+            </Text>
             <Select.Root
               value={locale}
               onValueChange={handleLocaleChange}
               width="full"
+              variant="ghost"
+              inModal
             >
               <Select.Trigger aria-label={t(aria.selectLanguage)}>
                 <span className={S.flagOption}>

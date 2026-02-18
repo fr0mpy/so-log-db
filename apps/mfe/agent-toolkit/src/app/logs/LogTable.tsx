@@ -255,11 +255,9 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
     setHoveredTime(null)
   }
 
-  // Handle replay request with toast feedback
   const handleReplay = async (logId: string, e: React.MouseEvent) => {
     e.stopPropagation()
 
-    // Show loading toast (duration: 0 = no auto-dismiss)
     const loadingId = addToast({
       variant: 'loading',
       position: 'bottom-right',
@@ -268,7 +266,6 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
     })
 
     const result = await replayRequest(logId)
-    removeToast(loadingId)
 
     if (result.success) {
       addToast({
@@ -286,6 +283,8 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
         duration: 5000,
       })
     }
+
+    setTimeout(() => removeToast(loadingId), 300)
   }
 
   // Keyboard navigation for table rows (roving tabindex pattern)

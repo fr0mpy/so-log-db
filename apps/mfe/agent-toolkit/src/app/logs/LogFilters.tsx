@@ -142,6 +142,7 @@ export function LogFilters({
           width="auto"
           variant="ghost"
           className={FilterSelect.dateRange}
+          dropdownMinWidth="6.5rem"
         />
 
         {/* Status Filter Select */}
@@ -153,6 +154,7 @@ export function LogFilters({
           width="auto"
           variant="ghost"
           className={FilterSelect.status}
+          dropdownMinWidth="5rem"
         />
 
         {/* Background Logs Toggle */}
@@ -165,26 +167,28 @@ export function LogFilters({
           <span className={FilterRow.label}>{translations.backgroundLogs}</span>
         </div>
 
-        {/* Actions Group (Theme + Refresh) */}
+        {/* Refresh Button - stays with filters */}
+        <Button
+          variant="inset"
+          size="sm"
+          iconOnly
+          onClick={onRefresh}
+          disabled={isRefreshing}
+          aria-label={translations.refresh}
+          className="group"
+        >
+          <RefreshCw
+            className={`${FilterSelect.refreshIcon} ${isRefreshing ? LoadingStyles.spinning : ''}`}
+            strokeWidth={2.5}
+          />
+        </Button>
+
+        {/* Theme Switcher - pushed to far right */}
         <div className={FilterRow.actionsGroup}>
           <ThemeSwitcher
             isDark={theme === 'dark'}
             onToggle={toggleTheme}
           />
-          <Button
-            variant="inset"
-            size="sm"
-            iconOnly
-            onClick={onRefresh}
-            disabled={isRefreshing}
-            aria-label={translations.refresh}
-            className="group"
-          >
-            <RefreshCw
-              className={`${FilterSelect.refreshIcon} ${isRefreshing ? LoadingStyles.spinning : ''}`}
-              strokeWidth={2.5}
-            />
-          </Button>
         </div>
       </div>
 

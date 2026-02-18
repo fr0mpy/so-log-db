@@ -305,8 +305,8 @@ export const LogTableColumns = {
   request: 'flex-1 min-w-[120px] md:min-w-[150px] lg:min-w-[180px]',
   /** Duration: hidden <sm, reduced width */
   duration: 'hidden sm:flex sm:w-[80px] lg:w-[100px] shrink',
-  /** Status: compact, fixed */
-  status: 'w-[55px] md:w-[60px] lg:w-[70px] shrink-0',
+  /** Status: compact, content-sized */
+  status: 'shrink-0',
   /** Actions: responsive width, center-aligned */
   actions: 'w-[100px] md:w-[140px] lg:w-[260px] shrink-0 flex justify-center',
 } as const
@@ -391,9 +391,9 @@ export const TimestampCell = {
 // ============================================================================
 
 export const RequestCell = {
-  container: [Layout.Flex.center, 'gap-2 overflow-hidden'].join(' '),
-  /** Fixed width for method badge so all names align */
-  methodWrapper: 'w-[4.5rem] flex justify-center shrink-0',
+  container: [Layout.Flex.center, 'w-full gap-2 overflow-hidden'].join(' '),
+  /** Method badge - fixed width for text alignment, centered */
+  methodWrapper: 'w-16 flex justify-center shrink-0',
   /** Request name - truncates to fit available space */
   name: 'hidden sm:block truncate text-sm text-muted-foreground',
 } as const
@@ -467,7 +467,7 @@ export const LogPagination = {
 
 export const FilterRow = {
   /** Container for filter cards row - sticky header, clip-path prevents shadow overflow on top/left */
-  container: 'flex items-center gap-3 sticky top-0 z-10 bg-background py-4 -mt-4 -mx-8 px-8 transition-shadow duration-200 [clip-path:inset(0_-100%_-100%_0)]',
+  container: 'flex items-center gap-2 sticky top-0 z-10 bg-background py-4 -mt-4 -mx-8 px-8 transition-shadow duration-200 [clip-path:inset(0_-100%_-100%_0)]',
   /** Shadow applied when scrolled */
   scrolled: 'shadow-neu-raised',
   /** Individual filter card */
@@ -482,8 +482,10 @@ export const FilterRow = {
   toggleWrapper: 'flex items-center gap-2',
   /** Icon for filter cards */
   icon: 'w-4 h-4 text-muted-foreground',
-  /** Actions group wrapper (theme switcher + refresh) */
-  actionsGroup: 'flex items-center gap-2',
+  /** Actions group wrapper (theme switcher + refresh) - ml-auto pushes to far right */
+  actionsGroup: 'flex items-center gap-2 ml-auto',
+  /** Theme switcher spacing - margin handled by actionsGroup ml-auto */
+  themeSwitcher: '',
 } as const
 
 // ============================================================================
@@ -491,10 +493,10 @@ export const FilterRow = {
 // ============================================================================
 
 export const FilterSelect = {
-  /** Date range select width */
-  dateRange: 'w-[6.5rem]',
-  /** Status filter select width */
-  status: 'w-[5rem]',
+  /** Date range select trigger width (dropdown uses dropdownMinWidth prop) */
+  dateRange: 'w-[5.5rem]',
+  /** Status filter select trigger width (dropdown uses dropdownMinWidth prop) */
+  status: 'w-[4rem]',
   /** Refresh icon with hover transition */
   refreshIcon: 'w-4 h-4 transition-colors group-hover:text-primary',
 } as const
