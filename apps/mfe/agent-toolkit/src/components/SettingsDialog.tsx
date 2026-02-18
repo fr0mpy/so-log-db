@@ -12,11 +12,12 @@ import {
   type Locale,
 } from '@stackone/i18n'
 import { Dialog } from '@stackone-ui/core/dialog'
-import { SelectCompound as Select } from '@stackone-ui/core/select'
+import { Radio } from '@stackone-ui/core/radio'
 import { Text } from '@stackone-ui/core/text'
 import { Layout } from '@stackone-ui/core/styles'
 
 const S = {
+  content: 'w-fit min-w-48',
   body: 'flex flex-col gap-4 py-4 items-center text-center',
   field: 'flex flex-col gap-2 items-center w-full',
   flag: 'w-5 h-4 rounded-sm overflow-hidden shrink-0',
@@ -76,7 +77,6 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const t = useTranslations()
   const locale = useLocale() as Locale
   const router = useRouter()
-  const CurrentFlag = FLAGS[locale]
 
   const handleLocaleChange = (newLocale: string) => {
     document.cookie = `${LOCALE_COOKIE}=${newLocale}; path=/; max-age=31536000`
@@ -85,7 +85,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Content className="max-w-[200px]">
+      <Dialog.Content className={S.content}>
         <Dialog.Header>
           <Dialog.Title>{t(settingsKeys.title)}</Dialog.Title>
         </Dialog.Header>
@@ -95,40 +95,24 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             <Text as="label" variant="subtitle">
               {t(settingsKeys.language)}
             </Text>
-            <Select.Root
+            <Radio.Root
               value={locale}
               onValueChange={handleLocaleChange}
-              width="full"
-              variant="ghost"
-              inModal
             >
-              <Select.Trigger aria-label={t(aria.selectLanguage)}>
-                <span className={S.flagOption}>
-                  <CurrentFlag />
-                  {localeNames[locale]}
-                </span>
-                <Select.Icon />
-              </Select.Trigger>
-              <Select.Portal>
-                <Select.Positioner>
-                  <Select.Popup>
-                    <div className="p-1">
-                      {locales.map((code) => {
-                        const Flag = FLAGS[code]
-                        return (
-                          <Select.Option key={code} value={code}>
-                            <span className={S.flagOption}>
-                              <Flag />
-                              {localeNames[code]}
-                            </span>
-                          </Select.Option>
-                        )
-                      })}
-                    </div>
-                  </Select.Popup>
-                </Select.Positioner>
-              </Select.Portal>
-            </Select.Root>
+              <Radio.Group aria-label={t(aria.selectLanguage)}>
+                {locales.map((code) => {
+                  const Flag = FLAGS[code]
+                  return (
+                    <Radio.Item key={code} value={code}>
+                      <span className={S.flagOption}>
+                        <Flag />
+                        {localeNames[code]}
+                      </span>
+                    </Radio.Item>
+                  )
+                })}
+              </Radio.Group>
+            </Radio.Root>
           </div>
         </div>
       </Dialog.Content>

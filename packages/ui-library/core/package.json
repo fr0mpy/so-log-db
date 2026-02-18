@@ -26,6 +26,7 @@
     "./input": "./src/components/form/input.tsx",
     "./search-input": "./src/components/form/search-input.tsx",
     "./select": "./src/components/select/index.tsx",
+    "./radio": "./src/components/radio/index.tsx",
     "./date-picker": "./src/components/date-picker/index.ts",
     "./pagination": "./src/components/pagination/index.ts",
     "./toast": "./src/components/toast/index.ts",
