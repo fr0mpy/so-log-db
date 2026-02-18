@@ -15,6 +15,7 @@
     "dev:shell": "turbo dev --no-daemon --filter @stackone/shell",
     "dev:agent-toolkit": "turbo dev --no-daemon --filter @stackone/mfe-agent-toolkit",
     "dev:design-review": "turbo dev --no-daemon --filter @stackone/mfe-design-review",
+    "dev:component-library": "turbo dev --no-daemon --filter @stackone/mfe-component-library",
     "dev:harness": "turbo dev --no-daemon --filter @stackone-ui/harness",
     "build": "turbo build",
     "test": "turbo test",
