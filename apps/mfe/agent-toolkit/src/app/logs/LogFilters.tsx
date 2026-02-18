@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Search, RefreshCw } from 'lucide-react'
-import { Switch } from '@stackone-ui/core/switch'
 import { Button } from '@stackone-ui/core/button'
-import { ThemeSwitcher } from '@stackone-ui/core/theme-switcher'
-import { useTheme } from '@stackone-ui/core/providers'
 import { Select, type SelectOption } from '@stackone-ui/core/select'
 import { Input } from '@stackone-ui/core/input'
 import { Dialog } from '@stackone-ui/core/dialog'
@@ -63,9 +60,7 @@ export function LogFilters({
   onRefresh,
   isRefreshing,
 }: LogFiltersProps) {
-  const [backgroundLogs, setBackgroundLogs] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const { theme, toggle: toggleTheme } = useTheme()
 
   // DatePicker state
   const [datePickerOpen, setDatePickerOpen] = useState(false)
@@ -157,17 +152,7 @@ export function LogFilters({
           dropdownMinWidth="5rem"
         />
 
-        {/* Background Logs Toggle */}
-        <div className={FilterRow.toggleWrapper}>
-          <Switch
-            checked={backgroundLogs}
-            onCheckedChange={setBackgroundLogs}
-            aria-label={translations.backgroundLogs}
-          />
-          <span className={FilterRow.label}>{translations.backgroundLogs}</span>
-        </div>
-
-        {/* Refresh Button - stays with filters */}
+        {/* Refresh Button */}
         <Button
           variant="inset"
           size="sm"
@@ -175,21 +160,13 @@ export function LogFilters({
           onClick={onRefresh}
           disabled={isRefreshing}
           aria-label={translations.refresh}
-          className="group"
+          className="group ml-auto"
         >
           <RefreshCw
             className={`${FilterSelect.refreshIcon} ${isRefreshing ? LoadingStyles.spinning : ''}`}
             strokeWidth={2.5}
           />
         </Button>
-
-        {/* Theme Switcher - pushed to far right */}
-        <div className={FilterRow.actionsGroup}>
-          <ThemeSwitcher
-            isDark={theme === 'dark'}
-            onToggle={toggleTheme}
-          />
-        </div>
       </div>
 
       {/* Date Range Picker Dialog */}

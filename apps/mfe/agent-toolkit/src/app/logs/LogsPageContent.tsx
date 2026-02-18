@@ -10,7 +10,10 @@ import { LogsChart } from '../../components/LogsChart'
 import { LogsContent } from './LogsContent'
 import { LogDetailDialog } from '../../components/LogDetailDialog'
 import type { LogEntryDetail } from '../../components/LogDetailDialog'
-import { Grid, LogStats } from '../../styles'
+import { ThemeSwitcher } from '@stackone-ui/core/theme-switcher'
+import { Switch } from '@stackone-ui/core/switch'
+import { useTheme } from '@stackone-ui/core/providers'
+import { Grid, LogStats, FilterRow } from '../../styles'
 
 interface LogEntry {
   id: string
@@ -122,11 +125,13 @@ export function LogsPageContent({ logs, stats, translations }: LogsPageContentPr
   const { title, filter, chart, stats: statsLabels, table } = translations
   const router = useRouter()
   const [isRefreshing, startTransition] = useTransition()
+  const { theme, toggle: toggleTheme } = useTheme()
 
   // Filter state
   const [dateRange, setDateRange] = useState('last24Hours')
   const [status, setStatus] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [backgroundLogs, setBackgroundLogs] = useState(false)
 
   // Log detail dialog state
   const [selectedLog, setSelectedLog] = useState<LogEntryDetail | null>(null)
@@ -196,30 +201,55 @@ export function LogsPageContent({ logs, stats, translations }: LogsPageContentPr
                 <LogsChart logs={filteredLogs} translations={chart} />
               </div>
 
-              {/* Stats 2x2 Grid */}
-              <div className={LogStats.grid}>
-                <StatCard
-                  label={statsLabels.totalRequests}
-                  value={stats.total}
-                  trend={{ delta: stats.trends.totalRequests.delta, isPositive: true, prefix: '+', suffix: '%' }}
-                />
-                <StatCard
-                  label={statsLabels.avgLatency}
-                  value={`${stats.avgLatency}${statsLabels.ms}`}
-                  trend={{ delta: stats.trends.avgLatency.delta, isPositive: false, prefix: '-', suffix: statsLabels.ms }}
-                />
-                <StatCard
-                  label={statsLabels.successRate}
-                  value={`${stats.successRate}%`}
-                  variant="success"
-                  trend={{ delta: stats.trends.successRate.delta, isPositive: true, prefix: '+', suffix: '%' }}
-                />
-                <StatCard
-                  label={statsLabels.errorRate}
-                  value={`${stats.errorRate}%`}
-                  variant="destructive"
-                  trend={{ delta: stats.trends.errorRate.delta, isPositive: false, prefix: '-', suffix: '%' }}
-                />
+              {/* Stats 2x2 Grid with controls */}
+              <div className={LogStats.wrapper}>
+                {/* Controls at top right */}
+                <div className={LogStats.controls}>
+                  <ThemeSwitcher
+                    isDark={theme === 'dark'}
+                    onToggle={toggleTheme}
+                    className={LogStats.themeSwitcher}
+                  />
+                  <Switch
+                    id="background-logs-switch"
+                    checked={backgroundLogs}
+                    onCheckedChange={setBackgroundLogs}
+                    aria-labelledby="background-logs-label"
+                    className={FilterRow.switchSmall}
+                  />
+                  <label
+                    id="background-logs-label"
+                    htmlFor="background-logs-switch"
+                    className={FilterRow.labelSmallMuted}
+                  >
+                    {filter.backgroundLogs}
+                  </label>
+                </div>
+
+                <div className={LogStats.grid}>
+                  <StatCard
+                    label={statsLabels.totalRequests}
+                    value={stats.total}
+                    trend={{ delta: stats.trends.totalRequests.delta, isPositive: true, prefix: '+', suffix: '%' }}
+                  />
+                  <StatCard
+                    label={statsLabels.avgLatency}
+                    value={`${stats.avgLatency}${statsLabels.ms}`}
+                    trend={{ delta: stats.trends.avgLatency.delta, isPositive: false, prefix: '-', suffix: statsLabels.ms }}
+                  />
+                  <StatCard
+                    label={statsLabels.successRate}
+                    value={`${stats.successRate}%`}
+                    variant="success"
+                    trend={{ delta: stats.trends.successRate.delta, isPositive: true, prefix: '+', suffix: '%' }}
+                  />
+                  <StatCard
+                    label={statsLabels.errorRate}
+                    value={`${stats.errorRate}%`}
+                    variant="destructive"
+                    trend={{ delta: stats.trends.errorRate.delta, isPositive: false, prefix: '-', suffix: '%' }}
+                  />
+                </div>
               </div>
             </div>
 

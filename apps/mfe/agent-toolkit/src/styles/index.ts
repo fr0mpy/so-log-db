@@ -209,6 +209,12 @@ export const Grid = {
 // ============================================================================
 
 export const LogStats = {
+  /** Wrapper for chart+stats with controls at top right */
+  wrapper: 'relative',
+  /** Controls positioned at top right of stats container */
+  controls: 'absolute top-0 right-0 flex items-center gap-2 z-10',
+  /** Theme switcher with left margin */
+  themeSwitcher: 'ml-2',
   /** 2x2 grid with separate cards - self-center for vertical alignment */
   grid: 'grid grid-cols-2 gap-2 self-center',
   /** Card content padding - fixed height for skeleton alignment, centered vertically */
@@ -478,8 +484,14 @@ export const FilterRow = {
   label: [Typography.textSm, Typography.fontMedium].join(' '),
   /** Muted filter label for secondary info */
   labelMuted: [Typography.textSm, Typography.textMuted].join(' '),
+  /** Small muted label (xs size) */
+  labelSmallMuted: [Typography.textXs, Typography.textMuted].join(' '),
   /** Toggle wrapper for switch + label */
   toggleWrapper: 'flex items-center gap-2',
+  /** Secondary row below main filter bar */
+  secondaryRow: 'flex items-center justify-end gap-2 -mt-2 mb-2 -mx-8 px-8',
+  /** Smaller switch scale */
+  switchSmall: 'scale-90 origin-right',
   /** Icon for filter cards */
   icon: 'w-4 h-4 text-muted-foreground',
   /** Actions group wrapper (theme switcher + refresh) - ml-auto pushes to far right */
