@@ -8,55 +8,31 @@
 sequenceDiagram
     participant User
     participant Browser
-    participant §1§
+    participant Shell
     participant SW as Service Worker
-    participant Bundle as MFE Bundle CDN
-    participant MFE
     participant API as REST API
     participant LS as LocalStorage
-    participant PS as PowerSync Client
-    participant SQL as SQLite
-    participant PSS as PowerSync Service
 
     Note over User,Shell: Entry (Direct Visit or In-App Nav)
-    User->>Browser: Navigate to /log-dashboard/...
-    Browser->>Shell: GET /log-dashboard/...
-    Shell->>Shell: SSR: Match URL, inject modulepreload
-    Shell-->>Browser: HTML with shell + preload hint
+    User->>Browser: Navigate to /agent-toolkit/logs
+    Browser->>Shell: GET /agent-toolkit/logs
+    Shell->>Shell: SSR: Match route, render page
+    Shell-->>Browser: HTML with page content
 
     par Parallel loading
-        Browser->>Bundle: Fetch MFE bundle (preload)
-        Bundle-->>Browser: JS bundle
-    and Shell hydration
-        Browser->>Shell: Execute Shell JS
-        Shell->>Shell: Hydrate shell
+        Browser->>Shell: Hydrate React app
         Shell->>SW: Register Service Worker
     end
 
-    Note over Shell,MFE: MFE Mount
-    Shell->>MFE: Mount MFE
-    MFE-->>User: Render skeleton UI
+    Note over Shell,API: Data Fetching
+    Shell->>API: GET /api/data
+    API-->>Shell: JSON response
+    Shell-->>User: Render with data
 
-    Note over MFE,API: REST-First Data (Fast Time-to-Content)
-    MFE->>API: GET /api/data
-    API-->>MFE: JSON response
-    MFE-->>User: Render with data
-
-    Note over MFE,PSS: Background Bootstrap (requestIdleCallback)
-    par Theme Init
-        MFE->>LS: Get cached theme
-        LS-->>MFE: Theme JSON (or fetch from CDN)
-        MFE->>MFE: Apply CSS vars
-    and SQLite Bootstrap
-        MFE->>PS: Download WASM + init
-        PS->>SQL: Create/open local DB
-        MFE->>SQL: Seed with REST response
-        PS->>PSS: Connect WebSocket
-    end
-
-    Note over PS,PSS: Background Sync Begins
-    PSS-->>PS: Stream updates
-    PS->>SQL: Update local
+    Note over Shell,LS: Theme Init
+    Shell->>LS: Get cached theme
+    LS-->>Shell: Theme preference
+    Shell->>Shell: Apply CSS vars
 ```
 
 ---
@@ -69,42 +45,147 @@ sequenceDiagram
     participant Browser
     participant Shell
     participant SW as Service Worker
-    participant MFE
     participant LS as LocalStorage
-    participant PS as PowerSync Client
-    participant SQL as SQLite
-    participant PSS as PowerSync Service
+    participant API as REST API
 
-    User->>Browser: Navigate to /log-dashboard/...
-    Browser->>Shell: GET /log-dashboard/...
-    Shell-->>Browser: HTML with shell + preload hint
+    User->>Browser: Navigate to /agent-toolkit/logs
+    Browser->>Shell: GET /agent-toolkit/logs
 
     par Parallel
-        SW-->>Browser: MFE bundle (from cache)
+        SW-->>Browser: Cached assets
     and
-        Browser->>Shell: Hydrate shell
+        Browser->>Shell: Hydrate app
     end
 
-    Shell->>MFE: Mount MFE
-    MFE-->>User: Render skeleton UI
+    Shell-->>User: Render skeleton UI
 
-    Note over MFE,SQL: Local Data (Instant)
-    MFE->>SQL: Check DB exists
-    SQL-->>MFE: Yes, populated
-    MFE->>PS: Query data
-    PS->>SQL: SELECT from local
-    SQL-->>PS: Records (~5-10ms)
-    PS-->>MFE: Data ready
-    MFE-->>User: Render with data (instant)
+    Note over Shell,API: Data Fetching
+    Shell->>API: GET /api/data
+    API-->>Shell: JSON response
+    Shell-->>User: Render with data
 
     par Background
-        MFE->>LS: Apply cached theme
-    and
-        PS->>PSS: Connect WebSocket
-        PSS-->>PS: Stream updates
-        PS->>SQL: Update local
-        PS-->>MFE: Reactive update
+        Shell->>LS: Apply cached theme
     end
 ```
 
 ---
+
+## Application Structure
+
+### Unified App with Lazy-Loaded Sections
+
+```mermaid
+graph TB
+    subgraph "Single Deployment"
+        Shell[Shell App<br/>apps/shell]
+
+        subgraph "Route Groups (Lazy Loaded)"
+            AT["(agent-toolkit)<br/>/agent-toolkit/*"]
+            CL["(component-library)<br/>/component-library/*"]
+            DR["(design-review)<br/>/design-review/*"]
+        end
+
+        Shell --> AT
+        Shell --> CL
+        Shell --> DR
+    end
+
+    subgraph "Shared Packages"
+        UI["@stackone-ui/core"]
+        I18N["@stackone/i18n"]
+        Utils["@stackone/utils"]
+    end
+
+    AT --> UI
+    CL --> UI
+    DR --> UI
+    Shell --> I18N
+```
+
+---
+
+## Data Flow
+
+### REST-First Pattern
+
+```mermaid
+flowchart LR
+    subgraph "Client"
+        Page[Page Component]
+        Table[Log Table]
+        Chart[Chart]
+    end
+
+    subgraph "Server"
+        API[REST API]
+        DB[(Database)]
+    end
+
+    Page -->|fetch| API
+    API -->|query| DB
+    DB -->|data| API
+    API -->|JSON| Page
+    Page -->|props| Table
+    Page -->|props| Chart
+```
+
+---
+
+## Component Architecture
+
+### Zero-Inline-Classnames Pattern
+
+```mermaid
+flowchart TB
+    subgraph "Component File"
+        C[component.tsx]
+        S[styles.ts]
+        T[types.ts]
+        I[index.ts]
+    end
+
+    subgraph "Style System"
+        Core["@stackone-ui/core/styles"]
+        Patterns[Style Patterns]
+        Tokens[Design Tokens]
+    end
+
+    S -->|imports| Patterns
+    S -->|imports| Tokens
+    C -->|imports| S
+    I -->|exports| C
+    I -->|exports| T
+```
+
+---
+
+## Theming
+
+### Two-Tier Theme System
+
+```mermaid
+flowchart TB
+    subgraph "Base Theme (Bundled)"
+        Spacing[Spacing Tokens]
+        Shadows[Shadow Tokens]
+        Motion[Motion Tokens]
+        Radii[Border Radius]
+    end
+
+    subgraph "Brand Theme (Runtime)"
+        Colors[Color Palette]
+        Typography[Font Family]
+    end
+
+    subgraph "CSS Variables"
+        Vars["--color-*, --spacing-*, etc."]
+    end
+
+    Spacing --> Vars
+    Shadows --> Vars
+    Motion --> Vars
+    Radii --> Vars
+    Colors --> Vars
+    Typography --> Vars
+```
