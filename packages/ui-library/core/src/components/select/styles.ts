@@ -30,6 +30,7 @@ export const SelectStyles = {
   },
   positioner: {
     base: 'z-dropdown',
+    inModal: 'z-popover',
   },
   popup: 'rounded-theme-md bg-neu-base shadow-neu-raised-lg',
   search: {

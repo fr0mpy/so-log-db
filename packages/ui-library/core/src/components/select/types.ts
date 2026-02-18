@@ -48,6 +48,10 @@ export interface SelectRootProps {
   placement?: SelectPlacement
   /** Visual variant - 'ghost' removes background/shadow for inline use */
   variant?: SelectVariant
+  /** When true, uses higher z-index for use inside modals/dialogs */
+  inModal?: boolean
+  /** Override dropdown minimum width (e.g., "6.5rem"). Defaults to trigger width. */
+  dropdownMinWidth?: string
 }
 
 export interface SelectTriggerProps {
@@ -113,4 +117,5 @@ export interface SelectContextValue {
   width: SelectWidth
   placement: SelectPlacement
   variant: SelectVariant
+  inModal: boolean
 }

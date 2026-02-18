@@ -74,6 +74,8 @@ function SelectRoot({
   width = 'full',
   placement = 'bottom',
   variant = 'default',
+  inModal = false,
+  dropdownMinWidth,
 }: SelectRootProps) {
   const [currentValue, setValue] = useControlledState(value, defaultValue, onValueChange)
   const [isOpen, setIsOpen] = useControlledState<boolean>(undefined, false)
@@ -94,16 +96,20 @@ function SelectRoot({
   useLayoutEffect(() => {
     if (isOpen && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect()
+      // Parse dropdownMinWidth if provided (supports rem values), otherwise use trigger width
+      const overrideMinWidth = dropdownMinWidth
+        ? parseFloat(dropdownMinWidth) * 16 // Convert rem to px
+        : 0
       const position = {
         // For 'top' placement, dropdown ends at trigger top; for 'bottom', starts at trigger bottom
         top: placement === 'top' ? rect.top : rect.bottom,
         left: rect.left,
-        minWidth: rect.width,
+        minWidth: Math.max(rect.width, overrideMinWidth),
       }
       lockedPositionRef.current = position
       setDropdownPosition(position)
     }
-  }, [isOpen, setDropdownPosition, placement])
+  }, [isOpen, setDropdownPosition, placement, dropdownMinWidth])
 
   // Close on click outside
   useClickOutsideMultiple(
@@ -155,6 +161,7 @@ function SelectRoot({
       width,
       placement,
       variant,
+      inModal,
     }),
     [
       isOpen,
@@ -171,6 +178,7 @@ function SelectRoot({
       width,
       placement,
       variant,
+      inModal,
     ]
   )
 
@@ -275,7 +283,7 @@ function SelectPortal({ children }: SelectPortalProps) {
 
 // Select.Positioner - Positions the dropdown
 function SelectPositioner({ children }: SelectPositionerProps) {
-  const { dropdownPosition, lockedPositionRef, dropdownRef, setIsOpen, triggerRef, setSearchQuery, triggerMode, placement } = useSelectContext()
+  const { dropdownPosition, lockedPositionRef, dropdownRef, setIsOpen, triggerRef, setSearchQuery, triggerMode, placement, inModal } = useSelectContext()
 
   const handleMouseLeave = useCallback(
     (e: React.MouseEvent) => {
@@ -316,7 +324,7 @@ function SelectPositioner({ children }: SelectPositionerProps) {
       ref={dropdownRef}
       onMouseLeave={handleMouseLeave}
       style={positionStyle}
-      className={S.positioner.base}
+      className={inModal ? S.positioner.inModal : S.positioner.base}
     >
       {children}
     </div>

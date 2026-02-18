@@ -40,6 +40,8 @@ export interface SelectProps {
   width?: SelectWidth
   /** Visual variant - 'ghost' removes background/shadow for inline use */
   variant?: SelectVariant
+  /** Override dropdown minimum width (e.g., "6.5rem"). Defaults to trigger width. */
+  dropdownMinWidth?: string
 }
 
 /**
@@ -61,6 +63,7 @@ export function Select({
   triggerMode,
   width,
   variant,
+  dropdownMinWidth,
 }: SelectProps) {
   // Find the selected option and resolve display value
   const currentValue = value ?? defaultValue
@@ -79,6 +82,7 @@ export function Select({
       triggerMode={triggerMode}
       width={width}
       variant={variant}
+      dropdownMinWidth={dropdownMinWidth}
     >
       <SelectNamespace.Trigger className={className}>
         <span className={!displayLabel ? S.value.placeholder : undefined}>
