@@ -7,12 +7,15 @@ import { Card } from '@stackone-ui/core/card'
 import { Paper } from '@stackone-ui/core/paper'
 import { Pagination } from '@stackone-ui/core/pagination'
 import { SelectCompound as Select } from '@stackone-ui/core/select'
-import { Skeleton } from '@stackone-ui/core/skeleton'
 import { PAGINATION, TABLE } from '../../config'
+import { LogTableSkeleton } from './LogTableLazy'
 import { ProviderIcon } from '../../components/ProviderIcon'
 import { LatencyBar } from '../../components/LatencyBar'
 import { useLogHover } from './LogHoverContext'
 import { Tooltip } from '@stackone-ui/core/tooltip'
+import { useToast } from '@stackone-ui/core/toast'
+import { Button } from '@stackone-ui/core/button'
+import { replayRequest } from './actions'
 import {
   Text,
   DataTable,
@@ -26,7 +29,6 @@ import {
   RowActions,
   TableIcon,
   LogPagination,
-  TableRowSkeleton,
   PaginationSelect,
 } from '../../styles'
 
@@ -69,6 +71,9 @@ interface LogTableProps {
     actions: {
       replay: string
       replayDescription: string
+      replayLoading: string
+      replaySuccess: string
+      replayError: string
       batchReplay: string
       batchReplayDescription: string
       requestTester: string
@@ -95,8 +100,8 @@ const ChevronDown = () => (
 
 // Action Icons for row hover menu
 const ReplayIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M8 5.14v14l11-7-11-7z" />
   </svg>
 )
 
@@ -202,6 +207,7 @@ function generatePaginationNumbers(current: number, total: number, siblings = 1)
 export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
   const { table, dates, aria, pagination: paginationLabels, actions } = translations
   const { setHoveredTime } = useLogHover()
+  const { addToast, removeToast } = useToast()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   // Pagination state
@@ -210,6 +216,9 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
 
   // Keyboard navigation state for roving tabindex
   const [focusedRowIndex, setFocusedRowIndex] = useState<number>(-1)
+
+  // Track if component is mounted to prevent flash of empty content
+  const [isMounted, setIsMounted] = useState(false)
 
   // Calculate pagination
   const totalPages = Math.ceil(logs.length / pageSize)
@@ -244,6 +253,39 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
 
   const handleRowMouseLeave = () => {
     setHoveredTime(null)
+  }
+
+  // Handle replay request with toast feedback
+  const handleReplay = async (logId: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+
+    // Show loading toast (duration: 0 = no auto-dismiss)
+    const loadingId = addToast({
+      variant: 'loading',
+      position: 'bottom-right',
+      title: actions.replayLoading,
+      duration: 0,
+    })
+
+    const result = await replayRequest(logId)
+    removeToast(loadingId)
+
+    if (result.success) {
+      addToast({
+        variant: 'success',
+        position: 'bottom-right',
+        title: actions.replaySuccess,
+        duration: 3000,
+      })
+    } else {
+      addToast({
+        variant: 'destructive',
+        position: 'bottom-right',
+        title: actions.replayError,
+        description: result.error,
+        duration: 5000,
+      })
+    }
   }
 
   // Keyboard navigation for table rows (roving tabindex pattern)
@@ -306,6 +348,17 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
     setFocusedRowIndex(-1)
   }, [currentPage, pageSize])
 
+  // Set mounted after first render to prevent flash of empty content
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  // Show skeleton during virtualizer initialization to prevent flash of empty content
+  // The virtualizer needs one render cycle to measure the scroll container
+  if (!isMounted) {
+    return <LogTableSkeleton />
+  }
+
   // Static row classes - hover is handled by CSS only for smooth scrolling
   const rowClasses = [DataTable.rowWrapper, DataTable.row].join(' ')
 
@@ -364,58 +417,7 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
               position: 'relative',
             }}
           >
-            {/* Skeleton rows while virtualizer initializes */}
-            {virtualizer.getVirtualItems().length === 0 &&
-              [...Array(pageSize)].map((_, i) => (
-                <div key={`skeleton-${i}`} className={DataTable.rowWrapper}>
-                  <div className={DataTable.row} style={{ height: `${TABLE.rowHeight}px` }}>
-                    {/* Requested: date + time stacked */}
-                    <div className={[DataTable.cell, LogTableColumns.requested].join(' ')}>
-                      <div className={TableRowSkeleton.stack}>
-                        <Skeleton className="h-3 w-12" />
-                        <Skeleton className="h-4 w-16" />
-                      </div>
-                    </div>
-                    {/* Provider: icon + text */}
-                    <div className={[DataTable.cell, LogTableColumns.provider].join(' ')}>
-                      <div className={TableRowSkeleton.rowWithIcon}>
-                        <Skeleton className="h-6 w-6 rounded-full" />
-                        <div className={TableRowSkeleton.hiddenMdStack}>
-                          <Skeleton className="h-3.5 w-16" />
-                          <Skeleton className="h-2.5 w-8" />
-                        </div>
-                      </div>
-                    </div>
-                    {/* Origin Owner: single line */}
-                    <div className={[DataTable.cell, LogTableColumns.originOwner].join(' ')}>
-                      <Skeleton className="h-4 w-3/4" />
-                    </div>
-                    {/* Source: single line */}
-                    <div className={[DataTable.cell, LogTableColumns.source].join(' ')}>
-                      <Skeleton className="h-4 w-3/4" />
-                    </div>
-                    {/* Request: method badge + name */}
-                    <div className={[DataTable.cell, LogTableColumns.request].join(' ')}>
-                      <div className={TableRowSkeleton.rowWithIcon}>
-                        <Skeleton className="h-5 w-12 rounded" />
-                        <Skeleton className="hidden sm:block h-4 flex-1" />
-                      </div>
-                    </div>
-                    {/* Duration: text + bar */}
-                    <div className={[DataTable.cell, LogTableColumns.duration].join(' ')}>
-                      <div className={TableRowSkeleton.centeredStack}>
-                        <Skeleton className="h-4 w-10" />
-                        <Skeleton className="h-1 w-16 rounded-full" />
-                      </div>
-                    </div>
-                    {/* Status: badge */}
-                    <div className={[DataTable.cell, LogTableColumns.status].join(' ')}>
-                      <Skeleton className="h-6 w-10 rounded-full" />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            {/* Render visible rows once virtualizer is ready */}
+            {/* Render visible rows */}
             {virtualizer.getVirtualItems().map((virtualRow) => {
               const log = paginatedLogs[virtualRow.index]
               const isFocused = focusedRowIndex === virtualRow.index
@@ -484,60 +486,68 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
                     <div className={RowActions.container}>
                       {/* Primary actions - always visible */}
                       <Tooltip content={actions.replayDescription}>
-                        <button
-                          type="button"
-                          className={RowActions.buttonPrimary}
+                        <Button
+                          variant="inset"
+                          iconOnly
+                          size="sm"
                           aria-label={actions.replay}
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={(e: React.MouseEvent) => handleReplay(log.id, e)}
                           onKeyDown={handleActionKeyDown}
                         >
                           <ReplayIcon className={RowActions.icon} />
-                        </button>
+                        </Button>
                       </Tooltip>
                       <Tooltip content={actions.requestTesterDescription}>
-                        <button
-                          type="button"
-                          className={RowActions.buttonPrimary}
+                        <Button
+                          variant="inset"
+                          iconOnly
+                          size="sm"
                           aria-label={actions.requestTester}
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={(e: React.MouseEvent) => e.stopPropagation()}
                           onKeyDown={handleActionKeyDown}
                         >
                           <RequestTesterIcon className={RowActions.icon} />
-                        </button>
+                        </Button>
                       </Tooltip>
                       {/* Secondary actions - hidden on <lg screens */}
                       <Tooltip content={actions.batchReplayDescription}>
-                        <button
-                          type="button"
-                          className={RowActions.buttonSecondary}
+                        <Button
+                          variant="inset"
+                          iconOnly
+                          size="sm"
+                          className="hidden lg:inline-flex"
                           aria-label={actions.batchReplay}
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={(e: React.MouseEvent) => e.stopPropagation()}
                           onKeyDown={handleActionKeyDown}
                         >
                           <BatchReplayIcon className={RowActions.icon} />
-                        </button>
+                        </Button>
                       </Tooltip>
                       <Tooltip content={actions.integration}>
-                        <button
-                          type="button"
-                          className={RowActions.buttonSecondary}
+                        <Button
+                          variant="inset"
+                          iconOnly
+                          size="sm"
+                          className="hidden lg:inline-flex"
                           aria-label={actions.integration}
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={(e: React.MouseEvent) => e.stopPropagation()}
                           onKeyDown={handleActionKeyDown}
                         >
                           <IntegrationIcon className={RowActions.icon} />
-                        </button>
+                        </Button>
                       </Tooltip>
                       <Tooltip content={actions.account}>
-                        <button
-                          type="button"
-                          className={RowActions.buttonSecondary}
+                        <Button
+                          variant="inset"
+                          iconOnly
+                          size="sm"
+                          className="hidden lg:inline-flex"
                           aria-label={actions.account}
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={(e: React.MouseEvent) => e.stopPropagation()}
                           onKeyDown={handleActionKeyDown}
                         >
                           <AccountIcon className={RowActions.icon} />
-                        </button>
+                        </Button>
                       </Tooltip>
                     </div>
                   </div>

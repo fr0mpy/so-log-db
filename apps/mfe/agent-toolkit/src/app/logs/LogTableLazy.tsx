@@ -13,8 +13,9 @@ type LogTableProps = ComponentProps<typeof LogTableType>
 /**
  * Skeleton for LogTable while loading
  * Matches the visual structure to prevent CLS
+ * Exported for use by LogTable during virtualizer initialization
  */
-function LogTableSkeleton() {
+export function LogTableSkeleton() {
   return (
     <div className={DataTable.scrollWrapper}>
       {/* Header */}

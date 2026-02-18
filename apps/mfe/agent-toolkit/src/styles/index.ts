@@ -263,8 +263,8 @@ export const DataTable = {
     'cursor-pointer hover:bg-muted/10 select-none',
   ].join(' '),
   headerCellRight: 'px-2 sm:px-3 py-3 whitespace-nowrap text-right',
-  /** Responsive row - clips overflow, raises on hover, presses on click */
-  row: ['group flex items-center w-full overflow-hidden', 'hover:bg-muted/10', 'hover:shadow-neu-raised-sm', 'active:shadow-neu-pressed-sm', 'transition-[background-color,box-shadow,border-color] duration-200 ease-neu', 'motion-reduce:transition-none', 'cursor-pointer'].join(' '),
+  /** Responsive row - clips overflow, raises on hover, presses on click (not on button clicks) */
+  row: ['group flex items-center w-full overflow-hidden', 'hover:bg-muted/10', 'hover:shadow-neu-raised-sm', '[&:not(:has(button:active))]:active:shadow-neu-pressed-sm', 'transition-[background-color,box-shadow,border-color] duration-200 ease-neu', 'motion-reduce:transition-none', 'cursor-pointer'].join(' '),
   /** Row focused state for keyboard navigation - uses inset ring to avoid overflow clipping */
   rowFocused: 'ring-2 ring-inset ring-primary',
   /** Row wrapper that includes separator - hides borders adjacent to hovered row */
@@ -307,8 +307,8 @@ export const LogTableColumns = {
   duration: 'hidden sm:flex sm:w-[80px] lg:w-[100px] shrink',
   /** Status: compact, fixed */
   status: 'w-[55px] md:w-[60px] lg:w-[70px] shrink-0',
-  /** Actions: responsive width, right-aligned */
-  actions: 'w-[80px] md:w-[120px] lg:w-[160px] shrink-0 justify-end',
+  /** Actions: responsive width, center-aligned */
+  actions: 'w-[100px] md:w-[140px] lg:w-[260px] shrink-0 flex justify-center',
 } as const
 
 // ============================================================================
@@ -411,32 +411,11 @@ export const RowAction = {
 // ============================================================================
 
 export const RowActions = {
-  /** Container for action icons - appears on row hover or when any button is focused, right-aligned */
+  /** Container for action icons - appears on row hover or when any button is focused, center-aligned */
   container: [
-    'flex items-center justify-end gap-0.5',
+    'flex items-center justify-center gap-0.5',
     'opacity-0 group-hover:opacity-100 has-[:focus-visible]:opacity-100',
     'transition-opacity duration-150',
-  ].join(' '),
-  /** Individual action button - shows primary icon fill when focused */
-  button: [
-    'p-1 rounded',
-    'hover:bg-muted/20',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
-    '[&:focus-visible>svg]:text-primary [&:focus-visible>svg]:fill-primary',
-  ].join(' '),
-  /** Primary action button - always visible */
-  buttonPrimary: [
-    'p-1 rounded',
-    'hover:bg-muted/20',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
-    '[&:focus-visible>svg]:text-primary [&:focus-visible>svg]:fill-primary',
-  ].join(' '),
-  /** Secondary action button - hidden on <lg to save space */
-  buttonSecondary: [
-    'hidden lg:block p-1 rounded',
-    'hover:bg-muted/20',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
-    '[&:focus-visible>svg]:text-primary [&:focus-visible>svg]:fill-primary',
   ].join(' '),
   /** Action icon - grey to match row text, adapts to theme */
   icon: 'size-5 flex-shrink-0 text-muted-foreground transition-colors duration-150',
@@ -503,6 +482,8 @@ export const FilterRow = {
   toggleWrapper: 'flex items-center gap-2',
   /** Icon for filter cards */
   icon: 'w-4 h-4 text-muted-foreground',
+  /** Actions group wrapper (theme switcher + refresh) */
+  actionsGroup: 'flex items-center gap-2',
 } as const
 
 // ============================================================================
