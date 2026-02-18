@@ -195,6 +195,9 @@ export const logs = {
   actions: {
     replay: 'logs.actions.replay',
     replayDescription: 'logs.actions.replayDescription',
+    replayLoading: 'logs.actions.replayLoading',
+    replaySuccess: 'logs.actions.replaySuccess',
+    replayError: 'logs.actions.replayError',
     batchReplay: 'logs.actions.batchReplay',
     batchReplayDescription: 'logs.actions.batchReplayDescription',
     requestTester: 'logs.actions.requestTester',

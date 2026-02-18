@@ -100,6 +100,9 @@ interface LogsPageContentProps {
       actions: {
         replay: string
         replayDescription: string
+        replayLoading: string
+        replaySuccess: string
+        replayError: string
         batchReplay: string
         batchReplayDescription: string
         requestTester: string

@@ -93,6 +93,9 @@
     "actions": {
       "replay": "Rejouer",
       "replayDescription": "Rejouer la requête unifiée",
+      "replayLoading": "Rejeu en cours",
+      "replaySuccess": "Succès",
+      "replayError": "Échec du rejeu",
       "batchReplay": "Rejouer en lot",
       "batchReplayDescription": "Rejouer toutes les requêtes sous-jacentes",
       "requestTester": "Testeur de requêtes",

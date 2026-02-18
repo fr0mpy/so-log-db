@@ -93,6 +93,9 @@
     "actions": {
       "replay": "Replay",
       "replayDescription": "Replay the unified request",
+      "replayLoading": "Replaying Request",
+      "replaySuccess": "Success",
+      "replayError": "Replay Failed",
       "batchReplay": "Batch-Replay",
       "batchReplayDescription": "Replay all underlying requests",
       "requestTester": "Request Tester",
