@@ -12,7 +12,7 @@ export const KeyValueListStyles = {
   row: [
     'flex items-start gap-4',
     'py-2 px-2',
-    'border-b border-border/30 last:border-b-0',
+    'border-b border-dashed border-border/30 last:border-b-0',
     'hover:bg-muted/5',
     'transition-colors duration-150',
   ].join(' '),
