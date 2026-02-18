@@ -20,7 +20,7 @@ export const Routes = {
 
   /** Shell home (cross-zone - use <a> not <Link>) */
   shell: {
-    home: '/',
+    home: process.env.NEXT_PUBLIC_SHELL_URL || '/',
   },
 } as const
 

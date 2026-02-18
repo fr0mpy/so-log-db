@@ -1,23 +1,26 @@
 /**
  * Shell Application Route Configuration
  *
- * Single source of truth for all routes within the shell app.
- * Includes cross-zone routes to MFEs.
+ * Routes for Multi-Zone MFE architecture.
+ * Cross-zone routes require `<a>` tags (not `<Link>`).
  *
  * @example
  * import { Routes } from '@/lib/routes'
- * <a href={Routes.agentToolkit}>Agent Toolkit MFE</a>
+ * <a href={Routes.agentToolkit}>Agent Toolkit</a>
  */
 
 export const Routes = {
   /** Shell home page */
   home: '/',
 
-  /** Agent Toolkit MFE (cross-zone - use <a> not <Link>) */
+  /** Agent Toolkit MFE (cross-zone) */
   agentToolkit: '/agent-toolkit',
 
-  /** Component Library MFE (cross-zone - use <a> not <Link>) */
+  /** Component Library MFE (cross-zone) */
   componentLibrary: '/component-library',
+
+  /** Design Review MFE (cross-zone) */
+  designReview: '/design-review',
 } as const
 
 /** Type for route keys */

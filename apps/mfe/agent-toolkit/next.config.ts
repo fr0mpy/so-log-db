@@ -9,7 +9,13 @@ const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 })
 
+// Shell URL for cross-zone navigation back to home
+const SHELL_URL = process.env.NEXT_PUBLIC_SHELL_URL || 'http://localhost:3000'
+
 const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_SHELL_URL: SHELL_URL,
+  },
   experimental: {
     reactCompiler: true,
     staleTimes: {
