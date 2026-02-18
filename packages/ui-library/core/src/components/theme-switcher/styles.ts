@@ -16,7 +16,6 @@ export const ThemeSwitcherStyles = {
     Interactive.Cursor.pointer,
     'bg-neu-base shadow-neu-raised',
     Layout.Flex.centerBoth,
-    'overflow-hidden',
   ].join(' '),
 
   iconContainer: [
