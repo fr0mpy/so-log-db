@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, useRef, type ReactNode } from 'react'
-import { getStorageString, setStorageString } from '@stackone/utils'
+import { setStorageString } from '@stackone/utils'
 import {
   defaultBaseTheme,
   applyBaseTheme,
@@ -40,24 +40,28 @@ interface ThemeProviderProps {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)
 
-const STORAGE_KEY = 'stackone-theme'
+/** localStorage key for persisted theme preference */
+export const THEME_STORAGE_KEY = 'stackone-theme'
 
 /**
- * Get the system color scheme preference
+ * Inline script to prevent theme flash (FOUC).
+ * Must run before React hydrates to set `dark` class on `<html>`.
+ * Use in layout.tsx: `<script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />`
  */
-function getSystemTheme(): ThemeMode {
-  if (typeof window === 'undefined') return 'light'
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-}
+export const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('${THEME_STORAGE_KEY}');if(t==='dark'||(t===null&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})()`
+
+// Backwards compat alias
+const STORAGE_KEY = THEME_STORAGE_KEY
 
 /**
- * Get initial theme: localStorage > system preference > light
+ * Get initial theme by reading from DOM class.
+ * The inline THEME_INIT_SCRIPT sets `dark` class before React hydrates,
+ * so we read from DOM to match and avoid hydration mismatch.
  */
 function getInitialTheme(): ThemeMode {
   if (typeof window === 'undefined') return 'light'
-  const stored = getStorageString<string>(STORAGE_KEY, '')
-  if (stored === 'light' || stored === 'dark') return stored
-  return getSystemTheme()
+  // Read from DOM class (set by THEME_INIT_SCRIPT) to match hydration
+  return document.documentElement.classList.contains('dark') ? 'dark' : 'light'
 }
 
 // =============================================================================
@@ -65,7 +69,7 @@ function getInitialTheme(): ThemeMode {
 // =============================================================================
 
 export function ThemeProvider({ children, brandThemeUrl }: ThemeProviderProps) {
-  // Initialize theme: localStorage > system preference > light
+  // Initialize theme from DOM class (set by THEME_INIT_SCRIPT before hydration)
   const [theme, setTheme] = useState<ThemeMode>(getInitialTheme)
 
   const [fontsLoaded, setFontsLoaded] = useState(false)
