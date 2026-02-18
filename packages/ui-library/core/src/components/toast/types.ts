@@ -1,7 +1,7 @@
 import type { ReactNode, HTMLAttributes } from 'react'
 import type { TargetAndTransition } from 'motion/react'
 
-export type ToastVariant = 'info' | 'success' | 'warning' | 'destructive'
+export type ToastVariant = 'info' | 'success' | 'warning' | 'destructive' | 'loading'
 export type ToastPosition = 'top' | 'top-left' | 'top-right' | 'bottom' | 'bottom-left' | 'bottom-right' | 'left' | 'right'
 
 export type MotionVariant = {
@@ -21,7 +21,7 @@ export interface ToastData {
 
 export interface ToastContextValue {
   toasts: ToastData[]
-  addToast: (toast: Omit<ToastData, 'id'>) => void
+  addToast: (toast: Omit<ToastData, 'id'>) => string
   removeToast: (id: string) => void
 }
 

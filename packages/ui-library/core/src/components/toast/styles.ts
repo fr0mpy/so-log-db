@@ -25,6 +25,7 @@ export const variantStyles: Record<ToastVariant, string> = {
   success: 'border-success/40',
   warning: 'border-warning/40',
   destructive: 'border-destructive/40',
+  loading: 'border-primary/40',
 }
 
 export const iconStyles: Record<ToastVariant, string> = {
@@ -32,6 +33,7 @@ export const iconStyles: Record<ToastVariant, string> = {
   success: 'text-success',
   warning: 'text-warning',
   destructive: 'text-destructive',
+  loading: 'text-primary animate-spin',
 }
 
 export const containerStyles: Record<ToastPosition, string> = {

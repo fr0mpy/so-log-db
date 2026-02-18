@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/utils/cn'
-import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react'
+import { X, CheckCircle, AlertCircle, Info, AlertTriangle, Loader2 } from 'lucide-react'
 import { useState, useEffect, useCallback, createContext, useContext } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'motion/react'
@@ -33,6 +33,7 @@ const icons: Record<ToastVariant, typeof Info> = {
   success: CheckCircle,
   warning: AlertTriangle,
   destructive: AlertCircle,
+  loading: Loader2,
 }
 
 const motionVariants: Record<ToastPosition, MotionVariant> = {
@@ -93,9 +94,10 @@ export function useToast() {
 function ToastProvider({ children }: ToastProviderProps) {
   const [toasts, setToasts] = useState<ToastData[]>([])
 
-  const addToast = useCallback((toast: Omit<ToastData, 'id'>) => {
+  const addToast = useCallback((toast: Omit<ToastData, 'id'>): string => {
     const id = crypto.randomUUID()
     setToasts((prev) => [...prev, { ...toast, id }])
+    return id
   }, [])
 
   const removeToast = useCallback((id: string) => {
@@ -220,3 +222,6 @@ export const Toast = {
   Description: ToastDescription,
   Close: ToastClose,
 }
+
+// Direct export for reliable imports (Object.assign pattern can cause issues)
+export { ToastProvider }
