@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation'
-import { componentRoutes } from '../routes'
+import { Routes } from '@/routes'
 
 /**
- * Component Library root page - redirects to first component.
+ * Component Library root page - redirects to design tokens.
  */
 export default function ComponentLibraryPage() {
-  redirect(`/${componentRoutes[0].path}`)
+  redirect(Routes.designTokens)
 }
