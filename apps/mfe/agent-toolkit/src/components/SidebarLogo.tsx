@@ -16,7 +16,7 @@ export function SidebarLogo() {
       aria-label="Go to homepage"
     >
       <Image
-        src="/agent-toolkit/logo.png"
+        src="/logo.png"
         alt="StackOne Logo"
         width={24}
         height={24}
