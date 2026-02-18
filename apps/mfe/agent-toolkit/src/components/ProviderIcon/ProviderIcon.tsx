@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { cn } from '@stackone-ui/core/utils'
 import { getProviderLogoUrl, isKnownProvider } from '../../config/providers'
 import {
@@ -37,6 +37,7 @@ function getFallbackColorForProvider(name: string): ProviderFallbackColor {
  */
 export function ProviderIcon({ name, size = 'sm', className, fallbackColor }: ProviderIconProps) {
   const [imageStatus, setImageStatus] = useState<'loading' | 'loaded' | 'error'>('loading')
+  const prevNameRef = useRef(name)
 
   const logoUrl = getProviderLogoUrl(name)
   const hasLogo = logoUrl !== null && isKnownProvider(name)
@@ -52,12 +53,13 @@ export function ProviderIcon({ name, size = 'sm', className, fallbackColor }: Pr
     setImageStatus('error')
   }
 
-  // Reset status when name changes
-  useEffect(() => {
-    if (hasLogo) {
+  // Reset status only when name actually changes (not on initial mount)
+  if (prevNameRef.current !== name) {
+    prevNameRef.current = name
+    if (hasLogo && imageStatus !== 'loading') {
       setImageStatus('loading')
     }
-  }, [name, hasLogo])
+  }
 
   // Show fallback while loading, on error, or for unknown providers
   const showFallback = !hasLogo || imageStatus !== 'loaded'
