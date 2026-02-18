@@ -72,8 +72,10 @@ export function ThemeProvider({ children, brandThemeUrl }: ThemeProviderProps) {
   // Initialize theme from DOM class (set by THEME_INIT_SCRIPT before hydration)
   const [theme, setTheme] = useState<ThemeMode>(getInitialTheme)
 
-  const [fontsLoaded, setFontsLoaded] = useState(false)
-  const [themeReady, setThemeReady] = useState(false)
+  // Use refs instead of state to avoid re-rendering entire app tree
+  // These are informational flags, not reactive state that children depend on
+  const fontsLoadedRef = useRef(false)
+  const themeReadyRef = useRef(false)
 
   // Store validated brand theme for mode switching
   const brandThemeRef = useRef<BrandTheme | null>(null)
@@ -109,8 +111,8 @@ export function ThemeProvider({ children, brandThemeUrl }: ThemeProviderProps) {
       // Apply brand theme (visual tokens)
       applyBrandTheme(validatedTheme, { mode: theme })
 
-      // Mark theme as ready
-      setThemeReady(true)
+      // Mark theme as ready (no re-render needed)
+      themeReadyRef.current = true
     }
 
     loadBrandTheme()
@@ -127,21 +129,35 @@ export function ThemeProvider({ children, brandThemeUrl }: ThemeProviderProps) {
     }
   }, [theme])
 
-  // Track font loading state
+  // Track font loading state (no re-render needed)
   useEffect(() => {
     if (typeof document !== 'undefined' && document.fonts) {
       if (document.fonts.status === 'loaded') {
-        setFontsLoaded(true)
+        fontsLoadedRef.current = true
       } else {
-        document.fonts.ready.then(() => setFontsLoaded(true))
+        document.fonts.ready.then(() => {
+          fontsLoadedRef.current = true
+        })
       }
     }
   }, [])
 
   const toggle = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'))
 
+  // Expose ref values directly - consumers can read but won't re-render when they change
+  const contextValue: ThemeContextValue = {
+    theme,
+    toggle,
+    get fontsLoaded() {
+      return fontsLoadedRef.current
+    },
+    get themeReady() {
+      return themeReadyRef.current
+    },
+  }
+
   return (
-    <ThemeContext.Provider value={{ theme, toggle, fontsLoaded, themeReady }}>
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   )
