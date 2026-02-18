@@ -1,36 +1,56 @@
-"use client";
+'use client'
 
-import { useTranslations } from "next-intl";
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@stackone-ui/core";
-import { HomeStyles as S } from "./styles";
-import { Routes } from "../lib/routes";
+import { useTranslations } from 'next-intl'
+import { Paper } from '@stackone-ui/core/paper'
+import { Text } from '@stackone-ui/core/text'
+import { HomeStyles as S } from './styles'
+import { Routes } from '../lib/routes'
 
 export default function HomePage() {
-  const t = useTranslations();
+  const t = useTranslations()
 
   return (
     <main className={S.main}>
-      <Card className={S.card}>
-        <CardHeader className={S.cardHeader}>
-          <CardTitle>{t("home.title")}</CardTitle>
-        </CardHeader>
-        <CardContent className={S.cardContent}>
-          <nav className={S.nav}>
-            <Button asChild>
-              <a href={Routes.agentToolkit}>{t("navigation.agentToolkit")}</a>
-            </Button>
-            <Button asChild variant="secondary">
-              <a href={Routes.componentLibrary}>{t("navigation.componentLibrary")}</a>
-            </Button>
-          </nav>
-        </CardContent>
-      </Card>
+      <nav className={S.nav}>
+        <Paper className={S.paper}>
+          <Paper.Header>
+            <Paper.Title>
+              <a href={Routes.designReview} className={S.link}>
+                {t('navigation.designReview')}
+              </a>
+            </Paper.Title>
+            <Paper.Description>
+              <Text color="muted">{t('home.designReviewDescription')}</Text>
+            </Paper.Description>
+          </Paper.Header>
+        </Paper>
+
+        <Paper className={S.paper}>
+          <Paper.Header>
+            <Paper.Title>
+              <a href={Routes.agentToolkit} className={S.link}>
+                {t('navigation.agentToolkit')}
+              </a>
+            </Paper.Title>
+            <Paper.Description>
+              <Text color="muted">{t('home.agentToolkitDescription')}</Text>
+            </Paper.Description>
+          </Paper.Header>
+        </Paper>
+
+        <Paper className={S.paper}>
+          <Paper.Header>
+            <Paper.Title>
+              <a href={Routes.componentLibrary} className={S.link}>
+                {t('navigation.componentLibrary')}
+              </a>
+            </Paper.Title>
+            <Paper.Description>
+              <Text color="muted">{t('home.componentLibraryDescription')}</Text>
+            </Paper.Description>
+          </Paper.Header>
+        </Paper>
+      </nav>
     </main>
-  );
+  )
 }

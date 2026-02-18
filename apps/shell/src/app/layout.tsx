@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 import { Providers } from './providers'
-import { MFE_URL } from '../lib/env'
 import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
 import './globals.css'
 
@@ -34,7 +33,6 @@ export default async function RootLayout({
       <head>
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="apple-touch-icon" href="/favicon.png" />
-        <link rel="modulepreload" href={`${MFE_URL}/connectors`} />
       </head>
       <body className={fontSans.className}>
         <NextIntlClientProvider messages={messages}>
