@@ -218,7 +218,7 @@ export default function FontShowcasePage() {
                 <Text variant="caption">Size: {previewSize}px</Text>
                 <Slider
                   value={previewSize}
-                  onChange={setPreviewSize}
+                  onValueChange={setPreviewSize}
                   min={12}
                   max={32}
                   className="w-24"
@@ -229,7 +229,7 @@ export default function FontShowcasePage() {
                 <Select
                   options={WEIGHT_OPTIONS}
                   value={previewWeight}
-                  onChange={(val) => setPreviewWeight(val as string)}
+                  onValueChange={(val) => setPreviewWeight(val)}
                   triggerMode="click"
                 />
               </div>
