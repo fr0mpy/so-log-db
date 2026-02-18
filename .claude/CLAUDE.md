@@ -32,6 +32,12 @@ Central index for rules, skills, and agents. Hook reads this every 3 prompts for
 | `skills/command-format.md` | create command, slash command, new command |
 | `skills/rule-format.md` | create rule, new rule, rule template |
 
+## Commands
+
+| Command | Triggers |
+|---------|----------|
+| `/audit` | audit, compliance check, rule check, codebase audit, comprehensive audit |
+
 ## Agents
 
 ### Pre-Work (Run BEFORE)
@@ -75,6 +81,13 @@ Central index for rules, skills, and agents. Hook reads this every 3 prompts for
 | `dead-code-finder` | unused exports, orphaned files, dead code, cleanup |
 | `type-narrower` | TypeScript error, type issue, type narrowing, as any |
 | `performance-profiler` | lighthouse, performance score, LCP, TBT, slow page, optimize performance, core web vitals |
+| `code-standards-auditor` | hardcode audit, magic number check, anti-pattern scan, code standards |
+| `routing-auditor` | route audit, Link check, navigation audit, Routes config |
+| `i18n-auditor` | translation audit, hardcoded string check, i18n compliance |
+| `error-handling-auditor` | error boundary audit, catch check, error state audit |
+| `data-fetching-auditor` | fetch audit, caching check, waterfall detection |
+| `git-auditor` | git audit, commit format, branch naming, sensitive files |
+| `test-auditor` | test audit, coverage check, test quality, testing patterns |
 
 ## Behavior
 
