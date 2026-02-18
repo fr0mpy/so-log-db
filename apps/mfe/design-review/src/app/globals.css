@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Theme tokens are injected by ThemeProvider via applyBrandTheme().
+ * DO NOT hardcode colors here — they come from:
+ * - packages/ui-library/core/src/themes/schema.ts (fallbacks)
+ * - apps/shell/public/themes/*.json (brand themes)
+ */
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
