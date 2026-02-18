@@ -9,15 +9,20 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@stackone-ui/core": "workspace:*",
+    "@stackone/i18n": "workspace:*",
+    "@stackone/utils": "workspace:*",
+    "@tanstack/react-virtual": "^3.13.18",
+    "lucide-react": "^0.564.0",
+    "motion": "^12.34.0",
     "next": "^15.0.0",
     "next-intl": "^3.26.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "@stackone-ui/core": "workspace:*",
-    "@stackone/i18n": "workspace:*",
-    "@stackone/utils": "workspace:*"
+    "recharts": "^3.7.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^15.0.0",
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

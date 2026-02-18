@@ -10,6 +10,9 @@
       "@/*": [
         "./src/*",
         "../../packages/ui-library/core/src/*"
+      ],
+      "@harness/*": [
+        "../../packages/ui-library/harness/src/*"
       ]
     },
     "baseUrl": ".",
