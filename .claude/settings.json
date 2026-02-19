@@ -28,9 +28,10 @@
         "matcher": ".*",
         "hooks": [
           {
-            "type": "command",
-            "command": ".claude/hooks/smart-inject-rules.sh",
-            "statusMessage": "Checking context..."
+            "type": "agent",
+            "prompt": "You are a plan mode context classifier.\n\nInput: $ARGUMENTS\n\n## Instructions\n\n1. Check if permission_mode is 'plan'. If NOT 'plan', output nothing and exit immediately.\n\n2. Read .claude/CLAUDE.md to get the rules/skills/agents trigger map.\n\n3. Analyze the user's prompt against the triggers in the map.\n\n4. For each matched RULE, use Read to get .claude/rules/{rule-name}.md and output its full content.\n\n5. For each matched SKILL, use Read to get .claude/skills/{skill-name}.md and output its full content.\n\n6. List matched agents as names only (PRE and POST categories).\n\n## Output Format (only if plan mode)\n\n<plan_context>\n## Relevant Rules\n<rule name=\"routing\">\n[full file content]\n</rule>\n\n## Relevant Skills\n<skill name=\"react-patterns\">\n[full file content]\n</skill>\n\n## Agents to Consider\n- PRE: pre-code-check, challenge-thinking\n- POST: component-auditor, accessibility-auditor\n</plan_context>",
+            "timeout": 60,
+            "statusMessage": "Analyzing task for relevant context..."
           }
         ]
       }
