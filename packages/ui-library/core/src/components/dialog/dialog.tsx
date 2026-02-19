@@ -265,8 +265,8 @@ function DialogClose({ asChild, children, onClick, className, ref, ...props }: D
 function DialogContent({ className, children, showClose = true, ref, ...props }: DialogContentProps) {
   return (
     <DialogPortal>
-      <DialogBackdrop />
-      <DialogPopup ref={ref} className={className} {...props}>
+      <DialogBackdrop key="backdrop" />
+      <DialogPopup key="popup" ref={ref} className={className} {...props}>
         {showClose && <DialogClose />}
         {children}
       </DialogPopup>
