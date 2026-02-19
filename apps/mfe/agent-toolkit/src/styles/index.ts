@@ -583,6 +583,31 @@ export const PageSkeleton = {
 } as const
 
 // ============================================================================
+// Logs Page Skeleton
+// ============================================================================
+
+export const LogsPageSkeleton = {
+  /** Header skeleton sizes - measured from actual components via Playwright */
+  headerTitle: 'h-8 w-14',           // 32px × 56px (actual: 32 × 57)
+  headerSearch: 'h-11 flex-1',       // 44px × flex (actual: 44 × flex)
+  headerDateSelect: 'h-11 w-[88px]', // 44px × 88px (actual: 44 × 88)
+  headerStatusSelect: 'h-11 w-16',   // 44px × 64px (actual: 44 × 64)
+  headerRefresh: 'h-8 w-8',          // 32px × 32px (actual: 32 × 32)
+  headerTheme: 'h-8 w-14',           // 32px × 56px (actual: 32 × 56)
+
+  /** Chart placeholder - no skeleton, reserves 220px height */
+  chartPlaceholder: 'min-w-0 h-[220px]',
+
+  /** Stats skeleton - measured 78px card height, 280px wrapper */
+  statsToggle: 'h-5 w-9 rounded-full',
+  statsLabel: 'h-4 w-28',
+  statCard: 'h-[78px]',              // 78px (actual: 78px, width from grid)
+
+  /** Table skeleton - measured ~41px row height */
+  tableRow: 'h-[41px] w-full',       // 41px (actual: 40.7px)
+} as const
+
+// ============================================================================
 // Position Utilities
 // ============================================================================
 
