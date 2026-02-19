@@ -52,7 +52,17 @@
     "selectLanguage": "Sélectionner la langue",
     "viewLogDetails": "Voir les détails du journal",
     "sortByColumn": "Trier par {column}",
-    "mainNavigation": "Navigation principale"
+    "mainNavigation": "Navigation principale",
+    "previousAnnotation": "Annotation précédente",
+    "nextAnnotation": "Annotation suivante",
+    "previousLog": "Journal précédent",
+    "nextLog": "Journal suivant",
+    "goToHomepage": "Aller à la page d'accueil",
+    "openNavigationMenu": "Ouvrir le menu de navigation",
+    "markAsHelpful": "Marquer comme utile",
+    "markAsNotHelpful": "Marquer comme non utile",
+    "openUrlInNewTab": "Ouvrir l'URL dans un nouvel onglet",
+    "copyUrlToClipboard": "Copier l'URL dans le presse-papiers"
   },
   "labels": {
     "previous": "Précédent",
@@ -122,5 +132,16 @@
       "cancel": "Annuler",
       "clear": "Effacer"
     }
+  },
+  "mobileWarning": {
+    "title": "Expérience de bureau recommandée",
+    "description": "Ce produit est actuellement optimisé pour les ordinateurs de bureau et peut fonctionner de manière inattendue sur mobile.",
+    "dismiss": "Compris"
+  },
+  "error": {
+    "title": "Une erreur s'est produite",
+    "description": "Une erreur inattendue s'est produite. Veuillez réessayer.",
+    "tryAgain": "Réessayer",
+    "goHome": "Aller à la page d'accueil"
   }
 }

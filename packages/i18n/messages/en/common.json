@@ -52,7 +52,17 @@
     "selectLanguage": "Select language",
     "viewLogDetails": "View log details",
     "sortByColumn": "Sort by {column}",
-    "mainNavigation": "Main navigation"
+    "mainNavigation": "Main navigation",
+    "previousAnnotation": "Previous annotation",
+    "nextAnnotation": "Next annotation",
+    "previousLog": "Previous log",
+    "nextLog": "Next log",
+    "goToHomepage": "Go to homepage",
+    "openNavigationMenu": "Open navigation menu",
+    "markAsHelpful": "Mark as helpful",
+    "markAsNotHelpful": "Mark as not helpful",
+    "openUrlInNewTab": "Open URL in new tab",
+    "copyUrlToClipboard": "Copy URL to clipboard"
   },
   "labels": {
     "previous": "Previous",
@@ -122,5 +132,16 @@
       "cancel": "Cancel",
       "clear": "Clear"
     }
+  },
+  "mobileWarning": {
+    "title": "Desktop Experience Recommended",
+    "description": "This product is currently focused on desktop and may perform strangely on mobile.",
+    "dismiss": "Got it"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. Please try again.",
+    "tryAgain": "Try again",
+    "goHome": "Go to homepage"
   }
 }

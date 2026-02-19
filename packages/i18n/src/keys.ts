@@ -46,6 +46,16 @@ export const aria = {
   viewLogDetails: 'aria.viewLogDetails',
   sortByColumn: 'aria.sortByColumn',
   mainNavigation: 'aria.mainNavigation',
+  previousAnnotation: 'aria.previousAnnotation',
+  nextAnnotation: 'aria.nextAnnotation',
+  previousLog: 'aria.previousLog',
+  nextLog: 'aria.nextLog',
+  goToHomepage: 'aria.goToHomepage',
+  openNavigationMenu: 'aria.openNavigationMenu',
+  markAsHelpful: 'aria.markAsHelpful',
+  markAsNotHelpful: 'aria.markAsNotHelpful',
+  openUrlInNewTab: 'aria.openUrlInNewTab',
+  copyUrlToClipboard: 'aria.copyUrlToClipboard',
 } as const
 
 export const labels = {
@@ -364,4 +374,19 @@ export const designReview = {
   title: 'designReview.title',
   screenA: 'designReview.screenA',
   screenB: 'designReview.screenB',
+} as const
+
+// Mobile Warning keys
+export const mobileWarning = {
+  title: 'mobileWarning.title',
+  description: 'mobileWarning.description',
+  dismiss: 'mobileWarning.dismiss',
+} as const
+
+// Error keys
+export const error = {
+  title: 'error.title',
+  description: 'error.description',
+  tryAgain: 'error.tryAgain',
+  goHome: 'error.goHome',
 } as const

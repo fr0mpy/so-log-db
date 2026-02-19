@@ -7,4 +7,5 @@ export {
   brand, skipLinks, navigation, aria, labels, placeholder, srOnly, settings,
   logLevels, timeRanges, dataTypes, status, datePicker,
   metadata, sidebar, dashboard, logs, logDetail, search, explore, home, designReview,
+  mobileWarning, error,
 } from './keys'
