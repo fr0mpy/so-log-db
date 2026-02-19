@@ -1,30 +1,18 @@
 'use client'
 
-import { Suspense } from 'react'
-import { Skeleton } from '@stackone-ui/core/skeleton'
-import { AppLayout, Spacing, PageSkeleton } from '../styles'
+import { AppLayout } from '../styles'
 
 interface MainContentProps {
   children: React.ReactNode
 }
 
 /**
- * Generic skeleton fallback for page loading states
- * Provides structural placeholder to prevent CLS during hydration
- */
-function PageSkeletonFallback() {
-  return (
-    <div className={Spacing.spaceY4}>
-      <Skeleton className={PageSkeleton.title} />
-      <Skeleton className={PageSkeleton.chart} />
-      <Skeleton className={PageSkeleton.table} />
-    </div>
-  )
-}
-
-/**
  * Main content area that responds to sidebar expansion
  * Uses flex-1 to naturally fill remaining space beside sticky sidebar
+ *
+ * Note: Loading states are handled by route-level loading.tsx files,
+ * not by a Suspense boundary here. This keeps the loading skeleton
+ * specific to each route (e.g., LogsSkeleton for /logs).
  */
 export function MainContent({ children }: MainContentProps) {
   return (
@@ -33,9 +21,7 @@ export function MainContent({ children }: MainContentProps) {
       tabIndex={-1}
       className={AppLayout.mainAnimated}
     >
-      <div className={AppLayout.content}>
-        <Suspense fallback={<PageSkeletonFallback />}>{children}</Suspense>
-      </div>
+      <div className={AppLayout.content}>{children}</div>
     </main>
   )
 }
