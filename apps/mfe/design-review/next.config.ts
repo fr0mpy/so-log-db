@@ -1,8 +1,13 @@
 import type { NextConfig } from 'next'
 import path from 'path'
+import withBundleAnalyzer from '@next/bundle-analyzer'
 import createNextIntlPlugin from 'next-intl/plugin'
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
+
+const bundleAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+})
 
 // Shell URL for cross-zone navigation back to home
 const SHELL_URL = process.env.NEXT_PUBLIC_SHELL_URL || 'http://localhost:3000'
@@ -13,7 +18,13 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     reactCompiler: true,
+    staleTimes: {
+      dynamic: 30,
+      static: 180,
+    },
   },
+
+  transpilePackages: ['@stackone-ui/core', '@stackone/i18n'],
 
   webpack: (config, { isServer }) => {
     // Resolve @/ alias for UI library source files
@@ -45,4 +56,4 @@ const nextConfig: NextConfig = {
   basePath: '/design-review',
 }
 
-export default withNextIntl(nextConfig)
+export default withNextIntl(bundleAnalyzer(nextConfig))
