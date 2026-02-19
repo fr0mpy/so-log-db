@@ -8,7 +8,7 @@ export function Logo() {
   return (
     <a href={Routes.shell.home} className={S.container} aria-label="Back to home">
       <Image
-        src="/design-review/logo.png"
+        src="/logo.png"
         alt=""
         width={24}
         height={24}
