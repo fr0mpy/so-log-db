@@ -35,6 +35,7 @@ Thumbs.db
 !**/public/favicon.png
 !**/public/logo.png
 !**/public/**/*.svg
+!**/public/screens/**/*.png
 
 # Logs
 *.log
