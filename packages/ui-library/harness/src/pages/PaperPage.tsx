@@ -14,15 +14,10 @@ export default function PaperPage() {
             Paper with subtle (sm) depth for lighter inset effect.
           </p>
         </Paper>
-        <Paper className="w-full max-w-sm p-6">
-          <a
-            href="https://github.com/fr0mpy/so-log-db"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-primary hover:underline"
-          >
-            GitHub Repo
-          </a>
+        <Paper depth="lg" className="w-full max-w-sm p-6">
+          <p className="text-sm text-muted-foreground">
+            Paper with large (lg) depth for a deeper carved effect.
+          </p>
         </Paper>
       </div>
       <Paper className="w-full max-w-md">
