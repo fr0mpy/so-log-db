@@ -489,11 +489,12 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
                           variant="inset"
                           iconOnly
                           size="sm"
+                          className="group/action"
                           aria-label={actions.replay}
                           onClick={(e: React.MouseEvent) => handleReplay(log.id, e)}
                           onKeyDown={handleActionKeyDown}
                         >
-                          <ReplayIcon className={RowActions.icon} />
+                          <ReplayIcon className={RowActions.iconFilled} />
                         </Button>
                       </Tooltip>
                       <Tooltip content={actions.requestTesterDescription}>
