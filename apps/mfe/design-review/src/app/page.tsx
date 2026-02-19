@@ -4,8 +4,8 @@ import { useTranslations } from 'next-intl'
 import { Text } from '@stackone-ui/core/text'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@stackone-ui/core/tabs'
 import { DesignViewer } from '../components/design-viewer'
+import { Logo } from '../components/logo'
 import { screenA, screenB } from '../data/screens'
-import { Routes } from '../routes'
 import { PageStyles as S } from './styles'
 
 export default function DesignReviewPage() {
@@ -13,19 +13,24 @@ export default function DesignReviewPage() {
 
   return (
     <main className={S.main}>
-      <header className={S.header}>
-        <Text variant="h1">{t('designReview.title')}</Text>
-        <a href={Routes.shell.home} className={S.backLink}>
-          {t('navigation.dashboard')}
-        </a>
-      </header>
-
-      <div className={S.content}>
-        <Tabs defaultValue="screen-a">
-          <TabsList>
+      <Tabs defaultValue="overview">
+        <div className={S.stickyHeader}>
+          <header className={S.header}>
+            <Logo />
+            <Text variant="h3">{t('designReview.title')}</Text>
+          </header>
+          <TabsList className={S.tabsList}>
+            <TabsTrigger value="overview">{t('designReview.overview')}</TabsTrigger>
             <TabsTrigger value="screen-a">{t('designReview.screenA')}</TabsTrigger>
             <TabsTrigger value="screen-b">{t('designReview.screenB')}</TabsTrigger>
           </TabsList>
+          <div className={S.headerSpacer} />
+        </div>
+
+        <div className={S.content}>
+          <TabsContent value="overview" className={S.overviewContent}>
+            <Text variant="body1">{t('designReview.overviewContent')}</Text>
+          </TabsContent>
 
           <TabsContent value="screen-a" className={S.tabContent}>
             <DesignViewer screen={screenA} />
@@ -34,8 +39,8 @@ export default function DesignReviewPage() {
           <TabsContent value="screen-b" className={S.tabContent}>
             <DesignViewer screen={screenB} />
           </TabsContent>
-        </Tabs>
-      </div>
+        </div>
+      </Tabs>
     </main>
   )
 }
