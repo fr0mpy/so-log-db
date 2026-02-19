@@ -2,11 +2,27 @@
 
 A highly configurable log dashboard platform built on Multi-Zone MFE architecture. Designed for smooth UX with runtime-configurable theming, internationalization, component styling, and behavior settings - all without rebuilds.
 
+## Quick Start
+
+```bash
+pnpm install
+pnpm dev                     # All apps in parallel (ports 3000-3003)
+pnpm dev:shell               # Shell only (port 3000)
+pnpm dev:agent-toolkit       # Agent Toolkit MFE (port 3001)
+pnpm dev:component-library   # Component Library MFE (port 3002)
+pnpm dev:design-review       # Design Review MFE (port 3003)
+pnpm dev:harness             # Component Gallery (port 5173)
+pnpm build                   # Production build
+pnpm clean                   # Remove turbo cache and node_modules
+pnpm clean:ports             # Kill processes on ports 3000-3003, 5173
+```
+
+**VSCode:** Press `Cmd+Shift+B` (macOS) or `Ctrl+Shift+B` (Windows/Linux) to run tasks.
+
 ## Contents
 
 - [Architecture](#architecture)
 - [Project Structure](#project-structure)
-- [Quick Start](#quick-start)
 - [Apps](#apps)
 - [Packages](#packages)
 - [Design System](#design-system)
@@ -27,27 +43,6 @@ Multi-Zone MFE architecture with 4 separate Vercel deployments. Shell serves as 
 | Component Library | `stackone-component-library.vercel.app` | `/component-library` | 3002 |
 | Design Review | `stackone-design-review.vercel.app` | `/design-review` | 3003 |
 
-### Cross-Zone Navigation
-
-**Shell to MFE:** Uses `<a>` tags (not `<Link>`) because MFEs are separate deployments:
-```tsx
-<a href={Routes.agentToolkit}>Agent Toolkit</a>
-```
-
-**MFE to Shell:** Uses `NEXT_PUBLIC_SHELL_URL` environment variable:
-```tsx
-<a href={Routes.shell.home}>Back to Home</a>
-```
-
-### Environment Variables
-
-| Project | Variable | Value |
-|---------|----------|-------|
-| Shell | `MFE_AGENT_TOOLKIT_URL` | `https://stackone-agent-toolkit.vercel.app` |
-| Shell | `MFE_COMPONENT_LIBRARY_URL` | `https://stackone-component-library.vercel.app` |
-| Shell | `MFE_DESIGN_REVIEW_URL` | `https://stackone-design-review.vercel.app` |
-| All MFEs | `NEXT_PUBLIC_SHELL_URL` | `https://stackone-shell.vercel.app` |
-
 ---
 
 ## Project Structure
@@ -65,29 +60,6 @@ packages/
     harness/                    -> Vite dev preview tool (port 5173)
   i18n/                         -> @stackone/i18n translations
   utils/                        -> @stackone/utils (logger, storage)
-```
-
----
-
-## Quick Start
-
-```bash
-pnpm install
-
-# Development
-pnpm dev                     # All apps in parallel
-pnpm dev:shell               # Shell only (port 3000)
-pnpm dev:agent-toolkit       # Agent Toolkit MFE (port 3001)
-pnpm dev:component-library   # Component Library MFE (port 3002)
-pnpm dev:design-review       # Design Review MFE (port 3003)
-pnpm dev:harness             # Component Gallery (port 5173)
-
-# Production build
-pnpm build
-
-# Clean
-pnpm clean                   # Remove turbo cache and node_modules
-pnpm clean:ports             # Kill processes on ports 3000-3003, 5173
 ```
 
 ---
