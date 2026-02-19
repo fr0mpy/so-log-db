@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from 'react'
 import { useTheme } from '@stackone-ui/core/providers'
-import { Spinner } from '@stackone-ui/core'
+import { Spinner } from '@stackone-ui/core/spinner'
 import {
   initBaseTheme,
   loadBrandTheme,

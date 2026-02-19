@@ -11,6 +11,7 @@ import { ThemeSwitcher } from '@stackone-ui/core/theme-switcher'
 import { useIsMobile } from '@stackone-ui/core/hooks'
 import { useTheme } from '@stackone-ui/core/providers'
 import { cn } from '@stackone-ui/core/utils'
+import { useTranslations, aria } from '@stackone/i18n'
 import { componentRoutes, Routes } from '../routes'
 import { LayoutStyles as S } from './styles'
 import { GallerySidebarLogo } from './GallerySidebarLogo'
@@ -66,6 +67,7 @@ export function GallerySidebar() {
   const isMobile = useIsMobile()
   const { theme, toggle } = useTheme()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const t = useTranslations()
 
   // Extract component path from URL (remove leading slash)
   const currentPath = pathname.slice(1) || componentRoutes[0].path
@@ -116,7 +118,7 @@ export function GallerySidebar() {
         size="md"
         className={S.sidebar.mobileTrigger}
         onClick={openSidebar}
-        aria-label="Open navigation menu"
+        aria-label={t(aria.openNavigationMenu)}
       >
         <Menu className="h-5 w-5" />
       </Button>

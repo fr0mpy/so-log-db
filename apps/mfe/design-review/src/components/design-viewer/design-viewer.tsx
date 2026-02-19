@@ -3,10 +3,12 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { Text } from '@stackone-ui/core/text'
+import { useTranslations, aria } from '@stackone/i18n'
 import type { DesignViewerProps } from './types'
 import { DesignViewerStyles as S } from './styles'
 
 export function DesignViewer({ screen }: DesignViewerProps) {
+  const t = useTranslations()
   const [activeIndex, setActiveIndex] = useState(0)
   const activeHotspot = screen.hotspots[activeIndex]
 
@@ -35,7 +37,7 @@ export function DesignViewer({ screen }: DesignViewerProps) {
         <button
           className={S.navButton}
           onClick={handlePrev}
-          aria-label="Previous annotation"
+          aria-label={t(aria.previousAnnotation)}
         >
           <svg
             width="24"
@@ -65,7 +67,7 @@ export function DesignViewer({ screen }: DesignViewerProps) {
         <button
           className={S.navButton}
           onClick={handleNext}
-          aria-label="Next annotation"
+          aria-label={t(aria.nextAnnotation)}
         >
           <svg
             width="24"
