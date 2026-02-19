@@ -8,6 +8,7 @@
     "agentToolkit": "Aller à Boîte à outils Agent",
     "designReviewDescription": "Un aperçu rapide des designs actuels du tableau de bord des logs",
     "agentToolkitDescription": "Ici vous trouverez le tableau de bord des logs",
-    "componentLibraryDescription": "Les composants + système de design utilisés pour notre Agent Toolkit"
+    "componentLibraryDescription": "Les composants + système de design utilisés pour notre Agent Toolkit",
+    "githubDescription": "Le code de ce dépôt"
   }
 }

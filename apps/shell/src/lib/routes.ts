@@ -21,6 +21,9 @@ export const Routes = {
 
   /** Design Review MFE (cross-zone) */
   designReview: '/design-review',
+
+  /** GitHub repository (external) */
+  github: 'https://github.com/fr0mpy/so-log-db',
 } as const
 
 /** Type for route keys */

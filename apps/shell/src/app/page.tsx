@@ -50,6 +50,24 @@ export default function HomePage() {
             </Paper.Description>
           </Paper.Header>
         </Paper>
+
+        <Paper className={S.paper}>
+          <Paper.Header>
+            <Paper.Title>
+              <a
+                href={Routes.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={S.link}
+              >
+                {t('navigation.github')}
+              </a>
+            </Paper.Title>
+            <Paper.Description>
+              <Text color="muted">{t('home.githubDescription')}</Text>
+            </Paper.Description>
+          </Paper.Header>
+        </Paper>
       </nav>
     </main>
   )
