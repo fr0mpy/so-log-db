@@ -1,5 +1,6 @@
 {
+  "framework": "nextjs",
   "installCommand": "cd ../../.. && pnpm install",
   "buildCommand": "cd ../../.. && pnpm turbo run build --filter=@stackone/mfe-component-library",
-  "framework": "nextjs"
+  "outputDirectory": ".next"
 }
