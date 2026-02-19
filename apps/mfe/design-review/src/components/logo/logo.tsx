@@ -1,11 +1,12 @@
 'use client'
 
 import Image from 'next/image'
+import { Routes } from '@/routes'
 import { LogoStyles as S } from './styles'
 
 export function Logo() {
   return (
-    <div className={S.container} aria-hidden="true">
+    <a href={Routes.shell.home} className={S.container} aria-label="Back to home">
       <Image
         src="/design-review/logo.png"
         alt=""
@@ -14,6 +15,6 @@ export function Logo() {
         className={S.image}
         priority
       />
-    </div>
+    </a>
   )
 }
