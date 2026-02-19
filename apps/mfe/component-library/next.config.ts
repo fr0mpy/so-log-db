@@ -23,6 +23,8 @@ const nextConfig: NextConfig = {
     },
   },
 
+  transpilePackages: ['@stackone-ui/core', '@stackone/i18n'],
+
   webpack: (config, { isServer }) => {
     // Resolve aliases for UI library and harness source files
     config.resolve.alias = {
