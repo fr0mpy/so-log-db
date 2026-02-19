@@ -140,7 +140,7 @@ function generateMockLogs(count: number, baseSeed: number) {
     const baseRequest = REQUESTS[requestIndex]
     const request = {
       method: baseRequest.method,
-      name: `${provider.name} ${baseRequest.name}`,
+      name: baseRequest.name,
     }
 
     const sourceIndex = Math.floor(seededRandom(seed * 7) * SOURCES.length)
@@ -392,6 +392,7 @@ export default async function LogsPage() {
       aria: {
         viewLogDetails: t(aria.viewLogDetails),
         pagination: t(aria.pagination),
+        sortByColumn: t(aria.sortByColumn),
       },
       pagination: {
         showing: t(logs.pagination.showing),

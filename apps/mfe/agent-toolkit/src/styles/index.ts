@@ -260,17 +260,17 @@ export const DataTable = {
   headerCard: 'absolute top-0 left-0 right-0 z-10 rounded-t-lg rounded-b-none border-b-0 shadow-neu-raised-highlight',
   /** Paper wrapper for body - padding-top accounts for absolute header height */
   bodyPaper: 'pt-11 rounded-lg overflow-hidden',
-  /** Responsive header row - no min-width */
-  headerRow: 'flex w-full',
-  /** Responsive cell padding - smaller on mobile */
-  headerCell: 'px-2 sm:px-3 py-3 whitespace-nowrap',
+  /** Responsive header row - gap-8 for consistent column spacing, px-4 for edge padding */
+  headerRow: 'flex w-full gap-8 px-4',
+  /** Cell base padding - gap handles horizontal spacing */
+  headerCell: 'py-3 whitespace-nowrap',
   headerCellSortable: [
-    'px-2 sm:px-3 py-3 whitespace-nowrap',
+    'py-3 whitespace-nowrap',
     'cursor-pointer hover:bg-muted/10 select-none',
   ].join(' '),
-  headerCellRight: 'px-2 sm:px-3 py-3 whitespace-nowrap text-right',
-  /** Responsive row - clips overflow, raises on hover, presses on click (not on button clicks) */
-  row: ['group flex items-center w-full overflow-hidden', 'hover:bg-muted/10', 'hover:shadow-neu-raised-sm', '[&:not(:has(button:active))]:active:shadow-neu-pressed-sm', 'transition-[background-color,box-shadow,border-color] duration-200 ease-neu', 'motion-reduce:transition-none', 'cursor-pointer'].join(' '),
+  headerCellRight: 'py-3 whitespace-nowrap text-right',
+  /** Responsive row - gap-8 for consistent column spacing, px-4 for edge padding */
+  row: ['group flex items-center w-full gap-8 px-4 overflow-hidden', 'hover:bg-muted/10', 'hover:shadow-neu-raised-sm', '[&:not(:has(button:active))]:active:shadow-neu-pressed-sm', 'transition-[background-color,box-shadow,border-color] duration-200 ease-neu', 'motion-reduce:transition-none', 'cursor-pointer'].join(' '),
   /** Row focused state for keyboard navigation - uses inset ring to avoid overflow clipping */
   rowFocused: 'ring-2 ring-inset ring-primary',
   /** Row wrapper that includes separator - hides borders adjacent to hovered row */
@@ -281,10 +281,12 @@ export const DataTable = {
   ].join(' '),
   /** Skeleton row wrapper - no borders to prevent flash before animation starts */
   rowWrapperSkeleton: '',
-  /** Responsive cell padding */
-  cell: 'px-2 sm:px-3 py-3 flex items-center overflow-hidden',
-  cellRight: 'px-2 sm:px-3 py-3 text-right text-sm flex items-center justify-end',
-  cellTruncate: 'px-2 sm:px-3 py-3 truncate flex items-center overflow-hidden',
+  /** Cell base - gap handles horizontal spacing, vertical padding only */
+  cell: 'py-3 flex items-center overflow-hidden',
+  /** Same as cell - gap provides consistent spacing */
+  cellTight: 'py-3 flex items-center overflow-hidden',
+  cellRight: 'py-3 text-right text-sm flex items-center justify-end',
+  cellTruncate: 'py-3 truncate flex items-center overflow-hidden',
   scrollArea: 'max-h-[60vh] overflow-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
 } as const
 
@@ -293,28 +295,27 @@ export const DataTable = {
 // ============================================================================
 
 /**
- * Responsive column widths - fluid scaling to fit viewport
- * - lg (1024px+): Full table, all columns ~1000px total
- * - md (768px): ~730px total (fits 768px viewport)
- * - sm (640px): ~525px total (fits 640px viewport)
+ * Responsive column widths - fixed widths for predictable spacing
+ * Only 'request' column grows to fill remaining space.
+ * All other columns use fixed widths with shrink-0 grow-0.
  */
 export const LogTableColumns = {
-  /** Timestamp: responsive width, always visible */
-  requested: 'w-[90px] md:w-[100px] lg:w-[110px] shrink-0',
-  /** Provider: shrink allowed, responsive width */
-  provider: 'w-[100px] md:w-[130px] lg:w-[160px] shrink',
-  /** Origin: hidden <lg */
-  originOwner: 'hidden lg:flex lg:flex-1 lg:min-w-[100px]',
-  /** Source: hidden <md, reduced width */
-  source: 'hidden md:flex md:w-[90px] lg:w-[120px] shrink',
-  /** Request: reduced min-width for flexibility */
-  request: 'flex-1 min-w-[120px] md:min-w-[150px] lg:min-w-[180px]',
-  /** Duration: hidden <sm, reduced width */
-  duration: 'hidden sm:flex sm:w-[80px] lg:w-[100px] shrink',
-  /** Status: compact, content-sized */
-  status: 'shrink-0',
-  /** Actions: responsive width, center-aligned */
-  actions: 'w-[100px] md:w-[140px] lg:w-[260px] shrink-0 flex justify-center',
+  /** Timestamp: fixed 100px */
+  requested: 'w-[100px] shrink-0 grow-0',
+  /** Provider: 40px mobile (icon only), 150px desktop (icon + text) */
+  provider: 'w-10 md:w-[150px] shrink-0 grow-0',
+  /** Origin Owner: fixed 140px, hidden below lg */
+  originOwner: 'hidden lg:flex w-[140px] shrink-0 grow-0',
+  /** Source: fixed 90px */
+  source: 'w-[90px] shrink-0 grow-0',
+  /** Request: fixed 200px (badge 64px + gap 8px + ~120px for name) */
+  request: 'w-[200px] shrink-0 grow-0',
+  /** Duration: fixed 90px, hidden below sm, extra margin before status */
+  duration: 'hidden sm:flex w-[90px] shrink-0 grow-0 justify-end mr-2',
+  /** Status: fixed 56px (fits 3-digit codes with padding) */
+  status: 'w-14 shrink-0 grow-0',
+  /** Actions: fills remaining space, buttons centered */
+  actions: 'flex-1 flex justify-center',
 } as const
 
 // ============================================================================
@@ -378,8 +379,8 @@ export const VersionBadge = {
 export const SourceCell = {
   container: [Layout.Flex.center, 'gap-2'].join(' '),
   icon: 'w-4 h-4 rounded bg-muted/30 flex items-center justify-center text-[10px] text-muted-foreground shrink-0',
-  /** Source text - hidden below lg for icon-only mode */
-  text: 'hidden lg:block text-sm truncate max-w-[100px]',
+  /** Source text - always visible with truncation */
+  text: 'text-sm truncate',
 } as const
 
 // ============================================================================
@@ -457,7 +458,12 @@ export const LatencyBar = {
 // ============================================================================
 
 export const TableIcon = {
+  /** Base sort indicator (deprecated - use SortIndicatorStyles instead) */
   sortIndicator: 'w-4 h-4 ml-1 inline-block text-muted-foreground',
+  /** Active sort indicator - primary color when sorting */
+  sortIndicatorActive: 'w-4 h-4 ml-1 inline-block text-primary',
+  /** Inactive sort indicator - subtle, appears on hover */
+  sortIndicatorInactive: 'w-4 h-4 ml-1 inline-block text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity',
 } as const
 
 // ============================================================================
@@ -541,8 +547,8 @@ export const TableRowSkeleton = {
   hiddenMdStack: 'hidden md:flex flex-col gap-0.5',
   /** Centered column stack for duration */
   centeredStack: 'flex flex-col items-center gap-0.5',
-  /** Min width for inner row */
-  innerRow: 'flex items-center min-w-[900px]',
+  /** Row layout - matches DataTable.row gap and padding */
+  innerRow: 'flex items-center w-full gap-8 px-4',
 } as const
 
 // ============================================================================
@@ -593,7 +599,7 @@ export const LogsPageSkeleton = {
   headerDateSelect: 'h-11 w-[88px]', // 44×88px
   headerStatusSelect: 'h-11 w-16',   // 44×64px
   headerRefresh: 'h-8 w-8',          // 32×32px
-  headerTheme: 'h-8 w-14',           // 32×56px
+  headerTheme: 'h-8 w-14 rounded-full', // 32×56px theme switcher
 
   /** Chart - MUST be visible Skeleton, not empty div */
   chartPlaceholder: 'h-[220px] w-full rounded-lg',
@@ -616,6 +622,30 @@ export const Position = {
   absolute: 'absolute',
   searchIcon: 'absolute right-3 top-1/2 -translate-y-1/2',
   flex1: 'flex-1',
+} as const
+
+// ============================================================================
+// Log Table Skeleton Sizes
+// ============================================================================
+
+export const LogTableSkeletonSizes = {
+  /** Header cell skeleton widths */
+  headerRequested: 'h-4 w-20',
+  headerProvider: 'h-4 w-20',
+  headerOrigin: 'h-4 w-24',
+  headerSource: 'h-4 w-16',
+  headerRequest: 'h-4 w-20',
+  headerDuration: 'h-4 w-20',
+  headerStatus: 'h-4 w-14',
+  /** Row cell skeleton sizes */
+  cellTimestamp: 'h-10 w-full',
+  cellProvider: 'h-10 w-full',
+  cellText: 'h-4 w-3/4',
+  cellFull: 'h-4 w-full',
+  cellDuration: 'h-4 w-16',
+  cellStatus: 'h-6 w-12 rounded-full',
+  /** Row container - matches DataTable.row layout (gap-8 px-4) without interactive states */
+  rowInner: 'flex items-center w-full gap-8 px-4 py-3',
 } as const
 
 // Re-export core patterns for convenience

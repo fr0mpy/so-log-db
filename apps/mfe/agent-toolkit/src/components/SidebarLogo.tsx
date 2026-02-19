@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { useTranslations, aria } from '@stackone/i18n'
 import { Routes } from '@/routes'
 import { SidebarLogoStyles as S } from './styles'
 
@@ -9,11 +10,13 @@ import { SidebarLogoStyles as S } from './styles'
  * Displays in a rounded container with glass effect
  */
 export function SidebarLogo() {
+  const t = useTranslations()
+
   return (
     <a
       href={Routes.shell.home}
       className={S.container}
-      aria-label="Go to homepage"
+      aria-label={t(aria.goToHomepage)}
     >
       <Image
         src="/agent-toolkit/favicon.png"

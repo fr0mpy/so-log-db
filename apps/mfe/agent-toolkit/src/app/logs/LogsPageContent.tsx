@@ -92,6 +92,7 @@ interface LogsPageContentProps {
       aria: {
         viewLogDetails: string
         pagination: string
+        sortByColumn: string
       }
       pagination: {
         showing: string

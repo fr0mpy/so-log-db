@@ -6,7 +6,7 @@ import { useTranslations, aria } from '@stackone/i18n'
 import { Dialog } from '@stackone-ui/core/dialog'
 import { Tabs } from '@stackone-ui/core/tabs'
 import { Button } from '@stackone-ui/core/button'
-import { DialogStyles, TabsStyles, FooterStyles } from './styles'
+import { DialogStyles, TabsStyles, FooterStyles, IconSize } from './styles'
 import { LogDetailHeader } from './LogDetailHeader'
 import { DetailsTab } from './DetailsTab'
 import { UnderlyingRequestsTab } from './UnderlyingRequestsTab'
@@ -82,7 +82,7 @@ export function LogDetailDialog({
           <LogDetailHeader log={log} />
 
           {/* Close button - positioned absolutely */}
-          <div className="absolute top-4 right-4 z-10">
+          <div className={DialogStyles.closeButtonWrapper}>
             <Button
               variant="inset"
               size="sm"
@@ -90,12 +90,12 @@ export function LogDetailDialog({
               onClick={() => onOpenChange(false)}
               aria-label={t(aria.close)}
             >
-              <X className="w-4 h-4" />
+              <X className={IconSize.sm} />
             </Button>
           </div>
 
           {/* Tabs */}
-          <Tabs.Root defaultValue="details" className="flex-1 flex flex-col min-h-0">
+          <Tabs.Root defaultValue="details" className={TabsStyles.root}>
             <Tabs.List className={TabsStyles.list}>
               <Tabs.Trigger value="details">Details</Tabs.Trigger>
               <Tabs.Trigger value="underlying">Underlying Requests</Tabs.Trigger>
@@ -119,9 +119,9 @@ export function LogDetailDialog({
                 iconOnly
                 onClick={navigateToPrevious}
                 disabled={!canNavigatePrevious}
-                aria-label="Previous log"
+                aria-label={t(aria.previousLog)}
               >
-                <ChevronUp className="w-4 h-4" />
+                <ChevronUp className={IconSize.sm} />
               </Button>
               <Button
                 variant="inset"
@@ -129,9 +129,9 @@ export function LogDetailDialog({
                 iconOnly
                 onClick={navigateToNext}
                 disabled={!canNavigateNext}
-                aria-label="Next log"
+                aria-label={t(aria.nextLog)}
               >
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className={IconSize.sm} />
               </Button>
             </div>
           </div>

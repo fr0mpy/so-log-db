@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import type { ComponentProps } from 'react'
 import type { LogTable as LogTableType } from './LogTable'
-import { DataTable, LogTableColumns } from '../../styles'
+import { DataTable, LogTableColumns, LogTableSkeletonSizes } from '../../styles'
 import { Skeleton } from '@stackone-ui/core/skeleton'
 import { Card } from '@stackone-ui/core/card'
 import { Paper } from '@stackone-ui/core/paper'
@@ -22,25 +22,25 @@ export function LogTableSkeleton() {
       <Card className={DataTable.headerCard}>
         <div className={DataTable.headerRow}>
           <div className={`${DataTable.headerCell} ${LogTableColumns.requested}`}>
-            <Skeleton className="h-4 w-20" />
+            <Skeleton className={LogTableSkeletonSizes.headerRequested} />
           </div>
           <div className={`${DataTable.headerCell} ${LogTableColumns.provider}`}>
-            <Skeleton className="h-4 w-20" />
+            <Skeleton className={LogTableSkeletonSizes.headerProvider} />
           </div>
           <div className={`${DataTable.headerCell} ${LogTableColumns.originOwner}`}>
-            <Skeleton className="h-4 w-24" />
+            <Skeleton className={LogTableSkeletonSizes.headerOrigin} />
           </div>
           <div className={`${DataTable.headerCell} ${LogTableColumns.source}`}>
-            <Skeleton className="h-4 w-16" />
+            <Skeleton className={LogTableSkeletonSizes.headerSource} />
           </div>
           <div className={`${DataTable.headerCell} ${LogTableColumns.request}`}>
-            <Skeleton className="h-4 w-20" />
+            <Skeleton className={LogTableSkeletonSizes.headerRequest} />
           </div>
           <div className={`${DataTable.headerCell} ${LogTableColumns.duration}`}>
-            <Skeleton className="h-4 w-20" />
+            <Skeleton className={LogTableSkeletonSizes.headerDuration} />
           </div>
           <div className={`${DataTable.headerCell} ${LogTableColumns.status}`}>
-            <Skeleton className="h-4 w-14" />
+            <Skeleton className={LogTableSkeletonSizes.headerStatus} />
           </div>
         </div>
       </Card>
@@ -50,27 +50,27 @@ export function LogTableSkeleton() {
         <div className={DataTable.scrollArea}>
           {[...Array(10)].map((_, i) => (
             <div key={i} className={DataTable.rowWrapper}>
-              <div className="flex items-center min-w-[900px] py-3">
+              <div className={LogTableSkeletonSizes.rowInner}>
                 <div className={`${DataTable.cell} ${LogTableColumns.requested}`}>
-                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className={LogTableSkeletonSizes.cellTimestamp} />
                 </div>
                 <div className={`${DataTable.cell} ${LogTableColumns.provider}`}>
-                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className={LogTableSkeletonSizes.cellProvider} />
                 </div>
                 <div className={`${DataTable.cell} ${LogTableColumns.originOwner}`}>
-                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className={LogTableSkeletonSizes.cellText} />
                 </div>
                 <div className={`${DataTable.cell} ${LogTableColumns.source}`}>
-                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className={LogTableSkeletonSizes.cellText} />
                 </div>
                 <div className={`${DataTable.cell} ${LogTableColumns.request}`}>
-                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className={LogTableSkeletonSizes.cellFull} />
                 </div>
                 <div className={`${DataTable.cell} ${LogTableColumns.duration}`}>
-                  <Skeleton className="h-4 w-16" />
+                  <Skeleton className={LogTableSkeletonSizes.cellDuration} />
                 </div>
                 <div className={`${DataTable.cell} ${LogTableColumns.status}`}>
-                  <Skeleton className="h-6 w-12 rounded-full" />
+                  <Skeleton className={LogTableSkeletonSizes.cellStatus} />
                 </div>
               </div>
             </div>

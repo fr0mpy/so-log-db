@@ -1,5 +1,5 @@
 import { Skeleton } from '@stackone-ui/core/skeleton'
-import { Spacing, FilterRow, SkeletonHeight } from '../../styles'
+import { Spacing, FilterRow, SkeletonHeight, LogsPageSkeleton } from '../../styles'
 import { LogsContentSkeleton } from './LogsContentSkeleton'
 
 /**
@@ -28,7 +28,7 @@ export function LogsSkeleton() {
           <Skeleton className={`${SkeletonHeight.iconButtonSm} rounded-full`} />
         </div>
         {/* Theme Switcher: 56×32px */}
-        <Skeleton className="h-8 w-14 rounded-full" />
+        <Skeleton className={LogsPageSkeleton.headerTheme} />
       </div>
 
       {/* Content Skeleton - shared with LogsPageContent refresh state */}

@@ -33,6 +33,21 @@ export const DialogStyles = {
     'bg-neu-base shadow-neu-pressed-sm',
     'rounded-lg m-4',
   ].join(' '),
+  /** Close button positioning */
+  closeButtonWrapper: 'absolute top-4 right-4 z-10',
+} as const
+
+// ============================================================================
+// Icon Sizes
+// ============================================================================
+
+export const IconSize = {
+  /** Standard small icon (16x16) */
+  sm: 'w-4 h-4',
+  /** Standard medium icon (20x20) */
+  md: 'w-5 h-5',
+  /** External link icon (12x12) */
+  external: 'w-3 h-3 ml-1 inline',
 } as const
 
 // ============================================================================
@@ -116,6 +131,8 @@ export const TabsStyles = {
     'mx-4 mb-4 rounded-lg',
     'bg-neu-base shadow-neu-pressed-sm',
   ].join(' '),
+  /** Tabs root layout - flexible column */
+  root: 'flex-1 flex flex-col min-h-0',
 } as const
 
 // ============================================================================

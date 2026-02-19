@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { ChevronRight, Sparkles, ThumbsUp, ThumbsDown, ExternalLink, Loader2 } from 'lucide-react'
 import { cn } from '@stackone-ui/core/utils'
+import { useTranslations, aria } from '@stackone/i18n'
 import { ErrorExplainerStyles as S, Section } from './styles'
 import { useErrorExplainer } from './hooks'
 import type { ErrorExplainerProps } from './types'
@@ -14,6 +15,7 @@ import type { ErrorExplainerProps } from './types'
  * for error responses with feedback functionality.
  */
 export function ErrorExplainer({ show }: ErrorExplainerProps) {
+  const t = useTranslations()
   const [isExpanded, setIsExpanded] = useState(false)
   const { state, generate, submitFeedback } = useErrorExplainer()
 
@@ -132,7 +134,7 @@ export function ErrorExplainer({ show }: ErrorExplainerProps) {
                       state.feedback === 'positive' && S.feedbackButtonActive
                     )}
                     onClick={() => submitFeedback('positive')}
-                    aria-label="Mark as helpful"
+                    aria-label={t(aria.markAsHelpful)}
                     aria-pressed={state.feedback === 'positive'}
                   >
                     <ThumbsUp className={cn(
@@ -147,7 +149,7 @@ export function ErrorExplainer({ show }: ErrorExplainerProps) {
                       state.feedback === 'negative' && S.feedbackButtonActive
                     )}
                     onClick={() => submitFeedback('negative')}
-                    aria-label="Mark as not helpful"
+                    aria-label={t(aria.markAsNotHelpful)}
                     aria-pressed={state.feedback === 'negative'}
                   >
                     <ThumbsDown className={cn(
