@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   },
   description: 'Review and annotate UI designs with your team',
   icons: {
-    icon: '/design-review/favicon.png',
+    icon: '/favicon.png',
   },
 }
 

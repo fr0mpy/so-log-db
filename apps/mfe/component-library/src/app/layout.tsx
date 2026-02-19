@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   icons: {
-    icon: '/component-library/favicon.png',
+    icon: '/favicon.png',
   },
 }
 
