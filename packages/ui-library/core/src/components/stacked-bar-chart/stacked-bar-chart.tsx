@@ -9,7 +9,7 @@ import { cn } from '../../utils'
 // Chart dimensions (viewBox coordinates)
 const VIEW_WIDTH = 1000
 const VIEW_HEIGHT = 250
-const MARGIN = { top: 20, right: 20, bottom: 30, left: 35 }
+const MARGIN = { top: 20, right: 20, bottom: 10, left: 35 }
 const CHART_WIDTH = VIEW_WIDTH - MARGIN.left - MARGIN.right
 const CHART_HEIGHT = VIEW_HEIGHT - MARGIN.top - MARGIN.bottom
 
@@ -113,6 +113,7 @@ export function StackedBarChart({
         viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`}
         preserveAspectRatio="none"
         className={S.svg}
+        style={{ height: height - 20 }}
         aria-hidden="true"
         role="presentation"
       >
@@ -176,23 +177,28 @@ export function StackedBarChart({
           )
         })}
 
-        {/* X-axis labels */}
+      </svg>
+
+      {/* HTML X-axis labels - immune to SVG scaling */}
+      <div className={S.xAxis}>
         {data.map((point, index) => {
           if (index % labelInterval !== 0) return null
 
+          // Calculate percentage position matching bar center
+          const centerX = MARGIN.left + (index + 0.5) * slotWidth
+          const leftPercent = (centerX / VIEW_WIDTH) * 100
+
           return (
-            <text
+            <span
               key={point.label}
-              x={xScale(index) + barOffset + barWidth / 2}
-              y={VIEW_HEIGHT - 8}
-              textAnchor="middle"
-              style={SvgStyles.axisText}
+              className={S.xAxisLabel}
+              style={{ left: `${leftPercent}%` }}
             >
               {point.label}
-            </text>
+            </span>
           )
         })}
-      </svg>
+      </div>
 
       {/* Tooltip */}
       {tooltipData && <ChartTooltip data={tooltipData} series={series} />}

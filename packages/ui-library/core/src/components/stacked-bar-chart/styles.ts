@@ -11,7 +11,11 @@ export const StackedBarChartStyles = {
   container: 'relative flex-1 w-full min-w-0',
 
   // SVG - fills container completely, block removes inline spacing
-  svg: 'w-full h-full block',
+  svg: 'w-full block',
+
+  // X-axis labels (HTML, not SVG - immune to SVG scaling)
+  xAxis: 'relative w-full h-5',
+  xAxisLabel: 'absolute text-[11px] text-muted-foreground -translate-x-1/2',
 
   // Neumorphic Tooltip
   tooltip: [
