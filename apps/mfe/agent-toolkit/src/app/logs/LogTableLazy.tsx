@@ -82,11 +82,12 @@ export function LogTableSkeleton() {
 }
 
 /**
- * Code-split LogTable - loads @tanstack/react-virtual only when needed
+ * Code-split LogTable - loads @tanstack/react-virtual only when needed.
+ *
+ * NOTE: No loading prop - SSR handles initial render, loading.tsx handles
+ * route transitions. Adding loading prop with SSR causes content→skeleton→content flash.
+ * LogTableSkeleton is still exported for use by LogTable during virtualizer initialization.
  */
 export const LogTableLazy = dynamic<LogTableProps>(
-  () => import('./LogTable').then((mod) => mod.LogTable),
-  {
-    loading: () => <LogTableSkeleton />,
-  }
+  () => import('./LogTable').then((mod) => mod.LogTable)
 )
