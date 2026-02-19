@@ -84,7 +84,7 @@ export const SidebarLogoStyles = {
   container: [
     'flex items-center justify-center flex-shrink-0',
     'size-10 rounded-theme-md',
-    'bg-gradient-to-br from-[#10B981]/25 to-[#10B981]/10', // Green gradient fade
+    'bg-gradient-to-br from-[#10B981]/25 to-[#10B981]/15', // Green gradient fade
     'backdrop-blur-md', // Glass blur
     'cursor-pointer',
     'transition-all hover:from-[#10B981]/35 hover:to-[#10B981]/15',
