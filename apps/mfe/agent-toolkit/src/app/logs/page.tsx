@@ -7,8 +7,10 @@
 
 export { metadata } from './metadata'
 
+import { Suspense } from 'react'
 import { getTranslations, logs, aria } from '@stackone/i18n'
 import { LogsPageContentLazy } from './LogsPageContentLazy'
+import { LogsContentSkeleton } from './LogsContentSkeleton'
 
 // Mock data configuration
 const PROVIDERS = [
@@ -420,10 +422,12 @@ export default async function LogsPage() {
   }
 
   return (
-    <LogsPageContentLazy
-      logs={logsData}
-      stats={statsData}
-      translations={translations}
-    />
+    <Suspense fallback={<LogsContentSkeleton />}>
+      <LogsPageContentLazy
+        logs={logsData}
+        stats={statsData}
+        translations={translations}
+      />
+    </Suspense>
   )
 }
