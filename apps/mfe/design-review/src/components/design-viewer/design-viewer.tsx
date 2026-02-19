@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { Text } from '@stackone-ui/core/text'
-import { Button } from '@stackone-ui/core/button'
 import type { DesignViewerProps } from './types'
 import { DesignViewerStyles as S } from './styles'
 
@@ -32,22 +31,27 @@ export function DesignViewer({ screen }: DesignViewerProps) {
         />
       </div>
 
-      <div className={S.carousel}>
-        <Button
-          variant="outline"
-          size="sm"
+      <div className={S.carouselWrapper}>
+        <button
+          className={S.navButton}
           onClick={handlePrev}
           aria-label="Previous annotation"
         >
-          ←
-        </Button>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
 
-        <div className={S.carouselContent}>
-          <div className={S.carouselLabel}>
-            <Text variant="subtitle" weight="semibold">
-              {activeHotspot.label}
-            </Text>
-          </div>
+        <div className={S.carousel}>
           <div className={S.carouselInfo}>
             <Text variant="body1" weight="semibold">
               {activeHotspot.title}
@@ -58,14 +62,24 @@ export function DesignViewer({ screen }: DesignViewerProps) {
           </div>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
+        <button
+          className={S.navButton}
           onClick={handleNext}
           aria-label="Next annotation"
         >
-          →
-        </Button>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
       </div>
 
       <div className={S.indicators}>
