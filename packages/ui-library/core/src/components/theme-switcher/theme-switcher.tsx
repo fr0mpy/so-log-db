@@ -53,6 +53,9 @@ export function ThemeSwitcher({
   // Bounce only on user toggle, smooth transition on layout changes
   const knobTransition = wasUserToggle.current ? SPRING.snappy : LAYOUT_TRANSITION
 
+  // Initial width matches animate to prevent mount animation (no "grow into position")
+  const targetWidth = compact ? SWITCHER_WIDTH.compact : SWITCHER_WIDTH.full
+
   return (
     <motion.button
       role="switch"
@@ -60,7 +63,8 @@ export function ThemeSwitcher({
       aria-label={isDark ? ARIA.switchToLight : ARIA.switchToDark}
       onClick={onToggle}
       className={cn(S.button, className)}
-      animate={{ width: compact ? SWITCHER_WIDTH.compact : SWITCHER_WIDTH.full }}
+      initial={{ width: targetWidth }}
+      animate={{ width: targetWidth }}
       transition={SIZE_SPRING}
       {...props}
     >
