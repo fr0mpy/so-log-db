@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import { ThemeProvider, THEME_INIT_SCRIPT } from '@stackone-ui/core/providers'
 import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
-import { GallerySidebar, LayoutStyles as S } from '../components'
+import { GallerySidebar, MobileWarning, LayoutStyles as S } from '../components'
 import { ScrollArea } from '@stackone-ui/core/scroll-area'
 import './globals.css'
 
@@ -51,6 +51,7 @@ export default async function RootLayout({
       <body className={fontSans.className}>
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>
+            <MobileWarning />
             <div className={S.container}>
               <GallerySidebar />
               <main className={S.main}>

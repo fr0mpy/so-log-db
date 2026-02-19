@@ -4,7 +4,7 @@ import { getLocale, getMessages } from 'next-intl/server'
 import { ThemeProvider, THEME_INIT_SCRIPT } from '@stackone-ui/core/providers'
 import { ToastProvider } from '@stackone-ui/core/toast'
 import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
-import { Sidebar, SidebarProvider, MainContent, SkipLinks } from '@/components'
+import { Sidebar, SidebarProvider, MainContent, SkipLinks, MobileWarning } from '@/components'
 import { ProviderIconPreloader } from '@/components/ProviderIcon'
 import './globals.css'
 
@@ -54,6 +54,7 @@ export default async function RootLayout({
           <SkipLinks />
           <ThemeProvider>
             <ToastProvider>
+              <MobileWarning />
               <ProviderIconPreloader />
               <SidebarProvider>
                 <Sidebar />
