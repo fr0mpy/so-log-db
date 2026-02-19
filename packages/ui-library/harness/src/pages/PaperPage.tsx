@@ -14,9 +14,9 @@ export default function PaperPage() {
             Paper with subtle (sm) depth for lighter inset effect.
           </p>
         </Paper>
-        <Paper depth="lg" className="w-full max-w-sm p-6">
+        <Paper depth="md" className="w-full max-w-sm p-6">
           <p className="text-sm text-muted-foreground">
-            Paper with large (lg) depth for a deeper carved effect.
+            Paper with medium (md) depth for a deeper carved effect.
           </p>
         </Paper>
       </div>
