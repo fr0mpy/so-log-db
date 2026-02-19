@@ -306,8 +306,8 @@ export const LogTableColumns = {
   provider: 'w-10 md:w-[150px] shrink-0 grow-0',
   /** Origin Owner: fixed 140px, hidden below lg */
   originOwner: 'hidden lg:flex w-[140px] shrink-0 grow-0',
-  /** Source: fixed 90px */
-  source: 'w-[90px] shrink-0 grow-0',
+  /** Source: fixed 114px */
+  source: 'w-[114px] shrink-0 grow-0',
   /** Request: fixed 200px (badge 64px + gap 8px + ~120px for name) */
   request: 'w-[200px] shrink-0 grow-0',
   /** Duration: fixed 90px, hidden below sm, extra margin before status */
