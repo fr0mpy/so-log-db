@@ -7,12 +7,15 @@ import type { LogsPageContent as LogsPageContentType } from './LogsPageContent'
 type LogsPageContentProps = ComponentProps<typeof LogsPageContentType>
 
 /**
- * Lazy-loaded page content with SSR enabled.
- * Server renders immediately, children with DOM deps load lazily.
+ * Lazy-loaded page content with SSR disabled.
+ * Server sends Suspense fallback (skeleton), content loads client-side.
  *
- * NOTE: No loading prop - SSR handles initial render, loading.tsx handles
- * route transitions. Adding loading prop with SSR causes content→skeleton→content flash.
+ * Combined with Suspense boundary in page.tsx, this ensures:
+ * 1. Server streams skeleton immediately
+ * 2. Client loads and hydrates content
+ * 3. No flash of unstyled/partial content
  */
 export const LogsPageContentLazy = dynamic<LogsPageContentProps>(
-  () => import('./LogsPageContent').then((mod) => mod.LogsPageContent)
+  () => import('./LogsPageContent').then((mod) => mod.LogsPageContent),
+  { ssr: false }
 )
