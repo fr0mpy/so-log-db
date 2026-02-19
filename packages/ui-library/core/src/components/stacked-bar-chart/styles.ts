@@ -44,7 +44,5 @@ export const SvgStyles = {
     fill: 'var(--color-muted-foreground)',
     fontFamily: 'inherit',
   },
-  bar: {
-    transition: 'opacity 150ms ease-out',
-  },
+  bar: {},
 } as const

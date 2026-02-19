@@ -171,7 +171,6 @@ export function StackedBarChart({
                 fill="transparent"
                 onMouseEnter={() => handleBarEnter(point, index)}
                 onMouseLeave={handleBarLeave}
-                style={{ cursor: 'pointer' }}
               />
             </g>
           )
