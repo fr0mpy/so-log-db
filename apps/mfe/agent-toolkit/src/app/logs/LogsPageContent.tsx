@@ -10,9 +10,7 @@ import { LogsChart } from '../../components/LogsChart'
 import { LogsContent } from './LogsContent'
 import { LogDetailDialog } from '../../components/LogDetailDialog'
 import type { LogEntryDetail } from '../../components/LogDetailDialog'
-import { ThemeSwitcher } from '@stackone-ui/core/theme-switcher'
 import { Switch } from '@stackone-ui/core/switch'
-import { useTheme } from '@stackone-ui/core/providers'
 import { Grid, LogStats, FilterRow } from '../../styles'
 
 interface LogEntry {
@@ -125,7 +123,6 @@ export function LogsPageContent({ logs, stats, translations }: LogsPageContentPr
   const { title, filter, chart, stats: statsLabels, table } = translations
   const router = useRouter()
   const [isRefreshing, startTransition] = useTransition()
-  const { theme, toggle: toggleTheme } = useTheme()
 
   // Filter state
   const [dateRange, setDateRange] = useState('last24Hours')
@@ -205,11 +202,6 @@ export function LogsPageContent({ logs, stats, translations }: LogsPageContentPr
               <div className={LogStats.wrapper}>
                 {/* Controls at top right */}
                 <div className={LogStats.controls}>
-                  <ThemeSwitcher
-                    isDark={theme === 'dark'}
-                    onToggle={toggleTheme}
-                    className={LogStats.themeSwitcher}
-                  />
                   <Switch
                     id="background-logs-switch"
                     checked={backgroundLogs}

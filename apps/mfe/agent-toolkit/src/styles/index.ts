@@ -209,10 +209,10 @@ export const Grid = {
 // ============================================================================
 
 export const LogStats = {
-  /** Wrapper for chart+stats with controls at top right */
-  wrapper: 'relative',
-  /** Controls positioned at top right of stats container */
-  controls: 'absolute top-0 right-0 flex items-center gap-2 z-10',
+  /** Wrapper - flex column, center children vertically */
+  wrapper: 'flex flex-col justify-center h-full',
+  /** Controls aligned to far right */
+  controls: 'flex items-center gap-2 self-end mb-2',
   /** Theme switcher with left margin */
   themeSwitcher: 'ml-2',
   /** 2x2 grid with separate cards - self-center for vertical alignment */
@@ -425,6 +425,8 @@ export const RowActions = {
   ].join(' '),
   /** Action icon - grey to match row text, adapts to theme */
   icon: 'size-5 flex-shrink-0 text-muted-foreground transition-colors duration-150',
+  /** Filled action icon - for icons using fill instead of stroke */
+  iconFilled: 'size-5 flex-shrink-0 text-muted-foreground transition-colors duration-150 group-hover/action:fill-primary',
   /** External link indicator */
   external: 'size-3 ml-0.5 opacity-60',
 } as const
@@ -494,9 +496,11 @@ export const FilterRow = {
   switchSmall: 'scale-90 origin-right',
   /** Icon for filter cards */
   icon: 'w-4 h-4 text-muted-foreground',
+  /** Filter controls group - date select, status select, refresh with even spacing */
+  filterControls: 'flex items-center justify-evenly gap-4 mx-6',
   /** Actions group wrapper (theme switcher + refresh) - ml-auto pushes to far right */
   actionsGroup: 'flex items-center gap-2 ml-auto',
-  /** Theme switcher spacing - margin handled by actionsGroup ml-auto */
+  /** Theme switcher spacing */
   themeSwitcher: '',
 } as const
 

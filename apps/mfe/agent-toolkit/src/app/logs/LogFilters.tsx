@@ -12,6 +12,8 @@ import {
   DateInput,
   type DateRange,
 } from '@stackone-ui/core/date-picker'
+import { ThemeSwitcher } from '@stackone-ui/core/theme-switcher'
+import { useTheme } from '@stackone-ui/core/providers'
 import { FilterRow, Text, LoadingStyles, FilterSelect, DialogOverrides } from '../../styles'
 import { DatePickerStyles } from '@stackone-ui/core/date-picker'
 
@@ -60,6 +62,7 @@ export function LogFilters({
   onRefresh,
   isRefreshing,
 }: LogFiltersProps) {
+  const { theme, toggle: toggleTheme } = useTheme()
   const [isScrolled, setIsScrolled] = useState(false)
 
   // DatePicker state
@@ -123,50 +126,60 @@ export function LogFilters({
           />
         </div>
 
-        {/* Date Range Select */}
-        <Select
-          options={dateRangeOptions}
-          value={dateRange}
-          onValueChange={(value) => {
-            if (value !== 'customRange') {
-              setCustomRange(null)
-            }
-            onDateRangeChange(value)
-          }}
-          triggerMode="hover"
-          width="auto"
-          variant="ghost"
-          className={FilterSelect.dateRange}
-          dropdownMinWidth="6.5rem"
-        />
-
-        {/* Status Filter Select */}
-        <Select
-          options={statusOptions}
-          value={status}
-          onValueChange={onStatusChange}
-          triggerMode="hover"
-          width="auto"
-          variant="ghost"
-          className={FilterSelect.status}
-          dropdownMinWidth="5rem"
-        />
-
-        {/* Refresh Button */}
-        <Button
-          variant="inset"
-          size="sm"
-          iconOnly
-          onClick={onRefresh}
-          disabled={isRefreshing}
-          aria-label={translations.refresh}
-          className="group ml-auto"
-        >
-          <RefreshCw
-            className={`${FilterSelect.refreshIcon} ${isRefreshing ? LoadingStyles.spinning : ''}`}
-            strokeWidth={2.5}
+        {/* Filter Controls (Date + Status + Refresh) */}
+        <div className={FilterRow.filterControls}>
+          {/* Date Range Select */}
+          <Select
+            options={dateRangeOptions}
+            value={dateRange}
+            onValueChange={(value) => {
+              if (value !== 'customRange') {
+                setCustomRange(null)
+              }
+              onDateRangeChange(value)
+            }}
+            triggerMode="hover"
+            width="auto"
+            variant="ghost"
+            className={FilterSelect.dateRange}
+            dropdownMinWidth="6.5rem"
           />
-        </Button>
+
+          {/* Status Filter Select */}
+          <Select
+            options={statusOptions}
+            value={status}
+            onValueChange={onStatusChange}
+            triggerMode="hover"
+            width="auto"
+            variant="ghost"
+            className={FilterSelect.status}
+            dropdownMinWidth="5rem"
+          />
+
+          {/* Refresh Button */}
+          <Button
+            variant="inset"
+            size="sm"
+            iconOnly
+            onClick={onRefresh}
+            disabled={isRefreshing}
+            aria-label={translations.refresh}
+            className="group"
+          >
+            <RefreshCw
+              className={`${FilterSelect.refreshIcon} ${isRefreshing ? LoadingStyles.spinning : ''}`}
+              strokeWidth={2.5}
+            />
+          </Button>
+        </div>
+
+        {/* Theme Switcher - standalone */}
+        <ThemeSwitcher
+          isDark={theme === 'dark'}
+          onToggle={toggleTheme}
+          className={FilterRow.themeSwitcher}
+        />
       </div>
 
       {/* Date Range Picker Dialog */}
