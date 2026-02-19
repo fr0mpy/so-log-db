@@ -11,11 +11,14 @@ import { PAGINATION, TABLE } from '../../config'
 import { LogTableSkeleton } from './LogTableLazy'
 import { ProviderIcon } from '../../components/ProviderIcon'
 import { LatencyBar } from '../../components/LatencyBar'
+import { SortableHeader } from '../../components/SortableHeader'
 import { useLogHover } from './LogHoverContext'
 import { Tooltip } from '@stackone-ui/core/tooltip'
 import { useToast } from '@stackone-ui/core/toast'
 import { Button } from '@stackone-ui/core/button'
 import { replayRequest } from './actions'
+import { useTableSort } from '../../hooks'
+import type { LogEntry } from './types'
 import {
   Text,
   DataTable,
@@ -27,21 +30,9 @@ import {
   TimestampCell,
   RequestCell,
   RowActions,
-  TableIcon,
   LogPagination,
   PaginationSelect,
 } from '../../styles'
-
-interface LogEntry {
-  id: string
-  timestamp: string
-  provider: { name: string; version: string }
-  originOwner: string
-  source: string
-  request: { method: string; name: string }
-  duration: number
-  status: number
-}
 
 interface LogTableProps {
   logs: readonly LogEntry[]
@@ -62,6 +53,7 @@ interface LogTableProps {
     aria: {
       viewLogDetails: string
       pagination: string
+      sortByColumn: string
     }
     pagination: {
       showing: string
@@ -85,18 +77,6 @@ interface LogTableProps {
   /** Callback when a row is clicked */
   onRowClick?: (log: LogEntry) => void
 }
-
-// Chevron components for sortable headers and row actions
-const ChevronDown = () => (
-  <svg
-    className={TableIcon.sortIndicator}
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-  </svg>
-)
 
 // Action Icons for row hover menu
 const ReplayIcon = ({ className }: { className?: string }) => (
@@ -210,6 +190,12 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
   const { addToast, removeToast } = useToast()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
+  // Sorting state - default to newest first
+  const { sortedData, sortState, handleSort } = useTableSort(logs, {
+    column: 'requested',
+    direction: 'desc',
+  })
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState<number>(PAGINATION.defaultPageSize)
@@ -220,11 +206,11 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
   // Track if component is mounted to prevent flash of empty content
   const [isMounted, setIsMounted] = useState(false)
 
-  // Calculate pagination
-  const totalPages = Math.ceil(logs.length / pageSize)
+  // Calculate pagination using sorted data
+  const totalPages = Math.ceil(sortedData.length / pageSize)
   const startIndex = (currentPage - 1) * pageSize
-  const endIndex = Math.min(startIndex + pageSize, logs.length)
-  const paginatedLogs = logs.slice(startIndex, endIndex)
+  const endIndex = Math.min(startIndex + pageSize, sortedData.length)
+  const paginatedLogs = sortedData.slice(startIndex, endIndex)
 
   // Reset to page 1 when page size changes
   const handlePageSizeChange = (newSize: number) => {
@@ -347,6 +333,12 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
     setFocusedRowIndex(-1)
   }, [currentPage, pageSize])
 
+  // Reset to page 1 when sort changes
+  useEffect(() => {
+    setCurrentPage(1)
+    scrollContainerRef.current?.scrollTo({ top: 0 })
+  }, [sortState.column, sortState.direction])
+
   // Set mounted after first render to prevent flash of empty content
   useEffect(() => {
     setIsMounted(true)
@@ -367,29 +359,69 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
       <Card className={DataTable.headerCard} data-ui="header">
         <div className={DataTable.header} data-ui="header-inner">
           <div className={DataTable.headerRow} data-ui="header-row">
-            <div className={[DataTable.headerCellSortable, LogTableColumns.requested].join(' ')} data-ui="hcell-requested">
+            <SortableHeader
+              column="requested"
+              sortState={sortState}
+              onSort={handleSort}
+              className={LogTableColumns.requested}
+              ariaLabel={aria.sortByColumn.replace('{column}', table.requested)}
+            >
               {table.requested}
-              <ChevronDown />
-            </div>
-            <div className={[DataTable.headerCell, LogTableColumns.provider].join(' ')} data-ui="hcell-provider">
+            </SortableHeader>
+            <SortableHeader
+              column="provider"
+              sortState={sortState}
+              onSort={handleSort}
+              className={LogTableColumns.provider}
+              ariaLabel={aria.sortByColumn.replace('{column}', table.provider)}
+            >
               {table.provider}
-            </div>
-            <div className={[DataTable.headerCell, LogTableColumns.originOwner].join(' ')} data-ui="hcell-owner">
+            </SortableHeader>
+            <SortableHeader
+              column="originOwner"
+              sortState={sortState}
+              onSort={handleSort}
+              className={LogTableColumns.originOwner}
+              ariaLabel={aria.sortByColumn.replace('{column}', table.originOwner)}
+            >
               {table.originOwner}
-            </div>
-            <div className={[DataTable.headerCell, LogTableColumns.source].join(' ')} data-ui="hcell-source">
+            </SortableHeader>
+            <SortableHeader
+              column="source"
+              sortState={sortState}
+              onSort={handleSort}
+              className={LogTableColumns.source}
+              ariaLabel={aria.sortByColumn.replace('{column}', table.source)}
+            >
               {table.source}
-            </div>
-            <div className={[DataTable.headerCell, LogTableColumns.request].join(' ')} data-ui="hcell-request">
+            </SortableHeader>
+            <SortableHeader
+              column="request"
+              sortState={sortState}
+              onSort={handleSort}
+              className={LogTableColumns.request}
+              ariaLabel={aria.sortByColumn.replace('{column}', table.request)}
+            >
               {table.request}
-            </div>
-            <div className={[DataTable.headerCellSortable, LogTableColumns.duration].join(' ')} data-ui="hcell-duration">
+            </SortableHeader>
+            <SortableHeader
+              column="duration"
+              sortState={sortState}
+              onSort={handleSort}
+              className={LogTableColumns.duration}
+              ariaLabel={aria.sortByColumn.replace('{column}', table.duration)}
+            >
               {table.duration}
-              <ChevronDown />
-            </div>
-            <div className={[DataTable.headerCell, LogTableColumns.status].join(' ')} data-ui="hcell-status">
+            </SortableHeader>
+            <SortableHeader
+              column="status"
+              sortState={sortState}
+              onSort={handleSort}
+              className={LogTableColumns.status}
+              ariaLabel={aria.sortByColumn.replace('{column}', table.status)}
+            >
               {table.status}
-            </div>
+            </SortableHeader>
             <div className={[DataTable.headerCell, LogTableColumns.actions].join(' ')} data-ui="hcell-actions" />
           </div>
         </div>
@@ -460,10 +492,10 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
                   <div className={[DataTable.cellTruncate, LogTableColumns.originOwner].join(' ')} data-ui="cell-owner">
                     <span className={Text.muted}>{log.originOwner}</span>
                   </div>
-                  <div className={[DataTable.cell, LogTableColumns.source].join(' ')} data-ui="cell-source">
+                  <div className={[DataTable.cellTight, LogTableColumns.source].join(' ')} data-ui="cell-source">
                     <span className={SourceCell.text}>{log.source}</span>
                   </div>
-                  <div className={[DataTable.cell, LogTableColumns.request].join(' ')} data-ui="cell-request">
+                  <div className={[DataTable.cellTight, LogTableColumns.request].join(' ')} data-ui="cell-request">
                     <div className={RequestCell.container}>
                       <div className={RequestCell.methodWrapper}>
                         <span className={[MethodBadge.base, getMethodBadgeStyle(log.request.method)].join(' ')}>
