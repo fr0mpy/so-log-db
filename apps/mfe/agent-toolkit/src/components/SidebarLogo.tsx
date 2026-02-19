@@ -22,6 +22,7 @@ export function SidebarLogo() {
         height={24}
         className={S.image}
         priority
+        unoptimized
       />
     </a>
   )
