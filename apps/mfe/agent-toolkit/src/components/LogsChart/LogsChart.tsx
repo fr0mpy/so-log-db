@@ -21,11 +21,10 @@ function aggregateLogsByTime(logs: readonly LogEntry[]): LogChartData[] {
 
   for (const log of logs) {
     const date = new Date(log.timestamp)
-    const time = date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    })
+    // Use UTC to ensure consistent formatting between server and client (prevents hydration mismatch)
+    const hours = date.getUTCHours().toString().padStart(2, '0')
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0')
+    const time = `${hours}:${minutes}`
 
     if (!grouped.has(time)) {
       grouped.set(time, {
