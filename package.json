@@ -9,7 +9,8 @@
   },
   "scripts": {
     "clean:ports": "for port in 3000 3001 3002 3003 5173; do lsof -ti :$port | xargs kill -9 2>/dev/null; done; echo 'Ports cleared'",
-    "predev:all": "pnpm clean:ports",
+    "clean:next": "rm -rf apps/shell/.next apps/mfe/*/.next",
+    "predev:all": "pnpm clean:ports && pnpm clean:next",
     "dev": "turbo dev --no-daemon",
     "dev:all": "echo '\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n  StackOne Dev Servers\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n  Harness:         http://localhost:5173\n  Shell:           http://localhost:3000\n  Agent Toolkit:   http://localhost:3001\n  Design Review:   http://localhost:3003\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' && turbo dev --no-daemon",
     "dev:shell": "turbo dev --no-daemon --filter @stackone/shell",
