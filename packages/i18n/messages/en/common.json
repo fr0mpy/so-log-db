@@ -16,11 +16,14 @@
     "designReview": "Design Review",
     "agentToolkit": "Agent Toolkit",
     "componentLibrary": "Component Library",
+    "github": "GitHub",
     "settings": "Settings",
     "theme": "Theme"
   },
   "designReview": {
     "title": "Design Review",
+    "overview": "Overview",
+    "overviewContent": "Fundamentally, the current design is very safe - It doesn't try anything new and follows common patterns for dashboards.\n\nIt works.\n\nHowever, I believe there is much thought friction throughout the design which can be smoothed out.\n\nBy 'Thought Friction', I mean slight details throughout the product which will hinder soft cognitive processes for the user.\n\nWhy are these small points of friction important? The obvious answer is because they add up. But we also must consider the products offering itself and the audience it is intended for.\n\nStackOne offers easy. smooth. soft. Integrations for agents. Completely removing the complexity. It's UX must represent this. Much like an apple device hides incredible complexity behind cotton-like interfaces.\n\nWe must also consider the audience. The obvious answer here being 'Developers'. But it's more than that - Product Managers are adopting AI & agents in some cases faster than devs.\n\nAnd if there's anything product are genuinely skilled at, it's UX.\n\nStackOnes interface must accommodate for non technical also. Meaning we need a digestible visual hierarchy.\n\nNot flat, and text heavy.\n\nFinally, competitors. The main I saw design wise being Merge, Nango and Paragon.\n\nTruthfully, the homepages of these Merge and Nango, look like they were made by the same designer. And have little different to Paragon & StackOne. From the images I've seen, often competitors log dashboards design opt for minimal UI on the screen, likely in order to reduce complexity. However, this minimal approach limits functionality in favour of aesthetic.\n\nParagon seem to 'get it' more than the others. StackOne must match and improve on them.\n\nTaking all of this into account: on the next screens you will see some small examples of thought friction.\n\nAnd in our agent-toolkit & component-library see the design approach I've taken. I hope it matches your vision.\n\nEnjoy.",
     "screenA": "Screen A",
     "screenB": "Screen B"
   },
