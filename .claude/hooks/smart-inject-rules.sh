@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Smart Rule Injector - Minimal Context Edition
-# - Silent on cache hits (no repeated output)
-# - Context warning only once per session
-# - Only outputs when classification changes
+# Smart Rule Injector - Plan Mode Enhanced Edition
+# - Silent on cache hits (no repeated output) in normal mode
+# - In PLAN MODE: injects full file contents of matched rules/skills
+# - Always fresh classification in plan mode (no cache)
 # - User feedback via stderr
 
 set -euo pipefail
@@ -25,6 +25,10 @@ done
 INPUT=$(cat)
 USER_PROMPT=$(echo "$INPUT" | jq -r '.prompt // empty' 2>/dev/null || echo "")
 SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // "default"' 2>/dev/null || echo "default")
+PERMISSION_MODE=$(echo "$INPUT" | jq -r '.permission_mode // "default"' 2>/dev/null || echo "default")
+
+IS_PLAN_MODE=false
+[[ "$PERMISSION_MODE" == "plan" ]] && IS_PLAN_MODE=true
 
 # Find .claude directory
 CLAUDE_DIR=""
@@ -47,8 +51,8 @@ COUNT=1
 [[ -f "$COUNT_FILE" ]] && COUNT=$(( $(cat "$COUNT_FILE") + 1 ))
 echo "$COUNT" > "$COUNT_FILE"
 
-# Context warning - ONCE per session only
-if [[ ! -f "$WARNED_FILE" ]]; then
+# Context warning - ONCE per session only (skip in plan mode)
+if [[ "$IS_PLAN_MODE" == "false" ]] && [[ ! -f "$WARNED_FILE" ]]; then
   CONTEXT_FILE="$CLAUDE_DIR/CONTEXT.md"
   if [[ -f "$CONTEXT_FILE" ]]; then
     if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -65,12 +69,15 @@ if [[ ! -f "$WARNED_FILE" ]]; then
 fi
 
 # Cache hit? Stay silent (no output = no context bloat)
-if [[ -f "$RULES_FILE" ]] && [[ $(( COUNT % 3 )) -ne 1 ]]; then
-  CACHED=$(cat "$RULES_FILE")
-  if [[ "$CACHED" != "no-api" ]]; then
-    notify "📋 Using cached: $CACHED"
+# PLAN MODE: Always skip cache - run fresh classification
+if [[ "$IS_PLAN_MODE" == "false" ]]; then
+  if [[ -f "$RULES_FILE" ]] && [[ $(( COUNT % 3 )) -ne 1 ]]; then
+    CACHED=$(cat "$RULES_FILE")
+    if [[ "$CACHED" != "no-api" ]]; then
+      notify "📋 Using cached: $CACHED"
+    fi
+    exit 0
   fi
-  exit 0
 fi
 
 # No API key? Output once, then stay silent
@@ -83,28 +90,61 @@ if [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
   exit 0
 fi
 
-notify "🔍 Classifying prompt..."
+if [[ "$IS_PLAN_MODE" == "true" ]]; then
+  notify "🎯 Plan mode: analyzing task for relevant context..."
+else
+  notify "🔍 Classifying prompt..."
+fi
 
 # Read map from CLAUDE.md
 CLAUDE_MD="$CLAUDE_DIR/CLAUDE.md"
 [[ ! -f "$CLAUDE_MD" ]] && exit 0
 
-MAP=$(sed -n '/^## Rules/,/^## Behavior/p' "$CLAUDE_MD" | head -50)
-PROMPT_SNIPPET="${USER_PROMPT:0:300}"
+MAP=$(sed -n '/^## Rules/,/^## Behavior/p' "$CLAUDE_MD" | head -80)
+PROMPT_SNIPPET="${USER_PROMPT:0:500}"
 PROMPT_ESCAPED=$(printf '%s' "$PROMPT_SNIPPET" | jq -Rs '.' | sed 's/^"//;s/"$//')
 MAP_ESCAPED=$(printf '%s' "$MAP" | jq -Rs '.' | sed 's/^"//;s/"$//')
 
+# Different prompts for plan mode vs normal mode
+if [[ "$IS_PLAN_MODE" == "true" ]]; then
+  # Plan mode: more thorough, structured output for parsing
+  CLASSIFICATION_PROMPT="Task: $PROMPT_ESCAPED
+
+Map:
+$MAP_ESCAPED
+
+This is PLAN MODE - be thorough. Identify ALL relevant items for implementing this task.
+
+Reply in this EXACT format (one item per line, no explanations):
+RULES: rule1, rule2, rule3
+SKILLS: skill1, skill2
+PRE_AGENTS: agent1, agent2
+POST_AGENTS: agent1, agent2
+
+Use 'none' if a category doesn't apply. Use the exact filenames from the map (without .md extension)."
+  MAX_TOKENS=150
+else
+  # Normal mode: concise
+  CLASSIFICATION_PROMPT="Task: $PROMPT_ESCAPED
+
+Map:
+$MAP_ESCAPED
+
+Reply ONLY: Rules: x,y Agents: a,b (or 'none'). No explanation."
+  MAX_TOKENS=50
+fi
+
 # Call Haiku
-RESPONSE=$(curl -s --max-time 3 https://api.anthropic.com/v1/messages \
+RESPONSE=$(curl -s --max-time 5 https://api.anthropic.com/v1/messages \
   -H "Content-Type: application/json" \
   -H "x-api-key: $ANTHROPIC_API_KEY" \
   -H "anthropic-version: 2023-06-01" \
   -d "{
   \"model\": \"claude-3-5-haiku-20241022\",
-  \"max_tokens\": 50,
+  \"max_tokens\": $MAX_TOKENS,
   \"messages\": [{
     \"role\": \"user\",
-    \"content\": \"Task: $PROMPT_ESCAPED\\n\\nMap:\\n$MAP_ESCAPED\\n\\nReply ONLY: Rules: x,y Agents: a,b (or 'none'). No explanation.\"
+    \"content\": $(printf '%s' "$CLASSIFICATION_PROMPT" | jq -Rs '.')
   }]
 }" 2>/dev/null || echo "")
 
@@ -113,6 +153,93 @@ if [[ -z "$RESULT" ]]; then
   notify "⚠️  Classification failed (API timeout or error)"
   exit 0
 fi
+
+# ============================================================================
+# PLAN MODE: Inject full file contents
+# ============================================================================
+if [[ "$IS_PLAN_MODE" == "true" ]]; then
+  notify "✅ Classification complete, injecting relevant context..."
+
+  echo "<plan_context>"
+
+  # Parse RULES from classification
+  RULES_LINE=$(echo "$RESULT" | grep -i "^RULES:" | head -1 || echo "")
+  if [[ -n "$RULES_LINE" ]] && [[ "$RULES_LINE" != *"none"* ]]; then
+    RULES=$(echo "$RULES_LINE" | sed 's/^RULES:[[:space:]]*//' | tr ',' '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+    echo ""
+    echo "## Relevant Rules"
+    echo ""
+
+    while IFS= read -r rule; do
+      [[ -z "$rule" ]] && continue
+      rule=$(echo "$rule" | tr -d '[:space:]')
+      RULE_FILE="$CLAUDE_DIR/rules/${rule}.md"
+      if [[ -f "$RULE_FILE" ]]; then
+        echo "<rule name=\"$rule\">"
+        cat "$RULE_FILE"
+        echo "</rule>"
+        echo ""
+        notify "  📜 Loaded rule: $rule"
+      fi
+    done <<< "$RULES"
+  fi
+
+  # Parse SKILLS from classification
+  SKILLS_LINE=$(echo "$RESULT" | grep -i "^SKILLS:" | head -1 || echo "")
+  if [[ -n "$SKILLS_LINE" ]] && [[ "$SKILLS_LINE" != *"none"* ]]; then
+    SKILLS=$(echo "$SKILLS_LINE" | sed 's/^SKILLS:[[:space:]]*//' | tr ',' '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+    echo ""
+    echo "## Relevant Skills"
+    echo ""
+
+    while IFS= read -r skill; do
+      [[ -z "$skill" ]] && continue
+      skill=$(echo "$skill" | tr -d '[:space:]')
+      SKILL_FILE="$CLAUDE_DIR/skills/${skill}.md"
+      if [[ -f "$SKILL_FILE" ]]; then
+        echo "<skill name=\"$skill\">"
+        cat "$SKILL_FILE"
+        echo "</skill>"
+        echo ""
+        notify "  🛠️  Loaded skill: $skill"
+      fi
+    done <<< "$SKILLS"
+  fi
+
+  # Parse AGENTS - names only (they get spawned via Task tool)
+  PRE_AGENTS_LINE=$(echo "$RESULT" | grep -i "^PRE_AGENTS:" | head -1 || echo "")
+  POST_AGENTS_LINE=$(echo "$RESULT" | grep -i "^POST_AGENTS:" | head -1 || echo "")
+
+  if [[ -n "$PRE_AGENTS_LINE" ]] || [[ -n "$POST_AGENTS_LINE" ]]; then
+    echo ""
+    echo "## Agents to Consider"
+    echo ""
+
+    if [[ -n "$PRE_AGENTS_LINE" ]] && [[ "$PRE_AGENTS_LINE" != *"none"* ]]; then
+      PRE_AGENTS=$(echo "$PRE_AGENTS_LINE" | sed 's/^PRE_AGENTS:[[:space:]]*//')
+      echo "- **PRE (run before coding):** $PRE_AGENTS"
+      notify "  🤖 Pre-agents: $PRE_AGENTS"
+    fi
+
+    if [[ -n "$POST_AGENTS_LINE" ]] && [[ "$POST_AGENTS_LINE" != *"none"* ]]; then
+      POST_AGENTS=$(echo "$POST_AGENTS_LINE" | sed 's/^POST_AGENTS:[[:space:]]*//')
+      echo "- **POST (run after coding):** $POST_AGENTS"
+      notify "  🤖 Post-agents: $POST_AGENTS"
+    fi
+  fi
+
+  echo ""
+  echo "</plan_context>"
+
+  notify "🎯 Plan context injected successfully"
+  exit 0
+fi
+
+# ============================================================================
+# NORMAL MODE: Just output classification (existing behavior)
+# ============================================================================
 
 # Only output if classification CHANGED
 PREV=""
