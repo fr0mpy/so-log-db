@@ -12,7 +12,7 @@ import { LogsContentSkeleton } from './LogsContentSkeleton'
 export function LogsSkeleton() {
   return (
     <div className={Spacing.spaceY4}>
-      {/* Filter Row Skeleton */}
+      {/* Filter Row Skeleton - matches LogFilters structure */}
       <div className={FilterRow.container}>
         {/* Title: text-2xl line-height */}
         <Skeleton className={`${SkeletonHeight.text2xl} w-12`} />
@@ -20,16 +20,14 @@ export function LogsSkeleton() {
         <div className={FilterRow.searchWrapper}>
           <Skeleton className={`${SkeletonHeight.input} w-full rounded-lg`} />
         </div>
-        {/* Selects */}
-        <Skeleton className={`${SkeletonHeight.select} w-[6.5rem] rounded-lg`} />
-        <Skeleton className={`${SkeletonHeight.select} w-[5rem] rounded-lg`} />
-        {/* Switch + label */}
-        <div className={FilterRow.toggleWrapper}>
-          <Skeleton className={`${SkeletonHeight.switch} rounded-full`} />
-          <Skeleton className={`${SkeletonHeight.textXs} w-28`} />
+        {/* Filter Controls: Date Select, Status Select, Refresh */}
+        <div className={FilterRow.filterControls}>
+          <Skeleton className={`${SkeletonHeight.select} w-[6.5rem] rounded-lg`} />
+          <Skeleton className={`${SkeletonHeight.select} w-[5rem] rounded-lg`} />
+          <Skeleton className={`${SkeletonHeight.iconButtonSm} rounded-full`} />
         </div>
-        {/* Refresh button */}
-        <Skeleton className={`${SkeletonHeight.iconButtonSm} rounded-full`} />
+        {/* Theme Switcher - h-8 w-14 (32x56px) */}
+        <Skeleton className="h-8 w-14 rounded-full" />
       </div>
 
       {/* Content Skeleton - shared with LogsPageContent refresh state */}

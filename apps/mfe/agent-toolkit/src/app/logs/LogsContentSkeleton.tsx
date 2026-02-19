@@ -16,19 +16,28 @@ export function LogsContentSkeleton() {
         {/* Chart area - empty placeholder, chart renders instantly */}
         <div data-skel="chart" className="flex-1 min-w-0 h-[220px]" />
 
-        {/* Stats 2x2 Grid */}
-        <div className={LogStats.grid} data-skel="stats">
-          {[...Array(4)].map((_, i) => (
-            <Paper key={i} data-skel={`stat-${i}`}>
-              <div className={LogStats.cell} data-skel="cell">
-                <Skeleton className="h-8 w-24" data-skel="label" />
-                <div className={LogStats.valueRow} data-skel="value-row">
-                  <Skeleton className="h-8 w-16" data-skel="value" />
-                  <Skeleton className="h-5 w-12" data-skel="trend" />
+        {/* Stats with controls - matches LogsPageContent structure */}
+        <div className={LogStats.wrapper} data-skel="stats-wrapper">
+          {/* Controls at top right - Background Logs toggle */}
+          <div className={LogStats.controls} data-skel="controls">
+            <Skeleton className="h-5 w-9 rounded-full" />
+            <Skeleton className="h-4 w-28" />
+          </div>
+
+          {/* Stats 2x2 Grid */}
+          <div className={LogStats.grid} data-skel="stats">
+            {[...Array(4)].map((_, i) => (
+              <Paper key={i} data-skel={`stat-${i}`}>
+                <div className={LogStats.cell} data-skel="cell">
+                  <Skeleton className="h-8 w-24" data-skel="label" />
+                  <div className={LogStats.valueRow} data-skel="value-row">
+                    <Skeleton className="h-8 w-16" data-skel="value" />
+                    <Skeleton className="h-5 w-12" data-skel="trend" />
+                  </div>
                 </div>
-              </div>
-            </Paper>
-          ))}
+              </Paper>
+            ))}
+          </div>
         </div>
       </div>
 
