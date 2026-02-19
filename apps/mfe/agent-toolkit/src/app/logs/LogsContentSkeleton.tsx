@@ -1,7 +1,6 @@
 import { Paper } from "@stackone-ui/core/paper";
 import { Skeleton } from "@stackone-ui/core/skeleton";
 import {
-  FilterRow,
   Grid,
   LogStats,
   DataTable,
@@ -9,27 +8,16 @@ import {
 } from "../../styles";
 
 /**
- * Skeleton for logs page - uses EXACT same layout classes as real components
- * to prevent CLS. Only Skeleton components + Paper wrapper for table.
+ * Skeleton for logs content (chart, stats, table) - NO header.
+ * Header skeleton is in LogsSkeleton.tsx to avoid duplication.
+ * Used by LogsPageContent during refresh state.
  */
 export function LogsContentSkeleton() {
   return (
     <>
-      <div id="filters" className={FilterRow.container}>
-        <Skeleton className={Skel.headerTitle} />
-        <div className={FilterRow.searchWrapper}>
-          <Skeleton className={Skel.headerSearch} />
-        </div>
-        <div className={FilterRow.filterControls}>
-          <Skeleton className={Skel.headerDateSelect} />
-          <Skeleton className={Skel.headerStatusSelect} />
-          <Skeleton className={Skel.headerRefresh} />
-        </div>
-        <Skeleton className={Skel.headerTheme} />
-      </div>
-
       <div className={Grid.chartStats}>
-        <div className={Skel.chartPlaceholder} />
+        {/* Chart - VISIBLE skeleton, not empty div */}
+        <Skeleton className={Skel.chartPlaceholder} />
 
         <div className={LogStats.wrapper}>
           <div className={LogStats.controls}>
@@ -37,10 +25,11 @@ export function LogsContentSkeleton() {
             <Skeleton className={Skel.statsLabel} />
           </div>
           <div className={LogStats.grid}>
-            <Skeleton className={Skel.statCard} />
-            <Skeleton className={Skel.statCard} />
-            <Skeleton className={Skel.statCard} />
-            <Skeleton className={Skel.statCard} />
+            {/* Stat cards - wrapped in Paper to match real StatCard structure */}
+            <Paper><Skeleton className={Skel.statCard} /></Paper>
+            <Paper><Skeleton className={Skel.statCard} /></Paper>
+            <Paper><Skeleton className={Skel.statCard} /></Paper>
+            <Paper><Skeleton className={Skel.statCard} /></Paper>
           </div>
         </div>
       </div>

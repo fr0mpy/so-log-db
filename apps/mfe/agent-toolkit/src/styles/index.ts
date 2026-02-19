@@ -587,24 +587,24 @@ export const PageSkeleton = {
 // ============================================================================
 
 export const LogsPageSkeleton = {
-  /** Header skeleton sizes - measured from actual components via Playwright */
-  headerTitle: 'h-8 w-14',           // 32px × 56px (actual: 32 × 57)
-  headerSearch: 'h-11 flex-1',       // 44px × flex (actual: 44 × flex)
-  headerDateSelect: 'h-11 w-[88px]', // 44px × 88px (actual: 44 × 88)
-  headerStatusSelect: 'h-11 w-16',   // 44px × 64px (actual: 44 × 64)
-  headerRefresh: 'h-8 w-8',          // 32px × 32px (actual: 32 × 32)
-  headerTheme: 'h-8 w-14',           // 32px × 56px (actual: 32 × 56)
+  /** Header skeleton sizes - PIXEL PERFECT from Playwright measurements */
+  headerTitle: 'h-8 w-[57px]',       // 32×57px (actual measured)
+  headerSearch: 'h-11 flex-1',       // 44px × flex
+  headerDateSelect: 'h-11 w-[88px]', // 44×88px
+  headerStatusSelect: 'h-11 w-16',   // 44×64px
+  headerRefresh: 'h-8 w-8',          // 32×32px
+  headerTheme: 'h-8 w-14',           // 32×56px
 
-  /** Chart placeholder - no skeleton, reserves 220px height */
-  chartPlaceholder: 'min-w-0 h-[220px]',
+  /** Chart - MUST be visible Skeleton, not empty div */
+  chartPlaceholder: 'h-[220px] w-full rounded-lg',
 
-  /** Stats skeleton - measured 78px card height, 280px wrapper */
+  /** Stats skeleton */
   statsToggle: 'h-5 w-9 rounded-full',
   statsLabel: 'h-4 w-28',
-  statCard: 'h-[78px]',              // 78px (actual: 78px, width from grid)
+  statCard: 'h-[78px] w-[136px]',    // Explicit width matches actual StatCard content width
 
-  /** Table skeleton - measured ~41px row height */
-  tableRow: 'h-[41px] w-full',       // 41px (actual: 40.7px)
+  /** Table row - FIXED height from measurement */
+  tableRow: 'h-[52px] w-full',       // 52px (actual measured, was 41px)
 } as const
 
 // ============================================================================

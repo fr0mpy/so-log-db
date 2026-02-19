@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import type { ComponentProps } from 'react'
 import type { LogsPageContent as LogsPageContentType } from './LogsPageContent'
-import { LogsContentSkeleton } from './LogsContentSkeleton'
+import { LogsSkeleton } from './LogsSkeleton'
 
 type LogsPageContentProps = ComponentProps<typeof LogsPageContentType>
 
@@ -15,13 +15,13 @@ type LogsPageContentProps = ComponentProps<typeof LogsPageContentType>
  * 2. Client loads JS bundle
  * 3. Component renders with data
  *
- * This ensures users see ONLY skeleton during initial load,
- * never real data flashing before skeleton.
+ * Uses LogsSkeleton (with header) since no header exists during bundle load.
+ * LogsContentSkeleton (no header) is used during refresh when LogFilters is visible.
  */
 export const LogsPageContentLazy = dynamic<LogsPageContentProps>(
   () => import('./LogsPageContent').then((mod) => mod.LogsPageContent),
   {
     ssr: false,
-    loading: () => <LogsContentSkeleton />,
+    loading: () => <LogsSkeleton />,
   }
 )

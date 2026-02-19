@@ -8,25 +8,26 @@ import { LogsContentSkeleton } from './LogsContentSkeleton'
  *
  * Heights use SkeletonHeight tokens which are tightly coupled to
  * ComponentHeight in @stackone-ui/core - no manual sync needed.
+ * Updated: Pixel-perfect measurements verified with Playwright
  */
 export function LogsSkeleton() {
   return (
     <div className={Spacing.spaceY4}>
-      {/* Filter Row Skeleton - matches LogFilters structure */}
+      {/* Filter Row Skeleton - PIXEL PERFECT measurements */}
       <div className={FilterRow.container}>
-        {/* Title: text-2xl line-height */}
-        <Skeleton className={`${SkeletonHeight.text2xl} w-12`} />
-        {/* Search Input */}
+        {/* Title: 57×32px + 20px margin-right (matches Text.pageTitle mr-5) */}
+        <Skeleton className={`${SkeletonHeight.text2xl} w-[57px] mr-5`} />
+        {/* Search Input: flex×44px */}
         <div className={FilterRow.searchWrapper}>
           <Skeleton className={`${SkeletonHeight.input} w-full rounded-lg`} />
         </div>
-        {/* Filter Controls: Date Select, Status Select, Refresh */}
+        {/* Filter Controls: Date 88×44, Status 64×44, Refresh 32×32 */}
         <div className={FilterRow.filterControls}>
-          <Skeleton className={`${SkeletonHeight.select} w-[6.5rem] rounded-lg`} />
-          <Skeleton className={`${SkeletonHeight.select} w-[5rem] rounded-lg`} />
+          <Skeleton className={`${SkeletonHeight.select} w-[88px] rounded-lg`} />
+          <Skeleton className={`${SkeletonHeight.select} w-16 rounded-lg`} />
           <Skeleton className={`${SkeletonHeight.iconButtonSm} rounded-full`} />
         </div>
-        {/* Theme Switcher - h-8 w-14 (32x56px) */}
+        {/* Theme Switcher: 56×32px */}
         <Skeleton className="h-8 w-14 rounded-full" />
       </div>
 
