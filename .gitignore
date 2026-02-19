@@ -31,6 +31,11 @@ Thumbs.db
 *.gif
 *.bmp
 
+# Exception: public folder assets (favicons, logos)
+!**/public/favicon.png
+!**/public/logo.png
+!**/public/**/*.svg
+
 # Logs
 *.log
 npm-debug.log*
