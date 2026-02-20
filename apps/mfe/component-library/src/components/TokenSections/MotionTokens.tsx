@@ -1,24 +1,25 @@
 'use client'
 
 import { useState } from 'react'
+import { motion as Motion } from 'motion/react'
+import { DURATION } from '@stackone-ui/core/config'
 import { TokenViewer, TokenGridStyles as S, MotionTokenStyles } from '../TokenViewer'
+import { SpringDemo } from './SpringDemo'
 
 interface MotionTokensProps {
   motion: Record<string, string>
 }
 
+const DURATION_ENTRIES = Object.entries(DURATION).map(([name, value]) => ({
+  name,
+  value,
+  ms: Math.round(value * 1000),
+}))
+
 export function MotionTokens({
   motion,
 }: MotionTokensProps) {
   const [showJson, setShowJson] = useState(false)
-
-  // Separate duration and spring tokens
-  const durationTokens = Object.entries(motion).filter(([name]) =>
-    name.startsWith('duration-')
-  )
-  const springTokens = Object.entries(motion).filter(([name]) =>
-    name.startsWith('spring-')
-  )
 
   return (
     <div className={S.container}>
@@ -26,7 +27,7 @@ export function MotionTokens({
         <div>
           <h2 className={S.section.title}>Motion</h2>
           <p className={S.section.subtitle}>
-            Animation durations and spring physics
+            Animation durations and spring physics from @stackone-ui/core/config
           </p>
         </div>
         <button
@@ -43,45 +44,35 @@ export function MotionTokens({
         <div className="space-y-8">
           {/* Duration Tokens */}
           <div className={S.section.wrapper}>
-            <p className={S.section.subtitle}>Durations</p>
+            <p className={S.section.subtitle}>Durations (DURATION)</p>
             <div className={S.grid.motion}>
-              {durationTokens.map(([name, value]) => (
+              {DURATION_ENTRIES.map(({ name, value, ms }) => (
                 <div key={name} className={MotionTokenStyles.item}>
-                  <p className={MotionTokenStyles.name}>{name.replace('duration-', '')}</p>
+                  <p className={MotionTokenStyles.name}>{name}</p>
                   <p className={MotionTokenStyles.value}>
-                    --motion-{name}: {value}
+                    DURATION.{name}: {value}s ({ms}ms)
                   </p>
-                  <div
-                    className={`${MotionTokenStyles.demo} animate-pulse`}
-                    style={{
-                      animationDuration: value,
-                      animationIterationCount: 'infinite',
-                    }}
-                    title={`Animation with ${value} duration`}
-                  />
+                  <div className={MotionTokenStyles.demoTrack}>
+                    <Motion.div
+                      animate={{ x: [0, 80, 0] }}
+                      transition={{
+                        duration: value,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                      }}
+                      className={MotionTokenStyles.demoBox}
+                      title={`Animation with ${ms}ms duration`}
+                    />
+                  </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Spring Tokens */}
+          {/* Spring Physics */}
           <div className={S.section.wrapper}>
-            <p className={S.section.subtitle}>Spring Physics</p>
-            <div className={S.grid.motion}>
-              {springTokens.map(([name, value]) => (
-                <div key={name} className={MotionTokenStyles.item}>
-                  <p className={MotionTokenStyles.name}>
-                    {name.replace('spring-', '').replace(/-/g, ' ')}
-                  </p>
-                  <p className={MotionTokenStyles.value}>
-                    --motion-{name}: {value}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Used for spring-based animations
-                  </p>
-                </div>
-              ))}
-            </div>
+            <p className={S.section.subtitle}>Spring Physics (SPRING)</p>
+            <SpringDemo />
           </div>
         </div>
       )}

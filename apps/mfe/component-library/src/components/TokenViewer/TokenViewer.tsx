@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Check, Copy } from 'lucide-react'
+import { ScrollArea } from '@stackone-ui/core/scroll-area'
 import { TokenViewerStyles as S } from './styles'
 
 interface TokenViewerProps {
@@ -154,7 +155,9 @@ export function TokenViewer({
           )}
         </div>
       )}
-      <pre className={S.pre}>{renderedContent}</pre>
+      <ScrollArea className={S.scrollArea}>
+        <pre className={S.pre}>{renderedContent}</pre>
+      </ScrollArea>
     </div>
   )
 }

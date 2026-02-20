@@ -92,16 +92,34 @@ export default function DesignTokensPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch(`${SHELL_URL}/themes/stackone-green.json`)
-      .then((res) => res.json())
-      .then((data: BrandTheme) => {
-        setBrandTheme(data)
-        setLoading(false)
-      })
-      .catch((err) => {
+    // Try local theme first (for standalone MFE), fall back to shell
+    const fetchTheme = async () => {
+      try {
+        // Try local path first
+        const localRes = await fetch('/themes/stackone-green.json')
+        if (localRes.ok) {
+          const data = await localRes.json()
+          setBrandTheme(data)
+          setLoading(false)
+          return
+        }
+      } catch {
+        // Local fetch failed, try shell
+      }
+
+      try {
+        const shellRes = await fetch(`${SHELL_URL}/themes/stackone-green.json`)
+        if (shellRes.ok) {
+          const data = await shellRes.json()
+          setBrandTheme(data)
+        }
+      } catch (err) {
         console.error('Failed to fetch brand theme:', err)
-        setLoading(false)
-      })
+      }
+      setLoading(false)
+    }
+
+    fetchTheme()
   }, [])
 
   if (loading) {

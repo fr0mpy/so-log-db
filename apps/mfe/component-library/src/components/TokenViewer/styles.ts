@@ -5,8 +5,10 @@
 export const TokenViewerStyles = {
   container: [
     'rounded-theme-lg bg-neu-base shadow-neu-raised-sm',
-    'p-4 overflow-auto max-h-96',
+    'p-4',
   ].join(' '),
+
+  scrollArea: 'max-h-80',
 
   pre: [
     'font-mono text-sm leading-relaxed',
@@ -147,6 +149,15 @@ export const MotionTokenStyles = {
   name: 'font-medium text-foreground',
   value: 'font-mono text-sm text-muted-foreground',
   demo: 'h-8 bg-primary rounded-theme-md',
+  demoTrack: [
+    'relative h-8 bg-muted rounded-theme-md',
+    'overflow-hidden',
+  ].join(' '),
+  demoBox: [
+    'absolute left-1 top-1 bottom-1 w-6',
+    'bg-primary rounded-theme-sm',
+    'shadow-neu-raised-sm',
+  ].join(' '),
 } as const
 
 export const ZIndexTokenStyles = {
@@ -158,4 +169,52 @@ export const ZIndexTokenStyles = {
   ].join(' '),
   name: 'font-medium',
   value: 'font-mono text-sm opacity-80',
+} as const
+
+export const SpringDemoStyles = {
+  container: 'space-y-4',
+
+  presetButtons: 'flex gap-2 flex-wrap',
+
+  presetButton: {
+    base: [
+      'px-3 py-1.5 text-sm rounded-theme-md',
+      'transition-colors font-medium',
+    ].join(' '),
+    active: 'bg-primary text-primary-foreground shadow-neu-raised-sm',
+    inactive: [
+      'bg-muted text-muted-foreground',
+      'hover:bg-muted-foreground/10 hover:text-foreground',
+    ].join(' '),
+  },
+
+  demoArea: [
+    'relative h-24 bg-muted rounded-theme-lg overflow-hidden',
+    'border border-border',
+  ].join(' '),
+
+  animatedBox: [
+    'absolute left-4 top-1/2 -translate-y-1/2',
+    'w-12 h-12 bg-primary rounded-theme-md',
+    'shadow-neu-raised-sm',
+  ].join(' '),
+
+  configDisplay: [
+    'p-3 rounded-theme-md bg-neu-base',
+    'font-mono text-sm text-muted-foreground',
+    'flex flex-wrap gap-x-4 gap-y-1',
+  ].join(' '),
+
+  configItem: 'whitespace-nowrap',
+
+  replayButton: [
+    'px-3 py-1.5 text-sm rounded-theme-md',
+    'bg-muted hover:bg-muted-foreground/10',
+    'text-muted-foreground hover:text-foreground',
+    'transition-colors',
+  ].join(' '),
+
+  header: 'flex items-center justify-between gap-4',
+
+  description: 'text-sm text-muted-foreground',
 } as const
