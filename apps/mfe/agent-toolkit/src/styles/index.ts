@@ -260,17 +260,52 @@ export const DataTable = {
   headerCard: 'absolute top-0 left-0 right-0 z-10 rounded-t-lg rounded-b-none border-b-0 shadow-neu-raised-highlight',
   /** Paper wrapper for body - padding-top accounts for absolute header height */
   bodyPaper: 'pt-11 rounded-lg overflow-hidden',
-  /** Responsive header row - gap-8 for consistent column spacing, px-4 for edge padding */
-  headerRow: 'flex w-full gap-8 px-4',
-  /** Cell base padding - gap handles horizontal spacing */
-  headerCell: 'py-3 whitespace-nowrap',
+
+  /**
+   * CSS Grid template for log table - SHARED between header and body rows.
+   * Uses CSS variables from globals.css for consistent column widths.
+   * Grid guarantees header-cell alignment at all responsive breakpoints.
+   */
+  gridRow: [
+    'grid',
+    'grid-cols-[var(--log-col-requested)_var(--log-col-provider)_var(--log-col-origin)_var(--log-col-source)_var(--log-col-request)_var(--log-col-duration)_var(--log-col-status)_var(--log-col-actions)]',
+    'gap-x-[var(--log-col-gap)]',
+    'px-4',
+    'items-center',
+  ].join(' '),
+
+  /** Header row - uses shared grid template */
+  headerRow: [
+    'grid',
+    'grid-cols-[var(--log-col-requested)_var(--log-col-provider)_var(--log-col-origin)_var(--log-col-source)_var(--log-col-request)_var(--log-col-duration)_var(--log-col-status)_var(--log-col-actions)]',
+    'gap-x-[var(--log-col-gap)]',
+    'px-4',
+    'items-center',
+  ].join(' '),
+
+  /** Cell base padding - truncate allows headers to shrink gracefully */
+  headerCell: 'py-3 truncate overflow-hidden',
   headerCellSortable: [
-    'py-3 whitespace-nowrap',
+    'py-3 truncate overflow-hidden',
     'cursor-pointer hover:bg-muted/10 select-none',
   ].join(' '),
-  headerCellRight: 'py-3 whitespace-nowrap text-right',
-  /** Responsive row - gap-8 for consistent column spacing, px-4 for edge padding */
-  row: ['group flex items-center w-full gap-8 px-4 overflow-hidden', 'hover:bg-muted/10', 'hover:shadow-neu-raised-sm', '[&:not(:has(button:active))]:active:shadow-neu-pressed-sm', 'transition-[background-color,box-shadow,border-color] duration-200 ease-neu', 'motion-reduce:transition-none', 'cursor-pointer'].join(' '),
+  headerCellRight: 'py-3 truncate overflow-hidden text-right',
+
+  /** Body row - uses shared grid template with interactive states */
+  row: [
+    'group grid',
+    'grid-cols-[var(--log-col-requested)_var(--log-col-provider)_var(--log-col-origin)_var(--log-col-source)_var(--log-col-request)_var(--log-col-duration)_var(--log-col-status)_var(--log-col-actions)]',
+    'gap-x-[var(--log-col-gap)]',
+    'px-4',
+    'items-center',
+    'hover:bg-muted/10',
+    'hover:shadow-neu-raised-sm',
+    '[&:not(:has(button:active))]:active:shadow-neu-pressed-sm',
+    'transition-[background-color,box-shadow,border-color] duration-200 ease-neu',
+    'motion-reduce:transition-none',
+    'cursor-pointer',
+  ].join(' '),
+
   /** Row focused state for keyboard navigation - uses inset ring to avoid overflow clipping */
   rowFocused: 'ring-2 ring-inset ring-primary',
   /** Row wrapper that includes separator - hides borders adjacent to hovered row */
@@ -281,41 +316,46 @@ export const DataTable = {
   ].join(' '),
   /** Skeleton row wrapper - no borders to prevent flash before animation starts */
   rowWrapperSkeleton: '',
-  /** Cell base - gap handles horizontal spacing, vertical padding only */
-  cell: 'py-3 flex items-center overflow-hidden',
-  /** Same as cell - gap provides consistent spacing */
-  cellTight: 'py-3 flex items-center overflow-hidden',
-  cellRight: 'py-3 text-right text-sm flex items-center justify-end',
-  cellTruncate: 'py-3 truncate flex items-center overflow-hidden',
+  /** Cell base - grid handles alignment, truncate adds ellipsis */
+  cell: 'py-3 flex items-center overflow-hidden min-w-0 truncate',
+  /** Same as cell - grid provides consistent spacing */
+  cellTight: 'py-3 flex items-center overflow-hidden min-w-0 truncate',
+  cellRight: 'py-3 text-right text-sm flex items-center justify-end min-w-0 truncate',
+  cellTruncate: 'py-3 truncate flex items-center overflow-hidden min-w-0',
   scrollArea: 'max-h-[60vh] overflow-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
 } as const
 
 // ============================================================================
-// Log Table Column Widths
+// Log Table Column Classes
 // ============================================================================
 
 /**
- * Responsive column widths - fixed widths for predictable spacing
- * Only 'request' column grows to fill remaining space.
- * All other columns use fixed widths with shrink-0 grow-0.
+ * Column-specific styles for the CSS Grid-based log table.
+ * Widths are controlled by CSS variables in globals.css - these classes
+ * handle overflow, visibility, and content alignment only.
+ *
+ * Column visibility is controlled by CSS variable width (0px = hidden):
+ * - Origin Owner: hidden below lg (--log-col-origin: 0px)
+ * - Source: hidden below md (--log-col-source: 0px)
+ * - Duration: hidden on mobile (--log-col-duration: 0px)
  */
 export const LogTableColumns = {
-  /** Timestamp: fixed 100px */
-  requested: 'w-[100px] shrink-0 grow-0',
-  /** Provider: 40px mobile (icon only), 150px desktop (icon + text) */
-  provider: 'w-10 md:w-[150px] shrink-0 grow-0',
-  /** Origin Owner: fixed 140px, hidden below lg */
-  originOwner: 'hidden lg:flex w-[140px] shrink-0 grow-0',
-  /** Source: fixed 114px */
-  source: 'w-[114px] shrink-0 grow-0',
-  /** Request: fixed 200px (badge 64px + gap 8px + ~120px for name) */
-  request: 'w-[200px] shrink-0 grow-0',
-  /** Duration: fixed 90px, hidden below sm, extra margin before status */
-  duration: 'hidden sm:flex w-[90px] shrink-0 grow-0 justify-end mr-2',
-  /** Status: fixed 56px (fits 3-digit codes with padding) */
-  status: 'w-14 shrink-0 grow-0',
-  /** Actions: fills remaining space, buttons centered */
-  actions: 'flex-1 flex justify-center',
+  /** Timestamp - always visible */
+  requested: 'overflow-hidden',
+  /** Provider - shows full content on md+, icon only below */
+  provider: 'overflow-hidden min-w-0',
+  /** Origin Owner - content hidden when column collapses (CSS variable = 0px) */
+  originOwner: 'overflow-hidden min-w-0',
+  /** Source - content hidden when column collapses */
+  source: 'overflow-hidden min-w-0',
+  /** Request - primary content column, truncates */
+  request: 'overflow-hidden min-w-0',
+  /** Duration - right-aligned, hidden on mobile via CSS variable */
+  duration: 'overflow-hidden min-w-0 justify-end',
+  /** Status - always visible, centered badge, extra left spacing from duration */
+  status: 'overflow-hidden pl-2',
+  /** Actions - centered action buttons */
+  actions: 'overflow-hidden flex justify-center',
 } as const
 
 // ============================================================================
@@ -323,12 +363,12 @@ export const LogTableColumns = {
 // ============================================================================
 
 export const ProviderAvatar = {
-  container: [Layout.Flex.center, 'gap-2'].join(' '),
-  icon: 'w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold text-white',
+  container: [Layout.Flex.center, 'gap-2 min-w-0'].join(' '),
+  icon: 'w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold text-white shrink-0',
   /** Wrapper for name + version - hidden below md for icon-only mode, min-w-0 enables truncation */
-  textWrapper: 'hidden md:flex flex-col min-w-0',
-  /** Progressive truncation: tighter at md, wider at lg */
-  name: 'font-medium leading-tight truncate max-w-[60px] md:max-w-[80px] lg:max-w-[100px]',
+  textWrapper: 'hidden md:flex flex-col min-w-0 overflow-hidden',
+  /** Name truncates based on flex container width (no fixed max-w) */
+  name: 'font-medium leading-tight truncate',
   version: 'text-[10px] text-muted-foreground leading-tight',
   /** Provider-specific colors use semantic tokens */
   primary: 'bg-primary',
@@ -377,10 +417,10 @@ export const VersionBadge = {
 // ============================================================================
 
 export const SourceCell = {
-  container: [Layout.Flex.center, 'gap-2'].join(' '),
+  container: [Layout.Flex.center, 'gap-2 min-w-0'].join(' '),
   icon: 'w-4 h-4 rounded bg-muted/30 flex items-center justify-center text-[10px] text-muted-foreground shrink-0',
-  /** Source text - always visible with truncation */
-  text: 'text-sm truncate',
+  /** Source text - truncates based on flex container width */
+  text: 'text-sm truncate flex-1',
 } as const
 
 // ============================================================================
@@ -389,7 +429,8 @@ export const SourceCell = {
 
 export const TimestampCell = {
   container: 'block',
-  date: 'block text-xs text-muted-foreground',
+  /** Date hidden on mobile - only time shown to save space */
+  date: 'hidden sm:block text-xs text-muted-foreground',
   time: 'block text-sm',
 } as const
 
@@ -398,11 +439,11 @@ export const TimestampCell = {
 // ============================================================================
 
 export const RequestCell = {
-  container: [Layout.Flex.center, 'w-full gap-2 overflow-hidden'].join(' '),
-  /** Method badge - fixed width for text alignment, centered */
-  methodWrapper: 'w-16 flex justify-center shrink-0',
-  /** Request name - truncates to fit available space */
-  name: 'hidden sm:block truncate text-sm text-muted-foreground',
+  container: [Layout.Flex.center, 'w-full gap-2 overflow-hidden min-w-0'].join(' '),
+  /** Method badge - narrower on mobile, expands on sm+ */
+  methodWrapper: 'w-12 sm:w-16 flex justify-center shrink-0',
+  /** Request name - hidden on mobile, flex-1 to fill remaining space and truncate */
+  name: 'hidden sm:block truncate text-sm text-muted-foreground flex-1',
 } as const
 
 // ============================================================================
@@ -439,8 +480,8 @@ export const RowActions = {
 export const LatencyBar = {
   /** Container for duration value + bar */
   container: 'flex flex-col items-center gap-0.5',
-  /** Duration text value - muted to contrast with foreground date/time */
-  value: 'text-sm tabular-nums text-muted-foreground',
+  /** Duration text value - hidden on sm (bar only), visible md+ */
+  value: 'hidden md:block text-sm tabular-nums text-muted-foreground',
   /** Bar container - segments in a row */
   bar: 'flex gap-px w-16 h-1',
   /** Individual segment */
@@ -644,8 +685,14 @@ export const LogTableSkeletonSizes = {
   cellFull: 'h-4 w-full',
   cellDuration: 'h-4 w-16',
   cellStatus: 'h-6 w-12 rounded-full',
-  /** Row container - matches DataTable.row layout (gap-8 px-4) without interactive states */
-  rowInner: 'flex items-center w-full gap-8 px-4 py-3',
+  /** Row container - matches DataTable.row grid layout */
+  rowInner: [
+    'grid',
+    'grid-cols-[var(--log-col-requested)_var(--log-col-provider)_var(--log-col-origin)_var(--log-col-source)_var(--log-col-request)_var(--log-col-duration)_var(--log-col-status)_var(--log-col-actions)]',
+    'gap-x-[var(--log-col-gap)]',
+    'px-4 py-3',
+    'items-center',
+  ].join(' '),
 } as const
 
 // Re-export core patterns for convenience

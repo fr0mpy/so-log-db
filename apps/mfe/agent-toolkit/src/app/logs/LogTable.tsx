@@ -422,7 +422,7 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
             >
               {table.status}
             </SortableHeader>
-            <div className={[DataTable.headerCell, LogTableColumns.actions].join(' ')} data-ui="hcell-actions" />
+            <div className={cn(DataTable.headerCell, LogTableColumns.actions)} data-ui="hcell-actions" />
           </div>
         </div>
       </Card>
@@ -472,7 +472,7 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
                   onMouseLeave={handleRowMouseLeave}
                   onClick={() => onRowClick?.(log)}
                 >
-                  <div className={[DataTable.cell, LogTableColumns.requested].join(' ')} data-ui="cell-requested">
+                  <div className={cn(DataTable.cell, LogTableColumns.requested)} data-ui="cell-requested">
                     <div className={TimestampCell.container}>
                       <span className={TimestampCell.date}>
                         {formatDate(log.timestamp, dates.today, dates.yesterday)}
@@ -480,40 +480,48 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
                       <span className={TimestampCell.time}>{formatTime(log.timestamp)}</span>
                     </div>
                   </div>
-                  <div className={[DataTable.cell, LogTableColumns.provider].join(' ')} data-ui="cell-provider">
+                  <div className={cn(DataTable.cell, LogTableColumns.provider)} data-ui="cell-provider">
                     <div className={ProviderAvatar.container}>
-                      <ProviderIcon name={log.provider.name} size="sm" />
+                      {/* Tooltip shows provider info on mobile when text is hidden */}
+                      <Tooltip content={`${log.provider.name} ${log.provider.version.toUpperCase()}`}>
+                        <span className="flex">
+                          <ProviderIcon name={log.provider.name} size="sm" />
+                        </span>
+                      </Tooltip>
                       <div className={ProviderAvatar.textWrapper}>
                         <span className={ProviderAvatar.name}>{log.provider.name}</span>
                         <span className={ProviderAvatar.version}>{log.provider.version.toUpperCase()}</span>
                       </div>
                     </div>
                   </div>
-                  <div className={[DataTable.cellTruncate, LogTableColumns.originOwner].join(' ')} data-ui="cell-owner">
+                  <div className={cn(DataTable.cellTruncate, LogTableColumns.originOwner)} data-ui="cell-owner">
                     <span className={Text.muted}>{log.originOwner}</span>
                   </div>
-                  <div className={[DataTable.cellTight, LogTableColumns.source].join(' ')} data-ui="cell-source">
+                  <div className={cn(DataTable.cellTight, LogTableColumns.source)} data-ui="cell-source">
                     <span className={SourceCell.text}>{log.source}</span>
                   </div>
-                  <div className={[DataTable.cellTight, LogTableColumns.request].join(' ')} data-ui="cell-request">
+                  <div className={cn(DataTable.cellTight, LogTableColumns.request)} data-ui="cell-request">
                     <div className={RequestCell.container}>
                       <div className={RequestCell.methodWrapper}>
-                        <span className={[MethodBadge.base, getMethodBadgeStyle(log.request.method)].join(' ')}>
+                        <span className={cn(MethodBadge.base, getMethodBadgeStyle(log.request.method))}>
                           {log.request.method}
                         </span>
                       </div>
-                      <span className={RequestCell.name}>{log.request.name}</span>
+                      {/* Tooltip shows full request name when truncated */}
+                      <Tooltip content={log.request.name}>
+                        <span className={RequestCell.name}>{log.request.name}</span>
+                      </Tooltip>
                     </div>
                   </div>
-                  <div className={[DataTable.cellRight, LogTableColumns.duration].join(' ')} data-ui="cell-duration">
+                  <div className={cn(DataTable.cellRight, LogTableColumns.duration)} data-ui="cell-duration">
                     <LatencyBar duration={log.duration} />
                   </div>
-                  <div className={[DataTable.cell, LogTableColumns.status].join(' ')} data-ui="cell-status">
-                    <span className={[StatusBadge.base, getStatusBadgeStyle(log.status)].join(' ')}>
+                  <div className={cn(DataTable.cell, LogTableColumns.status)} data-ui="cell-status">
+                    <span className={cn(StatusBadge.base, getStatusBadgeStyle(log.status))}>
                       {log.status}
                     </span>
                   </div>
-                  <div className={[DataTable.cell, LogTableColumns.actions].join(' ')} role="gridcell">
+                  <div className={cn(DataTable.cell, LogTableColumns.actions)} role="gridcell">
                     <div className={RowActions.container}>
                       {/* Primary actions - always visible */}
                       <Tooltip content={actions.replayDescription}>

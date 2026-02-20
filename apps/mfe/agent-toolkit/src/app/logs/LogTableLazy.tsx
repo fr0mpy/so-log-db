@@ -7,71 +7,74 @@ import { DataTable, LogTableColumns, LogTableSkeletonSizes } from '../../styles'
 import { Skeleton } from '@stackone-ui/core/skeleton'
 import { Card } from '@stackone-ui/core/card'
 import { Paper } from '@stackone-ui/core/paper'
+import { cn } from '@stackone-ui/core/utils'
 
 type LogTableProps = ComponentProps<typeof LogTableType>
 
 /**
  * Skeleton for LogTable while loading
- * Matches the visual structure to prevent CLS
+ * Matches the CSS Grid structure to prevent CLS and ensure alignment
  * Exported for use by LogTable during virtualizer initialization
  */
 export function LogTableSkeleton() {
   return (
     <div className={DataTable.scrollWrapper}>
-      {/* Header */}
+      {/* Header - uses same grid template as body rows */}
       <Card className={DataTable.headerCard}>
         <div className={DataTable.headerRow}>
-          <div className={`${DataTable.headerCell} ${LogTableColumns.requested}`}>
+          <div className={cn(DataTable.headerCell, LogTableColumns.requested)}>
             <Skeleton className={LogTableSkeletonSizes.headerRequested} />
           </div>
-          <div className={`${DataTable.headerCell} ${LogTableColumns.provider}`}>
+          <div className={cn(DataTable.headerCell, LogTableColumns.provider)}>
             <Skeleton className={LogTableSkeletonSizes.headerProvider} />
           </div>
-          <div className={`${DataTable.headerCell} ${LogTableColumns.originOwner}`}>
+          <div className={cn(DataTable.headerCell, LogTableColumns.originOwner)}>
             <Skeleton className={LogTableSkeletonSizes.headerOrigin} />
           </div>
-          <div className={`${DataTable.headerCell} ${LogTableColumns.source}`}>
+          <div className={cn(DataTable.headerCell, LogTableColumns.source)}>
             <Skeleton className={LogTableSkeletonSizes.headerSource} />
           </div>
-          <div className={`${DataTable.headerCell} ${LogTableColumns.request}`}>
+          <div className={cn(DataTable.headerCell, LogTableColumns.request)}>
             <Skeleton className={LogTableSkeletonSizes.headerRequest} />
           </div>
-          <div className={`${DataTable.headerCell} ${LogTableColumns.duration}`}>
+          <div className={cn(DataTable.headerCell, LogTableColumns.duration)}>
             <Skeleton className={LogTableSkeletonSizes.headerDuration} />
           </div>
-          <div className={`${DataTable.headerCell} ${LogTableColumns.status}`}>
+          <div className={cn(DataTable.headerCell, LogTableColumns.status)}>
             <Skeleton className={LogTableSkeletonSizes.headerStatus} />
           </div>
+          <div className={cn(DataTable.headerCell, LogTableColumns.actions)} />
         </div>
       </Card>
 
-      {/* Body rows */}
+      {/* Body rows - use same grid template as header */}
       <Paper className={DataTable.bodyPaper}>
         <div className={DataTable.scrollArea}>
           {[...Array(10)].map((_, i) => (
             <div key={i} className={DataTable.rowWrapper}>
               <div className={LogTableSkeletonSizes.rowInner}>
-                <div className={`${DataTable.cell} ${LogTableColumns.requested}`}>
+                <div className={cn(DataTable.cell, LogTableColumns.requested)}>
                   <Skeleton className={LogTableSkeletonSizes.cellTimestamp} />
                 </div>
-                <div className={`${DataTable.cell} ${LogTableColumns.provider}`}>
+                <div className={cn(DataTable.cell, LogTableColumns.provider)}>
                   <Skeleton className={LogTableSkeletonSizes.cellProvider} />
                 </div>
-                <div className={`${DataTable.cell} ${LogTableColumns.originOwner}`}>
+                <div className={cn(DataTable.cell, LogTableColumns.originOwner)}>
                   <Skeleton className={LogTableSkeletonSizes.cellText} />
                 </div>
-                <div className={`${DataTable.cell} ${LogTableColumns.source}`}>
+                <div className={cn(DataTable.cell, LogTableColumns.source)}>
                   <Skeleton className={LogTableSkeletonSizes.cellText} />
                 </div>
-                <div className={`${DataTable.cell} ${LogTableColumns.request}`}>
+                <div className={cn(DataTable.cell, LogTableColumns.request)}>
                   <Skeleton className={LogTableSkeletonSizes.cellFull} />
                 </div>
-                <div className={`${DataTable.cell} ${LogTableColumns.duration}`}>
+                <div className={cn(DataTable.cell, LogTableColumns.duration)}>
                   <Skeleton className={LogTableSkeletonSizes.cellDuration} />
                 </div>
-                <div className={`${DataTable.cell} ${LogTableColumns.status}`}>
+                <div className={cn(DataTable.cell, LogTableColumns.status)}>
                   <Skeleton className={LogTableSkeletonSizes.cellStatus} />
                 </div>
+                <div className={cn(DataTable.cell, LogTableColumns.actions)} />
               </div>
             </div>
           ))}
