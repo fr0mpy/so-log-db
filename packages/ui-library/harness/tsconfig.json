@@ -15,5 +15,5 @@
     "baseUrl": "."
   },
   "include": ["src/**/*", "tests/**/*", "../core/src/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "../core/src/fonts/generate-next-loader.ts"]
 }
