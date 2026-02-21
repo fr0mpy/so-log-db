@@ -1,6 +1,95 @@
 # Architecture
 
-## Runtime
+## Multi-Zone MFE Overview
+
+The platform uses Next.js Multi-Zones with 4 separate Vercel deployments. Shell serves as the main entry point and proxies requests to MFEs via URL rewrites.
+
+| App | Port (dev) | basePath | Vercel URL |
+|-----|-----------|----------|------------|
+| Shell | 3000 | none | `stackone-shell.vercel.app` |
+| Agent Toolkit | 3001 | `/agent-toolkit` | `stackone-agent-toolkit.vercel.app` |
+| Component Library | 3002 | `/component-library` | `stackone-component-library.vercel.app` |
+| Design Review | 3003 | `/design-review` | `stackone-design-review.vercel.app` |
+
+```mermaid
+graph TB
+    subgraph "Shell Deployment"
+        Shell[Shell App<br/>stackone-shell.vercel.app]
+    end
+
+    subgraph "MFE Deployments"
+        AT["Agent Toolkit<br/>stackone-agent-toolkit.vercel.app"]
+        CL["Component Library<br/>stackone-component-library.vercel.app"]
+        DR["Design Review<br/>stackone-design-review.vercel.app"]
+    end
+
+    Shell -->|rewrites /agent-toolkit/*| AT
+    Shell -->|rewrites /component-library/*| CL
+    Shell -->|rewrites /design-review/*| DR
+
+    subgraph "Shared Packages"
+        UI["@stackone-ui/core"]
+        I18N["@stackone/i18n"]
+        Utils["@stackone/utils"]
+    end
+
+    AT --> UI
+    CL --> UI
+    DR --> UI
+    Shell --> I18N
+```
+
+---
+
+## Shell Rewrite Flow
+
+When a user navigates to `/agent-toolkit/logs`:
+
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant Shell as Shell<br/>stackone-shell.vercel.app
+    participant MFE as Agent Toolkit MFE<br/>stackone-agent-toolkit.vercel.app
+
+    Browser->>Shell: GET /agent-toolkit/logs
+    Note over Shell: Rewrite rule matches
+    Shell->>MFE: Proxy to MFE_AGENT_TOOLKIT_URL/agent-toolkit/logs
+    MFE->>MFE: SSR render page
+    MFE-->>Shell: HTML + JS
+    Shell-->>Browser: Response (URL stays /agent-toolkit/logs)
+```
+
+**Rewrite rules** in `apps/shell/next.config.ts`:
+
+```typescript
+async rewrites() {
+  return [
+    { source: '/agent-toolkit', destination: `${MFE_AGENT_TOOLKIT_URL}/agent-toolkit` },
+    { source: '/agent-toolkit/:path*', destination: `${MFE_AGENT_TOOLKIT_URL}/agent-toolkit/:path*` },
+    // ... component-library, design-review
+  ]
+}
+```
+
+---
+
+## Navigation Rules
+
+| Navigation Type | Method | Example |
+|-----------------|--------|---------|
+| Shell → MFE | `<a>` tag | `<a href={Routes.agentToolkit}>Agent Toolkit</a>` |
+| MFE → Shell | `<a>` tag | `<a href={Routes.shell.home}>Home</a>` |
+| Within MFE | `<Link>` or `redirect()` | `<Link href={Routes.logs.index}>Logs</Link>` |
+
+Cross-zone navigation requires full page loads. Within-zone uses client-side routing.
+
+**Route configuration:**
+- Shell: `apps/shell/src/lib/routes.ts`
+- MFEs: `apps/mfe/*/src/routes.ts`
+
+---
+
+## Runtime Flows
 
 ### First Visit Sequence
 
@@ -71,40 +160,6 @@ sequenceDiagram
 
 ---
 
-## Application Structure
-
-### Unified App with Lazy-Loaded Sections
-
-```mermaid
-graph TB
-    subgraph "Single Deployment"
-        Shell[Shell App<br/>apps/shell]
-
-        subgraph "Route Groups (Lazy Loaded)"
-            AT["(agent-toolkit)<br/>/agent-toolkit/*"]
-            CL["(component-library)<br/>/component-library/*"]
-            DR["(design-review)<br/>/design-review/*"]
-        end
-
-        Shell --> AT
-        Shell --> CL
-        Shell --> DR
-    end
-
-    subgraph "Shared Packages"
-        UI["@stackone-ui/core"]
-        I18N["@stackone/i18n"]
-        Utils["@stackone/utils"]
-    end
-
-    AT --> UI
-    CL --> UI
-    DR --> UI
-    Shell --> I18N
-```
-
----
-
 ## Data Flow
 
 ### REST-First Pattern
@@ -160,9 +215,7 @@ flowchart TB
 
 ---
 
-## Theming
-
-### Two-Tier Theme System
+## Two-Tier Theme System
 
 ```mermaid
 flowchart TB
@@ -189,3 +242,5 @@ flowchart TB
     Colors --> Vars
     Typography --> Vars
 ```
+
+See [Theming](theming.md) for details on the theme initialization flow.
