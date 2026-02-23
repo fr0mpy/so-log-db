@@ -1,26 +1,9 @@
-import { Layout, Interactive, SizingTokens, TypographyTokens } from '../../styles'
-
 export const BreadcrumbStyles = {
   root: '',
-  list: [
-    Layout.Flex.center,
-    Layout.Spacing.gap2,
-    TypographyTokens.textSm,
-    TypographyTokens.textMuted,
-  ].join(' '),
-  item: [
-    'inline-flex items-center',
-    Layout.Spacing.gap2,
-  ].join(' '),
-  link: [
-    Interactive.Cursor.pointer,
-    'transition-colors',
-    'hover:text-primary',
-  ].join(' '),
+  list: 'flex items-center gap-2 text-sm text-muted-foreground',
+  item: 'inline-flex items-center gap-2',
+  link: 'cursor-pointer transition-colors hover:text-primary',
   separator: '',
-  separatorIcon: SizingTokens.iconSm,
-  page: [
-    TypographyTokens.fontMedium,
-    TypographyTokens.textForeground,
-  ].join(' '),
+  separatorIcon: 'h-4 w-4',
+  page: 'font-medium text-foreground',
 } as const

@@ -4,7 +4,7 @@
  * Follows zero-inline-classnames pattern for loading.tsx files.
  */
 
-import { Layout, ComponentHeight, TextHeight } from '@stackone-ui/core/styles'
+import { ComponentHeight, TextHeight } from '@stackone-ui/core/styles'
 
 /**
  * Note: min-h-[50vh] is an arbitrary value because Tailwind doesn't provide
@@ -13,7 +13,7 @@ import { Layout, ComponentHeight, TextHeight } from '@stackone-ui/core/styles'
  */
 export const LoadingStyles = {
   /** Full-page centered loading container (50vh min-height for visible loading state) */
-  page: [Layout.Flex.centerBoth, 'min-h-[50vh]'].join(' '),
+  page: 'flex items-center justify-center min-h-[50vh]',
 
   /** Spinning refresh icon animation */
   spinning: 'animate-spin',

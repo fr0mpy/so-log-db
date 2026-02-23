@@ -1,9 +1,7 @@
-import { Layout, Interactive } from '@stackone-ui/core/styles'
-
 export const DesignViewerStyles = {
-  container: ['flex flex-col gap-4'].join(' '),
+  container: 'flex flex-col gap-4',
   imageWrapper: [
-    Layout.Position.relative,
+    'relative',
     'w-full max-w-4xl mx-auto rounded-lg overflow-hidden border border-border',
   ].join(' '),
   image: 'w-full h-auto block',
@@ -13,7 +11,7 @@ export const DesignViewerStyles = {
     'flex items-center justify-between gap-4 w-full',
   ].join(' '),
   navButton: [
-    Interactive.Focus.ring,
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
     'flex-shrink-0 w-12 h-12 rounded-full',
     'flex items-center justify-center',
     'bg-primary text-primary-foreground',
@@ -39,13 +37,13 @@ export const DesignViewerStyles = {
     'flex items-center justify-center gap-2 flex-wrap',
   ].join(' '),
   indicator: [
-    Interactive.Focus.ring,
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
     'w-8 h-8 rounded-full bg-muted text-muted-foreground',
     'flex items-center justify-center text-xs font-medium',
     'cursor-pointer hover:bg-muted/80 transition-colors',
   ].join(' '),
   indicatorActive: [
-    Interactive.Focus.ring,
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
     'w-8 h-8 rounded-full bg-primary text-primary-foreground',
     'flex items-center justify-center text-xs font-medium',
     'cursor-pointer transition-colors',

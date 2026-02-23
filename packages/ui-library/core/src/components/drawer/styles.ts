@@ -1,10 +1,9 @@
-import { Layout, Overlay } from '../../styles'
 import type { DrawerSide } from './types'
 
 export const DrawerStyles = {
-  backdrop: Overlay.Drawer.backdrop,
-  header: Overlay.Drawer.header,
-  title: Overlay.Drawer.title,
+  backdrop: 'fixed inset-0 bg-foreground/60 backdrop-blur-sm',
+  header: 'flex items-center justify-between p-6',
+  title: 'font-heading text-lg font-semibold text-foreground',
   portal: 'fixed inset-0 z-50',
   content: {
     base: 'fixed z-50 bg-neu-base shadow-neu-raised-lg flex flex-col',
@@ -12,7 +11,7 @@ export const DrawerStyles = {
   scrollArea: 'flex-1 overflow-auto',
   scrollAreaPadded: 'flex-1 p-6',
   closeButton: 'ml-auto',
-  closeIcon: Layout.Size.iconSm,
+  closeIcon: 'h-4 w-4',
 } as const
 
 // Responsive drawer positions - full width on mobile with max constraint, fixed on tablet+

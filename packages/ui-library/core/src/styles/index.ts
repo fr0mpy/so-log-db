@@ -1,15 +1,27 @@
 /**
- * Centralized style constants for component harness.
- * Uses namespace pattern for clean organization.
+ * Centralized style tokens for the UI library.
+ *
+ * This file exports only the primitive tokens that provide real value:
+ * - Sizing tokens (WCAG 2.5.8 compliant touch targets)
+ * - Spacing tokens (responsive spacing utilities)
+ * - Typography tokens (text styles)
+ * - Responsive utilities (breakpoint types)
+ *
+ * Pattern compositions (Layout.Flex.col, Interactive.Hover.ghost, etc.) have been
+ * removed in favor of writing raw Tailwind classes directly in styles.ts files.
+ * This enables Tailwind IntelliSense to work properly.
  *
  * @example
- * import { Form, Layout, Interactive, Overlay, Control, Feedback } from '../styles'
- * <input className={Form.Input.base} />
- * <div className={Layout.Flex.center} />
+ * import { ComponentHeight, TextHeight } from '@stackone-ui/core/styles'
+ *
+ * export const SkeletonHeight = {
+ *   input: ComponentHeight.input,    // WCAG-compliant 44px
+ *   textSm: TextHeight.sm,           // Matches text-sm line-height
+ * }
  */
 
 // ============================================================================
-// TOKEN EXPORTS (Primitives)
+// TOKEN EXPORTS (Primitives - provides WCAG compliance and consistency)
 // ============================================================================
 
 export { Spacing as SpacingTokens, ResponsiveSpacing } from './tokens/spacing'
@@ -17,82 +29,7 @@ export { Sizing as SizingTokens, TouchTarget, ComponentHeight, TextHeight } from
 export { Typography as TypographyTokens, ResponsiveTypography } from './tokens/typography'
 
 // ============================================================================
-// PATTERN EXPORTS (Compositions) - from patterns/ subdirectory
+// TYPE EXPORTS
 // ============================================================================
 
-// Main namespaces
-export {
-  Form,
-  Layout,
-  Interactive,
-  Overlay,
-  Control,
-  Feedback,
-  Patterns,
-} from './patterns'
-
-// Sub-namespaces
-export {
-  Label,
-  Input,
-  NumberInput,
-  Textarea,
-  Helper,
-  Stepper,
-  getInputStyles,
-  getHelperStyles,
-} from './patterns'
-
-export {
-  Flex,
-  Spacing,
-  Position,
-  Size,
-  Responsive,
-} from './patterns'
-
-export {
-  Transition,
-  Focus,
-  Disabled,
-  Hover,
-  Active,
-  Cursor,
-  // Button and CloseButton available via Interactive.Button / Interactive.CloseButton
-} from './patterns'
-
-export {
-  // Dialog, Drawer, Card available via Overlay.Dialog / Overlay.Drawer / Overlay.Card
-  Paper,
-} from './patterns'
-
-export {
-  Toggle,
-  Slider,
-} from './patterns'
-
-export {
-  // Badge, Alert, Tag available via Feedback.Badge / Feedback.Alert / Feedback.Tag
-  type BadgeVariant,
-  type AlertVariant,
-  type TagVariant,
-} from './patterns'
-
-// ============================================================================
-// MOTION EXPORTS (Framer Motion presets)
-// ============================================================================
-
-export { Motion, Variants as MotionVariants, Transition as MotionTransition, type MotionVariant } from './motion'
-
-// ============================================================================
-// UTILITY EXPORTS
-// ============================================================================
-
-export {
-  responsiveClasses,
-  getResponsiveClasses,
-  resolveResponsiveValue,
-  isResponsiveObject,
-  type Breakpoint,
-  type ResponsiveValue,
-} from './responsive'
+export { type Breakpoint, type ResponsiveValue } from './responsive'

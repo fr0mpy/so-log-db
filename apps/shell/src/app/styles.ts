@@ -1,12 +1,7 @@
-import { Layout, Interactive } from '@stackone-ui/core/styles'
-
 export const HomeStyles = {
-  main: [Layout.Flex.col, Layout.Flex.centerBoth, 'min-h-screen p-8 gap-8'].join(' '),
+  main: 'flex flex-col flex items-center justify-center min-h-screen p-8 gap-8',
   title: 'text-center',
-  nav: [Layout.Flex.col, 'gap-4 w-full max-w-md'].join(' '),
+  nav: 'flex flex-col gap-4 w-full max-w-md',
   paper: 'w-full',
-  link: [
-    Interactive.Focus.ring,
-    'text-primary hover:underline',
-  ].join(' '),
+  link: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 text-primary hover:underline',
 } as const

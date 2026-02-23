@@ -1,42 +1,12 @@
-import { Layout, Interactive, SpacingTokens, SizingTokens } from '../../styles'
-
 export const CollapsibleStyles = {
   root: 'w-full',
-  trigger: [
-    'relative', // For indicator positioning
-    Layout.Flex.between,
-    'w-full',
-    'group', // Enable group-hover for children
-    Interactive.Cursor.pointer,
-    'rounded-theme-md',
-    SpacingTokens.px2,
-    SpacingTokens.py1,
-    'bg-transparent',
-    Interactive.Transition.all,
-    'hover:bg-muted',
-    'hover:text-primary', // Text turns primary on hover
-    Interactive.Focus.ring,
-  ].join(' '),
+  trigger: 'relative flex items-center justify-between w-full group cursor-pointer rounded-theme-md px-2 py-1 bg-transparent transition-all duration-200 hover:bg-muted hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
   /** Indicator bar - neumorphic raised style like Tabs */
-  indicator: [
-    'absolute inset-0',
-    'rounded-theme-md',
-    'bg-neu-base shadow-neu-raised-sm',
-  ].join(' '),
+  indicator: 'absolute inset-0 rounded-theme-md bg-neu-base shadow-neu-raised-sm',
   /** Trigger content wrapper - sits above indicator */
-  triggerContent: [
-    'relative z-10',
-    Layout.Flex.between,
-    'w-full',
-  ].join(' '),
-  iconWrapper: [
-    Layout.Flex.center,
-    'shrink-0',
-    'text-muted-foreground',
-    'group-hover:text-primary', // Icon turns primary on hover
-    Interactive.Transition.color,
-  ].join(' '),
-  icon: SizingTokens.iconSm,
+  triggerContent: 'relative z-10 flex items-center justify-between w-full',
+  iconWrapper: 'flex items-center shrink-0 text-muted-foreground group-hover:text-primary transition-[background-color] duration-200 ease-neu',
+  icon: 'h-4 w-4',
   contentWrapper: 'overflow-hidden',
-  content: SpacingTokens.pt2,
+  content: 'pt-2',
 } as const

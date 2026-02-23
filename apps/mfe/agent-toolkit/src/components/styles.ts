@@ -1,22 +1,20 @@
 /**
  * MFE Component Styles - zero inline classnames pattern.
- * Uses core style patterns for consistency.
+ * Raw Tailwind classes for IntelliSense support.
  */
-
-import { Layout, Interactive } from '@stackone-ui/core/styles'
 
 export const NavLinkStyles = {
   base: [
-    Layout.Flex.inline,
+    'inline-flex items-center justify-center',
     'gap-1',
     'font-medium',
-    Interactive.Cursor.pointer,
-    Interactive.Transition.color,
+    'cursor-pointer',
+    'transition-[background-color] duration-200 ease-neu',
     'outline-none whitespace-nowrap',
     'disabled:pointer-events-none disabled:opacity-50',
     'h-9 px-4 text-sm rounded-theme-md',
     'bg-transparent text-foreground',
-    Interactive.Hover.ghost,
+    'hover:bg-neu-base hover:shadow-neu-raised-sm hover:text-primary',
     'active:shadow-neu-pressed-sm',
     'focus-visible:shadow-neu-focus',
   ].join(' '),
@@ -58,9 +56,9 @@ export const SidebarStyles = {
     'gap-3 p-3 h-12 w-full',
     'rounded-theme-md',
     'text-muted-foreground',
-    Interactive.Cursor.pointer,
-    Interactive.Transition.color,
-    Interactive.Hover.ghost,
+    'cursor-pointer',
+    'transition-[background-color] duration-200 ease-neu',
+    'hover:bg-neu-base hover:shadow-neu-raised-sm hover:text-primary',
     'focus-visible:shadow-neu-focus outline-none',
     'whitespace-nowrap overflow-hidden',
   ].join(' '),
@@ -73,9 +71,9 @@ export const SidebarStyles = {
     'flex items-center justify-center',
     'size-9 rounded-theme-md',
     'text-muted-foreground',
-    Interactive.Cursor.pointer,
-    Interactive.Transition.color,
-    Interactive.Hover.ghost,
+    'cursor-pointer',
+    'transition-[background-color] duration-200 ease-neu',
+    'hover:bg-neu-base hover:shadow-neu-raised-sm hover:text-primary',
     'focus-visible:shadow-neu-focus outline-none',
   ].join(' '),
 } as const
@@ -99,8 +97,8 @@ export const SidebarNavStyles = {
       'flex items-center justify-start',
       'gap-3 p-3 h-12 w-full', // Always full width (no width transition)
       'rounded-theme-md',
-      Interactive.Cursor.pointer,
-      Interactive.Transition.color,
+      'cursor-pointer',
+      'transition-[background-color] duration-200 ease-neu',
       'whitespace-nowrap overflow-hidden',
     ].join(' '),
     icon: 'size-5 flex-shrink-0',
@@ -109,6 +107,6 @@ export const SidebarNavStyles = {
     labelVisible: 'opacity-100 translate-x-0',
     labelHidden: 'opacity-0 -translate-x-2',
     active: 'bg-primary text-primary-foreground',
-    inactive: ['text-foreground', Interactive.Hover.ghost].join(' '),
+    inactive: 'text-foreground hover:bg-neu-base hover:shadow-neu-raised-sm hover:text-primary',
   },
 } as const

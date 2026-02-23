@@ -2,17 +2,8 @@
  * MFE App Styles
  *
  * Co-located styles following zero-inline-classnames pattern.
- * Imports from @stackone-ui/core and composes app-specific patterns.
+ * Raw Tailwind classes for IntelliSense support.
  */
-
-import {
-  Layout,
-  Interactive,
-  Overlay,
-  Feedback,
-  Form,
-  TypographyTokens as Typography,
-} from '@stackone-ui/core/styles'
 
 // ============================================================================
 // Typography Compositions
@@ -22,12 +13,12 @@ export const Text = {
   h1: 'text-3xl font-bold',
   h2: 'text-2xl font-bold',
   h3: 'text-xl font-semibold',
-  body: Typography.textSm,
-  muted: [Typography.textSm, Typography.textMuted].join(' '),
+  body: 'text-sm',
+  muted: 'text-sm text-muted-foreground',
   value: 'text-sm',
   valueTruncate: 'text-sm flex-1 truncate',
-  label: [Typography.textSm, Typography.fontMedium, Typography.textMuted].join(' '),
-  medium: Typography.fontMedium,
+  label: 'text-sm font-medium text-muted-foreground',
+  medium: 'font-medium',
   center: 'text-center',
   pre: 'whitespace-pre',
   /** Page title in filter row */
@@ -43,9 +34,7 @@ export const AppLayout = {
   /** Main content area - uses ml-16 (64px) to account for collapsed SideNav */
   main: 'flex-1 p-8 ml-16',
   /** Main content - flex-1 naturally fills remaining space beside sidebar */
-  mainAnimated: [
-    'flex-1 min-w-0 min-h-screen overflow-x-clip',
-  ].join(' '),
+  mainAnimated: 'flex-1 min-w-0 min-h-screen overflow-x-clip',
   /** Inner content wrapper with padding */
   content: 'p-8',
 } as const
@@ -72,10 +61,10 @@ export const AppHeader = {
 
 export const PageHeader = {
   container: 'mb-2',
-  title: Text.h1,
-  description: Text.muted,
+  title: 'text-3xl font-bold',
+  description: 'text-sm text-muted-foreground',
   breadcrumb: {
-    container: [Text.muted, 'mb-2'].join(' '),
+    container: 'text-sm text-muted-foreground mb-2',
     link: 'hover:text-foreground',
     separator: 'mx-2',
   },
@@ -92,14 +81,14 @@ export const Card = {
   interactive: [
     'bg-surface rounded-lg border border-border',
     'hover:border-primary',
-    Interactive.Transition.border,
+    'transition-[border-color] duration-200 ease-neu',
   ].join(' '),
   header: 'p-4 border-b border-border',
   content: 'p-6',
   /** CardContent with top padding for stats cards */
   contentPadded: 'pt-6',
-  title: Overlay.Card.title,
-  description: Overlay.Card.description,
+  title: 'font-heading text-lg font-semibold text-foreground',
+  description: 'text-sm text-muted-foreground',
 } as const
 
 // ============================================================================
@@ -108,8 +97,8 @@ export const Card = {
 
 export const Stats = {
   grid: 'grid grid-cols-1 md:grid-cols-3 gap-6 mb-8',
-  card: Card.padded,
-  label: Text.label,
+  card: 'bg-surface rounded-lg border border-border p-6',
+  label: 'text-sm font-medium text-muted-foreground',
   value: 'text-3xl font-bold',
   valueDestructive: 'text-3xl font-bold text-destructive',
   valueWarning: 'text-3xl font-bold text-warning',
@@ -123,13 +112,13 @@ export const ListItem = {
   base: [
     'block p-4 border-b border-border last:border-b-0',
     'hover:bg-muted/10',
-    Interactive.Transition.color,
+    'transition-[background-color] duration-200 ease-neu',
   ].join(' '),
-  row: [Layout.Flex.center, 'gap-4'].join(' '),
+  row: 'flex items-center gap-4',
   interactive: [
     'p-3 bg-muted/10 rounded',
     'hover:bg-muted/20',
-    Interactive.Transition.color,
+    'transition-[background-color] duration-200 ease-neu',
     'cursor-pointer',
   ].join(' '),
 } as const
@@ -139,11 +128,11 @@ export const ListItem = {
 // ============================================================================
 
 export const Badge = {
-  base: Feedback.Badge.base,
-  info: [Feedback.Badge.base, 'bg-info/10 text-info'].join(' '),
-  success: [Feedback.Badge.base, 'bg-success/10 text-success'].join(' '),
-  warning: [Feedback.Badge.base, 'bg-warning/10 text-warning'].join(' '),
-  destructive: [Feedback.Badge.base, 'bg-destructive/10 text-destructive'].join(' '),
+  base: 'inline-flex items-center rounded-theme-md px-2.5 py-0.5 text-xs font-medium',
+  info: 'inline-flex items-center rounded-theme-md px-2.5 py-0.5 text-xs font-medium bg-info/10 text-info',
+  success: 'inline-flex items-center rounded-theme-md px-2.5 py-0.5 text-xs font-medium bg-success/10 text-success',
+  warning: 'inline-flex items-center rounded-theme-md px-2.5 py-0.5 text-xs font-medium bg-warning/10 text-warning',
+  destructive: 'inline-flex items-center rounded-theme-md px-2.5 py-0.5 text-xs font-medium bg-destructive/10 text-destructive',
 } as const
 
 // ============================================================================
@@ -153,7 +142,7 @@ export const Badge = {
 export const FormInput = {
   base: [
     'w-full',
-    Layout.Spacing.input,
+    'px-3 py-2',
     'bg-surface border border-border rounded-lg',
     'focus-visible:outline-none focus-visible:shadow-neu-focus',
   ].join(' '),
@@ -164,7 +153,7 @@ export const FormInput = {
     'text-lg',
   ].join(' '),
   select: [
-    Layout.Spacing.input,
+    'px-3 py-2',
     'bg-surface border border-border rounded-lg',
   ].join(' '),
 } as const
@@ -178,7 +167,7 @@ export const InfoBox = {
   info: 'mt-8 p-4 bg-info/10 rounded-lg border border-info/20',
   title: 'font-semibold mb-2',
   titleInfo: 'font-semibold text-info mb-2',
-  content: [Text.muted, 'space-y-1'].join(' '),
+  content: 'text-sm text-muted-foreground space-y-1',
 } as const
 
 // ============================================================================
@@ -220,7 +209,7 @@ export const LogStats = {
   /** Card content padding - fixed height for skeleton alignment, centered vertically */
   cell: 'p-4 h-[78px] flex flex-col justify-center',
   /** Label text - small, muted, uppercase */
-  label: [Typography.textXs, Typography.textMuted, Typography.fontMedium, 'uppercase tracking-wide'].join(' '),
+  label: 'text-xs text-muted-foreground font-medium uppercase tracking-wide',
   /** Row for value + optional inline content (items-center for vertical centering with breakdown) */
   valueRow: 'flex flex-row flex-nowrap items-center justify-between gap-2 mt-0.5',
   /** Primary value - medium and bold */
@@ -235,14 +224,14 @@ export const LogStats = {
   /** Arrow icons */
   trendArrow: 'w-2.5 h-2.5',
   /** Secondary info text */
-  subtext: [Typography.textXs, Typography.textMuted].join(' '),
+  subtext: 'text-xs text-muted-foreground',
   /** Error breakdown section - vertical stack, left-aligned labels */
   breakdown: 'flex flex-col items-start gap-0',
   breakdownItem: 'flex items-center gap-1',
-  breakdownLabel: [Typography.textXs, Typography.textMuted].join(' '),
-  breakdownValue: [Typography.textXs, 'font-semibold'].join(' '),
-  breakdownValueWarning: [Typography.textXs, 'text-warning font-bold'].join(' '),
-  breakdownValueDestructive: [Typography.textXs, 'text-destructive font-bold'].join(' '),
+  breakdownLabel: 'text-xs text-muted-foreground',
+  breakdownValue: 'text-xs font-semibold',
+  breakdownValueWarning: 'text-xs text-warning font-bold',
+  breakdownValueDestructive: 'text-xs text-destructive font-bold',
 } as const
 
 // ============================================================================
@@ -363,7 +352,7 @@ export const LogTableColumns = {
 // ============================================================================
 
 export const ProviderAvatar = {
-  container: [Layout.Flex.center, 'gap-2 min-w-0'].join(' '),
+  container: 'flex items-center gap-2 min-w-0',
   icon: 'w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold text-white shrink-0',
   /** Wrapper for name + version - hidden below md for icon-only mode, min-w-0 enables truncation */
   textWrapper: 'hidden md:flex flex-col min-w-0 overflow-hidden',
@@ -383,14 +372,14 @@ export const ProviderAvatar = {
 // ============================================================================
 
 export const MethodBadge = {
-  base: Feedback.Tag.base,
-  GET: Feedback.Tag.info,
-  POST: Feedback.Tag.success,
-  PUT: Feedback.Tag.warning,
-  DELETE: Feedback.Tag.destructive,
-  PATCH: Feedback.Tag.accent,
-  HEAD: Feedback.Tag.primary,
-  OPTIONS: Feedback.Tag.secondary,
+  base: 'inline-flex items-center rounded-theme-md px-2 py-0.5 text-xs font-semibold border',
+  GET: 'bg-info-muted text-info border-info',
+  POST: 'bg-success-muted text-success border-success',
+  PUT: 'bg-warning-muted text-warning border-warning',
+  DELETE: 'bg-destructive-muted text-destructive border-destructive',
+  PATCH: 'bg-accent-muted text-accent border-accent',
+  HEAD: 'bg-primary-muted text-primary border-primary',
+  OPTIONS: 'bg-secondary-muted text-secondary border-secondary',
 } as const
 
 // ============================================================================
@@ -398,10 +387,10 @@ export const MethodBadge = {
 // ============================================================================
 
 export const StatusBadge = {
-  base: Feedback.TagSolid.base,
-  success: Feedback.TagSolid.success,
-  warning: Feedback.TagSolid.warning,
-  error: Feedback.TagSolid.destructive,
+  base: 'inline-flex items-center rounded-theme-md px-2 py-0.5 text-xs font-semibold border',
+  success: 'bg-success text-white border-success',
+  warning: 'bg-warning text-white border-warning',
+  error: 'bg-destructive text-white border-destructive',
 } as const
 
 // ============================================================================
@@ -417,7 +406,7 @@ export const VersionBadge = {
 // ============================================================================
 
 export const SourceCell = {
-  container: [Layout.Flex.center, 'gap-2 min-w-0'].join(' '),
+  container: 'flex items-center gap-2 min-w-0',
   icon: 'w-4 h-4 rounded bg-muted/30 flex items-center justify-center text-[10px] text-muted-foreground shrink-0',
   /** Source text - truncates based on flex container width */
   text: 'text-sm truncate flex-1',
@@ -439,7 +428,7 @@ export const TimestampCell = {
 // ============================================================================
 
 export const RequestCell = {
-  container: [Layout.Flex.center, 'w-full gap-2 overflow-hidden min-w-0'].join(' '),
+  container: 'flex items-center w-full gap-2 overflow-hidden min-w-0',
   /** Method badge - narrower on mobile, expands on sm+ */
   methodWrapper: 'w-12 sm:w-16 flex justify-center shrink-0',
   /** Request name - hidden on mobile, flex-1 to fill remaining space and truncate */
@@ -530,11 +519,11 @@ export const FilterRow = {
   /** Search wrapper - takes remaining space */
   searchWrapper: 'flex-1',
   /** Filter label */
-  label: [Typography.textSm, Typography.fontMedium].join(' '),
+  label: 'text-sm font-medium',
   /** Muted filter label for secondary info */
-  labelMuted: [Typography.textSm, Typography.textMuted].join(' '),
+  labelMuted: 'text-sm text-muted-foreground',
   /** Small muted label (xs size) */
-  labelSmallMuted: [Typography.textXs, Typography.textMuted].join(' '),
+  labelSmallMuted: 'text-xs text-muted-foreground',
   /** Toggle wrapper for switch + label */
   toggleWrapper: 'flex items-center gap-2',
   /** Secondary row below main filter bar */
@@ -694,9 +683,6 @@ export const LogTableSkeletonSizes = {
     'items-center',
   ].join(' '),
 } as const
-
-// Re-export core patterns for convenience
-export { Layout, Interactive, Overlay, Feedback, Form }
 
 // Loading styles
 export { LoadingStyles, SkeletonHeight } from './loading'

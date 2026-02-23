@@ -3,20 +3,12 @@
  * All inline classes from display components are centralized here.
  */
 
-import { Layout, Interactive, SizingTokens } from '../../styles'
-
 // ============================================================================
 // AVATAR STYLES
 // ============================================================================
 
 export const AvatarStyles = {
-  root: [
-    'relative',
-    Layout.Flex.inline,
-    'overflow-hidden rounded-full',
-    'bg-neu-base shadow-neu-pressed',
-    'border border-black/5 dark:border-white/10',
-  ].join(' '),
+  root: 'relative inline-flex items-center justify-center overflow-hidden rounded-full bg-neu-base shadow-neu-pressed border border-black/5 dark:border-white/10',
   image: 'h-full w-full object-cover',
   fallback: 'font-medium text-muted-foreground',
   fallbackIcon: 'h-1/2 w-1/2 text-muted-foreground',
@@ -57,7 +49,7 @@ export const SeparatorStyles = {
 // ============================================================================
 
 export const SpinnerStyles = {
-  container: Layout.Flex.inline,
+  container: 'inline-flex items-center justify-center',
   srOnly: 'sr-only',
 } as const
 
@@ -94,26 +86,15 @@ export const CarouselStyles = {
   track: 'flex transition-transform duration-300 ease-in-out',
   slide: 'min-w-full',
   navButton: {
-    base: [
-      'absolute top-1/2 -translate-y-1/2 z-10',
-      Interactive.Cursor.pointer,
-      SizingTokens.minTouch,
-      'rounded-full bg-background/80 p-2 shadow-theme-md backdrop-blur-sm',
-      'transition-colors hover:bg-background',
-      Interactive.Focus.ring,
-    ].join(' '),
+    base: 'absolute top-1/2 -translate-y-1/2 z-10 cursor-pointer min-h-11 min-w-11 rounded-full bg-background/80 p-2 shadow-theme-md backdrop-blur-sm transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
     prev: 'left-2',
     next: 'right-2',
   },
-  navButtonIcon: SizingTokens.iconMd,
+  navButtonIcon: 'h-5 w-5',
   indicators: {
     container: 'absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10',
     dot: {
-      base: [
-        'h-2 w-2 rounded-full transition-all',
-        Interactive.Cursor.pointer,
-        Interactive.Focus.ring,
-      ].join(' '),
+      base: 'h-2 w-2 rounded-full transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
       active: 'bg-primary w-4',
       inactive: 'bg-background/60 hover:bg-background/80',
     },

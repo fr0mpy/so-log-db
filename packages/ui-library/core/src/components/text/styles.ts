@@ -1,5 +1,3 @@
-import { TypographyTokens as Typography, ResponsiveTypography } from '../../styles'
-
 /**
  * Text component styles following zero-inline-classnames pattern.
  * Headings (h1-h4) use responsive sizing by default.
@@ -7,93 +5,53 @@ import { TypographyTokens as Typography, ResponsiveTypography } from '../../styl
 export const TextStyles = {
   variants: {
     // Responsive headings (auto-scale on breakpoints)
-    h1: [
-      ResponsiveTypography.h1,
-      Typography.fontBold,
-      Typography.leadingTight,
-      Typography.fontHeading,
-    ].join(' '),
-    h2: [
-      ResponsiveTypography.h2,
-      Typography.fontSemibold,
-      Typography.leadingTight,
-      Typography.fontHeading,
-    ].join(' '),
-    h3: [
-      ResponsiveTypography.h3,
-      Typography.fontSemibold,
-      Typography.leadingSnug,
-      Typography.fontHeading,
-    ].join(' '),
-    h4: [
-      ResponsiveTypography.h4,
-      Typography.fontSemibold,
-      Typography.leadingSnug,
-      Typography.fontHeading,
-    ].join(' '),
+    h1: 'text-2xl md:text-3xl lg:text-4xl font-bold leading-tight font-heading',
+    h2: 'text-xl md:text-2xl lg:text-3xl font-semibold leading-tight font-heading',
+    h3: 'text-lg md:text-xl lg:text-2xl font-semibold leading-snug font-heading',
+    h4: 'text-base md:text-lg lg:text-xl font-semibold leading-snug font-heading',
 
     // Fixed-size headings
-    h5: [
-      Typography.textLg,
-      Typography.fontMedium,
-      Typography.leadingNormal,
-      Typography.fontHeading,
-    ].join(' '),
-    h6: [
-      Typography.textBase,
-      Typography.fontMedium,
-      Typography.leadingNormal,
-      Typography.fontHeading,
-    ].join(' '),
+    h5: 'text-lg font-medium leading-normal font-heading',
+    h6: 'text-base font-medium leading-normal font-heading',
 
     // Body text
-    lead: [ResponsiveTypography.lead, Typography.leadingRelaxed, Typography.fontBody].join(' '),
-    body1: [Typography.textBase, Typography.leadingRelaxed, Typography.fontBody].join(' '),
-    body2: [Typography.textSm, Typography.leadingRelaxed, Typography.fontBody].join(' '),
-    subtitle: [Typography.textSm, Typography.fontMedium, Typography.leadingNormal].join(' '),
-    caption: [Typography.textXs, Typography.leadingNormal].join(' '),
-    overline: [
-      Typography.textXs,
-      Typography.fontMedium,
-      Typography.trackingWide,
-      Typography.uppercase,
-    ].join(' '),
+    lead: 'text-lg md:text-xl leading-relaxed font-body',
+    body1: 'text-base leading-relaxed font-body',
+    body2: 'text-sm leading-relaxed font-body',
+    subtitle: 'text-sm font-medium leading-normal',
+    caption: 'text-xs leading-normal',
+    overline: 'text-xs font-medium tracking-wide uppercase',
 
     // Utility variants
-    code: [Typography.textSm, Typography.fontMono, 'bg-muted px-1.5 py-0.5 rounded'].join(' '),
-    kbd: [
-      Typography.textXs,
-      Typography.fontMono,
-      Typography.fontMedium,
-      'px-1.5 py-0.5 bg-muted border border-border rounded shadow-sm',
-    ].join(' '),
+    code: 'text-sm font-mono bg-muted px-1.5 py-0.5 rounded',
+    kbd: 'text-xs font-mono font-medium px-1.5 py-0.5 bg-muted border border-border rounded shadow-sm',
   },
 
   colors: {
-    foreground: Typography.textForeground,
-    muted: Typography.textMuted,
-    primary: Typography.textPrimary,
-    destructive: Typography.textDestructive,
-    success: Typography.textSuccess,
+    foreground: 'text-foreground',
+    muted: 'text-muted-foreground',
+    primary: 'text-primary',
+    destructive: 'text-destructive',
+    success: 'text-success',
   },
 
   weights: {
-    normal: Typography.fontNormal,
-    medium: Typography.fontMedium,
-    semibold: Typography.fontSemibold,
-    bold: Typography.fontBold,
+    normal: 'font-normal',
+    medium: 'font-medium',
+    semibold: 'font-semibold',
+    bold: 'font-bold',
   },
 
   aligns: {
-    left: Typography.textLeft,
-    center: Typography.textCenter,
-    right: Typography.textRight,
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right',
   },
 
   modifiers: {
-    truncate: Typography.truncate,
-    italic: Typography.italic,
-    underline: Typography.underline,
+    truncate: 'truncate',
+    italic: 'italic',
+    underline: 'underline',
   },
 
   lineClamps: {

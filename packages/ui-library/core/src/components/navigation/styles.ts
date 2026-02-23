@@ -1,46 +1,10 @@
-import { Layout, Interactive, SpacingTokens, SizingTokens, TypographyTokens } from '../../styles'
-
 export const NavigationStyles = {
   root: 'relative z-10 flex items-center justify-center',
-  list: [
-    Layout.Flex.center,
-    Layout.Spacing.gap1,
-  ].join(' '),
+  list: 'flex items-center gap-1',
   item: 'relative',
-  itemDropdownWrapper: Layout.Flex.center,
-  trigger: [
-    Layout.Flex.inline,
-    Layout.Spacing.gap1,
-    'rounded-theme-md',
-    SpacingTokens.px4,
-    'py-3 min-h-11', // 44px minimum for touch targets
-    Interactive.Cursor.pointer,
-    TypographyTokens.textSm,
-    TypographyTokens.fontMedium,
-    'transition-colors',
-    'hover:text-primary',
-    'focus-visible:bg-surface',
-    Interactive.Focus.ring,
-    Interactive.Disabled.base,
-  ].join(' '),
-  triggerIcon: SizingTokens.iconSm,
-  content: [
-    'absolute left-0 top-full mt-1 w-auto min-w-[12rem]',
-    'rounded-theme-md border border-border',
-    'bg-background shadow-theme-lg glass',
-    SpacingTokens.p2,
-    'origin-top',
-  ].join(' '),
-  link: [
-    'block rounded-theme-md',
-    SpacingTokens.px4,
-    'py-3 min-h-11', // 44px minimum for touch targets
-    TypographyTokens.textSm,
-    TypographyTokens.fontMedium,
-    Interactive.Cursor.pointer,
-    'transition-colors',
-    'hover:text-primary',
-    'active:bg-muted/80', // Touch feedback
-    Interactive.Focus.ring,
-  ].join(' '),
+  itemDropdownWrapper: 'flex items-center',
+  trigger: 'inline-flex items-center justify-center gap-1 rounded-theme-md px-4 py-3 min-h-11 cursor-pointer text-sm font-medium transition-colors hover:text-primary focus-visible:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  triggerIcon: 'h-4 w-4',
+  content: 'absolute left-0 top-full mt-1 w-auto min-w-[12rem] rounded-theme-md border border-border bg-background shadow-theme-lg glass p-2 origin-top',
+  link: 'block rounded-theme-md px-4 py-3 min-h-11 text-sm font-medium cursor-pointer transition-colors hover:text-primary active:bg-muted/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
 } as const

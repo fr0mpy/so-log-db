@@ -3,155 +3,56 @@
  * All form components import from this central styles file.
  */
 
-import {
-  Layout,
-  Interactive,
-  Control,
-  Form,
-  SpacingTokens,
-  SizingTokens,
-  TypographyTokens,
-  TouchTarget,
-} from '../../styles'
-
 // ============================================================================
 // BUTTON STYLES
 // ============================================================================
 
 export const ButtonStyles = {
   /** Base styles for all buttons */
-  base: [
-    Layout.Flex.inline,
-    SpacingTokens.gap1,
-    TypographyTokens.fontMedium,
-    Interactive.Cursor.pointer,
-    Interactive.Transition.color,
-    'outline-none whitespace-nowrap',
-    Interactive.Disabled.base,
-  ].join(' '),
+  base: 'inline-flex items-center justify-center gap-1 font-medium cursor-pointer transition-[background-color] duration-200 ease-neu outline-none whitespace-nowrap disabled:pointer-events-none disabled:opacity-50',
 
   /** Loading state modifier */
   loading: 'flex-col py-1.5 disabled:opacity-100',
 
   /** Loading content wrapper */
-  loadingContent: [
-    Layout.Flex.col,
-    'items-center',
-    SpacingTokens.gap1,
-    SizingTokens.wFull,
-    SpacingTokens.px2,
-  ].join(' '),
+  loadingContent: 'flex flex-col items-center gap-1 w-full px-2',
 
   /** Loading text */
-  loadingText: [
-    TypographyTokens.textXs,
-    TypographyTokens.fontSemibold,
-    TypographyTokens.trackingWide,
-  ].join(' '),
+  loadingText: 'text-xs font-semibold tracking-wide',
 
   /** Content wrapper for children */
-  content: [
-    Layout.Flex.inline,
-    SpacingTokens.gap1,
-  ].join(' '),
+  content: 'inline-flex items-center justify-center gap-1',
 
   /** Size variants - sleek modern heights with subtle rounding */
   sizes: {
-    sm: [
-      SizingTokens.h8,
-      SpacingTokens.px3,
-      TypographyTokens.textSm,
-      'rounded-theme-md',
-    ].join(' '),
-    md: [
-      SizingTokens.h9,
-      SpacingTokens.px4,
-      TypographyTokens.textSm,
-      'rounded-theme-md',
-    ].join(' '),
-    lg: [
-      SizingTokens.h10,
-      SpacingTokens.px5,
-      TypographyTokens.textSm,
-      'rounded-theme-md',
-    ].join(' '),
+    sm: 'h-8 px-3 text-sm rounded-theme-md',
+    md: 'h-9 px-4 text-sm rounded-theme-md',
+    lg: 'h-10 px-5 text-sm rounded-theme-md',
   },
 
   /** Icon-only button sizes (circular) */
   iconOnly: {
-    sm: [
-      SizingTokens.square8,
-      SpacingTokens.p0,
-      'rounded-full',
-    ].join(' '),
-    md: [
-      SizingTokens.square9,
-      SpacingTokens.p0,
-      'rounded-full',
-    ].join(' '),
-    lg: [
-      SizingTokens.square10,
-      SpacingTokens.p0,
-      'rounded-full',
-    ].join(' '),
+    sm: 'h-8 w-8 p-0 rounded-full',
+    md: 'h-9 w-9 p-0 rounded-full',
+    lg: 'h-10 w-10 p-0 rounded-full',
   },
 
   /** Icon sizing within buttons */
   icon: {
-    sm: SizingTokens.iconSm,
-    md: SizingTokens.iconSm,
-    lg: SizingTokens.iconMd,
+    sm: 'h-4 w-4',
+    md: 'h-4 w-4',
+    lg: 'h-5 w-5',
   },
 
   /** Variant styles */
   variants: {
-    primary: [
-      'bg-primary text-primary-foreground',
-      'shadow-neu-variant-primary',
-      'hover:bg-primary-hover hover:shadow-neu-raised-lg',
-      'active:shadow-neu-pressed-sm',
-      'focus-visible:shadow-[var(--shadow-variant-primary),var(--shadow-focus)]',
-    ].join(' '),
-    secondary: [
-      'bg-secondary text-secondary-foreground',
-      'shadow-neu-variant-secondary',
-      'hover:bg-secondary-hover hover:shadow-neu-raised-lg',
-      'active:shadow-neu-pressed-sm',
-      'focus-visible:shadow-[var(--shadow-variant-secondary),var(--shadow-focus)]',
-    ].join(' '),
-    text: [
-      'bg-transparent text-foreground',
-      'hover:text-primary',
-      'active:opacity-80',
-      'focus-visible:shadow-neu-focus',
-    ].join(' '),
-    ghost: [
-      'bg-transparent text-foreground',
-      Interactive.Hover.ghost,
-      'active:shadow-neu-pressed-sm',
-      'focus-visible:shadow-neu-focus',
-    ].join(' '),
-    outline: [
-      'bg-neu-base text-foreground',
-      'shadow-neu-raised',
-      'hover:shadow-neu-raised-lg',
-      'active:shadow-neu-pressed-sm',
-      'focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]',
-    ].join(' '),
-    destructive: [
-      'bg-destructive text-destructive-foreground',
-      'shadow-neu-variant-destructive',
-      'hover:bg-destructive-hover hover:shadow-neu-raised-lg',
-      'active:shadow-neu-pressed-sm',
-      'focus-visible:shadow-[var(--shadow-variant-destructive),var(--shadow-focus)]',
-    ].join(' '),
-    inset: [
-      'bg-neu-base text-foreground',
-      'shadow-neu-pressed-sm rounded-full',
-      'hover:shadow-neu-raised',
-      'active:shadow-neu-pressed-sm',
-      'focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]',
-    ].join(' '),
+    primary: 'bg-primary text-primary-foreground shadow-neu-variant-primary hover:bg-primary-hover hover:shadow-neu-raised-lg active:shadow-neu-pressed-sm focus-visible:shadow-[var(--shadow-variant-primary),var(--shadow-focus)]',
+    secondary: 'bg-secondary text-secondary-foreground shadow-neu-variant-secondary hover:bg-secondary-hover hover:shadow-neu-raised-lg active:shadow-neu-pressed-sm focus-visible:shadow-[var(--shadow-variant-secondary),var(--shadow-focus)]',
+    text: 'bg-transparent text-foreground hover:text-primary active:opacity-80 focus-visible:shadow-neu-focus',
+    ghost: 'bg-transparent text-foreground hover:bg-neu-base hover:shadow-neu-raised-sm hover:text-primary active:shadow-neu-pressed-sm focus-visible:shadow-neu-focus',
+    outline: 'bg-neu-base text-foreground shadow-neu-raised hover:shadow-neu-raised-lg active:shadow-neu-pressed-sm focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]',
+    destructive: 'bg-destructive text-destructive-foreground shadow-neu-variant-destructive hover:bg-destructive-hover hover:shadow-neu-raised-lg active:shadow-neu-pressed-sm focus-visible:shadow-[var(--shadow-variant-destructive),var(--shadow-focus)]',
+    inset: 'bg-neu-base text-foreground shadow-neu-pressed-sm rounded-full hover:shadow-neu-raised active:shadow-neu-pressed-sm focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]',
   },
 } as const
 
@@ -161,25 +62,13 @@ export const ButtonStyles = {
 
 export const CheckboxStyles = {
   /** Container wrapper */
-  container: [
-    Layout.Flex.center,
-    SpacingTokens.gap2,
-  ].join(' '),
+  container: 'flex items-center gap-2',
 
   /** Checkbox input - 16px visual size with expanded touch area for WCAG 2.5.8 compliance */
-  input: [
-    SizingTokens.square4,
-    TouchTarget.controlAreaLg, // Expands touch target to 44px+ while keeping 16px visual
-    'rounded-theme-sm',
-    Control.Toggle.base,
-    Control.Toggle.unchecked,
-    Control.Toggle.focus,
-    Control.Toggle.checkedState,
-    Control.Toggle.disabled,
-  ].join(' '),
+  input: 'h-4 w-4 relative before:absolute before:-inset-3.5 before:content-[""] rounded-theme-sm cursor-pointer appearance-none bg-neu-base border border-border transition-all duration-200 shadow-neu-control-unchecked focus-visible:outline-none focus-visible:shadow-[var(--shadow-pressed-sm),var(--shadow-focus)] checked:bg-primary checked:shadow-neu-control-checked disabled:cursor-not-allowed disabled:opacity-50',
 
   /** Label text */
-  label: Control.Toggle.label,
+  label: 'text-sm font-medium text-foreground cursor-pointer select-none',
 } as const
 
 // ============================================================================
@@ -188,22 +77,11 @@ export const CheckboxStyles = {
 
 export const SwitchStyles = {
   /** Container wrapper */
-  container: [
-    Layout.Flex.center,
-    SpacingTokens.gap2,
-  ].join(' '),
+  container: 'flex items-center gap-2',
 
   /** Track base */
   track: {
-    base: [
-      Layout.Position.relative,
-      'inline-flex group',
-      SizingTokens.h5,
-      SizingTokens.w10,
-      Interactive.Cursor.pointer,
-      'items-center rounded-full',
-      Interactive.Transition.all,
-    ].join(' '),
+    base: 'relative inline-flex group h-5 w-10 cursor-pointer items-center rounded-full transition-all duration-200',
     uncheckedBorder: 'border border-border hover:border-primary hover:shadow-[inset_-2px_-2px_4px_rgba(0,175,102,0.15),inset_2px_2px_5px_rgba(0,100,60,0.25)]',
     disabled: 'cursor-not-allowed opacity-50',
   },
@@ -213,23 +91,17 @@ export const SwitchStyles = {
 
   /** Thumb (knob) */
   thumb: {
-    base: [
-      'inline-block',
-      SizingTokens.square4,
-      'transform rounded-full',
-      'shadow-neu-raised-sm',
-      'transition-all duration-200',
-    ].join(' '),
+    base: 'inline-block h-4 w-4 transform rounded-full shadow-neu-raised-sm transition-all duration-200',
     checked: 'translate-x-5 bg-white',
     unchecked: 'translate-x-0.5 bg-foreground dark:bg-white group-hover:bg-primary',
   },
 
   /** Track states */
-  checked: Control.Toggle.checked,
-  unchecked: Control.Toggle.unchecked,
+  checked: 'bg-primary shadow-neu-control-checked',
+  unchecked: 'shadow-neu-control-unchecked',
 
   /** Label text */
-  label: Control.Toggle.label,
+  label: 'text-sm font-medium text-foreground cursor-pointer select-none',
 } as const
 
 // ============================================================================
@@ -238,35 +110,16 @@ export const SwitchStyles = {
 
 export const SliderStyles = {
   /** Container wrapper */
-  container: [
-    Layout.Position.relative,
-    SizingTokens.wFull,
-    SpacingTokens.py2,
-  ].join(' '),
+  container: 'relative w-full py-2',
 
   /** Track background */
-  trackBg: [
-    Layout.Position.relative,
-    SizingTokens.h2,
-    SizingTokens.wFull,
-    'overflow-hidden rounded-full',
-    'bg-neu-base shadow-neu-pressed-sm',
-  ].join(' '),
+  trackBg: 'relative h-2 w-full overflow-hidden rounded-full bg-neu-base shadow-neu-pressed-sm',
 
   /** Fill indicator */
-  fill: [
-    'absolute',
-    SizingTokens.hFull,
-    SizingTokens.wFull,
-    'origin-left bg-primary',
-  ].join(' '),
+  fill: 'absolute h-full w-full origin-left bg-primary',
 
   /** Range input */
-  input: [
-    Control.Slider.track,
-    Control.Slider.thumb,
-    'focus-visible:outline-none',
-  ].join(' '),
+  input: 'absolute left-0 right-0 top-1/2 -translate-y-1/2 h-5 w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-0 [&::-webkit-slider-thumb]:w-0 [&::-moz-range-thumb]:h-0 [&::-moz-range-thumb]:w-0 [&::-moz-range-thumb]:border-0 focus-visible:outline-none',
 } as const
 
 // ============================================================================
@@ -275,14 +128,10 @@ export const SliderStyles = {
 
 export const InputStyles = {
   /** Container wrapper */
-  container: SizingTokens.wFull,
+  container: 'w-full',
 
   /** Input wrapper (relative for icons, group for hover states) */
-  wrapper: [
-    Layout.Position.relative,
-    SizingTokens.wFull,
-    'group',
-  ].join(' '),
+  wrapper: 'relative w-full group',
 
   /** Disabled compound variants */
   disabledErrorBorder: 'border-destructive/50',
@@ -294,10 +143,10 @@ export const InputStyles = {
 // ============================================================================
 
 export const TextareaStyles = {
-  base: Form.Textarea.base,
-  interactive: Form.Textarea.interactive,
-  error: Form.Textarea.error,
-  success: Form.Textarea.success,
+  base: 'flex w-full rounded-theme-lg px-3 py-2 bg-neu-base shadow-neu-pressed-sm text-sm text-foreground placeholder:text-muted-foreground transition-[border-color,box-shadow] duration-200 ease-neu border border-transparent focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px] resize-y',
+  interactive: 'hover:shadow-neu-pressed hover:border-primary focus:shadow-neu-pressed focus:border-primary',
+  error: 'border-destructive',
+  success: 'border-success',
 } as const
 
 // ============================================================================
@@ -306,11 +155,8 @@ export const TextareaStyles = {
 
 export const NumberInputStyles = {
   /** Container wrapper */
-  container: SizingTokens.wFull,
+  container: 'w-full',
 
   /** Input wrapper with flexbox */
-  wrapper: [
-    Layout.Position.relative,
-    Layout.Flex.center,
-  ].join(' '),
+  wrapper: 'relative flex items-center',
 } as const

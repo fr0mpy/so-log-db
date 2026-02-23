@@ -2,16 +2,8 @@
  * LogDetailDialog Styles
  *
  * Co-located styles following zero-inline-classnames pattern.
- * Imports from @stackone-ui/core and composes dialog-specific patterns.
+ * Raw Tailwind classes for IntelliSense support.
  */
-
-import {
-  Layout,
-  Interactive,
-  Overlay,
-  Feedback,
-  TypographyTokens as Typography,
-} from '@stackone-ui/core/styles'
 
 // ============================================================================
 // Dialog Container
@@ -63,9 +55,9 @@ export const HeaderBar = {
     'bg-surface',
   ].join(' '),
   /** Left side: method tag + request name */
-  left: [Layout.Flex.center, 'gap-3'].join(' '),
+  left: 'flex items-center gap-3',
   /** Right side: timestamp, duration, status - with padding for close button */
-  right: [Layout.Flex.center, 'gap-4 pr-12'].join(' '),
+  right: 'flex items-center gap-4 pr-12',
   /** Timestamp stack - date on top, time below */
   timestamp: 'flex flex-col items-end tabular-nums',
 } as const
@@ -85,7 +77,7 @@ export const MetadataRow = {
   /** Individual metadata item - vertical stack (label on top, value below) */
   item: 'flex flex-col gap-1',
   /** Value row with icon and text */
-  valueRow: [Layout.Flex.center, 'gap-2'].join(' '),
+  valueRow: 'flex items-center gap-2',
   /** Icon for metadata item */
   icon: 'w-4 h-4 text-muted-foreground',
 } as const
@@ -102,7 +94,7 @@ export const UrlSection = {
     'bg-neu-base shadow-neu-raised-sm rounded-lg',
   ].join(' '),
   /** URL label */
-  label: [Typography.textSm, Typography.textMuted, 'shrink-0'].join(' '),
+  label: 'text-sm text-muted-foreground shrink-0',
   /** URL value - monospace, truncated */
   value: 'flex-1 font-mono text-sm truncate',
   /** Copy button */
@@ -110,7 +102,7 @@ export const UrlSection = {
     'p-1.5 rounded',
     'hover:bg-muted/20',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-    Interactive.Transition.color,
+    'transition-[background-color] duration-200 ease-neu',
   ].join(' '),
   /** Copy icon */
   copyIcon: 'w-4 h-4 text-muted-foreground',
@@ -145,11 +137,11 @@ export const Section = {
   /** Section header - extends Collapsible.Trigger with extra padding */
   header: 'px-4 py-3',
   /** Header left side: chevron + title */
-  headerLeft: [Layout.Flex.center, 'gap-2'].join(' '),
+  headerLeft: 'flex items-center gap-2',
   /** Section title */
-  title: [Typography.textSm, Typography.fontMedium].join(' '),
+  title: 'text-sm font-medium',
   /** Header right side: badge */
-  headerRight: [Layout.Flex.center, 'gap-2'].join(' '),
+  headerRight: 'flex items-center gap-2',
   /** Chevron icon - rotates when expanded */
   chevron: 'w-4 h-4 text-muted-foreground transition-transform',
   /** Chevron when expanded */
@@ -162,10 +154,10 @@ export const Section = {
   subHeader: 'px-4 py-2 hover:!bg-transparent',
   /** Sub-section title - uses group-hover to match chevron behavior */
   subTitle: [
-    Typography.textSm,
-    Typography.textMuted,
+    'text-sm',
+    'text-muted-foreground',
     'group-hover:text-primary',
-    Interactive.Transition.color,
+    'transition-[background-color] duration-200 ease-neu',
   ].join(' '),
   /** Sub-section content */
   subContent: 'px-4 pb-3',
@@ -184,14 +176,14 @@ export const KeyValueStyles = {
     'py-2 px-2',
     'border-b border-border/30 last:border-b-0',
     'hover:bg-muted/5',
-    Interactive.Transition.color,
+    'transition-[background-color] duration-200 ease-neu',
   ].join(' '),
   /** Key text - fixed width for alignment */
-  key: [Typography.textSm, Typography.textMuted, 'shrink-0 w-40'].join(' '),
+  key: 'text-sm text-muted-foreground shrink-0 w-40',
   /** Value container - takes remaining space */
-  valueContainer: [Layout.Flex.center, 'gap-2 flex-1 min-w-0'].join(' '),
+  valueContainer: 'flex items-center gap-2 flex-1 min-w-0',
   /** Value text - left-aligned, not pushed right */
-  value: [Typography.textSm, 'font-mono truncate'].join(' '),
+  value: 'text-sm font-mono truncate',
   /** Copy button (small) */
   copyButton: [
     'p-1 rounded opacity-0 group-hover:opacity-100',
@@ -225,7 +217,7 @@ export const JsonBodyStyles = {
     null: 'text-muted-foreground',
   },
   /** Not available state */
-  notAvailable: [Typography.textSm, Typography.textMuted, 'italic'].join(' '),
+  notAvailable: 'text-sm text-muted-foreground italic',
 } as const
 
 // ============================================================================
@@ -245,48 +237,45 @@ export const ErrorExplainerStyles = {
     'w-full px-4 py-3',
     'hover:bg-ai/10',
     'cursor-pointer',
-    Interactive.Transition.color,
+    'transition-[background-color] duration-200 ease-neu',
   ].join(' '),
   /** Header left with sparkle icon */
-  headerLeft: [Layout.Flex.center, 'gap-2'].join(' '),
+  headerLeft: 'flex items-center gap-2',
   /** Title with AI purple color */
-  title: [Typography.textSm, Typography.fontMedium, 'text-ai'].join(' '),
+  title: 'text-sm font-medium text-ai',
   /** Sparkle icon - AI purple */
   sparkleIcon: 'w-4 h-4 text-ai',
   /** "Open to Generate" link */
-  generateLink: [
-    Typography.textSm,
-    'text-ai hover:text-ai-hover hover:underline cursor-pointer',
-  ].join(' '),
+  generateLink: 'text-sm text-ai hover:text-ai-hover hover:underline cursor-pointer',
   /** "via Advanced Logs" badge - AI gradient */
   viaBadge: [
-    Feedback.Badge.base,
+    'inline-flex items-center rounded-theme-md px-2.5 py-0.5 text-xs font-medium',
     'bg-gradient-to-r from-ai-from/20 to-ai-to/20 text-ai text-xs shadow-neu-badge-ai',
   ].join(' '),
   /** Content area */
   content: 'p-4',
   /** Loading state */
-  loading: [Layout.Flex.center, 'gap-2'].join(' '),
+  loading: 'flex items-center gap-2',
   /** Loading text */
-  loadingText: [Typography.textSm, 'text-ai'].join(' '),
+  loadingText: 'text-sm text-ai',
   /** Explanation text */
   explanation: 'prose prose-sm max-w-none',
   /** Sources section */
   sources: 'mt-4 space-y-2',
   /** Source link */
-  sourceLink: [Typography.textSm, 'text-ai hover:text-ai-hover hover:underline'].join(' '),
+  sourceLink: 'text-sm text-ai hover:text-ai-hover hover:underline',
   /** Feedback row */
-  feedback: [Layout.Flex.center, 'gap-4 mt-4 pt-4 border-t border-ai/20'].join(' '),
+  feedback: 'flex items-center gap-4 mt-4 pt-4 border-t border-ai/20',
   /** Feedback label */
-  feedbackLabel: [Typography.textSm, Typography.textMuted].join(' '),
+  feedbackLabel: 'text-sm text-muted-foreground',
   /** Feedback buttons container */
-  feedbackButtons: [Layout.Flex.center, 'gap-2'].join(' '),
+  feedbackButtons: 'flex items-center gap-2',
   /** Feedback button */
   feedbackButton: [
     'p-1.5 rounded',
     'hover:bg-ai/20',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ai',
-    Interactive.Transition.color,
+    'transition-[background-color] duration-200 ease-neu',
   ].join(' '),
   /** Feedback button active */
   feedbackButtonActive: 'bg-ai/20',
@@ -313,14 +302,14 @@ export const UnderlyingRequestsStyles = {
     'px-4 py-3',
     'bg-neu-base shadow-neu-raised-sm rounded-lg',
     'group', // Enable group-hover for children
-    Interactive.Cursor.pointer,
-    Interactive.Transition.all,
+    'cursor-pointer',
+    'transition-all duration-200',
     'hover:shadow-neu-raised',
   ].join(' '),
   /** Row expanded state */
   rowExpanded: 'shadow-neu-raised',
   /** Cell with method tag and URL */
-  methodCell: [Layout.Flex.center, 'gap-3'].join(' '),
+  methodCell: 'flex items-center gap-3',
   /** Expand icon - follows collapsible pattern */
   expandIcon: [
     'w-4 h-4',
@@ -348,7 +337,7 @@ export const FooterStyles = {
     'px-6 py-4',
   ].join(' '),
   /** Navigation controls */
-  navigation: [Layout.Flex.center, 'gap-1'].join(' '),
+  navigation: 'flex items-center gap-1',
 } as const
 
 // ============================================================================
@@ -361,6 +350,3 @@ export const UtilityStyles = {
   /** Visually hidden but accessible */
   visuallyHidden: 'absolute w-px h-px p-0 -m-px overflow-hidden clip-rect-0 whitespace-nowrap border-0',
 } as const
-
-// Re-export for convenience
-export { Layout, Interactive, Overlay, Feedback }

@@ -3,12 +3,12 @@
  * Uses the same responsive patterns with Next.js App Router structure.
  */
 
-import { ResponsiveSpacing, ResponsiveTypography, Responsive, SpacingTokens } from '@stackone-ui/core/styles'
+import { ResponsiveSpacing, ResponsiveTypography, SpacingTokens } from '@stackone-ui/core/styles'
 
 export const LayoutStyles = {
   /** Main container - full viewport height with modern units */
   container: [
-    Responsive.Container.fullHeight,
+    'min-h-[100dvh]',
     'flex bg-background overflow-hidden',
   ].join(' '),
 
@@ -16,12 +16,12 @@ export const LayoutStyles = {
   sidebar: {
     /** Desktop sidebar container */
     desktop: [
-      Responsive.Sidebar.desktop,
+      'hidden md:flex w-64',
       'md:flex-col border-r border-border bg-neu-base flex-shrink-0 overflow-hidden',
     ].join(' '),
 
     /** Mobile menu trigger button */
-    mobileTrigger: Responsive.Sidebar.mobileFixed,
+    mobileTrigger: 'fixed bottom-4 right-4 z-50 md:hidden',
 
     /** Sidebar scroll area */
     scrollArea: 'h-full p-4',
@@ -37,7 +37,7 @@ export const LayoutStyles = {
   },
 
   /** Main content area */
-  main: [Responsive.Container.main, 'bg-background'].join(' '),
+  main: 'flex-1 min-w-0 overflow-y-auto bg-background',
 
   /** Scrollable content wrapper */
   scrollArea: [
@@ -56,17 +56,17 @@ export const LayoutStyles = {
     ].join(' '),
     subtitle: 'text-muted-foreground',
     /** Mobile-only container for theme toggle */
-    mobileOnly: Responsive.Sidebar.mobileTrigger,
+    mobileOnly: 'md:hidden',
   },
 
   /** Navigation controls - stack on mobile, row on tablet+ */
   navControls: {
     wrapper: [
-      Responsive.Stack.adaptive,
+      'flex flex-col md:flex-row md:items-center md:justify-between gap-4',
       ResponsiveSpacing.sectionMargin,
     ].join(' '),
     /** Previous/Next buttons with hidden text on mobile */
-    buttonText: Responsive.Text.srOnlyMobile,
+    buttonText: 'sr-only md:not-sr-only',
     /** Component title */
     title: [
       ResponsiveTypography.componentTitle,
