@@ -1,13 +1,12 @@
-'use client'
-
-import { useTranslations } from 'next-intl'
+import { getTranslations } from '@stackone/i18n'
 import { Paper } from '@stackone-ui/core/paper'
 import { Text } from '@stackone-ui/core/text'
+import { PrefetchLink } from '@/components'
 import { HomeStyles as S } from './styles'
 import { Routes } from '../lib/routes'
 
-export default function HomePage() {
-  const t = useTranslations()
+export default async function HomePage() {
+  const t = await getTranslations()
 
   return (
     <main className={S.main}>
@@ -15,9 +14,9 @@ export default function HomePage() {
         <Paper className={S.paper}>
           <Paper.Header>
             <Paper.Title>
-              <a href={Routes.designReview} className={S.link}>
+              <PrefetchLink href={Routes.designReview} className={S.link}>
                 {t('navigation.designReview')}
-              </a>
+              </PrefetchLink>
             </Paper.Title>
             <Paper.Description>
               <Text color="muted">{t('home.designReviewDescription')}</Text>
@@ -28,9 +27,9 @@ export default function HomePage() {
         <Paper className={S.paper}>
           <Paper.Header>
             <Paper.Title>
-              <a href={Routes.agentToolkit} className={S.link}>
+              <PrefetchLink href={Routes.agentToolkit} className={S.link}>
                 {t('navigation.agentToolkit')}
-              </a>
+              </PrefetchLink>
             </Paper.Title>
             <Paper.Description>
               <Text color="muted">{t('home.agentToolkitDescription')}</Text>
@@ -41,9 +40,9 @@ export default function HomePage() {
         <Paper className={S.paper}>
           <Paper.Header>
             <Paper.Title>
-              <a href={Routes.componentLibrary} className={S.link}>
+              <PrefetchLink href={Routes.componentLibrary} className={S.link}>
                 {t('navigation.componentLibrary')}
-              </a>
+              </PrefetchLink>
             </Paper.Title>
             <Paper.Description>
               <Text color="muted">{t('home.componentLibraryDescription')}</Text>

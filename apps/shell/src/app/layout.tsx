@@ -4,6 +4,7 @@ import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 import { Providers } from './providers'
 import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
 import { getThemeFromCookies } from '@stackone-ui/core/providers/server'
+import { MFE_ORIGINS } from '@/lib/mfe-urls'
 import '@stackone-ui/core/themes/base.css'
 import './globals.css'
 
@@ -51,6 +52,10 @@ export default async function RootLayout({
         )}
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="apple-touch-icon" href="/favicon.png" />
+        {/* Preconnect to MFE domains for faster cross-zone navigation */}
+        {MFE_ORIGINS.map((origin) => (
+          <link key={origin} rel="preconnect" href={origin} />
+        ))}
       </head>
       <body className={fontSans.className}>
         <NextIntlClientProvider messages={messages}>
