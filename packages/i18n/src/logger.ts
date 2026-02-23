@@ -66,22 +66,6 @@ function debouncedReportMissing(): void {
 }
 
 /**
- * Get all missing translations recorded in this session.
- * Useful for testing or debugging.
- */
-export function getMissingTranslations(): MissingTranslation[] {
-  return [...missingTranslations]
-}
-
-/**
- * Clear recorded missing translations.
- * Useful for testing.
- */
-export function clearMissingTranslations(): void {
-  missingTranslations.length = 0
-}
-
-/**
  * Create onError handler for next-intl configuration.
  * Returns formatted fallback string for missing keys.
  */

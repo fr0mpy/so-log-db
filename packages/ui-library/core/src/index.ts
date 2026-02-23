@@ -5,7 +5,7 @@
  *
  * @example
  * import { Button, Dialog, useControlledState, cn } from 'stackone-ui'
- * import { Form, Layout } from 'stackone-ui/styles'
+ * import { ComponentHeight, TextHeight } from 'stackone-ui/styles'
  * import { SPRING, DURATION } from 'stackone-ui/config'
  */
 
@@ -25,40 +25,21 @@ export * from './hooks'
 export * from './config'
 
 // =============================================================================
-// Styles (selective exports to avoid conflicts with component names)
-// Use Form.Input, Layout.Flex, Control.Slider, etc. for style patterns
+// Styles - Tokens only (write raw Tailwind classes for IntelliSense support)
 // =============================================================================
 export {
-  // Main namespaces
-  Form,
-  Layout,
-  Interactive,
-  Overlay,
-  Control,
-  Feedback,
-  Patterns,
   // Tokens
   SpacingTokens,
   ResponsiveSpacing,
   SizingTokens,
   TouchTarget,
+  ComponentHeight,
+  TextHeight,
   TypographyTokens,
   ResponsiveTypography,
-  // Motion
-  Motion,
-  MotionVariants,
-  MotionTransition,
-  // Responsive utilities
-  responsiveClasses,
-  getResponsiveClasses,
-  resolveResponsiveValue,
-  isResponsiveObject,
   // Types
-  type MotionVariant,
   type Breakpoint,
   type ResponsiveValue,
-  type BadgeVariant,
-  type AlertVariant,
 } from './styles'
 
 // =============================================================================

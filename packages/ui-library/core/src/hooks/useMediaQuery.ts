@@ -61,15 +61,6 @@ export function useIsMobile(): boolean {
 }
 
 /**
- * Convenience hook for detecting tablet viewport (768px - 1023px).
- *
- * @returns Whether the viewport is tablet-sized
- */
-export function useIsTablet(): boolean {
-  return useMediaQuery(MEDIA_QUERIES.tablet)
-}
-
-/**
  * Convenience hook for detecting touch/coarse pointer devices.
  * More reliable than viewport-based detection for touch support.
  *
@@ -77,19 +68,4 @@ export function useIsTablet(): boolean {
  */
 export function useIsTouchDevice(): boolean {
   return useMediaQuery(MEDIA_QUERIES.touch)
-}
-
-/**
- * Hook that returns the current breakpoint name.
- * Useful for conditional rendering based on screen size.
- *
- * @returns Current breakpoint: 'mobile', 'tablet', or 'desktop'
- */
-export function useBreakpoint(): 'mobile' | 'tablet' | 'desktop' {
-  const isMobile = useIsMobile()
-  const isTablet = useIsTablet()
-
-  if (isMobile) return 'mobile'
-  if (isTablet) return 'tablet'
-  return 'desktop'
 }

@@ -16,12 +16,10 @@ export const SPRING = {
   gentle: { type: 'spring' as const, stiffness: 200, damping: 25 },
   /** Snappy spring - quick response */
   snappy: { type: 'spring' as const, stiffness: 500, damping: 30 },
+  /** Smooth spring - reduced bounce for layout animations */
+  smooth: { type: 'spring' as const, stiffness: 400, damping: 40 },
   /** Tooltip spring - lighter feel */
   tooltip: { type: 'spring' as const, stiffness: 400, damping: 15, mass: 0.8 },
-  /** Select open - smooth entry */
-  selectOpen: { type: 'spring' as const, stiffness: 280, damping: 28 },
-  /** Select close - slower, gentler exit */
-  selectClose: { type: 'spring' as const, stiffness: 200, damping: 32 },
 } as const
 
 // =============================================================================
@@ -41,8 +39,6 @@ export const DURATION = {
   spinner: 3,
   /** Progress bar wave animation */
   progress: 1.2,
-  /** Loading state interval */
-  loading: 0.2,
   /** Smooth scroll duration */
   scroll: 1.2,
 } as const
@@ -71,10 +67,6 @@ export const OFFSET = {
 // =============================================================================
 
 export const OPACITY = {
-  /** Dialog backdrop */
-  backdrop: 0.8,
-  /** Drawer backdrop */
-  drawerBackdrop: 0.6,
   /** Highlights and accents */
   highlight: 0.2,
 } as const
@@ -95,27 +87,12 @@ export const SCROLL = {
 } as const
 
 // =============================================================================
-// Press Effect Configuration
-// =============================================================================
-
-export const PRESS = {
-  /** Scale when pressed */
-  scale: 0.98,
-  /** Duration of press animation */
-  duration: 0.1,
-} as const
-
-// =============================================================================
 // Theme Switcher Timing
 // =============================================================================
 
 export const THEME_TIMING = {
   /** Icon exit animation duration */
   iconExit: 0.12,
-  /** Knob animation delay */
-  knobDelay: 0.08,
-  /** Knob animation duration */
-  knobDuration: 0.25,
   /** Icon entry delay */
   iconEntryDelay: 0.28,
   /** Icon entry duration */

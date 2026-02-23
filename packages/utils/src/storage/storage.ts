@@ -21,69 +21,6 @@ function isStorageAvailable(): boolean {
 }
 
 /**
- * Get a value from localStorage
- *
- * @param key - Storage key
- * @param fallback - Default value if key doesn't exist or storage unavailable
- * @returns Stored value or fallback
- *
- * @example
- * const theme = getStorageItem('theme', 'light')
- */
-export function getStorageItem<T>(key: string, fallback: T): T {
-  if (!isStorageAvailable()) return fallback
-
-  try {
-    const item = window.localStorage.getItem(key)
-    if (item === null) return fallback
-    return JSON.parse(item) as T
-  } catch {
-    return fallback
-  }
-}
-
-/**
- * Get a raw string value from localStorage (no JSON parsing)
- *
- * @param key - Storage key
- * @param fallback - Default value if key doesn't exist or storage unavailable
- * @returns Stored string or fallback
- *
- * @example
- * const theme = getStorageString('theme', 'light')
- */
-export function getStorageString<T extends string>(key: string, fallback: T): T {
-  if (!isStorageAvailable()) return fallback
-
-  try {
-    const item = window.localStorage.getItem(key)
-    if (item === null) return fallback
-    return item as T
-  } catch {
-    return fallback
-  }
-}
-
-/**
- * Set a value in localStorage
- *
- * @param key - Storage key
- * @param value - Value to store (will be JSON serialized)
- *
- * @example
- * setStorageItem('user', { id: 1, name: 'John' })
- */
-export function setStorageItem<T>(key: string, value: T): void {
-  if (!isStorageAvailable()) return
-
-  try {
-    window.localStorage.setItem(key, JSON.stringify(value))
-  } catch {
-    // Storage full or other error - fail silently
-  }
-}
-
-/**
  * Set a raw string value in localStorage (no JSON serialization)
  *
  * @param key - Storage key
@@ -99,23 +36,5 @@ export function setStorageString(key: string, value: string): void {
     window.localStorage.setItem(key, value)
   } catch {
     // Storage full or other error - fail silently
-  }
-}
-
-/**
- * Remove a value from localStorage
- *
- * @param key - Storage key to remove
- *
- * @example
- * removeStorageItem('theme')
- */
-export function removeStorageItem(key: string): void {
-  if (!isStorageAvailable()) return
-
-  try {
-    window.localStorage.removeItem(key)
-  } catch {
-    // Fail silently
   }
 }

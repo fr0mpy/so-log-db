@@ -1,7 +1,1 @@
-export {
-  getStorageItem,
-  getStorageString,
-  setStorageItem,
-  setStorageString,
-  removeStorageItem,
-} from './storage'
+export { setStorageString } from './storage'

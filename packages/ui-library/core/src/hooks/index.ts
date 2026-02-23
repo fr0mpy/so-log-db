@@ -14,9 +14,7 @@ export type {
 export {
   useMediaQuery,
   useIsMobile,
-  useIsTablet,
   useIsTouchDevice,
-  useBreakpoint,
 } from './useMediaQuery'
 export { useCopyToClipboard } from './useCopyToClipboard'
 export type {
