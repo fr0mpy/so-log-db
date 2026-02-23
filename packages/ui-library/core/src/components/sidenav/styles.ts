@@ -14,6 +14,7 @@ export const SideNavStyles = {
   item: {
     base: 'flex items-center justify-start gap-3 p-3 h-12 rounded-theme-md cursor-pointer transition-[background-color] duration-200 ease-neu text-foreground whitespace-nowrap overflow-hidden',
     icon: 'h-5 w-5 flex-shrink-0',
+    label: 'flex-1 text-left',
     active: 'bg-primary text-primary-foreground',
     inactive: 'hover:bg-neu-base hover:shadow-neu-raised-sm hover:text-primary',
   },

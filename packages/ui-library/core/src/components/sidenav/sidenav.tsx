@@ -210,7 +210,7 @@ function SideNavItem({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -8 }}
             transition={SPRING.snappy}
-            className="flex-1 text-left"
+            className={S.item.label}
           >
             {children}
           </motion.span>
