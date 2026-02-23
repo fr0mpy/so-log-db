@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 import { Providers } from './providers'
 import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
-import { getThemeFromCookies } from '@stackone-ui/core/providers'
+import { getThemeFromCookies } from '@stackone-ui/core/providers/server'
 import '@stackone-ui/core/themes/base.css'
 import './globals.css'
 

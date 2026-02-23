@@ -41,6 +41,7 @@
     "./config": "./src/config/index.ts",
     "./utils": "./src/utils/index.ts",
     "./providers": "./src/providers/index.ts",
+    "./providers/server": "./src/providers/server.ts",
     "./themes": "./src/themes/index.ts",
     "./themes/base.css": "./src/themes/base.css",
     "./fonts": "./src/fonts/index.ts",
