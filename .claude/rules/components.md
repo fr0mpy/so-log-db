@@ -57,34 +57,38 @@ import { ButtonStyles } from './styles'
 ## Style Architecture
 
 ```
-component-harness/styles/
+ui-library/core/src/styles/
 ├── index.ts              # Main barrel export
 ├── tokens/               # Primitive tokens (Spacing, Sizing, Typography)
-└── patterns/             # Style compositions (namespaced)
-    ├── form/             # Form.Label.base, Form.Input.base
-    ├── layout/           # Layout.Flex.center, Layout.Position.absolute
-    ├── interactive/      # Interactive.Focus.ring, Interactive.Cursor.pointer
-    ├── overlay/          # Overlay.Dialog.backdrop, Overlay.Card.container
-    ├── control/          # Control.Toggle.base, Control.Slider.track
-    └── feedback/         # Feedback.Badge.primary, Feedback.Alert.success
+│   ├── sizing.ts         # ComponentHeight, TextHeight, TouchTarget
+│   ├── spacing.ts        # SpacingTokens, ResponsiveSpacing
+│   └── typography.ts     # TypographyTokens, ResponsiveTypography
+└── responsive.ts         # Breakpoint types
 ```
 
-## Co-located Styles
+**Tokens provide WCAG-compliant sizing values:**
+- `ComponentHeight.input` = `'h-11'` (44px touch target)
+- `TextHeight.sm` = `'leading-5'` (matches text-sm)
+
+## Co-located Styles (Raw Tailwind)
+
+Write Tailwind classes directly in styles.ts for IntelliSense support:
 
 ```tsx
 // styles.ts — REQUIRED for every component
-import { Layout, Interactive, Overlay } from '../../styles'
-
+// Write raw Tailwind classes (no imports from patterns)
 export const DialogStyles = {
   overlay: [
-    Overlay.Dialog.backdrop,
-    Interactive.Transition.all,
+    'fixed inset-0 z-modal',
+    'bg-foreground/80 backdrop-blur-sm',
+    'transition-all duration-200',
   ].join(' '),
   content: [
-    Overlay.Dialog.content,
-    Interactive.Focus.within,
+    'relative z-modal w-full max-w-lg',
+    'rounded-theme-xl p-6',
+    'bg-neu-base shadow-neu-raised-lg',
   ].join(' '),
-  title: Overlay.Dialog.title,
+  title: 'font-heading text-lg font-semibold text-foreground',
 } as const
 
 // component.tsx
@@ -92,16 +96,25 @@ import { DialogStyles as S } from './styles'
 <div className={cn(S.overlay, className)} />
 ```
 
-## Namespace Pattern
+**Why raw Tailwind?**
+- Tailwind IntelliSense works (autocomplete, hover preview, linting)
+- No runtime indirection
+- Easier to understand and debug
 
-| Namespace | Examples |
-|-----------|----------|
-| `Form` | `Form.Input.base`, `Form.Label.base`, `Form.Helper.error` |
-| `Layout` | `Layout.Flex.center`, `Layout.Flex.between`, `Layout.Position.absolute` |
-| `Interactive` | `Interactive.Focus.ring`, `Interactive.Cursor.pointer`, `Interactive.Disabled.base` |
-| `Overlay` | `Overlay.Dialog.backdrop`, `Overlay.Card.container`, `Overlay.Drawer.header` |
-| `Control` | `Control.Toggle.base`, `Control.Toggle.checked`, `Control.Slider.track` |
-| `Feedback` | `Feedback.Badge.primary`, `Feedback.Alert.success` |
+## Sizing Tokens (WCAG Compliance)
+
+Import from `@stackone-ui/core/styles` for WCAG 2.5.8 compliant sizing:
+
+```tsx
+import { ComponentHeight, TextHeight } from '@stackone-ui/core/styles'
+
+// Use in skeleton files for pixel-perfect loading states
+export const SkeletonHeight = {
+  input: ComponentHeight.input,      // h-11 (44px)
+  buttonSm: ComponentHeight.buttonSm, // h-8 (32px)
+  textSm: TextHeight.sm,             // leading-5 (20px)
+}
+```
 
 ## Ref Handling (React 19 Ready)
 

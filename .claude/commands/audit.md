@@ -8,7 +8,7 @@ Scope: Scans ENTIRE codebase (not just current changes). Use $ARGUMENTS to targe
    - server-component-validator, bundle-size-tracker, performance-profiler
    - code-standards-auditor, routing-auditor, i18n-auditor
    - error-handling-auditor, data-fetching-auditor, security-auditor
-   - test-auditor, git-auditor
+   - test-auditor, git-auditor, dead-code-finder
 3. Each auditor checks specific rule categories from .claude/rules/
 4. Aggregate findings by severity (🔴 Critical > 🟡 Warning > 🟢 Minor)
 5. Output unified report with file:line references and fix recommendations
