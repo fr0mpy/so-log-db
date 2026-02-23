@@ -14,14 +14,13 @@ import {
 import { Dialog } from '@stackone-ui/core/dialog'
 import { Radio } from '@stackone-ui/core/radio'
 import { Text } from '@stackone-ui/core/text'
-import { Layout } from '@stackone-ui/core/styles'
 
 const S = {
   content: 'w-fit min-w-48',
   body: 'flex flex-col gap-4 py-4 items-center text-center',
   field: 'flex flex-col gap-2 items-center w-full',
   flag: 'w-5 h-4 rounded-sm overflow-hidden shrink-0',
-  flagOption: [Layout.Flex.center, 'gap-2'].join(' '),
+  flagOption: 'flex items-center gap-2',
 } as const
 
 // Flag SVG components for supported locales

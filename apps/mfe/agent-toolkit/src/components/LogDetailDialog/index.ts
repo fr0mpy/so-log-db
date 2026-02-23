@@ -1,5 +1,6 @@
 // Main component
 export { LogDetailDialog } from './LogDetailDialog'
+export { LogDetailDialogLazy } from './LogDetailDialogLazy'
 
 // Sub-components (for potential reuse)
 export { LogDetailHeader } from './LogDetailHeader'

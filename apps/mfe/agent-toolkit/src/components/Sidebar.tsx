@@ -8,7 +8,7 @@ import { Select } from '@stackone-ui/core/select'
 import { cn } from '@stackone-ui/core/utils'
 import { SidebarLogo } from './SidebarLogo'
 import { SidebarNav } from './SidebarNav'
-import { SettingsDialog } from './SettingsDialog'
+import { SettingsDialogLazy as SettingsDialog } from './SettingsDialogLazy'
 import { useSidebar } from './SidebarContext'
 import { SidebarStyles as S } from './styles'
 

@@ -1,1 +1,1 @@
-export { PowerSyncProvider, usePowerSync } from './PowerSyncProvider'
+export { LocalDBProvider, useLocalDB } from './LocalDBProvider'
