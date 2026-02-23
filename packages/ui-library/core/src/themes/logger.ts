@@ -3,7 +3,7 @@
  * Provides convenience methods for theme-related logging.
  */
 
-import { createLogger, configureLogger } from '@stackone/utils'
+import { createLogger } from '@stackone/utils'
 
 const log = createLogger('Theme')
 
@@ -52,5 +52,3 @@ export const themeLogger = {
   },
 }
 
-// Re-export configure for backwards compatibility
-export { configureLogger }

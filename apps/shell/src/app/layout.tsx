@@ -3,6 +3,8 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 import { Providers } from './providers'
 import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
+import { getThemeFromCookies } from '@stackone-ui/core/providers'
+import '@stackone-ui/core/themes/base.css'
 import './globals.css'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -28,15 +30,31 @@ export default async function RootLayout({
   const locale = await getLocale()
   const messages = await getMessages()
 
+  // Server-side theme detection from cookie
+  const theme = await getThemeFromCookies()
+  const isDark = theme === 'dark'
+
   return (
-    <html lang={locale} className={fontVariables} suppressHydrationWarning>
+    <html
+      lang={locale}
+      className={`${fontVariables}${isDark ? ' dark' : ''}`}
+      suppressHydrationWarning
+    >
       <head>
+        {/* Minimal script ONLY for system preference detection */}
+        {theme === 'system' && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(){if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.classList.add('dark')}})()`,
+            }}
+          />
+        )}
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="apple-touch-icon" href="/favicon.png" />
       </head>
       <body className={fontSans.className}>
         <NextIntlClientProvider messages={messages}>
-          <Providers>{children}</Providers>
+          <Providers initialTheme={theme}>{children}</Providers>
         </NextIntlClientProvider>
       </body>
     </html>

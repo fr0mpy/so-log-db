@@ -1,16 +1,13 @@
 /**
- * Theme validation utilities.
+ * Brand theme validation utilities.
  * Validates themes against schema and returns merged result with fallbacks.
  * Never throws — always returns usable theme.
+ *
+ * Note: Base theme validation is no longer needed since base theme
+ * is now a static CSS file at @stackone-ui/core/themes/base.css
  */
 
-import {
-  BASE_THEME_SCHEMA,
-  BRAND_THEME_SCHEMA,
-  type BaseTheme,
-  type BrandTheme,
-  type TokenDefinition,
-} from './schema'
+import { BRAND_THEME_SCHEMA, type BrandTheme, type TokenDefinition } from './schema'
 import { themeLogger } from './logger'
 
 // =============================================================================
@@ -69,42 +66,6 @@ function validateNestedSection(
 // =============================================================================
 // Public API
 // =============================================================================
-
-/**
- * Validates a base theme against the schema.
- * Returns merged theme with fallbacks for missing values.
- */
-export function validateBaseTheme(
-  input: Partial<BaseTheme>
-): ValidationResult<BaseTheme> {
-  const warnings: string[] = []
-
-  const spacing = validateSection('spacing', input.spacing, BASE_THEME_SCHEMA.spacing)
-  warnings.push(...spacing.warnings)
-
-  const radius = validateSection('radius', input.radius, BASE_THEME_SCHEMA.radius)
-  warnings.push(...radius.warnings)
-
-  const shadow = validateNestedSection('shadow', input.shadow, BASE_THEME_SCHEMA.shadow)
-  warnings.push(...shadow.warnings)
-
-  const motion = validateSection('motion', input.motion, BASE_THEME_SCHEMA.motion)
-  warnings.push(...motion.warnings)
-
-  const zIndex = validateSection('zIndex', input.zIndex, BASE_THEME_SCHEMA.zIndex)
-  warnings.push(...zIndex.warnings)
-
-  return {
-    theme: {
-      spacing: spacing.values,
-      radius: radius.values,
-      shadow: shadow.values as BaseTheme['shadow'],
-      motion: motion.values,
-      zIndex: zIndex.values,
-    },
-    warnings,
-  }
-}
 
 /**
  * Validates a brand theme against the schema.

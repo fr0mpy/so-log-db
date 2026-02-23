@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
-import { ThemeProvider, THEME_INIT_SCRIPT } from '@stackone-ui/core/providers'
+import { ThemeProvider, getThemeFromCookies } from '@stackone-ui/core/providers'
 import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
 import { MobileWarning } from '../components'
+import '@stackone-ui/core/themes/base.css'
 import './globals.css'
 
 /** SEO: Base metadata */
@@ -36,15 +37,29 @@ export default async function RootLayout({
   const locale = await getLocale()
   const messages = await getMessages()
 
+  // Server-side theme detection from cookie
+  const theme = await getThemeFromCookies()
+  const isDark = theme === 'dark'
+
   return (
-    <html lang={locale} className={fontVariables} suppressHydrationWarning>
+    <html
+      lang={locale}
+      className={`${fontVariables}${isDark ? ' dark' : ''}`}
+      suppressHydrationWarning
+    >
       <head>
-        {/* Inline script to set theme before React hydrates (prevents FOUC) */}
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        {/* Minimal script ONLY for system preference detection */}
+        {theme === 'system' && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(){if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.classList.add('dark')}})()`,
+            }}
+          />
+        )}
       </head>
       <body className={fontSans.className}>
         <NextIntlClientProvider messages={messages}>
-          <ThemeProvider>
+          <ThemeProvider initialTheme={theme}>
             <MobileWarning />
             {children}
           </ThemeProvider>

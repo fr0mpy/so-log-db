@@ -2,60 +2,42 @@
  * Theme system for StackOne UI.
  *
  * Two-tier architecture:
- * - Base theme: Structural tokens (spacing, shadows, motion, z-index)
- * - Brand theme: Visual tokens (colors, typography)
+ * - Base theme: Structural tokens (spacing, shadows, motion, z-index) — static CSS file
+ * - Brand theme: Visual tokens (colors, fonts) — fetched JSON, injected via JS
  *
  * @example
- * import {
- *   defaultBaseTheme,
- *   applyBaseTheme,
- *   applyBrandTheme,
- *   validateBrandTheme,
- * } from '@stackone-ui/core/themes'
+ * // In layout.tsx, import the base theme CSS
+ * import '@stackone-ui/core/themes/base.css'
  *
- * // Apply base theme on app init
- * applyBaseTheme(defaultBaseTheme)
+ * // Brand theme is loaded by ThemeProvider
+ * <ThemeProvider brandThemeUrl="/themes/brand.json">
+ *   {children}
+ * </ThemeProvider>
  *
- * // Load and apply brand theme
- * const { theme, warnings } = validateBrandTheme(fetchedTheme)
- * logWarnings(warnings, 'stackone-green')
+ * // Or manually apply brand theme
+ * const { theme } = validateBrandTheme(fetchedJson)
  * applyBrandTheme(theme)
  */
 
 // Schema and types
 export {
-  BASE_THEME_SCHEMA,
   BRAND_THEME_SCHEMA,
-  extractFallbacks,
-  type BaseTheme,
   type BrandTheme,
   type ThemeMode,
   type TokenDefinition,
 } from './schema'
 
 // Validation
-export {
-  validateBaseTheme,
-  validateBrandTheme,
-  logWarnings,
-  type ValidationResult,
-} from './validate-theme'
+export { validateBrandTheme, logWarnings, type ValidationResult } from './validate-theme'
 
-// Application
-export {
-  applyBaseTheme,
-  applyBrandTheme,
-  clearTheme,
-  clearBrandTheme,
-  updateThemeMode,
-  type ApplyThemeOptions,
-} from './apply-theme'
+// Application (brand theme only — base theme is now in CSS)
+export { applyBrandTheme, clearBrandTheme } from './apply-theme'
 
 // Logger
-export { themeLogger, configureLogger } from './logger'
+export { themeLogger } from './logger'
 
-// Default base theme
-import baseThemeJson from './base.json'
-import type { BaseTheme } from './schema'
+// Backwards compatibility: re-export base tokens for programmatic access
+export { baseTokens as defaultBaseTheme } from '../tokens/base.tokens'
 
-export const defaultBaseTheme: BaseTheme = baseThemeJson as BaseTheme
+// Note: base.css should be imported directly in app layouts
+// import '@stackone-ui/core/themes/base.css'

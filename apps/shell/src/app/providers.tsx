@@ -1,19 +1,27 @@
 'use client'
 
 import { useEffect, type ReactNode } from 'react'
-import { ThemeProvider } from '@stackone-ui/core/providers'
+import { ThemeProvider, type ThemeMode } from '@stackone-ui/core/providers'
 import { registerServiceWorker } from '../lib/service-worker'
-import { ThemeInitializer, MobileWarning } from '../components'
+import { MobileWarning } from '../components'
 
-export function Providers({ children }: { children: ReactNode }) {
+interface ProvidersProps {
+  children: ReactNode
+  initialTheme?: ThemeMode
+}
+
+export function Providers({ children, initialTheme }: ProvidersProps) {
   useEffect(() => {
     registerServiceWorker()
   }, [])
 
   return (
-    <ThemeProvider>
+    <ThemeProvider
+      brandThemeUrl="/themes/stackone-green.json"
+      initialTheme={initialTheme}
+    >
       <MobileWarning />
-      <ThemeInitializer>{children}</ThemeInitializer>
+      {children}
     </ThemeProvider>
   )
 }

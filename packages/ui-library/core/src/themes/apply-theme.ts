@@ -1,183 +1,80 @@
 /**
- * Theme application utilities.
- * Converts theme JSON to CSS custom properties and injects into DOM.
+ * Brand theme application utilities.
+ *
+ * Injects brand theme (colors, fonts) as a <style> tag in the document head.
+ * Both light and dark values are injected at once, so dark mode toggle
+ * only requires adding/removing the .dark class — no JS re-injection needed.
+ *
+ * Base theme (spacing, radius, shadows, motion, z-index) is now a static
+ * CSS file (base.css) that should be imported in app layouts.
  */
 
-import type { BaseTheme, BrandTheme, ThemeMode } from './schema'
+import type { BrandTheme } from './schema'
 
 // =============================================================================
-// Types
+// Constants
 // =============================================================================
 
-export interface ApplyThemeOptions {
-  /** Target element for CSS vars. Defaults to document.documentElement */
-  target?: HTMLElement
-  /** Current theme mode. Defaults to 'light' */
-  mode?: ThemeMode
-}
-
-// =============================================================================
-// CSS Variable Injection
-// =============================================================================
-
-function setVar(element: HTMLElement, name: string, value: string): void {
-  element.style.setProperty(`--${name}`, value)
-}
-
-function removeVar(element: HTMLElement, name: string): void {
-  element.style.removeProperty(`--${name}`)
-}
-
-// =============================================================================
-// Base Theme Application
-// =============================================================================
-
-/**
- * Applies base theme (structural tokens) to the DOM.
- * Handles light/dark mode for shadows.
- */
-export function applyBaseTheme(
-  theme: BaseTheme,
-  options: ApplyThemeOptions = {}
-): void {
-  const target = options.target ?? document.documentElement
-  const mode = options.mode ?? 'light'
-
-  // Spacing tokens
-  for (const [key, value] of Object.entries(theme.spacing)) {
-    setVar(target, `spacing-${key}`, value)
-  }
-
-  // Radius tokens
-  for (const [key, value] of Object.entries(theme.radius)) {
-    setVar(target, `radius-${key}`, value)
-  }
-
-  // Shadow tokens (mode-specific)
-  const shadows = theme.shadow[mode]
-  for (const [key, value] of Object.entries(shadows)) {
-    setVar(target, `shadow-${key}`, value)
-  }
-
-  // Motion tokens
-  for (const [key, value] of Object.entries(theme.motion)) {
-    setVar(target, `motion-${key}`, value)
-  }
-
-  // Z-index tokens
-  for (const [key, value] of Object.entries(theme.zIndex)) {
-    setVar(target, `z-${key}`, value)
-  }
-}
+const BRAND_STYLE_ID = 'brand-theme'
 
 // =============================================================================
 // Brand Theme Application
 // =============================================================================
 
 /**
- * Applies brand theme (visual tokens) to the DOM.
- * Handles light/dark mode for colors.
+ * Applies brand theme (colors, fonts) by injecting a <style> tag.
+ *
+ * Injects both :root (light) and .dark values at once, so dark mode
+ * toggle is handled purely by CSS class — no re-injection needed.
  */
-export function applyBrandTheme(
-  theme: BrandTheme,
-  options: ApplyThemeOptions = {}
-): void {
-  const target = options.target ?? document.documentElement
-  const mode = options.mode ?? 'light'
+export function applyBrandTheme(theme: BrandTheme): void {
+  let style = document.getElementById(BRAND_STYLE_ID) as HTMLStyleElement | null
 
-  // Color tokens (mode-specific)
-  const colors = theme.color[mode]
-  for (const [key, value] of Object.entries(colors)) {
-    setVar(target, `color-${key}`, value)
+  if (!style) {
+    style = document.createElement('style')
+    style.id = BRAND_STYLE_ID
+    document.head.appendChild(style)
   }
 
-  // Font tokens
-  for (const [key, value] of Object.entries(theme.font)) {
-    setVar(target, `font-${key}`, value)
+  // Generate CSS variable declarations
+  const lightColors = Object.entries(theme.color.light)
+    .map(([key, value]) => `--color-${key}: ${value};`)
+    .join('\n    ')
+
+  const darkColors = Object.entries(theme.color.dark)
+    .map(([key, value]) => `--color-${key}: ${value};`)
+    .join('\n    ')
+
+  const fonts = Object.entries(theme.font)
+    .map(([key, value]) => `--font-${key}: ${value};`)
+    .join('\n    ')
+
+  // Inject both light and dark values at once
+  style.textContent = `
+  /* Brand Theme - Injected by applyBrandTheme() */
+  :root {
+    /* Colors (Light Mode) */
+    ${lightColors}
+
+    /* Fonts */
+    ${fonts}
   }
+
+  .dark {
+    /* Colors (Dark Mode) */
+    ${darkColors}
+  }
+`
 }
 
 // =============================================================================
 // Theme Clearing
 // =============================================================================
 
-/** Prefixes used by the theme system */
-const THEME_PREFIXES = [
-  'spacing-',
-  'radius-',
-  'shadow-',
-  'motion-',
-  'z-',
-  'color-',
-  'font-',
-] as const
-
 /**
- * Clears all theme CSS variables from the target element.
+ * Removes the brand theme <style> tag.
+ * Useful when switching to a different brand theme.
  */
-export function clearTheme(target?: HTMLElement): void {
-  const element = target ?? document.documentElement
-  const style = element.style
-
-  // Iterate through all properties and remove theme vars
-  const propsToRemove: string[] = []
-
-  for (let i = 0; i < style.length; i++) {
-    const prop = style[i]
-    if (prop.startsWith('--') && THEME_PREFIXES.some(p => prop.startsWith(`--${p}`))) {
-      propsToRemove.push(prop)
-    }
-  }
-
-  propsToRemove.forEach(prop => removeVar(element, prop.slice(2)))
-}
-
-/**
- * Clears only brand theme CSS variables (colors, fonts).
- * Preserves base theme (spacing, shadows, etc.).
- */
-export function clearBrandTheme(target?: HTMLElement): void {
-  const element = target ?? document.documentElement
-  const style = element.style
-  const brandPrefixes = ['color-', 'font-']
-
-  const propsToRemove: string[] = []
-
-  for (let i = 0; i < style.length; i++) {
-    const prop = style[i]
-    if (prop.startsWith('--') && brandPrefixes.some(p => prop.startsWith(`--${p}`))) {
-      propsToRemove.push(prop)
-    }
-  }
-
-  propsToRemove.forEach(prop => removeVar(element, prop.slice(2)))
-}
-
-// =============================================================================
-// Mode Switching
-// =============================================================================
-
-/**
- * Updates theme for a mode change (light/dark).
- * Re-applies mode-specific tokens (shadows, colors).
- */
-export function updateThemeMode(
-  baseTheme: BaseTheme,
-  brandTheme: BrandTheme,
-  mode: ThemeMode,
-  target?: HTMLElement
-): void {
-  const element = target ?? document.documentElement
-
-  // Update shadow tokens
-  const shadows = baseTheme.shadow[mode]
-  for (const [key, value] of Object.entries(shadows)) {
-    setVar(element, `shadow-${key}`, value)
-  }
-
-  // Update color tokens
-  const colors = brandTheme.color[mode]
-  for (const [key, value] of Object.entries(colors)) {
-    setVar(element, `color-${key}`, value)
-  }
+export function clearBrandTheme(): void {
+  document.getElementById(BRAND_STYLE_ID)?.remove()
 }

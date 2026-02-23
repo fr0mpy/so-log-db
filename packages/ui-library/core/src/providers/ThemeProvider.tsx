@@ -1,35 +1,36 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, useRef, type ReactNode } from 'react'
-import { setStorageString } from '@stackone/utils'
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
+import { applyBrandTheme, validateBrandTheme, type BrandTheme } from '../themes'
 import {
-  defaultBaseTheme,
-  applyBaseTheme,
-  applyBrandTheme,
-  updateThemeMode,
-  validateBrandTheme,
-  logWarnings,
-  type BrandTheme,
+  setThemeCookie,
+  getThemeCookieClient,
+  migrateLocalStorageToCookie,
   type ThemeMode,
-} from '../themes'
+} from './theme-cookie'
+
+// Re-export type for consumers
+export type { ThemeMode } from './theme-cookie'
 
 // =============================================================================
 // Types
 // =============================================================================
 
 interface ThemeContextValue {
-  /** Current theme mode */
+  /** Current theme preference ('light', 'dark', or 'system') */
   theme: ThemeMode
+  /** Resolved theme - actual applied value (resolves 'system' to 'light' or 'dark') */
+  resolvedTheme: 'light' | 'dark'
   /** Toggle between light and dark mode */
   toggle: () => void
-  /** Whether web fonts have finished loading */
-  fontsLoaded: boolean
-  /** Whether themes have been applied */
-  themeReady: boolean
+  /** Set specific theme mode */
+  setTheme: (theme: ThemeMode) => void
 }
 
 interface ThemeProviderProps {
   children: ReactNode
+  /** Initial theme from server cookie read. Defaults to 'system'. */
+  initialTheme?: ThemeMode
   /** URL to fetch brand theme JSON from. If not provided, uses schema fallbacks. */
   brandThemeUrl?: string
 }
@@ -40,60 +41,90 @@ interface ThemeProviderProps {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)
 
-/** localStorage key for persisted theme preference */
+/** @deprecated Use THEME_COOKIE_NAME from theme-cookie.ts instead */
 export const THEME_STORAGE_KEY = 'stackone-theme'
 
 /**
- * Inline script to prevent theme flash (FOUC).
- * Must run before React hydrates to set `dark` class on `<html>`.
- * Use in layout.tsx: `<script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />`
+ * @deprecated Use server-side theme detection with getThemeFromCookies() instead.
+ * This script is only needed for system preference detection when theme='system'.
  */
 export const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('${THEME_STORAGE_KEY}');if(t==='dark'||(t===null&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})()`
 
-// Backwards compat alias
-const STORAGE_KEY = THEME_STORAGE_KEY
+/**
+ * Get system color scheme preference
+ */
+function getSystemPreference(): 'light' | 'dark' {
+  if (typeof window === 'undefined') return 'light'
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
 
 /**
- * Get initial theme by reading from DOM class.
- * The inline THEME_INIT_SCRIPT sets `dark` class before React hydrates,
- * so we read from DOM to match and avoid hydration mismatch.
+ * Resolve theme mode to actual light/dark value
  */
-function getInitialTheme(): ThemeMode {
-  if (typeof window === 'undefined') return 'light'
-  // Read from DOM class (set by THEME_INIT_SCRIPT) to match hydration
-  return document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+function resolveTheme(theme: ThemeMode): 'light' | 'dark' {
+  if (theme === 'system') {
+    return getSystemPreference()
+  }
+  return theme
 }
 
 // =============================================================================
 // Provider
 // =============================================================================
 
-export function ThemeProvider({ children, brandThemeUrl }: ThemeProviderProps) {
-  // Initialize theme from DOM class (set by THEME_INIT_SCRIPT before hydration)
-  const [theme, setTheme] = useState<ThemeMode>(getInitialTheme)
+export function ThemeProvider({
+  children,
+  initialTheme = 'system',
+  brandThemeUrl,
+}: ThemeProviderProps) {
+  const [theme, setThemeState] = useState<ThemeMode>(initialTheme)
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() =>
+    resolveTheme(initialTheme)
+  )
 
-  // Use refs instead of state to avoid re-rendering entire app tree
-  // These are informational flags, not reactive state that children depend on
-  const fontsLoadedRef = useRef(false)
-  const themeReadyRef = useRef(false)
-
-  // Store validated brand theme for mode switching
-  const brandThemeRef = useRef<BrandTheme | null>(null)
-
-  // Apply base theme and load brand theme (non-blocking)
+  // Migrate localStorage to cookie on first mount (backwards compatibility)
   useEffect(() => {
-    // Apply base theme immediately (structural tokens)
-    applyBaseTheme(defaultBaseTheme, { mode: theme })
+    migrateLocalStorageToCookie()
 
-    // Load and apply brand theme in background
+    // Verify client cookie matches server-provided initial
+    const clientTheme = getThemeCookieClient()
+    if (clientTheme !== initialTheme && clientTheme !== 'system') {
+      setThemeState(clientTheme)
+      setResolvedTheme(resolveTheme(clientTheme))
+    }
+  }, [initialTheme])
+
+  // Listen for system preference changes when in 'system' mode
+  useEffect(() => {
+    if (theme !== 'system') return
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+
+    const handler = (e: MediaQueryListEvent) => {
+      const newResolved = e.matches ? 'dark' : 'light'
+      setResolvedTheme(newResolved)
+      document.documentElement.classList.toggle('dark', e.matches)
+    }
+
+    mediaQuery.addEventListener('change', handler)
+    return () => mediaQuery.removeEventListener('change', handler)
+  }, [theme])
+
+  // Apply theme class to document when resolvedTheme changes
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', resolvedTheme === 'dark')
+  }, [resolvedTheme])
+
+  // Load brand theme (injects both :root and .dark values via <style> tag)
+  useEffect(() => {
     async function loadBrandTheme() {
-      let brandTheme: Partial<BrandTheme> = {}
+      let rawTheme: Partial<BrandTheme> = {}
 
       if (brandThemeUrl) {
         try {
           const response = await fetch(brandThemeUrl)
           if (response.ok) {
-            brandTheme = await response.json()
+            rawTheme = await response.json()
           }
         } catch {
           // Fall through to use fallbacks
@@ -101,63 +132,30 @@ export function ThemeProvider({ children, brandThemeUrl }: ThemeProviderProps) {
       }
 
       // Validate and fill in fallbacks for missing tokens
-      const { theme: validatedTheme, warnings } = validateBrandTheme(brandTheme)
-      brandThemeRef.current = validatedTheme
+      const { theme: validatedTheme } = validateBrandTheme(rawTheme)
 
-      if (warnings.length > 0) {
-        logWarnings(warnings, brandThemeUrl ?? 'default')
-      }
-
-      // Apply brand theme (visual tokens)
-      applyBrandTheme(validatedTheme, { mode: theme })
-
-      // Mark theme as ready (no re-render needed)
-      themeReadyRef.current = true
+      // Inject <style> tag with both :root and .dark values
+      applyBrandTheme(validatedTheme)
     }
 
     loadBrandTheme()
-  }, [brandThemeUrl, theme])
+  }, [brandThemeUrl])
 
-  // Handle mode switching
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark')
-    setStorageString(STORAGE_KEY, theme)
+  // Set theme and persist to cookie
+  const setTheme = (newTheme: ThemeMode) => {
+    setThemeCookie(newTheme)
+    setThemeState(newTheme)
+    setResolvedTheme(resolveTheme(newTheme))
+  }
 
-    // Update mode-specific tokens (shadows, colors)
-    if (brandThemeRef.current) {
-      updateThemeMode(defaultBaseTheme, brandThemeRef.current, theme)
-    }
-  }, [theme])
-
-  // Track font loading state (no re-render needed)
-  useEffect(() => {
-    if (typeof document !== 'undefined' && document.fonts) {
-      if (document.fonts.status === 'loaded') {
-        fontsLoadedRef.current = true
-      } else {
-        document.fonts.ready.then(() => {
-          fontsLoadedRef.current = true
-        })
-      }
-    }
-  }, [])
-
-  const toggle = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'))
-
-  // Expose ref values directly - consumers can read but won't re-render when they change
-  const contextValue: ThemeContextValue = {
-    theme,
-    toggle,
-    get fontsLoaded() {
-      return fontsLoadedRef.current
-    },
-    get themeReady() {
-      return themeReadyRef.current
-    },
+  // Toggle between light and dark (skips system)
+  const toggle = () => {
+    const newTheme = resolvedTheme === 'light' ? 'dark' : 'light'
+    setTheme(newTheme)
   }
 
   return (
-    <ThemeContext.Provider value={contextValue}>
+    <ThemeContext.Provider value={{ theme, resolvedTheme, toggle, setTheme }}>
       {children}
     </ThemeContext.Provider>
   )
