@@ -3,7 +3,7 @@
  *
  * Provides configurable font loading with:
  * - Fallback metrics for CLS prevention
- * - Next.js and Vite/CSS support
+ * - Next.js support
  * - Namespace pattern for consistent access
  *
  * @example
@@ -16,58 +16,25 @@
  *
  * // For Next.js apps, import loader separately
  * import { fontSans, fontMono, fontVariables } from '@stackone-ui/core/fonts/next-loader'
- *
- * // For Vite apps
- * import { initializeFonts } from '@stackone-ui/core/fonts/css-loader'
  */
 
 // =============================================================================
-// Configuration
+// Configuration (from next-loader)
 // =============================================================================
 
-export {
-  FONT_CONFIG,
-  FONT_FAMILIES,
-  buildGoogleFontsUrl,
-  getPreconnectLinks,
-  type FontConfig,
-  type FontDisplay,
-  type FontFamilyConfig,
-  type FontKey,
-} from './config'
+export { FONT_FAMILIES, type FontKey } from './next-loader'
 
 // =============================================================================
 // Schema & Metrics
 // =============================================================================
 
-export {
-  FONT_METRICS,
-  generateFallbackFontFace,
-  generateAllFallbackFontFaces,
-  buildFontStack,
-  type FontMetrics,
-  type FontFallbackConfig,
-} from './schema'
-
-// =============================================================================
-// CSS Loader (for Vite/non-Next.js)
-// =============================================================================
-
-export {
-  generateFontCSS,
-  injectFontStyles,
-  injectFontLinks,
-  initializeFonts,
-  cleanupFonts,
-  fontsReady,
-  isFontLoaded,
-} from './css-loader'
+export { buildFontStack, type FontMetrics, type FontFallbackConfig } from './schema'
 
 // =============================================================================
 // Font Namespace
 // =============================================================================
 
-import { FONT_FAMILIES } from './config'
+import { FONT_FAMILIES } from './next-loader'
 import { buildFontStack } from './schema'
 
 /**

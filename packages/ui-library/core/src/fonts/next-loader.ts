@@ -1,17 +1,39 @@
 /**
- * AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY
+ * Font loader for Next.js apps.
  *
- * Generated from config.ts by generate-next-loader.ts
- * Run: pnpm generate:fonts
- *
- * next/font requires literal values at build time, so we generate this file
- * from the canonical configuration in config.ts.
+ * next/font requires literal values at build time.
+ * Edit this file directly to change fonts.
  */
 
 import { Inter, IBM_Plex_Mono } from 'next/font/google'
 
 // =============================================================================
-// Font Instances (generated from config.ts)
+// Font Configuration
+// =============================================================================
+
+/**
+ * Font family definitions.
+ * Used by the Font namespace in index.ts.
+ */
+export const FONT_FAMILIES = {
+  sans: {
+    name: 'Inter',
+    weights: [400, 500, 600, 700] as const,
+    variable: '--font-sans',
+    fallback: 'ui-sans-serif, system-ui, -apple-system, sans-serif',
+  },
+  mono: {
+    name: 'IBM Plex Mono',
+    weights: [400, 500] as const,
+    variable: '--font-mono',
+    fallback: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+  },
+} as const
+
+export type FontKey = keyof typeof FONT_FAMILIES
+
+// =============================================================================
+// Font Instances
 // =============================================================================
 
 /**

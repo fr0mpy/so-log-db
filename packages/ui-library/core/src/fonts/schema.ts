@@ -38,7 +38,7 @@ export interface FontFallbackConfig {
  * - https://screenspan.net/fallback
  * - https://meowni.ca/font-style-matcher/
  */
-export const FONT_METRICS: Record<string, FontFallbackConfig> = {
+const FONT_METRICS: Record<string, FontFallbackConfig> = {
   // Figtree - geometric sans-serif, similar to system-ui
   Figtree: {
     metrics: {
@@ -96,48 +96,8 @@ export const FONT_METRICS: Record<string, FontFallbackConfig> = {
 } as const
 
 // =============================================================================
-// CSS Generation
+// Font Stack Builder
 // =============================================================================
-
-/**
- * Generates @font-face CSS for a fallback font with metric adjustments.
- */
-export function generateFallbackFontFace(
-  fontName: string,
-  fallbackName?: string
-): string {
-  const config = FONT_METRICS[fontName]
-  if (!config) {
-    // Unknown font - return empty (will use browser defaults)
-    return ''
-  }
-
-  const { metrics, localFonts } = config
-  const name = fallbackName ?? `${fontName} Fallback`
-  const src = localFonts.map((f) => `local('${f}')`).join(', ')
-
-  return `
-@font-face {
-  font-family: '${name}';
-  src: ${src};
-  size-adjust: ${metrics.sizeAdjust};
-  ascent-override: ${metrics.ascentOverride};
-  descent-override: ${metrics.descentOverride};
-  line-gap-override: ${metrics.lineGapOverride};
-}`.trim()
-}
-
-/**
- * Generates all fallback @font-face rules for the default font families.
- */
-export function generateAllFallbackFontFaces(
-  fontNames: string[] = ['Inter', 'IBM Plex Mono']
-): string {
-  return fontNames
-    .map((name) => generateFallbackFontFace(name))
-    .filter(Boolean)
-    .join('\n\n')
-}
 
 /**
  * Builds a font-family stack including the adjusted fallback.
