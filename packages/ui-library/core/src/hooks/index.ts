@@ -17,6 +17,7 @@ export {
   useIsTouchDevice,
 } from './useMediaQuery'
 export { useCopyToClipboard } from './useCopyToClipboard'
+export { useIsTruncated } from './use-is-truncated'
 export type {
   UseCopyToClipboardOptions,
   UseCopyToClipboardReturn,
