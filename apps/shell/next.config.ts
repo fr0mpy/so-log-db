@@ -1,9 +1,14 @@
 import type { NextConfig } from 'next'
 import { PHASE_DEVELOPMENT_SERVER } from 'next/constants'
 import path from 'path'
+import withBundleAnalyzer from '@next/bundle-analyzer'
 import createNextIntlPlugin from 'next-intl/plugin'
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
+
+const bundleAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+})
 
 export default (phase: string) => {
   const isDev = phase === PHASE_DEVELOPMENT_SERVER
@@ -23,11 +28,15 @@ export default (phase: string) => {
   const nextConfig: NextConfig = {
     experimental: {
       reactCompiler: true,
+      staleTimes: {
+        dynamic: 0,
+        static: 180,
+      },
     },
 
     transpilePackages: ['@stackone-ui/core'],
 
-    webpack: (config) => {
+    webpack: (config, { isServer }) => {
       // Resolve aliases - shell src takes priority, falls back to UI library
       config.resolve.alias = {
         ...config.resolve.alias,
@@ -37,6 +46,41 @@ export default (phase: string) => {
         ],
         '@harness': path.resolve(__dirname, '../../packages/ui-library/harness/src'),
       }
+
+      // Split heavy libraries into separate chunks (client only)
+      if (!isServer && config.optimization?.splitChunks) {
+        const splitChunks = config.optimization.splitChunks as {
+          cacheGroups?: Record<string, unknown>
+        }
+        splitChunks.cacheGroups = {
+          ...splitChunks.cacheGroups,
+          motion: {
+            test: /[\\/]node_modules[\\/](motion|framer-motion)[\\/]/,
+            name: 'motion',
+            chunks: 'all',
+            priority: 30,
+          },
+          recharts: {
+            test: /[\\/]node_modules[\\/](recharts|d3-.*|victory-vendor)[\\/]/,
+            name: 'recharts',
+            chunks: 'all',
+            priority: 25,
+          },
+          virtualizer: {
+            test: /[\\/]node_modules[\\/]@tanstack[\\/]react-virtual[\\/]/,
+            name: 'virtualizer',
+            chunks: 'all',
+            priority: 25,
+          },
+          lucide: {
+            test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
+            name: 'lucide',
+            chunks: 'all',
+            priority: 20,
+          },
+        }
+      }
+
       return config
     },
 
@@ -72,5 +116,5 @@ export default (phase: string) => {
     },
   }
 
-  return withNextIntl(nextConfig)
+  return bundleAnalyzer(withNextIntl(nextConfig))
 }
