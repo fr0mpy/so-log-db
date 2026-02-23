@@ -47,7 +47,7 @@ function SidebarNav({ currentPath, onNavigate }: SidebarNavProps) {
       {componentRoutes.map((route) => (
         <Link
           key={route.path}
-          href={`/${route.path}`}
+          href={Routes.component(route.path)}
           onClick={onNavigate}
           className={cn(
             S.navLink.base,
