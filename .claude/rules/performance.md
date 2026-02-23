@@ -242,16 +242,16 @@ export default async function Page() {
   )
 }
 
-// ✅ OK - ssr: false ONLY for truly client-only components (charts, maps)
-const Chart = dynamic(() => import('./Chart'), {
-  ssr: false,  // Recharts/D3 require DOM - acceptable
-  loading: () => <ChartSkeleton />,
+// ✅ OK - ssr: false ONLY for truly client-only components (maps, canvas)
+const MapView = dynamic(() => import('./MapView'), {
+  ssr: false,  // Map libraries require DOM - acceptable
+  loading: () => <MapSkeleton />,
 })
 ```
 
 **When to use `ssr: false`:**
-- Charting libraries (Recharts, D3, Chart.js)
 - Map libraries (Mapbox, Leaflet)
+- Canvas-based components
 - Components using `window`/`document` in render
 
 **Never use `ssr: false` for:**
@@ -350,14 +350,14 @@ function Logo({ className }) {
 
 ```tsx
 // ❌ NEVER - import heavy libraries directly in page content
-import { BarChart, Bar, XAxis } from 'recharts'  // ~200KB
+import { HeavyComponent } from 'some-heavy-library'  // Large bundle impact
 
 // ✅ ALWAYS - create lazy wrapper with skeleton
 // ComponentLazy.tsx
 export const Component = dynamic(
   () => import('./Component').then(mod => mod.Component),
   {
-    ssr: false,  // Charts need DOM - acceptable
+    ssr: false,  // Only if component requires DOM
     loading: () => <ComponentSkeleton />,
   }
 )
@@ -414,5 +414,5 @@ When Lighthouse score is low, check these in order:
 | Page content SSR disabled | `ssr: false` on wrapper | Remove, use Suspense |
 | Theme provider blocking | Wait for fonts/theme | Render immediately |
 | Oversized logo | 80KB PNG at 24px | Inline SVG (~1KB) |
-| Direct Recharts import | 200KB in main bundle | Lazy load with skeleton |
+| Heavy library import | Large bundle in main JS | Lazy load with skeleton |
 | Non-lazy table | Blocks initial render | Use existing *Lazy.tsx |
