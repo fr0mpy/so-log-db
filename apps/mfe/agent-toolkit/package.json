@@ -24,8 +24,7 @@
     "next": "^15.0.0",
     "next-intl": "^3.26.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "recharts": "^3.7.0"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^15.0.0",

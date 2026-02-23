@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, memo } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { cn } from '@stackone-ui/core/utils'
 import { Card } from '@stackone-ui/core/card'
@@ -14,6 +14,7 @@ import { LatencyBar } from '../../components/LatencyBar'
 import { SortableHeader } from '../../components/SortableHeader'
 import { useLogHover } from './LogHoverContext'
 import { Tooltip } from '@stackone-ui/core/tooltip'
+import { useIsTruncated } from '@stackone-ui/core/hooks'
 import { useToast } from '@stackone-ui/core/toast'
 import { Button } from '@stackone-ui/core/button'
 import { replayRequest } from './actions'
@@ -108,6 +109,19 @@ const AccountIcon = ({ className }: { className?: string }) => (
     <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
   </svg>
 )
+
+/** Shows tooltip only when text is truncated */
+const RequestNameCell = memo(function RequestNameCell({ name }: { name: string }) {
+  const { ref, isTruncated } = useIsTruncated<HTMLSpanElement>()
+
+  const content = (
+    <span ref={ref} className={RequestCell.name}>
+      {name}
+    </span>
+  )
+
+  return isTruncated ? <Tooltip content={name}>{content}</Tooltip> : content
+})
 
 function formatDate(iso: string, todayLabel: string, yesterdayLabel: string): string {
   const date = new Date(iso)
@@ -507,10 +521,7 @@ export function LogTable({ logs, translations, onRowClick }: LogTableProps) {
                           {log.request.method}
                         </span>
                       </div>
-                      {/* Tooltip shows full request name when truncated */}
-                      <Tooltip content={log.request.name}>
-                        <span className={RequestCell.name}>{log.request.name}</span>
-                      </Tooltip>
+                      <RequestNameCell name={log.request.name} />
                     </div>
                   </div>
                   <div className={cn(DataTable.cellRight, LogTableColumns.duration)} data-ui="cell-duration">
