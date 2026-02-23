@@ -333,7 +333,7 @@ function TooltipArrow({ className }: TooltipArrowProps) {
 }
 
 // ============================================================================
-// Simple Wrapper (backward compatibility)
+// Simple Wrapper
 // ============================================================================
 
 interface TooltipSimpleProps {

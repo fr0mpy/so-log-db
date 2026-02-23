@@ -18,9 +18,8 @@ const SPRING_PRESETS: SpringPreset[] = [
   { name: 'bouncy', description: 'More energetic' },
   { name: 'gentle', description: 'Slower, softer' },
   { name: 'snappy', description: 'Quick response' },
+  { name: 'smooth', description: 'Reduced bounce for layout animations' },
   { name: 'tooltip', description: 'Lighter feel' },
-  { name: 'selectOpen', description: 'Smooth entry' },
-  { name: 'selectClose', description: 'Gentle exit' },
 ]
 
 export function SpringDemo() {

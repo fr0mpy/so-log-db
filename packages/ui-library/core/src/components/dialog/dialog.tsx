@@ -14,9 +14,8 @@ import {
   useControlledState,
   useBodyScrollLock,
   useEscapeKey,
-  SPRING_CONFIG,
 } from '../../hooks'
-import { DURATION, OFFSET, ARIA } from '../../config'
+import { ARIA, POPUP_SLIDE, BACKDROP } from '../../config'
 import { DialogStyles as S } from './styles'
 import type {
   DialogContextValue,
@@ -125,10 +124,10 @@ function DialogBackdrop({ className, onClick, ref, onDrag, onDragStart, onDragEn
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: DURATION.normal }}
+      variants={BACKDROP}
+      initial="initial"
+      animate="animate"
+      exit="exit"
       className={cn(S.backdrop, blocking && S.backdropBlocking, className)}
       onClick={handleClick}
       aria-hidden="true"
@@ -149,10 +148,10 @@ function DialogPopup({ className, children, ref, onDrag, onDragStart, onDragEnd,
         ref={ref}
         role={blocking ? 'alertdialog' : 'dialog'}
         aria-modal="true"
-        initial={{ opacity: 0, scale: 0.95, y: -OFFSET.slide }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: -OFFSET.slide }}
-        transition={SPRING_CONFIG.default}
+        variants={POPUP_SLIDE}
+        initial="initial"
+        animate="animate"
+        exit="exit"
         className={cn(S.content, className)}
         {...props}
       >

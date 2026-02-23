@@ -17,7 +17,7 @@ import {
   useEscapeKey,
   SPRING_CONFIG,
 } from '../../hooks'
-import { DURATION, ARIA } from '../../config'
+import { DURATION, ARIA, SLIDE } from '../../config'
 import { DrawerStyles as S, SIDE_POSITIONS } from './styles'
 import type {
   DrawerContextValue,
@@ -40,33 +40,6 @@ const useDrawerContext = () => {
     throw new Error('Drawer components must be used within a Drawer.Root')
   }
   return context
-}
-
-// Animation configurations
-const SLIDE_VARIANTS: Record<
-  DrawerSide,
-  { initial: { x?: string; y?: string }; animate: { x?: number; y?: number }; exit: { x?: string; y?: string } }
-> = {
-  left: {
-    initial: { x: '-100%' },
-    animate: { x: 0 },
-    exit: { x: '-100%' },
-  },
-  right: {
-    initial: { x: '100%' },
-    animate: { x: 0 },
-    exit: { x: '100%' },
-  },
-  top: {
-    initial: { y: '-100%' },
-    animate: { y: 0 },
-    exit: { y: '-100%' },
-  },
-  bottom: {
-    initial: { y: '100%' },
-    animate: { y: 0 },
-    exit: { y: '100%' },
-  },
 }
 
 // Sub-components
@@ -137,7 +110,7 @@ function DrawerContent({ className, children, ref, onDrag, onDragStart, onDragEn
   // Handle escape key using shared hook
   useEscapeKey(() => setOpen(false))
 
-  const variants = SLIDE_VARIANTS[side]
+  const variants = SLIDE[side]
 
   return (
     <motion.div
@@ -229,7 +202,7 @@ function DrawerClose({ asChild, children, onClick, className, ref, ...props }: D
 }
 
 // ============================================================================
-// Simple Wrapper (backward compatibility)
+// Simple Wrapper
 // ============================================================================
 
 interface DrawerSimpleProps {

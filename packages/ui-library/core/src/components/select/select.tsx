@@ -17,22 +17,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import { Input } from '../form/input'
 import { useControlledState } from '../../hooks/useControlledState'
 import { useClickOutsideMultiple } from '../../hooks/useClickOutside'
-import { SPRING, DURATION, PLACEHOLDER } from '../../config'
-
-// Simple fade animation - options appear smoothly without complex slide
-const fadeVariants = {
-  initial: { opacity: 0, scale: 0.95 },
-  animate: {
-    opacity: 1,
-    scale: 1,
-    transition: SPRING.snappy,
-  },
-  exit: {
-    opacity: 0,
-    scale: 0.95,
-    transition: { duration: DURATION.instant },
-  },
-}
+import { SPRING, PLACEHOLDER, POPUP_SNAPPY } from '../../config'
 import { SelectStyles as S } from './styles'
 import type {
   SelectContextValue,
@@ -337,7 +322,7 @@ function SelectPopup({ children, className, ref }: SelectPopupProps) {
     <motion.div
       ref={ref}
       role="listbox"
-      variants={fadeVariants}
+      variants={POPUP_SNAPPY}
       initial="initial"
       animate="animate"
       exit="exit"

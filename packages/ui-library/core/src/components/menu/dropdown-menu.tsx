@@ -398,7 +398,7 @@ function DropdownMenuLabel({ className, children, ref, ...props }: MenuLabelProp
 }
 
 // ============================================================================
-// Simple Wrapper (backward compatibility)
+// Simple Wrapper
 // ============================================================================
 
 interface DropdownMenuSimpleProps {

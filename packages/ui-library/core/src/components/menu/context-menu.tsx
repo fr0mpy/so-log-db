@@ -180,7 +180,7 @@ function ContextMenuSeparator({ className, ref, ...props }: MenuSeparatorProps) 
 }
 
 // ============================================================================
-// Simple Wrapper (backward compatibility)
+// Simple Wrapper
 // ============================================================================
 
 interface ContextMenuSimpleProps {

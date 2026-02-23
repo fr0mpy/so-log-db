@@ -7,7 +7,10 @@ import { TokenViewer, TokenGridStyles as S, MotionTokenStyles } from '../TokenVi
 import { SpringDemo } from './SpringDemo'
 
 interface MotionTokensProps {
-  motion: Record<string, string>
+  motion: {
+    duration: Record<string, string>
+    spring: Record<string, string>
+  }
 }
 
 const DURATION_ENTRIES = Object.entries(DURATION).map(([name, value]) => ({

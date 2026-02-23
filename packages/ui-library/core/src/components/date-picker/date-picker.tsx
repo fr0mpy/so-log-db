@@ -16,7 +16,7 @@ import { cn } from '@/utils/cn'
 import { useControlledState } from '../../hooks/useControlledState'
 import { useClickOutsideMultiple } from '../../hooks/useClickOutside'
 import { useEscapeKey } from '../../hooks/useEscapeKey'
-import { SPRING } from '../../config'
+import { POPUP, BACKDROP } from '../../config'
 import { DatePickerStyles as S } from './styles'
 import { formatDate, formatDateRange, today } from './utils/date-utils'
 import type {
@@ -48,30 +48,6 @@ export const useDatePickerContext = () => {
     throw new Error('DatePicker components must be used within a DatePicker.Root')
   }
   return context
-}
-
-// =============================================================================
-// Animation Variants
-// =============================================================================
-
-const popupVariants = {
-  initial: { opacity: 0, scale: 0.95 },
-  animate: {
-    opacity: 1,
-    scale: 1,
-    transition: SPRING.default,
-  },
-  exit: {
-    opacity: 0,
-    scale: 0.95,
-    transition: { duration: 0.15 },
-  },
-}
-
-const backdropVariants = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.15 } },
-  exit: { opacity: 0, transition: { duration: 0.15 } },
 }
 
 // =============================================================================
@@ -390,7 +366,7 @@ function DatePickerPopup({
       {/* Backdrop */}
       <motion.div
         className={S.backdrop}
-        variants={backdropVariants}
+        variants={BACKDROP}
         initial="initial"
         animate="animate"
         exit="exit"
@@ -403,7 +379,7 @@ function DatePickerPopup({
         role="dialog"
         aria-modal="true"
         aria-label="Date picker"
-        variants={popupVariants}
+        variants={POPUP}
         initial="initial"
         animate="animate"
         exit="exit"

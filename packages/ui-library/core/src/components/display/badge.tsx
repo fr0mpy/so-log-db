@@ -1,23 +1,25 @@
 import { cn } from '@/utils/cn'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { Feedback } from '../../styles'
 
-const badgeVariants = cva(Feedback.Badge.base, {
-  variants: {
-    variant: {
-      primary: Feedback.Badge.primary,
-      secondary: Feedback.Badge.secondary,
-      destructive: Feedback.Badge.destructive,
-      success: Feedback.Badge.success,
-      warning: Feedback.Badge.warning,
-      info: Feedback.Badge.info,
-      outline: Feedback.Badge.outline,
+const badgeVariants = cva(
+  'inline-flex items-center rounded-theme-md px-2.5 py-0.5 text-xs font-medium',
+  {
+    variants: {
+      variant: {
+        primary: 'bg-primary text-primary-foreground shadow-neu-badge-primary',
+        secondary: 'bg-secondary text-secondary-foreground shadow-neu-badge-secondary',
+        destructive: 'bg-destructive text-destructive-foreground shadow-neu-badge-destructive',
+        success: 'bg-success text-success-foreground shadow-neu-badge-success',
+        warning: 'bg-warning text-warning-foreground shadow-neu-badge-warning',
+        info: 'bg-info text-info-foreground shadow-neu-badge-info',
+        outline: 'bg-neu-base text-foreground shadow-neu-raised-sm',
+      },
     },
-  },
-  defaultVariants: {
-    variant: 'primary',
-  },
-})
+    defaultVariants: {
+      variant: 'primary',
+    },
+  }
+)
 
 export type BadgeVariant = VariantProps<typeof badgeVariants>['variant']
 

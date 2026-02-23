@@ -5,7 +5,7 @@ import { X, CheckCircle, AlertCircle, Info, AlertTriangle, Loader2 } from 'lucid
 import { useState, useEffect, useCallback, createContext, useContext } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'motion/react'
-import { TOAST, SPRING, SR_ONLY } from '../../config'
+import { TOAST, SPRING, SR_ONLY, SLIDE_FADE, type SlideDirection } from '../../config'
 import {
   ToastStyles as S,
   variantStyles,
@@ -24,7 +24,6 @@ import type {
   ToastTitleProps,
   ToastDescriptionProps,
   ToastCloseProps,
-  MotionVariant,
 } from './types'
 
 // Module-level constants to avoid recreation on each render
@@ -36,47 +35,16 @@ const icons: Record<ToastVariant, typeof Info> = {
   loading: Loader2,
 }
 
-const motionVariants: Record<ToastPosition, MotionVariant> = {
-  top: {
-    initial: { y: '-100%', opacity: 0 },
-    animate: { y: 0, opacity: 1 },
-    exit: { y: '-100%', opacity: 0 },
-  },
-  'top-left': {
-    initial: { x: '-100%', opacity: 0 },
-    animate: { x: 0, opacity: 1 },
-    exit: { x: '-100%', opacity: 0 },
-  },
-  'top-right': {
-    initial: { x: '100%', opacity: 0 },
-    animate: { x: 0, opacity: 1 },
-    exit: { x: '100%', opacity: 0 },
-  },
-  bottom: {
-    initial: { y: '100%', opacity: 0 },
-    animate: { y: 0, opacity: 1 },
-    exit: { y: '100%', opacity: 0 },
-  },
-  'bottom-left': {
-    initial: { x: '-100%', opacity: 0 },
-    animate: { x: 0, opacity: 1 },
-    exit: { x: '-100%', opacity: 0 },
-  },
-  'bottom-right': {
-    initial: { x: '100%', opacity: 0 },
-    animate: { x: 0, opacity: 1 },
-    exit: { x: '100%', opacity: 0 },
-  },
-  left: {
-    initial: { x: '-100%', opacity: 0 },
-    animate: { x: 0, opacity: 1 },
-    exit: { x: '-100%', opacity: 0 },
-  },
-  right: {
-    initial: { x: '100%', opacity: 0 },
-    animate: { x: 0, opacity: 1 },
-    exit: { x: '100%', opacity: 0 },
-  },
+// Map toast positions to slide directions
+const POSITION_TO_SLIDE: Record<ToastPosition, SlideDirection> = {
+  top: 'top',
+  'top-left': 'left',
+  'top-right': 'right',
+  bottom: 'bottom',
+  'bottom-left': 'left',
+  'bottom-right': 'right',
+  left: 'left',
+  right: 'right',
 }
 
 const positions: ToastPosition[] = ['top', 'top-left', 'top-right', 'bottom', 'bottom-left', 'bottom-right', 'left', 'right']
@@ -162,9 +130,9 @@ function ToastRoot({ toast, onClose, ref }: ToastRootProps) {
           ref={ref}
           layout
           role="alert"
-          initial={motionVariants[toast.position].initial}
-          animate={motionVariants[toast.position].animate}
-          exit={motionVariants[toast.position].exit}
+          initial={SLIDE_FADE[POSITION_TO_SLIDE[toast.position]].initial}
+          animate={SLIDE_FADE[POSITION_TO_SLIDE[toast.position]].animate}
+          exit={SLIDE_FADE[POSITION_TO_SLIDE[toast.position]].exit}
           transition={SPRING.bouncy}
           className={cn(S.root.base, variantStyles[toast.variant])}
         >

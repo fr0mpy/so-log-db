@@ -11,9 +11,6 @@ import type { ThemeSwitcherProps } from './types'
 /** Width: compact fits knob + padding, full allows knob to slide */
 const SWITCHER_WIDTH = { compact: 32, full: 56 } as const
 
-/** Soft spring for size transitions */
-const SIZE_SPRING = { type: 'spring', stiffness: 300, damping: 30 } as const
-
 /** Smooth transition for layout-driven changes (no bounce) */
 const LAYOUT_TRANSITION = { type: 'tween', duration: DURATION.fast, ease: 'easeOut' } as const
 
@@ -65,7 +62,7 @@ export function ThemeSwitcher({
       className={cn(S.button, className)}
       initial={{ width: targetWidth }}
       animate={{ width: targetWidth }}
-      transition={SIZE_SPRING}
+      transition={SPRING.default}
       {...props}
     >
       {/* Knob with icon - always visible, animates to center when compact */}

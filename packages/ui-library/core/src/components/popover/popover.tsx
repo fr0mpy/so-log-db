@@ -315,7 +315,7 @@ function PopoverClose({ asChild, children, onClick, ref, ...props }: PopoverClos
 }
 
 // ============================================================================
-// Simple Wrapper (backward compatibility)
+// Simple Wrapper
 // ============================================================================
 
 interface PopoverSimpleProps {

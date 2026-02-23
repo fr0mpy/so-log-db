@@ -19,7 +19,7 @@ import { TabsStyles as S } from './styles'
 const SPRING_BOUNCE = SPRING.bouncy
 
 // Extra smooth for middle transitions - no bounce
-const SPRING_SMOOTH = { ...SPRING.bouncy, damping: 40 }
+const SPRING_SMOOTH = SPRING.smooth
 
 const TabsContext = createContext<TabsContextValue | undefined>(undefined)
 

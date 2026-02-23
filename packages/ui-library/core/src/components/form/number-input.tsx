@@ -4,8 +4,35 @@ import { cn } from '@/utils/cn'
 import { Minus, Plus } from 'lucide-react'
 import { useState, useCallback } from 'react'
 import { ARIA } from '../../config'
-import { Form, Layout, Stepper, getHelperStyles } from '../../styles'
 import { NumberInputStyles as S } from './styles'
+
+// Stepper button styles
+const STEPPER_BASE = 'flex items-center justify-center h-10 w-10 cursor-pointer bg-neu-base shadow-neu-raised text-foreground transition-shadow duration-200 hover:shadow-neu-raised-lg active:shadow-neu-pressed-sm focus-visible:outline-none focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)] disabled:pointer-events-none disabled:opacity-50'
+const STEPPER_LEFT = 'rounded-l-theme-lg'
+const STEPPER_RIGHT = 'rounded-r-theme-lg'
+
+// Number input field styles
+const NUMBER_FIELD = 'flex h-10 w-full px-3 py-2 bg-neu-base shadow-neu-pressed-sm text-sm text-foreground text-center placeholder:text-muted-foreground transition-[border-color] duration-200 ease-neu border-y border-transparent focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
+const NUMBER_INTERACTIVE = 'hover:shadow-neu-pressed hover:border-primary focus:shadow-neu-pressed focus:border-primary'
+const NUMBER_ERROR = 'border-destructive hover:shadow-neu-pressed focus:shadow-neu-pressed'
+const NUMBER_SUCCESS = 'border-success hover:shadow-neu-pressed focus:shadow-neu-pressed'
+
+// Label styles
+const LABEL_TRACKING = 'block font-body text-sm font-medium tracking-wide text-foreground mb-1.5'
+
+// Helper styles
+const HELPER_BASE = 'mt-1.5 text-xs'
+const HELPER_DEFAULT = 'text-muted-foreground'
+const HELPER_ERROR = 'text-destructive'
+const HELPER_SUCCESS = 'text-success'
+
+function getHelperStyles(options: { hasError?: boolean; hasSuccess?: boolean }): string {
+  const { hasError, hasSuccess } = options
+  return `${HELPER_BASE} ${hasError ? HELPER_ERROR : hasSuccess ? HELPER_SUCCESS : HELPER_DEFAULT}`
+}
+
+// Icon size
+const ICON_SM = 'h-4 w-4'
 
 interface NumberInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange'> {
   label?: string
@@ -79,7 +106,7 @@ function NumberInput({
   return (
     <div className={S.container}>
       {label && (
-        <label htmlFor={inputId} className={Form.Label.tracking}>
+        <label htmlFor={inputId} className={LABEL_TRACKING}>
           {label}
         </label>
       )}
@@ -88,10 +115,10 @@ function NumberInput({
           type="button"
           onClick={handleDecrement}
           disabled={disabled || !canDecrement}
-          className={cn(Stepper.base, Stepper.left)}
+          className={cn(STEPPER_BASE, STEPPER_LEFT)}
           aria-label={ARIA.decreaseValue}
         >
-          <Minus className={Layout.Size.iconSm} />
+          <Minus className={ICON_SM} />
         </button>
         <input
           id={inputId}
@@ -105,10 +132,10 @@ function NumberInput({
           max={max}
           step={step}
           className={cn(
-            Form.NumberInput.field,
-            !error && !success && Form.NumberInput.interactive,
-            error && Form.NumberInput.error,
-            success && Form.NumberInput.success,
+            NUMBER_FIELD,
+            !error && !success && NUMBER_INTERACTIVE,
+            error && NUMBER_ERROR,
+            success && NUMBER_SUCCESS,
             className
           )}
           {...props}
@@ -117,10 +144,10 @@ function NumberInput({
           type="button"
           onClick={handleIncrement}
           disabled={disabled || !canIncrement}
-          className={cn(Stepper.base, Stepper.right)}
+          className={cn(STEPPER_BASE, STEPPER_RIGHT)}
           aria-label={ARIA.increaseValue}
         >
-          <Plus className={Layout.Size.iconSm} />
+          <Plus className={ICON_SM} />
         </button>
       </div>
       {helperText && (
