@@ -1,46 +1,16 @@
-'use client'
+import { getTranslations } from '@stackone/i18n'
+import { DesignReviewClient } from './DesignReviewClient'
 
-import { useTranslations } from 'next-intl'
-import { Text } from '@stackone-ui/core/text'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@stackone-ui/core/tabs'
-import { DesignViewer } from '../components/design-viewer'
-import { Logo } from '../components/logo'
-import { screenA, screenB } from '../data/screens'
-import { PageStyles as S } from './styles'
+export default async function DesignReviewPage() {
+  const t = await getTranslations()
 
-export default function DesignReviewPage() {
-  const t = useTranslations()
+  const translations = {
+    title: t('designReview.title'),
+    overview: t('designReview.overview'),
+    screenA: t('designReview.screenA'),
+    screenB: t('designReview.screenB'),
+    overviewContent: t('designReview.overviewContent'),
+  }
 
-  return (
-    <main className={S.main}>
-      <Tabs defaultValue="overview">
-        <div className={S.stickyHeader}>
-          <header className={S.header}>
-            <Logo />
-            <Text variant="h3">{t('designReview.title')}</Text>
-          </header>
-          <TabsList className={S.tabsList}>
-            <TabsTrigger value="overview">{t('designReview.overview')}</TabsTrigger>
-            <TabsTrigger value="screen-a">{t('designReview.screenA')}</TabsTrigger>
-            <TabsTrigger value="screen-b">{t('designReview.screenB')}</TabsTrigger>
-          </TabsList>
-          <div className={S.headerSpacer} />
-        </div>
-
-        <div className={S.content}>
-          <TabsContent value="overview" className={S.overviewContent}>
-            <Text variant="body1">{t('designReview.overviewContent')}</Text>
-          </TabsContent>
-
-          <TabsContent value="screen-a" className={S.tabContent}>
-            <DesignViewer screen={screenA} />
-          </TabsContent>
-
-          <TabsContent value="screen-b" className={S.tabContent}>
-            <DesignViewer screen={screenB} />
-          </TabsContent>
-        </div>
-      </Tabs>
-    </main>
-  )
+  return <DesignReviewClient translations={translations} />
 }
