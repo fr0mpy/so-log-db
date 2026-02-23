@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
   experimental: {
     reactCompiler: true,
     staleTimes: {
-      dynamic: 30,
+      dynamic: 0,
       static: 180,
     },
   },

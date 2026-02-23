@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
   experimental: {
     reactCompiler: true,
     staleTimes: {
-      dynamic: 30,
+      dynamic: 0,
       static: 180,
     },
   },
@@ -45,12 +45,6 @@ const nextConfig: NextConfig = {
           name: 'motion',
           chunks: 'all',
           priority: 30,
-        },
-        recharts: {
-          test: /[\\/]node_modules[\\/](recharts|d3-.*|victory-vendor)[\\/]/,
-          name: 'recharts',
-          chunks: 'all',
-          priority: 25,
         },
         virtualizer: {
           test: /[\\/]node_modules[\\/]@tanstack[\\/]react-virtual[\\/]/,
