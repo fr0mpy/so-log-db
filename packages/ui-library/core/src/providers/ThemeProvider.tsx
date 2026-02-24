@@ -1,10 +1,9 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, useRef, type ReactNode } from 'react'
 import { applyBrandTheme, validateBrandTheme, type BrandTheme } from '../themes'
 import {
   setThemeCookie,
-  getThemeCookieClient,
   migrateLocalStorageToCookie,
   type ThemeMode,
 } from './theme-cookie'
@@ -82,17 +81,13 @@ export function ThemeProvider({
     resolveTheme(initialTheme)
   )
 
+  // Track first render to skip class toggle (ThemeScript already set it)
+  const isFirstRender = useRef(true)
+
   // Migrate localStorage to cookie on first mount (backwards compatibility)
   useEffect(() => {
     migrateLocalStorageToCookie()
-
-    // Verify client cookie matches server-provided initial
-    const clientTheme = getThemeCookieClient()
-    if (clientTheme !== initialTheme && clientTheme !== 'system') {
-      setThemeState(clientTheme)
-      setResolvedTheme(resolveTheme(clientTheme))
-    }
-  }, [initialTheme])
+  }, [])
 
   // Listen for system preference changes when in 'system' mode
   useEffect(() => {
@@ -111,7 +106,12 @@ export function ThemeProvider({
   }, [theme])
 
   // Apply theme class to document when resolvedTheme changes
+  // Skip on first render - ThemeScript in <head> already set the correct class
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
     document.documentElement.classList.toggle('dark', resolvedTheme === 'dark')
   }, [resolvedTheme])
 
@@ -154,6 +154,7 @@ export function ThemeProvider({
     setTheme(newTheme)
   }
 
+  // Note: React Compiler auto-memoizes this context value
   return (
     <ThemeContext.Provider value={{ theme, resolvedTheme, toggle, setTheme }}>
       {children}

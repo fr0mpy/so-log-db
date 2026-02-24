@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import { ThemeProvider } from '@stackone-ui/core/providers'
-import { getThemeFromCookies } from '@stackone-ui/core/providers/server'
+import { getThemeFromCookies, ThemeScript } from '@stackone-ui/core/providers/server'
 import { ToastProvider } from '@stackone-ui/core/toast'
 import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
 import { Sidebar, SidebarProvider, MainContent, SkipLinks, MobileWarning } from '@/components'
@@ -56,14 +56,8 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* Minimal script ONLY for system preference detection */}
-        {theme === 'system' && (
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `(function(){if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.classList.add('dark')}})()`,
-            }}
-          />
-        )}
+        {/* Prevents theme flash by setting class before React hydrates */}
+        <ThemeScript />
       </head>
       <body className={fontSans.className}>
         <NextIntlClientProvider messages={messages}>

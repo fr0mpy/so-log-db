@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 import { Providers } from './providers'
 import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
-import { getThemeFromCookies } from '@stackone-ui/core/providers/server'
+import { getThemeFromCookies, ThemeScript } from '@stackone-ui/core/providers/server'
 import { MFE_ORIGINS } from '@/lib/mfe-urls'
 import '@stackone-ui/core/themes/base.css'
 import './globals.css'
@@ -42,14 +42,8 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* Minimal script ONLY for system preference detection */}
-        {theme === 'system' && (
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `(function(){if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.classList.add('dark')}})()`,
-            }}
-          />
-        )}
+        {/* Prevents theme flash by setting class before React hydrates */}
+        <ThemeScript />
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="apple-touch-icon" href="/favicon.png" />
         {/* Preconnect to MFE domains for faster cross-zone navigation */}
