@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 import { Providers } from './providers'
-import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
+import { FontSetup } from '@stackone-ui/core/fonts'
 import { getThemeFromCookies, ThemeInitScript } from '@stackone-ui/core/providers/server'
 import { MFE_ORIGINS } from '@/lib/mfe-urls'
 import './globals.css'
@@ -19,9 +19,6 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-/** Combined font CSS variable classes */
-const fontVariables = `${fontSans.variable} ${fontMono.variable}`
-
 export default async function RootLayout({
   children,
 }: {
@@ -37,7 +34,7 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className={`${fontVariables}${isDark ? ' dark' : ''}`}
+      className={`${FontSetup.htmlClassName}${isDark ? ' dark' : ''}`}
       suppressHydrationWarning
     >
       <head>
@@ -50,7 +47,7 @@ export default async function RootLayout({
           <link key={origin} rel="preconnect" href={origin} />
         ))}
       </head>
-      <body className={fontSans.className}>
+      <body className={FontSetup.bodyClassName}>
         <NextIntlClientProvider messages={messages}>
           <Providers initialTheme={theme}>{children}</Providers>
         </NextIntlClientProvider>

@@ -129,6 +129,21 @@ export const stackoneGreen: BrandTheme = {
     aiTo: '#818CF8',
   },
 
+  fonts: {
+    sans: {
+      type: 'google',
+      name: 'Inter',
+      weights: [400, 500, 600, 700],
+      variable: 'sans',
+    },
+    mono: {
+      type: 'google',
+      name: 'IBM Plex Mono',
+      weights: [400, 500],
+      variable: 'mono',
+    },
+  },
+
   typography: {
     heading: 'var(--font-sans), ui-sans-serif, system-ui, sans-serif',
     body: 'var(--font-sans), ui-sans-serif, system-ui, sans-serif',

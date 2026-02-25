@@ -1,27 +1,19 @@
 /**
  * Gallery layout styles - responsive patterns for the component harness.
- * Uses mobile-first approach with progressive enhancement.
+ * Uses raw Tailwind classes for IntelliSense support.
  */
-
-import { ResponsiveSpacing, ResponsiveTypography, Responsive, SpacingTokens } from '@stackone-ui/core/styles'
 
 export const GalleryStyles = {
   /** Main container - full viewport height with modern units */
-  container: [
-    Responsive.Container.fullHeight,
-    'flex bg-background overflow-hidden',
-  ].join(' '),
+  container: 'min-h-[100dvh] flex bg-background overflow-hidden',
 
   /** Sidebar - hidden on mobile, visible on md+ */
   sidebar: {
     /** Desktop sidebar container */
-    desktop: [
-      Responsive.Sidebar.desktop,
-      'md:flex-col border-r border-border bg-neu-base flex-shrink-0 overflow-hidden',
-    ].join(' '),
+    desktop: 'hidden md:flex w-64 md:flex-col border-r border-border bg-neu-base flex-shrink-0 overflow-hidden',
 
     /** Mobile menu trigger button */
-    mobileTrigger: Responsive.Sidebar.mobileFixed,
+    mobileTrigger: 'fixed bottom-4 right-4 z-50 md:hidden',
 
     /** Sidebar scroll area - Lenis handles overflow */
     scrollArea: 'h-full p-4',
@@ -37,51 +29,39 @@ export const GalleryStyles = {
   },
 
   /** Main content area */
-  main: [Responsive.Container.main, 'bg-background'].join(' '),
+  main: 'flex-1 min-w-0 overflow-y-auto bg-background',
 
-  /** Scrollable content wrapper - Lenis handles overflow */
-  scrollArea: [
-    'h-full',
-    ResponsiveSpacing.galleryPadding,
-  ].join(' '),
+  /** Scrollable content wrapper - responsive padding */
+  scrollArea: 'h-full p-4 md:p-6 lg:p-8',
 
   /** Header section */
   header: {
-    wrapper: ResponsiveSpacing.sectionMargin,
+    /** Responsive section margin */
+    wrapper: 'mb-4 md:mb-6 lg:mb-8',
     /** Row that contains title and mobile theme toggle */
     row: 'flex items-start justify-between',
-    title: [
-      ResponsiveTypography.heading,
-      'font-heading font-bold mb-2 text-foreground',
-    ].join(' '),
+    /** Responsive heading size */
+    title: 'text-2xl md:text-3xl lg:text-4xl font-heading font-bold mb-2 text-foreground',
     subtitle: 'text-muted-foreground',
     /** Mobile-only container for theme toggle */
-    mobileOnly: Responsive.Sidebar.mobileTrigger,
+    mobileOnly: 'md:hidden',
   },
 
   /** Navigation controls - stack on mobile, row on tablet+ */
   navControls: {
-    wrapper: [
-      Responsive.Stack.adaptive,
-      ResponsiveSpacing.sectionMargin,
-    ].join(' '),
+    /** Adaptive stack + responsive margin */
+    wrapper: 'flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 md:mb-6 lg:mb-8',
     /** Previous/Next buttons with hidden text on mobile */
-    buttonText: Responsive.Text.srOnlyMobile,
-    /** Component title */
-    title: [
-      ResponsiveTypography.componentTitle,
-      'font-heading font-semibold text-foreground',
-    ].join(' '),
+    buttonText: 'sr-only md:not-sr-only',
+    /** Responsive component title */
+    title: 'text-xl md:text-2xl font-heading font-semibold text-foreground',
   },
 
-  /** Sidebar navigation */
-  nav: SpacingTokens.spaceY1,
+  /** Sidebar navigation - vertical spacing */
+  nav: 'space-y-1',
 
-  /** Component preview panel */
-  preview: [
-    'rounded-theme-2xl bg-neu-base shadow-neu-raised',
-    ResponsiveSpacing.previewPadding,
-  ].join(' '),
+  /** Component preview panel - responsive padding */
+  preview: 'rounded-theme-2xl bg-neu-base shadow-neu-raised p-4 md:p-6 lg:p-8',
 
   /** Component info footer */
   info: {

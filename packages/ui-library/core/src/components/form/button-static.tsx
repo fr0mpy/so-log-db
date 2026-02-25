@@ -1,19 +1,19 @@
-'use client'
+"use client";
 
-import { cn } from '@/utils/cn'
-import { isValidElement, cloneElement } from 'react'
-import { ButtonStyles as S } from './styles'
-import type { ButtonVariant, ButtonSize, ButtonBaseProps } from './button-types'
+import { cn } from "@/utils/cn";
+import { isValidElement, cloneElement } from "react";
+import { ButtonStyles as S } from "./styles";
+import type {
+  ButtonVariant,
+  ButtonSize,
+  ButtonBaseProps,
+} from "./button-types";
 
-export type { ButtonVariant, ButtonSize }
+export type { ButtonVariant, ButtonSize };
 
-/**
- * Static button without motion dependency.
- * Used when loading prop is not needed - reduces bundle by ~30KB.
- */
 export function ButtonStatic({
-  variant = 'primary',
-  size = 'md',
+  variant = "primary",
+  size = "md",
   iconOnly,
   disabled,
   className,
@@ -22,20 +22,38 @@ export function ButtonStatic({
   ref,
   ...props
 }: ButtonBaseProps) {
-  const sizeStyles = iconOnly ? S.iconOnly[size] : S.sizes[size]
-  const buttonClassName = cn(S.base, sizeStyles, S.variants[variant], className)
+  const sizeStyles = iconOnly ? S.iconOnly[size] : S.sizes[size];
+  const buttonClassName = cn(
+    S.base,
+    sizeStyles,
+    S.variants[variant],
+    className,
+  );
 
   // When asChild is true, clone the child element with button styles and accessibility attrs
   if (asChild && isValidElement(children)) {
-    return cloneElement(children as React.ReactElement<Record<string, unknown>>, {
-      className: cn(buttonClassName, (children as React.ReactElement<{ className?: string }>).props.className),
-      'aria-disabled': disabled,
-    })
+    return cloneElement(
+      children as React.ReactElement<Record<string, unknown>>,
+      {
+        className: cn(
+          buttonClassName,
+          (children as React.ReactElement<{ className?: string }>).props
+            .className,
+        ),
+        "aria-disabled": disabled,
+      },
+    );
   }
 
   return (
-    <button type="button" ref={ref} className={buttonClassName} disabled={disabled} {...props}>
+    <button
+      type="button"
+      ref={ref}
+      className={buttonClassName}
+      disabled={disabled}
+      {...props}
+    >
       <span className={S.content}>{children}</span>
     </button>
-  )
+  );
 }

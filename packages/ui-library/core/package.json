@@ -47,14 +47,14 @@
     "./theming/output/base.css": "./src/theming/output/base.css",
     "./theming/output/stackone-green.css": "./src/theming/output/stackone-green.css",
     "./fonts": "./src/fonts/index.ts",
-    "./fonts/next-loader": "./src/fonts/next-loader.ts",
-    "./fonts/css-loader": "./src/fonts/css-loader.ts",
     "./tailwind.preset": "./tailwind.preset.ts",
     "./tailwind.config": "./tailwind.config.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build:theme-css": "tsx src/utils/theme-css.generator.ts"
+    "build:theme-css": "tsx src/utils/theme-css.generator.ts",
+    "build:fonts": "tsx src/utils/font-loader.generator.ts",
+    "build:theme": "pnpm build:theme-css && pnpm build:fonts"
   },
   "peerDependencies": {
     "react": "^18.2.0 || ^19.0.0",

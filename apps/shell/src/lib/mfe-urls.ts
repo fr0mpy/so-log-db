@@ -15,9 +15,6 @@ export const MFE_BASE_PATHS = {
   designReview: '/design-review',
 } as const
 
-/** Theme JSON filename (same across all MFEs) */
-const THEME_FILENAME = 'themes/stackone-green.json'
-
 /** MFE domain origins for preconnect hints */
 export const MFE_ORIGINS = [
   new URL(MFE_AGENT_TOOLKIT_URL).origin,
@@ -35,10 +32,3 @@ export const MFE_ROUTES: Set<string> = new Set([
   Routes.componentLibrary,
   Routes.designReview,
 ])
-
-/** MFE theme JSON paths for prefetching (blocks render via ThemeScript) */
-export const MFE_THEME_PATHS: Record<string, string> = {
-  [Routes.agentToolkit]: `${MFE_BASE_PATHS.agentToolkit}/${THEME_FILENAME}`,
-  [Routes.componentLibrary]: `${MFE_BASE_PATHS.componentLibrary}/${THEME_FILENAME}`,
-  [Routes.designReview]: `${MFE_BASE_PATHS.designReview}/${THEME_FILENAME}`,
-}

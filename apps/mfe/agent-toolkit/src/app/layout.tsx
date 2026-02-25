@@ -7,7 +7,7 @@ import {
   ThemeInitScript,
 } from "@stackone-ui/core/providers/server";
 import { ToastProvider } from "@stackone-ui/core/toast";
-import { fontSans, fontMono } from "@stackone-ui/core/fonts/next-loader";
+import { FontSetup } from "@stackone-ui/core/fonts";
 import {
   Sidebar,
   SidebarProvider,
@@ -52,9 +52,6 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-/** Combined font CSS variable classes */
-const fontVariables = `${fontSans.variable} ${fontMono.variable}`;
-
 export default async function RootLayout({
   children,
 }: {
@@ -70,13 +67,13 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className={`${fontVariables}${isDark ? " dark" : ""}`}
+      className={`${FontSetup.htmlClassName}${isDark ? " dark" : ""}`}
       suppressHydrationWarning
     >
       <head>
         <ThemeInitScript />
       </head>
-      <body className={fontSans.className}>
+      <body className={FontSetup.bodyClassName}>
         <NextIntlClientProvider messages={messages}>
           <SkipLinks />
           <ThemeProvider initialTheme={theme}>

@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import { ThemeProvider } from '@stackone-ui/core/providers'
 import { getThemeFromCookies, ThemeInitScript } from '@stackone-ui/core/providers/server'
-import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
+import { FontSetup } from '@stackone-ui/core/fonts'
 import { MobileWarning } from '../components'
 import './globals.css'
 
@@ -26,9 +26,6 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-/** Combined font CSS variable classes */
-const fontVariables = `${fontSans.variable} ${fontMono.variable}`
-
 export default async function RootLayout({
   children,
 }: {
@@ -44,14 +41,14 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className={`${fontVariables}${isDark ? ' dark' : ''}`}
+      className={`${FontSetup.htmlClassName}${isDark ? ' dark' : ''}`}
       suppressHydrationWarning
     >
       <head>
         {/* Prevents theme flash by setting .dark class before React hydrates */}
         <ThemeInitScript />
       </head>
-      <body className={fontSans.className}>
+      <body className={FontSetup.bodyClassName}>
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider initialTheme={theme}>
             <MobileWarning />

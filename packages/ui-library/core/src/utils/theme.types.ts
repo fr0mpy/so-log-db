@@ -92,6 +92,53 @@ export interface BrandTypography {
   code: string
 }
 
+// =============================================================================
+// Font Configuration
+// =============================================================================
+
+/**
+ * Google Font configuration.
+ * Used to generate next/font imports at build time.
+ */
+export interface GoogleFontConfig {
+  type: 'google'
+  /** Font family name as it appears in Google Fonts (e.g., 'Inter', 'Space Grotesk') */
+  name: string
+  /** Font weights to include */
+  weights: number[]
+  /** CSS variable suffix (e.g., 'sans' → '--font-sans') */
+  variable: string
+  /** Character subsets to include. Defaults to ['latin'] */
+  subsets?: string[]
+}
+
+/**
+ * Local font configuration (for self-hosted fonts).
+ */
+export interface LocalFontConfig {
+  type: 'local'
+  /** Font family name */
+  name: string
+  /** Font file sources */
+  src: { path: string; weight: number; style?: 'normal' | 'italic' }[]
+  /** CSS variable suffix (e.g., 'sans' → '--font-sans') */
+  variable: string
+}
+
+/** Font configuration - either Google or local */
+export type FontConfig = GoogleFontConfig | LocalFontConfig
+
+/**
+ * Font definitions for a brand theme.
+ * Each theme can specify its own font families.
+ */
+export interface BrandFonts {
+  /** Primary sans-serif font (used for body and headings) */
+  sans: FontConfig
+  /** Monospace font (used for code) */
+  mono: FontConfig
+}
+
 /**
  * Complete theme definition.
  */
@@ -100,6 +147,8 @@ export interface BrandTheme {
   light: BrandColors
   /** Dark mode color tokens */
   dark: BrandColors
+  /** Font configurations for next/font generation */
+  fonts: BrandFonts
   /** Typography tokens (shared across modes) */
   typography: BrandTypography
 }

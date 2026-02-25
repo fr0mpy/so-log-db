@@ -4,8 +4,6 @@
  * Follows zero-inline-classnames pattern for loading.tsx files.
  */
 
-import { ComponentHeight, TextHeight } from '@stackone-ui/core/styles'
-
 /**
  * Note: min-h-[50vh] is an arbitrary value because Tailwind doesn't provide
  * a 50% viewport height token. This provides a reasonable loading container
@@ -20,28 +18,30 @@ export const LoadingStyles = {
 } as const
 
 /**
- * Skeleton sizing tokens - re-exports from @stackone-ui/core/styles.
+ * Skeleton height values for consistent loading states.
  *
- * These are tightly coupled to the actual component definitions in the ui-library.
- * If a component's height changes in @stackone-ui/core, skeletons automatically stay in sync.
+ * Typography heights match Tailwind's line-heights:
+ * - text-xs = h-4 (16px), text-sm = h-5 (20px), text-base = h-6 (24px), etc.
  *
- * @see packages/ui-library/core/src/styles/tokens/sizing.ts
+ * Form heights follow WCAG 2.5.8 (44px touch target for inputs/selects):
+ * - h-11 = 44px (inputs, selects)
+ * - h-8/h-9/h-10 = 32/36/40px (buttons)
  */
 export const SkeletonHeight = {
   // Typography line-heights (for text placeholders)
-  textXs: TextHeight.xs,
-  textSm: TextHeight.sm,
-  textBase: TextHeight.base,
-  textLg: TextHeight.lg,
-  text2xl: TextHeight['2xl'],
+  textXs: 'h-4',      // 16px - matches text-xs
+  textSm: 'h-5',      // 20px - matches text-sm
+  textBase: 'h-6',    // 24px - matches text-base
+  textLg: 'h-7',      // 28px - matches text-lg
+  text2xl: 'h-8',     // 32px - matches text-2xl
 
-  // Form component heights (from ComponentHeight)
-  input: ComponentHeight.input,
-  select: ComponentHeight.select,
-  switch: ComponentHeight.switch,
-  buttonSm: ComponentHeight.buttonSm,
-  buttonMd: ComponentHeight.buttonMd,
-  buttonLg: ComponentHeight.buttonLg,
-  iconButtonSm: ComponentHeight.iconButtonSm,
-  iconButtonMd: ComponentHeight.iconButtonMd,
+  // Form component heights (WCAG 2.5.8 compliant)
+  input: 'h-11',      // 44px
+  select: 'h-11',     // 44px
+  switch: 'h-5 w-10', // 20x40px
+  buttonSm: 'h-8',    // 32px
+  buttonMd: 'h-9',    // 36px
+  buttonLg: 'h-10',   // 40px
+  iconButtonSm: 'h-8 w-8',   // 32x32px
+  iconButtonMd: 'h-9 w-9',   // 36x36px
 } as const

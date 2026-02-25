@@ -4,6 +4,8 @@
  * Centralizes environment variable access with fallbacks
  */
 
+import type { BrandName } from '@stackone-ui/core/theming'
+
 /**
  * MFE URLs for Multi-Zone routing
  */
@@ -16,9 +18,10 @@ export const MFE_DESIGN_REVIEW_URL =
 
 /**
  * Default brand theme for the application
- * Can be overridden via environment variable or props
+ * TypeScript validates against available brand names at compile time.
  */
-export const DEFAULT_BRAND_THEME = process.env.BRAND_THEME || 'stackone-green'
+export const DEFAULT_BRAND_THEME: BrandName =
+  (process.env.BRAND_THEME as BrandName) || 'stackone-green'
 
 /**
  * Development port

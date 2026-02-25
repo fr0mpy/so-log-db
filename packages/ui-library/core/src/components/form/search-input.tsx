@@ -2,7 +2,6 @@
 
 import { Search } from 'lucide-react'
 import { Input } from './input'
-import { SizingTokens } from '../../styles'
 
 interface SearchInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'disabled'> {
   disabled?: boolean
@@ -13,7 +12,7 @@ function SearchInput({ className, ref, ...props }: SearchInputProps) {
   return (
     <Input
       type="search"
-      leftIcon={<Search className={SizingTokens.iconSm} />}
+      leftIcon={<Search className="h-4 w-4" />}
       className={className}
       ref={ref}
       {...props}

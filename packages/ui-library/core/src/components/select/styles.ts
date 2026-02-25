@@ -1,15 +1,13 @@
-import { ComponentHeight } from '../../styles/tokens/sizing'
-
 export const SelectStyles = {
   trigger: {
     base: [
-      `relative flex ${ComponentHeight.select} items-center justify-between gap-3 rounded-theme-lg`,
+      'relative flex h-11 items-center justify-between gap-3 rounded-theme-lg', // h-11 = 44px WCAG touch target
       'bg-neu-base shadow-neu-raised px-4 py-2 text-sm text-foreground cursor-pointer',
       'focus-visible:outline-none focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)]',
       'disabled:cursor-not-allowed disabled:opacity-50',
     ].join(' '),
     ghost: [
-      `relative flex ${ComponentHeight.select} items-center gap-1 rounded-theme-lg`,
+      'relative flex h-11 items-center gap-1 rounded-theme-lg', // h-11 = 44px WCAG touch target
       'bg-transparent px-2 py-2 text-sm font-medium text-foreground cursor-pointer',
       'hover:bg-muted/20 transition-colors duration-150',
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
