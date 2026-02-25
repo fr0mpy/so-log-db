@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   ColorTokens,
   SpacingTokens,
@@ -11,13 +11,7 @@ import {
   ZIndexTokens,
 } from '../../components/TokenSections'
 import { TokenViewer } from '../../components/TokenViewer'
-import { defaultBaseTheme } from '@stackone-ui/core/themes'
-
-// Brand theme fetched at runtime from shell
-type BrandTheme = {
-  color: { light: Record<string, string>; dark: Record<string, string> }
-  font: Record<string, string>
-}
+import { baseTheme, stackoneGreen } from '@stackone-ui/core/theming'
 
 const TabStyles = {
   nav: 'flex flex-wrap gap-1 p-1 bg-muted rounded-theme-lg mb-6',
@@ -83,62 +77,11 @@ function TabNav({
   )
 }
 
-const SHELL_URL = process.env.NEXT_PUBLIC_SHELL_URL || 'http://localhost:3000'
-
 export default function DesignTokensPage() {
   const [activeTab, setActiveTab] = useState<TabId>('all')
   const [colorMode, setColorMode] = useState<'light' | 'dark'>('light')
-  const [brandTheme, setBrandTheme] = useState<BrandTheme | null>(null)
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    // Try local theme first (for standalone MFE), fall back to shell
-    const fetchTheme = async () => {
-      try {
-        // Try local path first
-        const localRes = await fetch('/themes/stackone-green.json')
-        if (localRes.ok) {
-          const data = await localRes.json()
-          setBrandTheme(data)
-          setLoading(false)
-          return
-        }
-      } catch {
-        // Local fetch failed, try shell
-      }
-
-      try {
-        const shellRes = await fetch(`${SHELL_URL}/themes/stackone-green.json`)
-        if (shellRes.ok) {
-          const data = await shellRes.json()
-          setBrandTheme(data)
-        }
-      } catch (err) {
-        console.error('Failed to fetch brand theme:', err)
-      }
-      setLoading(false)
-    }
-
-    fetchTheme()
-  }, [])
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-muted-foreground">Loading theme data...</div>
-      </div>
-    )
-  }
-
-  if (!brandTheme) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-destructive">Failed to load brand theme</div>
-      </div>
-    )
-  }
-
-  const colors = colorMode === 'light' ? brandTheme.color.light : brandTheme.color.dark
+  const colors = colorMode === 'light' ? stackoneGreen.light : stackoneGreen.dark
 
   return (
     <div className="space-y-6">
@@ -189,7 +132,7 @@ export default function DesignTokensPage() {
         {activeTab === 'all' && (
           <div className="space-y-8">
             <TokenViewer
-              data={{ base: defaultBaseTheme, brand: brandTheme }}
+              data={{ base: baseTheme, brand: stackoneGreen }}
               title="Complete Theme Configuration"
             />
           </div>
@@ -198,7 +141,7 @@ export default function DesignTokensPage() {
         {/* Colors */}
         {(activeTab === 'all' || activeTab === 'colors') && (
           <ColorTokens
-            colors={colors}
+            colors={colors as unknown as Record<string, string>}
             title={`Colors (${colorMode} mode)`}
             mode={colorMode}
           />
@@ -206,32 +149,32 @@ export default function DesignTokensPage() {
 
         {/* Spacing */}
         {(activeTab === 'all' || activeTab === 'spacing') && (
-          <SpacingTokens spacing={defaultBaseTheme.spacing} />
+          <SpacingTokens spacing={baseTheme.spacing} />
         )}
 
         {/* Shadows */}
         {(activeTab === 'all' || activeTab === 'shadows') && (
-          <ShadowTokens shadows={defaultBaseTheme.shadow} />
+          <ShadowTokens shadows={baseTheme.shadow} />
         )}
 
         {/* Radius */}
         {(activeTab === 'all' || activeTab === 'radius') && (
-          <RadiusTokens radius={defaultBaseTheme.radius} />
+          <RadiusTokens radius={baseTheme.radius} />
         )}
 
         {/* Typography */}
         {(activeTab === 'all' || activeTab === 'typography') && (
-          <TypographyTokens fonts={brandTheme.font} />
+          <TypographyTokens fonts={stackoneGreen.typography as unknown as Record<string, string>} />
         )}
 
         {/* Motion */}
         {(activeTab === 'all' || activeTab === 'motion') && (
-          <MotionTokens motion={defaultBaseTheme.motion} />
+          <MotionTokens motion={baseTheme.motion} />
         )}
 
         {/* Z-Index */}
         {(activeTab === 'all' || activeTab === 'zindex') && (
-          <ZIndexTokens zIndex={defaultBaseTheme.zIndex} />
+          <ZIndexTokens zIndex={baseTheme.zIndex} />
         )}
       </div>
     </div>
