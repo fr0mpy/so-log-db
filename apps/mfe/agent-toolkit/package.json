@@ -18,6 +18,7 @@
   "dependencies": {
     "@stackone-ui/core": "workspace:*",
     "@stackone/i18n": "workspace:*",
+    "@stackone/utils": "workspace:*",
     "@tanstack/react-virtual": "^3.13.18",
     "lucide-react": "^0.564.0",
     "motion": "^12.34.0",
