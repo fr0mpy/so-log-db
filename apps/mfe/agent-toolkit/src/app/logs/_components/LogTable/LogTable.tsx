@@ -146,9 +146,9 @@ export function LogTable({
 
   return (
     <div className={DataTable.scrollWrapper}>
-      <Card className={DataTable.headerCard} data-ui="header">
-        <div className={DataTable.header} data-ui="header-inner">
-          <div className={DataTable.headerRow} data-ui="header-row">
+      <Card className={DataTable.headerCard}>
+        <div className={DataTable.header}>
+          <div className={DataTable.headerRow}>
             {LOG_TABLE_COLUMNS.map(({ id, labelKey, className }) => (
               <SortableHeader
                 key={id}
@@ -161,21 +161,17 @@ export function LogTable({
                 {t(labelKey)}
               </SortableHeader>
             ))}
-            <div
-              className={cn(DataTable.headerCell, LogTableColumns.actions)}
-              data-ui="hcell-actions"
-            />
+            <div className={cn(DataTable.headerCell, LogTableColumns.actions)} />
           </div>
         </div>
       </Card>
 
       {/* Virtualized Scrollable Body */}
-      <Paper className={DataTable.bodyPaper} data-ui="body">
+      <Paper className={DataTable.bodyPaper}>
         <div
           id="table"
           ref={scrollContainerRef}
           className={DataTable.scrollArea}
-          data-ui="scroll-area"
           tabIndex={0}
           role="grid"
           aria-label={t(aria.viewLogDetails)}

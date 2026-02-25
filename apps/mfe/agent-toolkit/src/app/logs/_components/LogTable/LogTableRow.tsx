@@ -74,14 +74,13 @@ export const LogTableRow = memo(function LogTableRow({
       data-row-index={index}
       aria-rowindex={index + 1}
       className={cn(rowClasses, isFocused && DataTable.rowFocused)}
-      data-ui={`row-${index}`}
       style={style}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
     >
       {/* Timestamp */}
-      <div className={cn(DataTable.cell, LogTableColumns.requested)} data-ui="cell-requested">
+      <div className={cn(DataTable.cell, LogTableColumns.requested)}>
         <div className={TimestampCell.container}>
           <span className={TimestampCell.date}>
             {formatDate(log.timestamp, {
@@ -94,7 +93,7 @@ export const LogTableRow = memo(function LogTableRow({
       </div>
 
       {/* Provider */}
-      <div className={cn(DataTable.cell, LogTableColumns.provider)} data-ui="cell-provider">
+      <div className={cn(DataTable.cell, LogTableColumns.provider)}>
         <div className={ProviderAvatar.container}>
           <Tooltip content={`${log.provider.name} ${log.provider.version.toUpperCase()}`}>
             <span className={LogTableStyles.tooltipWrapper}>
@@ -109,17 +108,17 @@ export const LogTableRow = memo(function LogTableRow({
       </div>
 
       {/* Origin Owner */}
-      <div className={cn(DataTable.cellTruncate, LogTableColumns.originOwner)} data-ui="cell-owner">
+      <div className={cn(DataTable.cellTruncate, LogTableColumns.originOwner)}>
         <span className={Text.muted}>{log.originOwner}</span>
       </div>
 
       {/* Source */}
-      <div className={cn(DataTable.cellTight, LogTableColumns.source)} data-ui="cell-source">
+      <div className={cn(DataTable.cellTight, LogTableColumns.source)}>
         <span className={SourceCell.text}>{log.source}</span>
       </div>
 
       {/* Request */}
-      <div className={cn(DataTable.cellTight, LogTableColumns.request)} data-ui="cell-request">
+      <div className={cn(DataTable.cellTight, LogTableColumns.request)}>
         <div className={RequestCell.container}>
           <div className={RequestCell.methodWrapper}>
             <span className={cn(MethodBadge.base, getMethodBadgeStyle(log.request.method))}>
@@ -131,12 +130,12 @@ export const LogTableRow = memo(function LogTableRow({
       </div>
 
       {/* Duration */}
-      <div className={cn(DataTable.cellRight, LogTableColumns.duration)} data-ui="cell-duration">
+      <div className={cn(DataTable.cellRight, LogTableColumns.duration)}>
         <LatencyBar duration={log.duration} />
       </div>
 
       {/* Status */}
-      <div className={cn(DataTable.cell, LogTableColumns.status)} data-ui="cell-status">
+      <div className={cn(DataTable.cell, LogTableColumns.status)}>
         <span className={cn(StatusBadge.base, getStatusBadgeStyle(log.status))}>{log.status}</span>
       </div>
 

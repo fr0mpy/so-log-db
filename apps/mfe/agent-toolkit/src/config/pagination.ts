@@ -12,4 +12,17 @@ export const PAGINATION = {
 export const TABLE = {
   /** Row height for virtualization (in pixels) */
   rowHeight: 52,
+  /** Extra rows rendered above/below viewport for smooth scrolling */
+  overscan: 5,
+} as const
+
+export const TOAST_DURATION = {
+  /** Loading toast - stays until dismissed (0 = infinite) */
+  loading: 0,
+  /** Success notification duration (ms) */
+  success: 3000,
+  /** Error notification duration - longer for reading (ms) */
+  error: 5000,
+  /** Cleanup delay after toast removal (ms) */
+  cleanup: 300,
 } as const

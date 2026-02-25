@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import type { ComponentProps } from 'react'
 import type { LogTable as LogTableType } from './LogTable'
-import { DataTable, LogTableColumns, LogTableSkeletonSizes } from '../../styles'
+import { DataTable, LogTableColumns, LogTableSkeletonSizes } from '../../../../styles'
 import { Skeleton } from '@stackone-ui/core/skeleton'
 import { Card } from '@stackone-ui/core/card'
 import { Paper } from '@stackone-ui/core/paper'

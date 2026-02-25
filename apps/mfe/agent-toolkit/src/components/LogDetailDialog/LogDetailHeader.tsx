@@ -1,6 +1,8 @@
 'use client'
 
 import { Building2, Globe, Clock } from 'lucide-react'
+import { useTranslations, logs } from '@stackone/i18n'
+import { formatDate, formatTime } from '@stackone/utils/formatters'
 import { Text } from '@stackone-ui/core/text'
 import { Tag, type TagVariant } from '@stackone-ui/core/display'
 import { Badge, type BadgeVariant } from '@stackone-ui/core/display'
@@ -28,31 +30,6 @@ function getStatusVariant(status: number): BadgeVariant {
   return 'success'
 }
 
-/** Format date for display - matches table format */
-function formatDate(iso: string): string {
-  const date = new Date(iso)
-  const today = new Date()
-  const yesterday = new Date(today)
-  yesterday.setDate(yesterday.getDate() - 1)
-
-  const isToday = date.toDateString() === today.toDateString()
-  const isYesterday = date.toDateString() === yesterday.toDateString()
-
-  if (isToday) return 'TODAY'
-  if (isYesterday) return 'YESTERDAY'
-
-  const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase()
-  const day = date.getDate().toString().padStart(2, '0')
-  return `${month} ${day}`
-}
-
-/** Format time for display */
-function formatTime(iso: string): string {
-  const date = new Date(iso)
-  return date.toLocaleTimeString('en-US', { hour12: false })
-}
-
-
 /**
  * Header component showing request info and metadata pills
  *
@@ -61,6 +38,8 @@ function formatTime(iso: string): string {
  * 2. Provider, Organization, Source, Expires
  */
 export function LogDetailHeader({ log }: LogDetailHeaderProps) {
+  const t = useTranslations()
+
   return (
     <>
       {/* Top Header Bar */}
@@ -76,7 +55,7 @@ export function LogDetailHeader({ log }: LogDetailHeaderProps) {
         <div className={HB.right}>
           <div className={HB.timestamp}>
             <Text variant="caption">
-              {formatDate(log.timestamp)}
+              {formatDate(log.timestamp, { todayLabel: t(logs.dates.today), yesterdayLabel: t(logs.dates.yesterday) })}
             </Text>
             <Text variant="body2">
               {formatTime(log.timestamp)}

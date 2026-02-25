@@ -1,5 +1,5 @@
 import { Paper } from '@stackone-ui/core/paper'
-import { LogStats } from '../../styles'
+import { LogStats } from '../../../styles'
 import type { ReactNode } from 'react'
 
 interface StatCardProps {
@@ -13,8 +13,6 @@ interface StatCardProps {
   }
   variant?: 'default' | 'success' | 'destructive'
   children?: ReactNode
-  /** Debug attribute for position tracking */
-  'data-ui'?: string
 }
 
 const ArrowUp = () => (
@@ -29,7 +27,7 @@ const ArrowDown = () => (
   </svg>
 )
 
-export function StatCard({ label, value, trend, variant = 'default', children, 'data-ui': dataUi }: StatCardProps) {
+export function StatCard({ label, value, trend, variant = 'default', children }: StatCardProps) {
   const valueClass =
     variant === 'success'
       ? LogStats.valueSuccess
@@ -38,12 +36,12 @@ export function StatCard({ label, value, trend, variant = 'default', children, '
         : LogStats.value
 
   return (
-    <Paper data-ui={dataUi}>
-      <div className={LogStats.cell} data-ui={dataUi ? `${dataUi}-cell` : undefined}>
-        <span className={LogStats.label} data-ui={dataUi ? `${dataUi}-label` : undefined}>{label}</span>
-        <div className={LogStats.valueRow} data-ui={dataUi ? `${dataUi}-value-row` : undefined}>
-          <span className={valueClass} data-ui={dataUi ? `${dataUi}-value` : undefined}>{value}</span>
-          <span className={LogStats.trendUp} data-ui={dataUi ? `${dataUi}-trend` : undefined}>
+    <Paper>
+      <div className={LogStats.cell}>
+        <span className={LogStats.label}>{label}</span>
+        <div className={LogStats.valueRow}>
+          <span className={valueClass}>{value}</span>
+          <span className={LogStats.trendUp}>
             {trend.isPositive ? <ArrowUp /> : <ArrowDown />}
             {trend.prefix}
             {trend.delta}

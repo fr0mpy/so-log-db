@@ -5,7 +5,7 @@ export {
   isKnownProvider,
 } from './providers'
 
-export { PAGINATION, TABLE } from './pagination'
+export { PAGINATION, TABLE, TOAST_DURATION } from './pagination'
 
 export {
   PROVIDERS,

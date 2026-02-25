@@ -1,8 +1,8 @@
 'use client'
 
+import { useTranslations, logs } from '@stackone/i18n'
 import { StackedBarChart } from '@stackone-ui/core/stacked-bar-chart'
 import type { LogsChartProps, LogEntry } from './types'
-import { useLogHover, useHoveredTime } from '../../app/logs/LogHoverContext'
 
 /** Internal type for aggregating log data */
 interface LogChartData {
@@ -16,10 +16,10 @@ interface LogChartData {
 /**
  * Aggregate logs by minute and status category
  */
-function aggregateLogsByTime(logs: readonly LogEntry[]): LogChartData[] {
+function aggregateLogsByTime(logEntries: readonly LogEntry[]): LogChartData[] {
   const grouped = new Map<string, LogChartData>()
 
-  for (const log of logs) {
+  for (const log of logEntries) {
     const date = new Date(log.timestamp)
     // Use UTC to ensure consistent formatting between server and client (prevents hydration mismatch)
     const hours = date.getUTCHours().toString().padStart(2, '0')
@@ -53,16 +53,14 @@ function aggregateLogsByTime(logs: readonly LogEntry[]): LogChartData[] {
  *
  * Uses the StackedBarChart from the UI library with log-specific data transformation.
  */
-export function LogsChart({ logs, translations }: LogsChartProps) {
-  const { setHoveredTime } = useLogHover()
-  const hoveredTime = useHoveredTime()
-
-  const data = aggregateLogsByTime(logs)
+export function LogsChart({ logs: logEntries, hoveredTime, onHover }: LogsChartProps) {
+  const t = useTranslations()
+  const data = aggregateLogsByTime(logEntries)
 
   const series = [
-    { key: 'success', color: 'var(--color-success)', label: translations.success },
-    { key: 'clientError', color: 'var(--color-warning)', label: translations.clientError },
-    { key: 'serverError', color: 'var(--color-destructive)', label: translations.serverError },
+    { key: 'success', color: 'var(--color-success)', label: t(logs.chart.success) },
+    { key: 'clientError', color: 'var(--color-warning)', label: t(logs.chart.clientError) },
+    { key: 'serverError', color: 'var(--color-destructive)', label: t(logs.chart.serverError) },
   ]
 
   return (
@@ -72,7 +70,7 @@ export function LogsChart({ logs, translations }: LogsChartProps) {
         series={series}
         height={220}
         hoveredLabel={hoveredTime}
-        onHover={setHoveredTime}
+        onHover={onHover}
       />
     </div>
   )

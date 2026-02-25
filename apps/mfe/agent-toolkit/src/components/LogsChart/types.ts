@@ -29,4 +29,8 @@ export interface LogsChartTranslations {
 export interface LogsChartProps {
   logs: readonly LogEntry[]
   translations: LogsChartTranslations
+  /** Currently hovered time slot (from table row hover) */
+  hoveredTime?: string | null
+  /** Callback when chart bar is hovered */
+  onHover?: (time: string | null) => void
 }

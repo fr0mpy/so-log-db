@@ -5,7 +5,7 @@ import {
   LogStats,
   DataTable,
   LogsPageSkeleton as Skel,
-} from "../../styles";
+} from "../../../../styles";
 
 /**
  * Skeleton for logs content (chart, stats, table) - NO header.

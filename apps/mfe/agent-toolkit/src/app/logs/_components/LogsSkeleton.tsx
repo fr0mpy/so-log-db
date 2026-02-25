@@ -1,6 +1,6 @@
 import { Skeleton } from '@stackone-ui/core/skeleton'
-import { Spacing, FilterRow, SkeletonHeight, LogsPageSkeleton } from '../../styles'
-import { LogsContentSkeleton } from './LogsContentSkeleton'
+import { Spacing, FilterRow, SkeletonHeight, LogsPageSkeleton } from '../../../styles'
+import { LogsContentSkeleton } from './LogsContent'
 
 /**
  * Full page skeleton for logs - used by loading.tsx

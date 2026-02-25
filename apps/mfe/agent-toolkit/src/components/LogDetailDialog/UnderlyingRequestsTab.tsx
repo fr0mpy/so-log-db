@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronRight } from 'lucide-react'
+import { formatTimestamp } from '@stackone/utils/formatters'
 import { cn } from '@stackone-ui/core/utils'
 import { Text } from '@stackone-ui/core/text'
 import { Tag, type TagVariant } from '@stackone-ui/core/display'
@@ -30,16 +31,6 @@ function getStatusVariant(status: number): BadgeVariant {
   if (status >= 500) return 'destructive'
   return 'success'
 }
-
-/** Format timestamp for display - matches table format */
-function formatTimestamp(iso: string): string {
-  const date = new Date(iso)
-  const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase()
-  const day = date.getDate().toString().padStart(2, '0')
-  const time = date.toLocaleTimeString('en-US', { hour12: false })
-  return `${month} ${day} ${time}`
-}
-
 
 interface UnderlyingRequestRowProps {
   request: UnderlyingRequest
