@@ -11,10 +11,7 @@ interface ProvidersProps {
 
 export function Providers({ children, initialTheme }: ProvidersProps) {
   return (
-    <ThemeProvider
-      brandThemeUrl="/themes/stackone-green.json"
-      initialTheme={initialTheme}
-    >
+    <ThemeProvider initialTheme={initialTheme}>
       <MobileWarning />
       {children}
     </ThemeProvider>

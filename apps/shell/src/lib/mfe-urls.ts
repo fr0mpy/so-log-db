@@ -6,6 +6,17 @@ import {
   MFE_COMPONENT_LIBRARY_URL,
   MFE_DESIGN_REVIEW_URL,
 } from './env'
+import { Routes } from './routes'
+
+/** MFE base paths (match Next.js basePath config) */
+export const MFE_BASE_PATHS = {
+  agentToolkit: '/agent-toolkit',
+  componentLibrary: '/component-library',
+  designReview: '/design-review',
+} as const
+
+/** Theme JSON filename (same across all MFEs) */
+const THEME_FILENAME = 'themes/stackone-green.json'
 
 /** MFE domain origins for preconnect hints */
 export const MFE_ORIGINS = [
@@ -19,8 +30,15 @@ export const MFE_ORIGINS = [
  * Uses shell routes (not direct MFE URLs) so browser cache
  * matches the actual navigation URL after rewrite.
  */
-export const MFE_ROUTES = new Set([
-  '/agent-toolkit',
-  '/component-library',
-  '/design-review',
+export const MFE_ROUTES: Set<string> = new Set([
+  Routes.agentToolkit,
+  Routes.componentLibrary,
+  Routes.designReview,
 ])
+
+/** MFE theme JSON paths for prefetching (blocks render via ThemeScript) */
+export const MFE_THEME_PATHS: Record<string, string> = {
+  [Routes.agentToolkit]: `${MFE_BASE_PATHS.agentToolkit}/${THEME_FILENAME}`,
+  [Routes.componentLibrary]: `${MFE_BASE_PATHS.componentLibrary}/${THEME_FILENAME}`,
+  [Routes.designReview]: `${MFE_BASE_PATHS.designReview}/${THEME_FILENAME}`,
+}

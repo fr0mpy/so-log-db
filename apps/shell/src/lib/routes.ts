@@ -13,8 +13,8 @@ export const Routes = {
   /** Shell home page */
   home: '/',
 
-  /** Agent Toolkit MFE (cross-zone) */
-  agentToolkit: '/agent-toolkit',
+  /** Agent Toolkit MFE (cross-zone) - links directly to logs, skipping redirect */
+  agentToolkit: '/agent-toolkit/logs',
 
   /** Component Library MFE (cross-zone) */
   componentLibrary: '/component-library',

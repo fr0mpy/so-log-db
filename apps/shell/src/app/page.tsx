@@ -19,7 +19,7 @@ export default async function HomePage() {
               </PrefetchLink>
             </Paper.Title>
             <Paper.Description>
-              <Text color="muted">{t('home.designReviewDescription')}</Text>
+              <Text as="span" color="muted">{t('home.designReviewDescription')}</Text>
             </Paper.Description>
           </Paper.Header>
         </Paper>
@@ -32,7 +32,7 @@ export default async function HomePage() {
               </PrefetchLink>
             </Paper.Title>
             <Paper.Description>
-              <Text color="muted">{t('home.agentToolkitDescription')}</Text>
+              <Text as="span" color="muted">{t('home.agentToolkitDescription')}</Text>
             </Paper.Description>
           </Paper.Header>
         </Paper>
@@ -45,7 +45,7 @@ export default async function HomePage() {
               </PrefetchLink>
             </Paper.Title>
             <Paper.Description>
-              <Text color="muted">{t('home.componentLibraryDescription')}</Text>
+              <Text as="span" color="muted">{t('home.componentLibraryDescription')}</Text>
             </Paper.Description>
           </Paper.Header>
         </Paper>
@@ -63,7 +63,7 @@ export default async function HomePage() {
               </a>
             </Paper.Title>
             <Paper.Description>
-              <Text color="muted">{t('home.githubDescription')}</Text>
+              <Text as="span" color="muted">{t('home.githubDescription')}</Text>
             </Paper.Description>
           </Paper.Header>
         </Paper>

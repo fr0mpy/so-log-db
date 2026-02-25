@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useRef } from 'react'
-import { MFE_ROUTES } from '@/lib/mfe-urls'
+import { MFE_ROUTES, MFE_THEME_PATHS } from '@/lib/mfe-urls'
 
 /**
  * Hook to prefetch a URL when user shows intent (hover/focus).
@@ -29,12 +29,22 @@ export function usePrefetch(href: string) {
       return
     }
 
-    // Create prefetch link
+    // Create prefetch link for document
     const link = document.createElement('link')
     link.rel = 'prefetch'
     link.href = href
     link.as = 'document'
     document.head.appendChild(link)
+
+    // Prefetch theme JSON (blocks render via ThemeScript)
+    const themePath = MFE_THEME_PATHS[href]
+    if (themePath) {
+      const themeLink = document.createElement('link')
+      themeLink.rel = 'prefetch'
+      themeLink.href = themePath
+      themeLink.as = 'fetch'
+      document.head.appendChild(themeLink)
+    }
 
     prefetchedRef.current = true
   }, [href])
