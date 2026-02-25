@@ -57,7 +57,7 @@ export default async function RootLayout({
     >
       <head>
         {/* Prevents theme flash by setting class and brand colors before React hydrates */}
-        <ThemeScript brandThemePath="themes/stackone-green.json" />
+        <ThemeScript brandThemeUrl={process.env.BRAND_THEME_URL} />
       </head>
       <body className={fontSans.className}>
         <NextIntlClientProvider messages={messages}>
