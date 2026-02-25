@@ -22,3 +22,8 @@ export type {
   UseCopyToClipboardOptions,
   UseCopyToClipboardReturn,
 } from './useCopyToClipboard'
+export { useListKeyboardNavigation } from './use-list-keyboard-navigation'
+export type {
+  UseListKeyboardNavigationOptions,
+  UseListKeyboardNavigationResult,
+} from './use-list-keyboard-navigation'
