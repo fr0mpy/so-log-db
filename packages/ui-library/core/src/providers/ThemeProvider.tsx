@@ -37,15 +37,6 @@ interface ThemeProviderProps {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)
 
-/** @deprecated Use THEME_COOKIE_NAME from theme-cookie.ts instead */
-export const THEME_STORAGE_KEY = 'stackone-theme'
-
-/**
- * @deprecated Use server-side theme detection with getThemeFromCookies() instead.
- * This script is only needed for system preference detection when theme='system'.
- */
-export const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('${THEME_STORAGE_KEY}');if(t==='dark'||(t===null&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})()`
-
 /**
  * Get system color scheme preference
  */

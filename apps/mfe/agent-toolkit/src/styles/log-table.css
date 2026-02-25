@@ -1,0 +1,56 @@
+/**
+ * Log Table Column Widths
+ * Using CSS variables ensures header and body rows have identical column widths.
+ * Grid-based layout guarantees alignment at all responsive breakpoints.
+ */
+:root {
+  /* Column widths - shared between header and body rows */
+  --log-col-requested: 100px;
+  --log-col-provider: 150px;
+  --log-col-origin: 160px;
+  --log-col-source: 114px;
+  --log-col-request: minmax(120px, 200px);
+  --log-col-duration: 90px;
+  --log-col-status: 56px;
+  --log-col-actions: 1fr;
+  --log-col-gap: clamp(1rem, 1.5vw + 0.5rem, 2.5rem); /* Fluid scaling: min 16px, scales with viewport, max 40px */
+}
+
+/* lg+ (1024px+): All columns visible */
+@media (min-width: 1024px) {
+  :root {
+    --log-col-origin: 160px;
+    --log-col-source: 114px;
+  }
+}
+
+/* md to lg (768-1023px): Hide origin owner */
+@media (max-width: 1023px) {
+  :root {
+    --log-col-origin: 0px;
+    --log-col-provider: 120px;
+    --log-col-source: 100px;
+    --log-col-request: minmax(100px, 180px);
+  }
+}
+
+/* sm to md (640-767px): Hide source, reduce sizes */
+@media (max-width: 767px) {
+  :root {
+    --log-col-source: 0px;
+    --log-col-requested: 80px;
+    --log-col-provider: 100px;
+    --log-col-duration: 60px;
+    --log-col-request: minmax(80px, 160px);
+  }
+}
+
+/* Mobile (<640px): Minimal columns */
+@media (max-width: 639px) {
+  :root {
+    --log-col-requested: 60px;
+    --log-col-provider: 40px; /* Icon only */
+    --log-col-duration: 0px;
+    --log-col-request: minmax(60px, 140px);
+  }
+}

@@ -5,7 +5,6 @@
  *
  * @example
  * import { Button, Dialog, useControlledState, cn } from 'stackone-ui'
- * import { ComponentHeight, TextHeight } from 'stackone-ui/styles'
  * import { SPRING, DURATION } from 'stackone-ui/config'
  */
 
@@ -25,22 +24,9 @@ export * from './hooks'
 export * from './config'
 
 // =============================================================================
-// Styles - Tokens only (write raw Tailwind classes for IntelliSense support)
+// Styles (types only - use raw Tailwind classes)
 // =============================================================================
-export {
-  // Tokens
-  SpacingTokens,
-  ResponsiveSpacing,
-  SizingTokens,
-  TouchTarget,
-  ComponentHeight,
-  TextHeight,
-  TypographyTokens,
-  ResponsiveTypography,
-  // Types
-  type Breakpoint,
-  type ResponsiveValue,
-} from './styles'
+export { type Breakpoint, type ResponsiveValue } from './styles'
 
 // =============================================================================
 // Providers

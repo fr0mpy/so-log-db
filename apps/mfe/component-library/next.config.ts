@@ -9,11 +9,16 @@ const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 })
 
+// Shell URL for cross-zone navigation back to home
 const SHELL_URL = process.env.NEXT_PUBLIC_SHELL_URL || 'http://localhost:3000'
+
+// Brand theme for this MFE (defaults to stackone-green)
+const BRAND_THEME = process.env.BRAND_THEME || 'stackone-green'
 
 const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_SHELL_URL: SHELL_URL,
+    NEXT_PUBLIC_BRAND_THEME: BRAND_THEME,
   },
   experimental: {
     reactCompiler: true,

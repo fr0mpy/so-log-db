@@ -42,8 +42,10 @@
     "./utils": "./src/utils/index.ts",
     "./providers": "./src/providers/index.ts",
     "./providers/server": "./src/providers/server.ts",
-    "./themes": "./src/themes/index.ts",
-    "./themes/base.css": "./src/themes/base.css",
+    "./theming": "./src/theming/index.ts",
+    "./theming/input": "./src/theming/input/index.ts",
+    "./theming/output/base.css": "./src/theming/output/base.css",
+    "./theming/output/stackone-green.css": "./src/theming/output/stackone-green.css",
     "./fonts": "./src/fonts/index.ts",
     "./fonts/next-loader": "./src/fonts/next-loader.ts",
     "./fonts/css-loader": "./src/fonts/css-loader.ts",
@@ -52,7 +54,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build:tokens": "tsx src/tokens/build.ts"
+    "build:theme-css": "tsx src/utils/theme-css.generator.ts"
   },
   "peerDependencies": {
     "react": "^18.2.0 || ^19.0.0",

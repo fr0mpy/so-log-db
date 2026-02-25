@@ -3,10 +3,8 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 import { Providers } from './providers'
 import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
-import { getThemeFromCookies, ThemeScript } from '@stackone-ui/core/providers/server'
+import { getThemeFromCookies, ThemeInitScript } from '@stackone-ui/core/providers/server'
 import { MFE_ORIGINS } from '@/lib/mfe-urls'
-import brandTheme from '../../public/themes/stackone-green.json'
-import '@stackone-ui/core/themes/base.css'
 import './globals.css'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -43,8 +41,8 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* Prevents theme flash by setting class and brand colors before React hydrates */}
-        <ThemeScript brandTheme={brandTheme} />
+        {/* Prevents theme flash by setting .dark class before React hydrates */}
+        <ThemeInitScript />
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="apple-touch-icon" href="/favicon.png" />
         {/* Preconnect to MFE domains for faster cross-zone navigation */}

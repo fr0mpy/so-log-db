@@ -1,12 +1,8 @@
 /**
- * AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY
+ * Tailwind Preset for StackOne UI
  *
- * This file is generated from token source files.
- * To modify, edit the source and run: pnpm build:tokens
- *
- * Source files:
- *   - src/tokens/base.tokens.ts
- *   - src/tokens/brand.tokens.ts
+ * Shared Tailwind configuration for all apps using the UI library.
+ * Edit this file directly to add/modify theme values.
  */
 
 

@@ -5,14 +5,14 @@
  * Import from '@stackone-ui/core/providers/server' in layout.tsx or page.tsx.
  *
  * @example
- * import { getThemeFromCookies, ThemeScript } from '@stackone-ui/core/providers/server'
+ * import { getThemeFromCookies, ThemeInitScript } from '@stackone-ui/core/providers/server'
  *
  * export default async function RootLayout({ children }) {
  *   const theme = await getThemeFromCookies()
  *   return (
  *     <html>
  *       <head>
- *         <ThemeScript />
+ *         <ThemeInitScript />
  *       </head>
  *       <body>
  *         <Providers initialTheme={theme}>{children}</Providers>
@@ -24,4 +24,4 @@
 
 export { getThemeFromCookies, THEME_COOKIE_NAME } from './theme-cookie'
 export type { ThemeMode } from './theme-cookie'
-export { ThemeScript } from './ThemeScript'
+export { ThemeInitScript, ThemeScript } from './ThemeScript'

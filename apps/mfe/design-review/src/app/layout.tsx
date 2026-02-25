@@ -2,11 +2,9 @@ import type { Metadata, Viewport } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import { ThemeProvider } from '@stackone-ui/core/providers'
-import { getThemeFromCookies, ThemeScript } from '@stackone-ui/core/providers/server'
+import { getThemeFromCookies, ThemeInitScript } from '@stackone-ui/core/providers/server'
 import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
 import { MobileWarning } from '../components'
-import brandTheme from '../../public/themes/stackone-green.json'
-import '@stackone-ui/core/themes/base.css'
 import './globals.css'
 
 /** SEO: Base metadata */
@@ -50,8 +48,8 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* Prevents theme flash by setting class and brand colors before React hydrates */}
-        <ThemeScript brandTheme={brandTheme} />
+        {/* Prevents theme flash by setting .dark class before React hydrates */}
+        <ThemeInitScript />
       </head>
       <body className={fontSans.className}>
         <NextIntlClientProvider messages={messages}>

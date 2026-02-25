@@ -1,64 +1,80 @@
-import type { Metadata, Viewport } from 'next'
-import { NextIntlClientProvider } from 'next-intl'
-import { getLocale, getMessages } from 'next-intl/server'
-import { ThemeProvider } from '@stackone-ui/core/providers'
-import { getThemeFromCookies, ThemeScript } from '@stackone-ui/core/providers/server'
-import { ToastProvider } from '@stackone-ui/core/toast'
-import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
-import { Sidebar, SidebarProvider, MainContent, SkipLinks, MobileWarning } from '@/components'
-import { ProviderIconPreloader } from '@/components/ProviderIcon'
-import brandTheme from '../../public/themes/stackone-green.json'
-import '@stackone-ui/core/themes/base.css'
-import './globals.css'
+import type { Metadata, Viewport } from "next";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
+import { ThemeProvider } from "@stackone-ui/core/providers";
+import {
+  getThemeFromCookies,
+  ThemeInitScript,
+} from "@stackone-ui/core/providers/server";
+import { ToastProvider } from "@stackone-ui/core/toast";
+import { fontSans, fontMono } from "@stackone-ui/core/fonts/next-loader";
+import {
+  Sidebar,
+  SidebarProvider,
+  MainContent,
+  SkipLinks,
+  MobileWarning,
+} from "@/components";
+import { ProviderIconPreloader } from "@/components/ProviderIcon";
+import "@/styles/log-table.css";
+import "./globals.css";
 
 /** SEO: Base metadata inherited by all pages */
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://yourdomain.com'),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com",
+  ),
   title: {
-    default: 'StackOne Log Dashboard',
-    template: '%s | StackOne',
+    default: "StackOne Log Dashboard",
+    template: "%s | StackOne",
   },
-  description: 'Real-time log viewing, search, and data exploration for distributed systems',
-  keywords: ['logs', 'monitoring', 'observability', 'distributed tracing', 'debugging'],
+  description:
+    "Real-time log viewing, search, and data exploration for distributed systems",
+  keywords: [
+    "logs",
+    "monitoring",
+    "observability",
+    "distributed tracing",
+    "debugging",
+  ],
   robots: {
     index: true,
     follow: true,
   },
   icons: {
-    icon: '/favicon.png',
+    icon: "/favicon.png",
   },
-}
+};
 
 /** SEO: Viewport configuration */
 export const viewport: Viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
-}
+};
 
 /** Combined font CSS variable classes */
-const fontVariables = `${fontSans.variable} ${fontMono.variable}`
+const fontVariables = `${fontSans.variable} ${fontMono.variable}`;
 
 export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const locale = await getLocale()
-  const messages = await getMessages()
+  const locale = await getLocale();
+  const messages = await getMessages();
 
   // Server-side theme detection from cookie
-  const theme = await getThemeFromCookies()
-  const isDark = theme === 'dark'
+  const theme = await getThemeFromCookies();
+  const isDark = theme === "dark";
 
   return (
     <html
       lang={locale}
-      className={`${fontVariables}${isDark ? ' dark' : ''}`}
+      className={`${fontVariables}${isDark ? " dark" : ""}`}
       suppressHydrationWarning
     >
       <head>
-        {/* Prevents theme flash by setting class and brand colors before React hydrates */}
-        <ThemeScript brandTheme={brandTheme} />
+        <ThemeInitScript />
       </head>
       <body className={fontSans.className}>
         <NextIntlClientProvider messages={messages}>
@@ -76,5 +92,5 @@ export default async function RootLayout({
         </NextIntlClientProvider>
       </body>
     </html>
-  )
+  );
 }
