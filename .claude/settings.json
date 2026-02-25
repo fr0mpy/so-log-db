@@ -28,10 +28,21 @@
         "matcher": ".*",
         "hooks": [
           {
+            "type": "command",
+            "command": ".claude/hooks/prompt-cache.sh",
+            "statusMessage": "Checking context cache..."
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
             "type": "agent",
-            "prompt": "You are a plan mode context classifier.\n\nInput: $ARGUMENTS\n\n## Instructions\n\n1. Check if permission_mode is 'plan'. If NOT 'plan', output nothing and exit immediately.\n\n2. Read .claude/CLAUDE.md to get the rules/skills/agents trigger map.\n\n3. Analyze the user's prompt against the triggers in the map.\n\n4. For each matched RULE, use Read to get .claude/rules/{rule-name}.md and output its full content.\n\n5. For each matched SKILL, use Read to get .claude/skills/{skill-name}.md and output its full content.\n\n6. List matched agents as names only (PRE and POST categories).\n\n## Output Format (only if plan mode)\n\n<plan_context>\n## Relevant Rules\n<rule name=\"routing\">\n[full file content]\n</rule>\n\n## Relevant Skills\n<skill name=\"react-patterns\">\n[full file content]\n</skill>\n\n## Agents to Consider\n- PRE: pre-code-check, challenge-thinking\n- POST: component-auditor, accessibility-auditor\n</plan_context>",
-            "timeout": 60,
-            "statusMessage": "Analyzing task for relevant context..."
+            "model": "haiku",
+            "prompt": "You are a context classifier. Analyze the user's prompt semantically and load relevant project rules.\n\nUser prompt: $ARGUMENTS\n\n## Instructions\n\n1. Read .claude/hooks/.prompt-state. If the number % 3 != 0, output nothing and exit (cache: classify every 3rd prompt only).\n\n2. Read .claude/CLAUDE.md to see the available rules, skills, and agents.\n\n3. SEMANTICALLY analyze what the user is trying to do. Do NOT match keywords literally - understand intent:\n   - \"switch between pages\" → routing\n   - \"make it look good on mobile\" → accessibility, components\n   - \"it's slow\" → performance\n   - \"add a button\" → components, pre-code-check agent\n   - \"deploy\" or \"ship\" → bundle, git\n\n4. If the prompt is conversational (greetings, thanks, clarifying questions), output nothing.\n\n5. For each relevant RULE (max 3), Read .claude/rules/{name}.md and output full content.\n\n6. For each relevant SKILL (max 2), Read .claude/skills/{name}.md and output full content.\n\n7. List relevant agents (PRE-work and POST-work) by name only.\n\n## Output Format\n\n<context>\n## Rules\n<rule name=\"routing\">\n[content]\n</rule>\n\n## Skills\n<skill name=\"react-patterns\">\n[content]\n</skill>\n\n## Agents\n- PRE: pre-code-check\n- POST: component-auditor\n</context>",
+            "timeout": 30,
+            "statusMessage": "Classifying prompt..."
           }
         ]
       }

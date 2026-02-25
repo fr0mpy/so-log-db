@@ -105,4 +105,7 @@ else
   echo "📁 Full details: .claude/CONTEXT.md"
 fi
 
+# Reset prompt counter for new session
+echo "0" > "$CLAUDE_DIR/hooks/.prompt-state" 2>/dev/null || true
+
 echo "</session_context>"
