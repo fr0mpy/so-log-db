@@ -135,6 +135,11 @@ export function useFloatingPosition({
     open,
   })
 
+  // Store refs in a stable ref to avoid dependency on refs object identity
+  // (floating-ui's refs object is not referentially stable across renders)
+  const refsRef = useRef(refs)
+  refsRef.current = refs
+
   // Extract actual side/anchor after potential flip/shift
   const { side: actualSide, anchor: actualAnchor } = useMemo(
     () => fromPlacement(placement),
@@ -147,20 +152,14 @@ export function useFloatingPosition({
   // Extract arrow data from middleware
   const arrowData = middlewareData.arrow ?? null
 
-  // Create stable ref setters
-  const setReference = useCallback(
-    (node: HTMLElement | null) => {
-      refs.setReference(node)
-    },
-    [refs]
-  )
+  // Create stable ref setters that don't depend on refs identity
+  const setReference = useCallback((node: HTMLElement | null) => {
+    refsRef.current.setReference(node)
+  }, [])
 
-  const setFloating = useCallback(
-    (node: HTMLElement | null) => {
-      refs.setFloating(node)
-    },
-    [refs]
-  )
+  const setFloating = useCallback((node: HTMLElement | null) => {
+    refsRef.current.setFloating(node)
+  }, [])
 
   return {
     setReference,
