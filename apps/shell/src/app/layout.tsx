@@ -43,7 +43,7 @@ export default async function RootLayout({
     >
       <head>
         {/* Prevents theme flash by setting class and brand colors before React hydrates */}
-        <ThemeScript brandThemeUrl={`${process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')}/themes/stackone-green.json`} />
+        <ThemeScript brandThemePath="themes/stackone-green.json" />
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="apple-touch-icon" href="/favicon.png" />
         {/* Preconnect to MFE domains for faster cross-zone navigation */}
