@@ -7,6 +7,7 @@ import { ToastProvider } from '@stackone-ui/core/toast'
 import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
 import { Sidebar, SidebarProvider, MainContent, SkipLinks, MobileWarning } from '@/components'
 import { ProviderIconPreloader } from '@/components/ProviderIcon'
+import brandTheme from '../../public/themes/stackone-green.json'
 import '@stackone-ui/core/themes/base.css'
 import './globals.css'
 
@@ -57,7 +58,7 @@ export default async function RootLayout({
     >
       <head>
         {/* Prevents theme flash by setting class and brand colors before React hydrates */}
-        <ThemeScript brandThemeUrl={process.env.BRAND_THEME_URL} />
+        <ThemeScript brandTheme={brandTheme} />
       </head>
       <body className={fontSans.className}>
         <NextIntlClientProvider messages={messages}>

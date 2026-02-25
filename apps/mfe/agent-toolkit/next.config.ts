@@ -12,15 +12,9 @@ const bundleAnalyzer = withBundleAnalyzer({
 // Shell URL for cross-zone navigation back to home
 const SHELL_URL = process.env.NEXT_PUBLIC_SHELL_URL || 'http://localhost:3000'
 
-// Base URL for theme fetching (constructed at build time)
-const BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3001')
-
 const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_SHELL_URL: SHELL_URL,
-    BRAND_THEME_URL: `${BASE_URL}/agent-toolkit/themes/stackone-green.json`,
   },
   experimental: {
     reactCompiler: true,

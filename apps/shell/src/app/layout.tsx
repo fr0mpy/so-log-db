@@ -5,6 +5,7 @@ import { Providers } from './providers'
 import { fontSans, fontMono } from '@stackone-ui/core/fonts/next-loader'
 import { getThemeFromCookies, ThemeScript } from '@stackone-ui/core/providers/server'
 import { MFE_ORIGINS } from '@/lib/mfe-urls'
+import brandTheme from '../../public/themes/stackone-green.json'
 import '@stackone-ui/core/themes/base.css'
 import './globals.css'
 
@@ -43,7 +44,7 @@ export default async function RootLayout({
     >
       <head>
         {/* Prevents theme flash by setting class and brand colors before React hydrates */}
-        <ThemeScript brandThemeUrl={process.env.BRAND_THEME_URL} />
+        <ThemeScript brandTheme={brandTheme} />
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="apple-touch-icon" href="/favicon.png" />
         {/* Preconnect to MFE domains for faster cross-zone navigation */}

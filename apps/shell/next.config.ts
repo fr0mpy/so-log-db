@@ -13,11 +13,6 @@ const bundleAnalyzer = withBundleAnalyzer({
 export default (phase: string) => {
   const isDev = phase === PHASE_DEVELOPMENT_SERVER
 
-  // Base URL for theme fetching (constructed at build time)
-  const BASE_URL =
-    process.env.NEXT_PUBLIC_BASE_URL ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
-
   // MFE URLs for Multi-Zone routing
   // In dev mode, default to localhost; in prod, default to Vercel URLs
   const MFE_AGENT_TOOLKIT_URL =
@@ -31,9 +26,6 @@ export default (phase: string) => {
     (isDev ? 'http://localhost:3003' : 'https://stackone-design-review.vercel.app')
 
   const nextConfig: NextConfig = {
-    env: {
-      BRAND_THEME_URL: `${BASE_URL}/themes/stackone-green.json`,
-    },
     experimental: {
       reactCompiler: true,
       staleTimes: {
