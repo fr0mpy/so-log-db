@@ -18,7 +18,42 @@ import type { BrandTheme } from './schema'
 const BRAND_STYLE_ID = 'brand-theme'
 
 // =============================================================================
-// Brand Theme Application
+// CSS Generation (Pure Function)
+// =============================================================================
+
+/**
+ * Generates CSS string for brand theme variables.
+ *
+ * Pure function with no DOM dependency - can be used server-side.
+ * Generates both :root (light) and .dark values.
+ */
+export function generateBrandCss(theme: BrandTheme): string {
+  const lightColors = Object.entries(theme.color.light)
+    .map(([key, value]) => `--color-${key}: ${value};`)
+    .join('\n    ')
+
+  const darkColors = Object.entries(theme.color.dark)
+    .map(([key, value]) => `--color-${key}: ${value};`)
+    .join('\n    ')
+
+  const fonts = Object.entries(theme.font)
+    .map(([key, value]) => `--font-${key}: ${value};`)
+    .join('\n    ')
+
+  return `
+  :root {
+    ${lightColors}
+    ${fonts}
+  }
+
+  .dark {
+    ${darkColors}
+  }
+`
+}
+
+// =============================================================================
+// Brand Theme Application (Client-Side)
 // =============================================================================
 
 /**
@@ -36,35 +71,7 @@ export function applyBrandTheme(theme: BrandTheme): void {
     document.head.appendChild(style)
   }
 
-  // Generate CSS variable declarations
-  const lightColors = Object.entries(theme.color.light)
-    .map(([key, value]) => `--color-${key}: ${value};`)
-    .join('\n    ')
-
-  const darkColors = Object.entries(theme.color.dark)
-    .map(([key, value]) => `--color-${key}: ${value};`)
-    .join('\n    ')
-
-  const fonts = Object.entries(theme.font)
-    .map(([key, value]) => `--font-${key}: ${value};`)
-    .join('\n    ')
-
-  // Inject both light and dark values at once
-  style.textContent = `
-  /* Brand Theme - Injected by applyBrandTheme() */
-  :root {
-    /* Colors (Light Mode) */
-    ${lightColors}
-
-    /* Fonts */
-    ${fonts}
-  }
-
-  .dark {
-    /* Colors (Dark Mode) */
-    ${darkColors}
-  }
-`
+  style.textContent = generateBrandCss(theme)
 }
 
 // =============================================================================

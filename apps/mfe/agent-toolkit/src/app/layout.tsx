@@ -56,8 +56,8 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* Prevents theme flash by setting class before React hydrates */}
-        <ThemeScript />
+        {/* Prevents theme flash by setting class and brand colors before React hydrates */}
+        <ThemeScript brandThemeUrl={`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001/agent-toolkit'}/themes/stackone-green.json`} />
       </head>
       <body className={fontSans.className}>
         <NextIntlClientProvider messages={messages}>

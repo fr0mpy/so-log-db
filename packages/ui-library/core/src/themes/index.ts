@@ -31,7 +31,7 @@ export {
 export { validateBrandTheme, logWarnings, type ValidationResult } from './validate-theme'
 
 // Application (brand theme only — base theme is now in CSS)
-export { applyBrandTheme, clearBrandTheme } from './apply-theme'
+export { generateBrandCss, applyBrandTheme, clearBrandTheme } from './apply-theme'
 
 // Logger
 export { themeLogger } from './logger'

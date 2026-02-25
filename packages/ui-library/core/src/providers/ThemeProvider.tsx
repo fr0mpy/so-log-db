@@ -1,7 +1,6 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, useRef, type ReactNode } from 'react'
-import { applyBrandTheme, validateBrandTheme, type BrandTheme } from '../themes'
 import {
   setThemeCookie,
   migrateLocalStorageToCookie,
@@ -30,8 +29,6 @@ interface ThemeProviderProps {
   children: ReactNode
   /** Initial theme from server cookie read. Defaults to 'system'. */
   initialTheme?: ThemeMode
-  /** URL to fetch brand theme JSON from. If not provided, uses schema fallbacks. */
-  brandThemeUrl?: string
 }
 
 // =============================================================================
@@ -74,7 +71,6 @@ function resolveTheme(theme: ThemeMode): 'light' | 'dark' {
 export function ThemeProvider({
   children,
   initialTheme = 'system',
-  brandThemeUrl,
 }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<ThemeMode>(initialTheme)
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() =>
@@ -114,32 +110,6 @@ export function ThemeProvider({
     }
     document.documentElement.classList.toggle('dark', resolvedTheme === 'dark')
   }, [resolvedTheme])
-
-  // Load brand theme (injects both :root and .dark values via <style> tag)
-  useEffect(() => {
-    async function loadBrandTheme() {
-      let rawTheme: Partial<BrandTheme> = {}
-
-      if (brandThemeUrl) {
-        try {
-          const response = await fetch(brandThemeUrl)
-          if (response.ok) {
-            rawTheme = await response.json()
-          }
-        } catch {
-          // Fall through to use fallbacks
-        }
-      }
-
-      // Validate and fill in fallbacks for missing tokens
-      const { theme: validatedTheme } = validateBrandTheme(rawTheme)
-
-      // Inject <style> tag with both :root and .dark values
-      applyBrandTheme(validatedTheme)
-    }
-
-    loadBrandTheme()
-  }, [brandThemeUrl])
 
   // Set theme and persist to cookie
   const setTheme = (newTheme: ThemeMode) => {
