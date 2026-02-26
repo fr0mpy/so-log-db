@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@stackone-ui/core": "workspace:*",
@@ -21,6 +23,7 @@
     "react-router-dom": "^7.13.0"
   },
   "devDependencies": {
+    "@stackone/eslint-config": "workspace:*",
     "@axe-core/playwright": "^4.8.0",
     "@playwright/test": "^1.40.0",
     "@tailwindcss/container-queries": "^0.1.1",

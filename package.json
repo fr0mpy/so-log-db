@@ -21,10 +21,13 @@
     "dev:harness": "turbo dev --no-daemon --filter @stackone-ui/harness",
     "build": "turbo build",
     "test": "turbo test",
+    "lint": "turbo lint",
+    "lint:fix": "turbo lint -- --fix",
     "clean": "turbo clean && rm -rf node_modules"
   },
   "devDependencies": {
     "babel-plugin-react-compiler": "^1.0.0",
+    "eslint": "^9.0.0",
     "next": "^15.0.0",
     "turbo": "^2.0.0",
     "typescript": "^5.0.0"

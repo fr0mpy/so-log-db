@@ -7,7 +7,9 @@
     "build": "next build",
     "build:analyze": "ANALYZE=true next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@stackone-ui/core": "workspace:*",
@@ -22,6 +24,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@stackone/eslint-config": "workspace:*",
     "@next/bundle-analyzer": "^15.0.0",
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",

@@ -11,9 +11,12 @@
     "./formatters": "./src/formatters/index.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
+    "@stackone/eslint-config": "workspace:*",
     "typescript": "^5.0.0"
   }
 }
