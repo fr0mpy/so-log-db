@@ -39,7 +39,7 @@ export const fontVariables = `${fontSans.variable} ${fontMono.variable}`
  * Simplifies font application in layout.tsx files.
  *
  * @example
- * import { FontSetup } from '@stackone-ui/core/fonts'
+ * import { FontSetup } from '@stackone-ui/core/theming'
  *
  * <html className={FontSetup.htmlClassName}>
  *   <body className={FontSetup.bodyClassName}>

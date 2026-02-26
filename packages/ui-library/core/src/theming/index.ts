@@ -5,18 +5,17 @@
  * - Base theme: Structural tokens (spacing, shadows, motion, z-index)
  * - Brand theme: Visual tokens (colors, fonts)
  *
- * Source files in `input/` generate CSS in `output/`.
- * Run: pnpm --filter @stackone-ui/core build:theme-css
+ * Source files in `input/` generate CSS + fonts in `output/`.
+ * Run: pnpm --filter @stackone-ui/core build:theme
  *
  * @example
  * // In layout.tsx
  * import '@stackone-ui/core/theming/output/base.css'
  * import '@stackone-ui/core/theming/output/stackone-green.css'
- * import { ThemeInitScript } from '@stackone-ui/core/providers/server'
+ * import { FontSetup } from '@stackone-ui/core/theming'
  *
- * <head>
- *   <ThemeInitScript />
- * </head>
+ * <html className={FontSetup.htmlClassName}>
+ *   <body className={FontSetup.bodyClassName}>
  */
 
 // Re-export from input (TypeScript source of truth)
@@ -27,6 +26,14 @@ export {
   BRAND_NAMES,
   type BrandName,
 } from './input'
+
+// Re-export generated font setup
+export {
+  FontSetup,
+  fontSans,
+  fontMono,
+  fontVariables,
+} from './output/fonts.generated'
 
 // Re-export ThemeMode type from providers for convenience
 export type { ThemeMode } from '../providers/theme-cookie'

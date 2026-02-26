@@ -4,7 +4,7 @@
  *
  * Generates next/font loader from TypeScript theme definitions.
  * Input: theming/input/{stackone-green.ts, ...}
- * Output: fonts/next-loader.generated.ts
+ * Output: theming/output/fonts.generated.ts
  *
  * Run with: pnpm --filter @stackone-ui/core build:fonts
  */
@@ -20,7 +20,7 @@ import type { BrandTheme, GoogleFontConfig, FontConfig } from './theme.types'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const OUTPUT_DIR = path.join(__dirname, '..', 'fonts')
+const OUTPUT_DIR = path.join(__dirname, '..', 'theming', 'output')
 
 // ============================================================================
 // Utilities
@@ -118,7 +118,7 @@ export const fontVariables = \`${fontVariablesExpr}\`
  * Simplifies font application in layout.tsx files.
  *
  * @example
- * import { FontSetup } from '@stackone-ui/core/fonts'
+ * import { FontSetup } from '@stackone-ui/core/theming'
  *
  * <html className={FontSetup.htmlClassName}>
  *   <body className={FontSetup.bodyClassName}>
@@ -160,10 +160,10 @@ function main(): void {
   }
 
   const output = generateFontLoader(theme)
-  const outputPath = path.join(OUTPUT_DIR, 'next-loader.generated.ts')
+  const outputPath = path.join(OUTPUT_DIR, 'fonts.generated.ts')
 
   fs.writeFileSync(outputPath, output, 'utf-8')
-  console.log('✓ Generated: fonts/next-loader.generated.ts')
+  console.log('✓ Generated: theming/output/fonts.generated.ts')
 
   console.log('\n✅ Font loader generated successfully')
 }

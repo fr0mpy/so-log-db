@@ -1,5 +1,5 @@
 import { NextIntlClientProvider } from 'next-intl'
-import { FontSetup } from '@stackone-ui/core/fonts'
+import { FontSetup } from '@stackone-ui/core/theming'
 import { ThemeProvider } from '@stackone-ui/core/providers'
 import { getThemeFromCookies, ThemeInitScript } from '@stackone-ui/core/providers/server'
 import { getLocale, getMessages } from '@stackone/i18n'
