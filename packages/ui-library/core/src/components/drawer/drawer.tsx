@@ -1,24 +1,25 @@
 'use client'
 
-import { cn } from '@/utils/cn'
-import { X } from 'lucide-react'
 import React, {
   createContext,
   useContext,
   useCallback,
+  useMemo,
 } from 'react'
-import { createPortal } from 'react-dom'
+import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Button } from '../form/button'
-import { ScrollArea } from '../display/scroll-area'
+import { createPortal } from 'react-dom'
+import { cn } from '@/utils/cn'
+import { DrawerStyles as S, SIDE_POSITIONS } from './styles'
+import { DURATION, ARIA, SLIDE } from '../../config'
 import {
   useControlledState,
   useBodyScrollLock,
   useEscapeKey,
   SPRING_CONFIG,
 } from '../../hooks'
-import { DURATION, ARIA, SLIDE } from '../../config'
-import { DrawerStyles as S, SIDE_POSITIONS } from './styles'
+import { ScrollArea } from '../display/scroll-area'
+import { Button } from '../form/button'
 import type {
   DrawerContextValue,
   DrawerRootProps,
@@ -56,11 +57,17 @@ function DrawerRoot({
     (newOpen: boolean) => {
       setIsOpen(newOpen)
     },
-    [setIsOpen]
+    [setIsOpen],
+  )
+
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(
+    () => ({ open: isOpen, setOpen: handleSetOpen, side }),
+    [isOpen, handleSetOpen, side],
   )
 
   return (
-    <DrawerContext.Provider value={{ open: isOpen, setOpen: handleSetOpen, side }}>
+    <DrawerContext.Provider value={contextValue}>
       {children}
     </DrawerContext.Provider>
   )
@@ -78,11 +85,11 @@ function DrawerPortal({ children }: DrawerPortalProps) {
     <AnimatePresence>
       {open && <div className={S.portal}>{children}</div>}
     </AnimatePresence>,
-    document.body
+    document.body,
   )
 }
 
-function DrawerBackdrop({ className, onClick, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: DrawerBackdropProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+function DrawerBackdrop({ className, onClick: _onClick, ref, onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, ...props }: DrawerBackdropProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
   const { setOpen } = useDrawerContext()
 
   const handleClick = useCallback(() => {
@@ -104,7 +111,7 @@ function DrawerBackdrop({ className, onClick, ref, onDrag, onDragStart, onDragEn
   )
 }
 
-function DrawerContent({ className, children, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: DrawerContentProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+function DrawerContent({ className, children, ref, onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, ...props }: DrawerContentProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
   const { setOpen, side } = useDrawerContext()
 
   // Handle escape key using shared hook
@@ -142,14 +149,16 @@ function DrawerHeader({ className, children, ref, ...props }: DrawerHeaderProps)
   )
 }
 
-function DrawerTitle({ className, ref, ...props }: DrawerTitleProps) {
+function DrawerTitle({ className, children, ref, ...props }: DrawerTitleProps) {
   return (
     <h2
       ref={ref}
       id="drawer-title"
       className={cn(S.title, className)}
       {...props}
-    />
+    >
+      {children}
+    </h2>
   )
 }
 
@@ -161,7 +170,7 @@ function DrawerClose({ asChild, children, onClick, className, ref, ...props }: D
       onClick?.(e as React.MouseEvent<HTMLButtonElement>)
       setOpen(false)
     },
-    [onClick, setOpen]
+    [onClick, setOpen],
   )
 
   if (asChild && React.isValidElement(children)) {
@@ -173,7 +182,7 @@ function DrawerClose({ asChild, children, onClick, className, ref, ...props }: D
       {
         onClick: handleClick,
         ref,
-      }
+      },
     )
   }
 

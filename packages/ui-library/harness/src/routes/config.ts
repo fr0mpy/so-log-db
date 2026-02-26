@@ -1,4 +1,4 @@
-import { lazy, ComponentType } from 'react'
+import { lazy, type ComponentType } from 'react'
 
 export interface ComponentRoute {
   name: string

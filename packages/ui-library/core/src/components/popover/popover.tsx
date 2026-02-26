@@ -10,9 +10,10 @@ import {
   isValidElement,
   useEffect,
 } from 'react'
-import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'motion/react'
+import { createPortal } from 'react-dom'
 import { cn } from '@/utils/cn'
+import { PopoverStyles as S } from './styles'
 import {
   usePositioning,
   useFloatingPosition,
@@ -20,7 +21,6 @@ import {
   SPRING_CONFIG,
   type Side,
 } from '../../hooks'
-import { PopoverStyles as S } from './styles'
 import type {
   PopoverRootProps,
   PopoverTriggerProps,
@@ -89,7 +89,7 @@ function PopoverRoot({
       }
       onOpenChange?.(value)
     },
-    [isControlled, onOpenChange]
+    [isControlled, onOpenChange],
   )
 
   return (
@@ -125,7 +125,7 @@ function PopoverTrigger({ asChild, children, onClick, ref, ...props }: PopoverTr
       setOpen(!open)
       onClick?.(e)
     },
-    [open, setOpen, onClick]
+    [open, setOpen, onClick],
   )
 
   // Merge refs - include setReference for floating-ui positioning
@@ -139,7 +139,7 @@ function PopoverTrigger({ asChild, children, onClick, ref, ...props }: PopoverTr
       (triggerRef as React.MutableRefObject<HTMLButtonElement | null>).current = node
       setReference(node)
     },
-    [ref, triggerRef, setReference]
+    [ref, triggerRef, setReference],
   )
 
   if (asChild && isValidElement(children)) {
@@ -206,7 +206,7 @@ function PopoverPositioner({
       (positionerRef as React.MutableRefObject<HTMLDivElement | null>).current = node
       setFloating(node)
     },
-    [setFloating]
+    [setFloating],
   )
 
   return (
@@ -294,7 +294,7 @@ function PopoverClose({ asChild, children, onClick, ref, ...props }: PopoverClos
       setOpen(false)
       onClick?.(e)
     },
-    [setOpen, onClick]
+    [setOpen, onClick],
   )
 
   if (asChild && isValidElement(children)) {
@@ -307,9 +307,9 @@ function PopoverClose({ asChild, children, onClick, ref, ...props }: PopoverClos
 
   return (
     <button ref={ref} type="button" onClick={handleClick} {...props}>
-      {children ?? (
-        <span className={S.srOnly}>Close</span>
-      )}
+      {children
+        ?? <span className={S.srOnly}>Close</span>
+      }
     </button>
   )
 }

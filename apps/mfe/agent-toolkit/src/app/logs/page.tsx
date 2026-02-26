@@ -7,12 +7,12 @@
 
 export { metadata } from './metadata'
 
-import { LogsPageContentLazy } from './_components'
 import {
   generateMockLogs,
   calculateStats,
   generateDateSeed,
 } from '@/lib/mock-data-generator'
+import { LogsPageContentLazy } from './_components'
 
 export default async function LogsPage() {
   // Generate stable mock data - same data for entire day, refreshes daily

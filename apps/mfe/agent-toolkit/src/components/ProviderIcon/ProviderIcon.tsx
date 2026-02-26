@@ -2,12 +2,12 @@
 
 import { useState, useRef } from 'react'
 import { cn } from '@stackone-ui/core/utils'
-import { getProviderLogoUrl, isKnownProvider } from '../../config/providers'
 import {
   ProviderIconStyles as S,
   ProviderFallbackColors,
   type ProviderFallbackColor,
 } from './styles'
+import { getProviderLogoUrl, isKnownProvider } from '../../config/providers'
 
 interface ProviderIconProps {
   /** Provider name (e.g., 'Attio', 'Salesforce') */
@@ -75,7 +75,7 @@ export function ProviderIcon({ name, size = 'sm', className, fallbackColor }: Pr
           S.fallbackLetter,
           ProviderFallbackColors[resolvedFallbackColor],
           showFallback ? 'opacity-100' : 'opacity-0',
-          S.imageTransition
+          S.imageTransition,
         )}
         aria-hidden={!showFallback}
       >
@@ -84,6 +84,7 @@ export function ProviderIcon({ name, size = 'sm', className, fallbackColor }: Pr
 
       {/* Render image when provider has logo */}
       {showImage && (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- onLoad/onError are lifecycle events, not user interactions
         <img
           src={logoUrl}
           alt={`${name} logo`}
@@ -91,7 +92,7 @@ export function ProviderIcon({ name, size = 'sm', className, fallbackColor }: Pr
             S.image,
             S.sizes[size],
             S.imageTransition,
-            imageStatus === 'loaded' ? S.imageVisible : S.imageHidden
+            imageStatus === 'loaded' ? S.imageVisible : S.imageHidden,
           )}
           onLoad={handleImageLoad}
           onError={handleImageError}

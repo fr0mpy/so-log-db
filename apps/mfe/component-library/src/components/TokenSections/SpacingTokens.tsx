@@ -13,7 +13,7 @@ export function SpacingTokens({
   const [showJson, setShowJson] = useState(false)
 
   const entries = Object.entries(spacing).sort(
-    (a, b) => parseFloat(a[0]) - parseFloat(b[0])
+    (a, b) => parseFloat(a[0]) - parseFloat(b[0]),
   )
 
   // Calculate max width for visual scale
@@ -36,28 +36,28 @@ export function SpacingTokens({
         </button>
       </div>
 
-      {showJson ? (
-        <TokenViewer data={spacing} />
-      ) : (
-        <div className={S.grid.spacing}>
-          {entries.map(([key, value]) => {
-            const remValue = parseFloat(value)
-            const widthPercent = (remValue / maxRem) * 100
+      {showJson
+        ? <TokenViewer data={spacing} />
+        : (
+          <div className={S.grid.spacing}>
+            {entries.map(([key, value]) => {
+              const remValue = parseFloat(value)
+              const widthPercent = (remValue / maxRem) * 100
 
-            return (
-              <div key={key} className={SpacingTokenStyles.item}>
-                <span className={SpacingTokenStyles.label}>{key}</span>
-                <div
-                  className={SpacingTokenStyles.bar}
-                  style={{ width: `${Math.max(widthPercent, 8)}%`, minWidth: '1rem' }}
-                  title={`--spacing-${key}: ${value}`}
-                />
-                <span className={SpacingTokenStyles.value}>{value}</span>
-              </div>
-            )
-          })}
-        </div>
-      )}
+              return (
+                <div key={key} className={SpacingTokenStyles.item}>
+                  <span className={SpacingTokenStyles.label}>{key}</span>
+                  <div
+                    className={SpacingTokenStyles.bar}
+                    style={{ width: `${Math.max(widthPercent, 8)}%`, minWidth: '1rem' }}
+                    title={`--spacing-${key}: ${value}`}
+                  />
+                  <span className={SpacingTokenStyles.value}>{value}</span>
+                </div>
+              )
+            })}
+          </div>
+        )}
     </div>
   )
 }

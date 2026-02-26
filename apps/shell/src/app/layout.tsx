@@ -1,10 +1,10 @@
-import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
-import { getLocale, getMessages, getTranslations } from 'next-intl/server'
-import { Providers } from './providers'
 import { FontSetup } from '@stackone-ui/core/fonts'
 import { getThemeFromCookies, ThemeInitScript } from '@stackone-ui/core/providers/server'
+import { getLocale, getMessages, getTranslations } from '@stackone/i18n'
 import { MFE_ORIGINS } from '@/lib/mfe-urls'
+import { Providers } from './providers'
+import type { Metadata } from 'next'
 import './globals.css'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -43,9 +43,9 @@ export default async function RootLayout({
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="apple-touch-icon" href="/favicon.png" />
         {/* Preconnect to MFE domains for faster cross-zone navigation */}
-        {MFE_ORIGINS.map((origin) => (
-          <link key={origin} rel="preconnect" href={origin} />
-        ))}
+        {MFE_ORIGINS.map((origin) =>
+          <link key={origin} rel="preconnect" href={origin} />,
+        )}
       </head>
       <body className={FontSetup.bodyClassName}>
         <NextIntlClientProvider messages={messages}>

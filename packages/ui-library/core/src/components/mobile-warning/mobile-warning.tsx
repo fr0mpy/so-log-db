@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useIsMobile } from '../../hooks'
 import { Dialog } from '../dialog'
 import { Button } from '../form'
-import { useIsMobile } from '../../hooks'
 
 const STORAGE_KEY = 'stackone-mobile-warning-dismissed'
 

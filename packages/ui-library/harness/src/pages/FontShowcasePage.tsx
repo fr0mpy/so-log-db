@@ -1,19 +1,12 @@
 import { useState, useEffect } from 'react'
-import {
-  Text,
-  Card,
-  CardContent,
-  Badge,
-  Paper,
-  PaperContent,
-  Slider,
-  Select,
-  Button,
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from '@stackone-ui/core'
+import { Badge } from '@stackone-ui/core/badge'
+import { Button } from '@stackone-ui/core/button'
+import { Card, CardContent } from '@stackone-ui/core/card'
+import { Paper, PaperContent } from '@stackone-ui/core/paper'
+import { Select } from '@stackone-ui/core/select'
+import { Slider } from '@stackone-ui/core/slider'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@stackone-ui/core/tabs'
+import { Text } from '@stackone-ui/core/text'
 
 interface FontConfig {
   name: string

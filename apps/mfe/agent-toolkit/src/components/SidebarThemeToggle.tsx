@@ -1,7 +1,7 @@
 'use client'
 
-import { ThemeSwitcher } from '@stackone-ui/core/theme-switcher'
 import { useTheme } from '@stackone-ui/core/providers'
+import { ThemeSwitcher } from '@stackone-ui/core/theme-switcher'
 import { useSidebar } from './SidebarContext'
 
 /**

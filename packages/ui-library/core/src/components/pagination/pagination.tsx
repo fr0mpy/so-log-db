@@ -1,5 +1,6 @@
-import { cn } from '@/utils/cn'
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react'
+import { cn } from '@/utils/cn'
+import { PaginationStyles as S } from './styles'
 import { ARIA, SR_ONLY, LABEL } from '../../config'
 import type {
   PaginationRootProps,
@@ -10,7 +11,6 @@ import type {
   PaginationNextProps,
   PaginationEllipsisProps,
 } from './types'
-import { PaginationStyles as S } from './styles'
 
 function PaginationRoot({ className, ref, ...props }: PaginationRootProps) {
   return (
@@ -48,7 +48,7 @@ function PaginationLink({ isActive, className, ref, ...props }: PaginationLinkPr
       className={cn(
         S.link.base,
         isActive ? S.link.active : S.link.inactive,
-        className
+        className,
       )}
       {...props}
     />

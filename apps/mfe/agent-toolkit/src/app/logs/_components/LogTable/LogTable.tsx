@@ -1,37 +1,37 @@
-"use client";
+'use client'
 
-import { useEffect, useRef, useState, useCallback } from "react";
-import { useVirtualizer } from "@tanstack/react-virtual";
-import { useTranslations, logs, aria } from "@stackone/i18n";
-import { getTimeSlot } from "@stackone/utils/formatters";
-import { cn } from "@stackone-ui/core/utils";
-import { Card } from "@stackone-ui/core/card";
-import { Paper } from "@stackone-ui/core/paper";
-import { usePagination, TablePagination } from "@stackone-ui/core/pagination";
-import { SelectCompound as Select } from "@stackone-ui/core/select";
-import { useToast } from "@stackone-ui/core/toast";
-import { useListKeyboardNavigation } from "@stackone-ui/core/hooks";
-import { PAGINATION, TABLE, TOAST_DURATION } from "../../../../config";
-import { LogTableSkeleton } from "./LogTableLazy";
-import { LOG_TABLE_COLUMNS } from "./columns";
-import { LogTableRow } from "./LogTableRow";
-import { SortableHeader } from "../../../../components/SortableHeader";
-import { replayRequest } from "../../actions";
-import { useTableSort } from "../../../../hooks";
-import type { LogEntry } from "../../_lib";
+import { useEffect, useRef, useState, useCallback } from 'react'
+import { useVirtualizer } from '@tanstack/react-virtual'
+import { Card } from '@stackone-ui/core/card'
+import { useListKeyboardNavigation } from '@stackone-ui/core/hooks'
+import { usePagination, TablePagination } from '@stackone-ui/core/pagination'
+import { Paper } from '@stackone-ui/core/paper'
+import { SelectCompound as Select } from '@stackone-ui/core/select'
+import { useToast } from '@stackone-ui/core/toast'
+import { cn } from '@stackone-ui/core/utils'
+import { useTranslations, logs, aria } from '@stackone/i18n'
+import { getTimeSlot } from '@stackone/utils/formatters'
+import { LOG_TABLE_COLUMNS } from './columns'
+import { LogTableSkeleton } from './LogTableLazy'
+import { LogTableRow } from './LogTableRow'
+import { SortableHeader } from '../../../../components/SortableHeader'
+import { PAGINATION, TABLE, TOAST_DURATION } from '../../../../config'
+import { useTableSort } from '../../../../hooks'
 import {
   DataTable,
   LogTableColumns,
   LogPagination,
   PaginationSelect,
-} from "../../../../styles";
+} from '../../../../styles'
+import { replayRequest } from '../../actions'
+import type { LogEntry } from '../../_lib'
 
 interface LogTableProps {
-  logs: readonly LogEntry[];
+  logs: readonly LogEntry[]
   /** Callback when a row is clicked */
-  onRowClick?: (log: LogEntry) => void;
+  onRowClick?: (log: LogEntry) => void
   /** Callback when a row is hovered (for chart coordination) */
-  onHover?: (time: string | null) => void;
+  onHover?: (time: string | null) => void
 }
 
 export function LogTable({
@@ -39,20 +39,20 @@ export function LogTable({
   onRowClick,
   onHover,
 }: LogTableProps) {
-  const t = useTranslations();
-  const { addToast, removeToast } = useToast();
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations()
+  const { addToast, removeToast } = useToast()
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   // Sorting state - default to newest first
   const { sortedData, sortState, handleSort } = useTableSort(logEntries, {
-    column: "requested",
-    direction: "desc",
-  });
+    column: 'requested',
+    direction: 'desc',
+  })
 
   // Scroll to top callback for pagination
   const scrollToTop = useCallback(() => {
-    scrollContainerRef.current?.scrollTo({ top: 0 });
-  }, []);
+    scrollContainerRef.current?.scrollTo({ top: 0 })
+  }, [])
 
   // Pagination state using shared hook
   const {
@@ -66,7 +66,7 @@ export function LogTable({
     defaultPageSize: PAGINATION.defaultPageSize,
     onPageChange: scrollToTop,
     resetDeps: [sortState.column, sortState.direction],
-  });
+  })
 
   // Keyboard navigation for roving tabindex pattern
   const {
@@ -78,10 +78,10 @@ export function LogTable({
     containerRef: scrollContainerRef,
     onSelect: onRowClick,
     resetDeps: [currentPage, pageSize],
-  });
+  })
 
   // Track if component is mounted to prevent flash of empty content
-  const [isMounted, setIsMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false)
 
   // Virtualize rows for performance
   const virtualizer = useVirtualizer({
@@ -89,60 +89,60 @@ export function LogTable({
     getScrollElement: () => scrollContainerRef.current,
     estimateSize: () => TABLE.rowHeight,
     overscan: TABLE.overscan,
-  });
+  })
 
   const handleRowMouseEnter = (timestamp: string) => {
-    onHover?.(getTimeSlot(timestamp));
-  };
+    onHover?.(getTimeSlot(timestamp))
+  }
 
   const handleRowMouseLeave = () => {
-    onHover?.(null);
-  };
+    onHover?.(null)
+  }
 
   const handleReplay = async (logId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
+    e.stopPropagation()
 
     const loadingId = addToast({
-      variant: "loading",
-      position: "bottom-right",
+      variant: 'loading',
+      position: 'bottom-right',
       title: t(logs.actions.replayLoading),
       duration: TOAST_DURATION.loading,
-    });
+    })
 
-    const result = await replayRequest(logId);
+    const result = await replayRequest(logId)
 
     if (result.success) {
       addToast({
-        variant: "success",
-        position: "bottom-right",
+        variant: 'success',
+        position: 'bottom-right',
         title: t(logs.actions.replaySuccess),
         duration: TOAST_DURATION.success,
-      });
+      })
     } else {
       addToast({
-        variant: "destructive",
-        position: "bottom-right",
+        variant: 'destructive',
+        position: 'bottom-right',
         title: t(logs.actions.replayError),
         description: result.error,
         duration: TOAST_DURATION.error,
-      });
+      })
     }
 
-    setTimeout(() => removeToast(loadingId), TOAST_DURATION.cleanup);
-  };
+    setTimeout(() => removeToast(loadingId), TOAST_DURATION.cleanup)
+  }
 
   // Set mounted after first render to prevent flash of empty content
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    setIsMounted(true)
+  }, [])
 
   // Show skeleton during virtualizer initialization to prevent flash of empty content
   // The virtualizer needs one render cycle to measure the scroll container
   if (!isMounted) {
-    return <LogTableSkeleton />;
+    return <LogTableSkeleton />
   }
 
-  const rowClasses = [DataTable.rowWrapper, DataTable.row].join(" ");
+  const rowClasses = [DataTable.rowWrapper, DataTable.row].join(' ')
 
   return (
     <div className={DataTable.scrollWrapper}>
@@ -184,14 +184,14 @@ export function LogTable({
               height:
                 virtualizer.getTotalSize() > 0
                   ? `${virtualizer.getTotalSize()}px`
-                  : "auto",
-              width: "100%",
-              position: "relative",
+                  : 'auto',
+              width: '100%',
+              position: 'relative',
             }}
           >
             {/* Render visible rows */}
             {virtualizer.getVirtualItems().map((virtualRow) => {
-              const log = paginatedLogs[virtualRow.index];
+              const log = paginatedLogs[virtualRow.index]
               return (
                 <LogTableRow
                   key={log.id}
@@ -200,10 +200,10 @@ export function LogTable({
                   isFocused={focusedRowIndex === virtualRow.index}
                   rowClasses={rowClasses}
                   style={{
-                    position: "absolute",
+                    position: 'absolute',
                     top: 0,
                     left: 0,
-                    width: "100%",
+                    width: '100%',
                     height: `${virtualRow.size}px`,
                     transform: `translateY(${virtualRow.start}px)`,
                   }}
@@ -213,7 +213,7 @@ export function LogTable({
                   onReplay={handleReplay}
                   onActionKeyDown={handleActionKeyDown}
                 />
-              );
+              )
             })}
           </div>
         </div>
@@ -264,5 +264,5 @@ export function LogTable({
         )}
       />
     </div>
-  );
+  )
 }

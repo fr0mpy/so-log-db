@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@stackone-ui/core'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@stackone-ui/core/tabs'
 
 export default function TabsPage() {
   return (

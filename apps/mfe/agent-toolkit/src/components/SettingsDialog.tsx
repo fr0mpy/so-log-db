@@ -1,7 +1,10 @@
 'use client'
 
-import { useLocale } from 'next-intl'
 import { useRouter } from 'next/navigation'
+import { Dialog } from '@stackone-ui/core/dialog'
+import { Radio } from '@stackone-ui/core/radio'
+import { Text } from '@stackone-ui/core/text'
+import { useLocale } from '@stackone/i18n'
 import {
   useTranslations,
   aria,
@@ -11,9 +14,6 @@ import {
   LOCALE_COOKIE,
   type Locale,
 } from '@stackone/i18n'
-import { Dialog } from '@stackone-ui/core/dialog'
-import { Radio } from '@stackone-ui/core/radio'
-import { Text } from '@stackone-ui/core/text'
 
 const S = {
   content: 'w-fit min-w-48',

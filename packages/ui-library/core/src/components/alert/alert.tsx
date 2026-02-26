@@ -1,9 +1,9 @@
 'use client'
 
-import { cn } from '@/utils/cn'
+import { createContext, useContext } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { AlertCircle, CheckCircle, Info, AlertTriangle } from 'lucide-react'
-import { createContext, useContext } from 'react'
+import { cn } from '@/utils/cn'
 import { AlertStyles as S } from './styles'
 import type { AlertIconProps, AlertTitleProps, AlertDescriptionProps } from './types'
 
@@ -35,7 +35,7 @@ const icons: Record<NonNullable<AlertVariant>, typeof Info> = {
 
 interface AlertRootProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof alertVariants> {
+  VariantProps<typeof alertVariants> {
   ref?: React.Ref<HTMLDivElement>
 }
 
@@ -63,13 +63,15 @@ function AlertIcon({ variant: variantProp, className }: AlertIconProps) {
   return <Icon className={cn(S.icon, className)} />
 }
 
-function AlertTitle({ className, ref, ...props }: AlertTitleProps) {
+function AlertTitle({ className, children, ref, ...props }: AlertTitleProps) {
   return (
     <h5
       ref={ref}
       className={cn(S.title, className)}
       {...props}
-    />
+    >
+      {children}
+    </h5>
   )
 }
 

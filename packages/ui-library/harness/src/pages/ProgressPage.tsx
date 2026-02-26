@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Progress } from '@stackone-ui/core'
+import { Progress } from '@stackone-ui/core/progress'
 
 export default function ProgressPage() {
   const [value, setValue] = useState(0)

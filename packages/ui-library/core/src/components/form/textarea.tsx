@@ -13,7 +13,7 @@ function Textarea({ className, error, ref, ...props }: TextareaProps) {
         S.base,
         !error && S.interactive,
         error && S.error,
-        className
+        className,
       )}
       ref={ref}
       {...props}

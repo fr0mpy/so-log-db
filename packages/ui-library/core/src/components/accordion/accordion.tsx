@@ -1,11 +1,12 @@
 'use client'
 
-import { cn } from '@/utils/cn'
+import { createContext, useContext, useCallback, useMemo } from 'react'
 import { ChevronDown } from 'lucide-react'
-import { createContext, useContext, useCallback } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { useControlledState } from '../../hooks/useControlledState'
 import { SPRING, DURATION } from '@/config'
+import { cn } from '@/utils/cn'
+import { AccordionStyles as S } from './styles'
+import { useControlledState } from '../../hooks/useControlledState'
 import type {
   AccordionContextValue,
   AccordionRootProps,
@@ -14,7 +15,6 @@ import type {
   AccordionTriggerProps,
   AccordionContentProps,
 } from './types'
-import { AccordionStyles as S } from './styles'
 
 const AccordionContext = createContext<AccordionContextValue | undefined>(undefined)
 
@@ -39,7 +39,7 @@ function AccordionRoot({ type = 'single', defaultValue, value, onValueChange, cl
   const [openItems, setOpenItems] = useControlledState<string[]>(
     value !== undefined ? normalizeValue(value) : undefined,
     normalizeValue(defaultValue),
-    onValueChange
+    onValueChange,
   )
 
   const toggleItem = useCallback((itemValue: string) => {
@@ -49,13 +49,19 @@ function AccordionRoot({ type = 'single', defaultValue, value, onValueChange, cl
       setOpenItems(prev =>
         prev.includes(itemValue)
           ? prev.filter((item) => item !== itemValue)
-          : [...prev, itemValue]
+          : [...prev, itemValue],
       )
     }
   }, [type, setOpenItems])
 
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(
+    () => ({ openItems, toggleItem, type }),
+    [openItems, toggleItem, type],
+  )
+
   return (
-    <AccordionContext.Provider value={{ openItems, toggleItem, type }}>
+    <AccordionContext.Provider value={contextValue}>
       <div ref={ref} className={cn(S.root, className)} {...props}>
         {children}
       </div>
@@ -134,7 +140,7 @@ function AccordionContent({ value, className, children, ref, ...props }: Accordi
   const isOpen = openItems.includes(value)
 
   // Destructure drag-related props to avoid conflicts with Framer Motion's drag types
-  const { onDrag, onDragEnd, onDragStart, ...motionSafeProps } = props as Record<string, unknown>
+  const { onDrag: _onDrag, onDragEnd: _onDragEnd, onDragStart: _onDragStart, ...motionSafeProps } = props as Record<string, unknown>
 
   return (
     <AnimatePresence initial={false}>
@@ -147,16 +153,16 @@ function AccordionContent({ value, className, children, ref, ...props }: Accordi
             opacity: 1,
             transition: {
               height: { ...SPRING.default },
-              opacity: { duration: DURATION.normal, delay: DURATION.instant }
-            }
+              opacity: { duration: DURATION.normal, delay: DURATION.instant },
+            },
           }}
           exit={{
             height: 0,
             opacity: 0,
             transition: {
               height: { ...SPRING.default },
-              opacity: { duration: DURATION.fast }
-            }
+              opacity: { duration: DURATION.fast },
+            },
           }}
           className={S.contentWrapper}
           {...motionSafeProps}

@@ -2,7 +2,7 @@ import { createLogger } from '@stackone/utils'
 
 const log = createLogger('i18n')
 
-type MissingTranslation = {
+interface MissingTranslation {
   key: string
   locale: string
   namespace?: string
@@ -20,7 +20,7 @@ let reportTimeout: ReturnType<typeof setTimeout> | undefined
 export function logMissingTranslation(
   key: string,
   locale: string,
-  namespace?: string
+  namespace?: string,
 ): void {
   const entry: MissingTranslation = {
     key,

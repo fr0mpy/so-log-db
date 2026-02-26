@@ -6,6 +6,12 @@ import { cn } from '@/utils/cn'
 import { useDatePickerContext } from './date-picker'
 import { DatePickerStyles as S } from './styles'
 import {
+  generateCalendarMonth,
+  generateMonthOptions,
+  generateYearRange,
+  getMonthYearLabel,
+} from './utils/calendar-utils'
+import {
   isSameDay,
   isDateInRange,
   isDateDisabled,
@@ -15,12 +21,6 @@ import {
   startOfMonth,
   endOfMonth,
 } from './utils/date-utils'
-import {
-  generateCalendarMonth,
-  generateMonthOptions,
-  generateYearRange,
-  getMonthYearLabel,
-} from './utils/calendar-utils'
 import type {
   CalendarProps,
   CalendarHeaderProps,
@@ -171,7 +171,7 @@ function CalendarGrid({ className, ref, ...props }: CalendarGridProps) {
   // Generate calendar data
   const { weeks, weekDays } = useMemo(
     () => generateCalendarMonth(viewDate, weekStartDay, locale),
-    [viewDate, weekStartDay, locale]
+    [viewDate, weekStartDay, locale],
   )
 
   // Keyboard navigation handler
@@ -226,7 +226,7 @@ function CalendarGrid({ className, ref, ...props }: CalendarGridProps) {
         setViewDate(newDate)
       }
     },
-    [focusedDate, setFocusedDate, viewDate, setViewDate, view]
+    [focusedDate, setFocusedDate, viewDate, setViewDate, view],
   )
 
   // Combine refs
@@ -260,9 +260,9 @@ function CalendarGrid({ className, ref, ...props }: CalendarGridProps) {
       <tbody>
         {weeks.map((week, weekIdx) => (
           <tr key={weekIdx} className={S.grid.bodyRow}>
-            {week.map((day, dayIdx) => (
-              <CalendarCell key={dayIdx} date={day.date} />
-            ))}
+            {week.map((day, dayIdx) =>
+              <CalendarCell key={dayIdx} date={day.date} />,
+            )}
           </tr>
         ))}
       </tbody>
@@ -438,7 +438,7 @@ function CalendarDay({ date, className, ref, ...props }: CalendarDayProps) {
         handleClick()
       }
     },
-    [handleClick]
+    [handleClick],
   )
 
   // Combine refs
@@ -475,7 +475,7 @@ function CalendarDay({ date, className, ref, ...props }: CalendarDayProps) {
         isRangeEnd && S.day.rangeEnd,
         isInRange && !isRangeStart && !isRangeEnd && S.day.rangeMiddle,
         isInHoverRange && S.day.rangeHover,
-        className
+        className,
       )}
       {...props}
     >
@@ -497,10 +497,10 @@ function CalendarMonthGrid({ className, ref }: { className?: string; ref?: React
 
   // Determine selected month
   const selectedMonth = useMemo(() => {
-    if (mode === 'single' && selectedDate && selectedDate.getFullYear() === currentYear) {
+    if (mode === 'single' && selectedDate?.getFullYear() === currentYear) {
       return selectedDate.getMonth()
     }
-    if (mode === 'range' && selectedRange?.start && selectedRange.start.getFullYear() === currentYear) {
+    if (mode === 'range' && selectedRange?.start?.getFullYear() === currentYear) {
       return selectedRange.start.getMonth()
     }
     return null
@@ -513,7 +513,7 @@ function CalendarMonthGrid({ className, ref }: { className?: string; ref?: React
       setViewDate(newDate)
       setView('days')
     },
-    [viewDate, setViewDate, setView]
+    [viewDate, setViewDate, setView],
   )
 
   return (
@@ -526,7 +526,7 @@ function CalendarMonthGrid({ className, ref }: { className?: string; ref?: React
           className={cn(
             S.monthYear.cell.base,
             month.value === selectedMonth && S.monthYear.cell.selected,
-            month.value === currentMonth && month.value !== selectedMonth && S.monthYear.cell.current
+            month.value === currentMonth && month.value !== selectedMonth && S.monthYear.cell.current,
           )}
         >
           {month.label.slice(0, 3)}
@@ -564,7 +564,7 @@ function CalendarYearGrid({ className, ref }: { className?: string; ref?: React.
       setViewDate(newDate)
       setView('months')
     },
-    [viewDate, setViewDate, setView]
+    [viewDate, setViewDate, setView],
   )
 
   return (
@@ -577,7 +577,7 @@ function CalendarYearGrid({ className, ref }: { className?: string; ref?: React.
           className={cn(
             S.monthYear.cell.base,
             year === selectedYear && S.monthYear.cell.selected,
-            year === currentYear && year !== selectedYear && S.monthYear.cell.current
+            year === currentYear && year !== selectedYear && S.monthYear.cell.current,
           )}
         >
           {year}

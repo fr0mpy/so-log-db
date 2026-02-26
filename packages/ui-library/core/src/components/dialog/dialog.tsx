@@ -1,22 +1,23 @@
 'use client'
 
-import { cn } from '@/utils/cn'
-import { X } from 'lucide-react'
 import React, {
   createContext,
   useContext,
   useCallback,
+  useMemo,
 } from 'react'
-import { createPortal } from 'react-dom'
+import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Button } from '../form/button'
+import { createPortal } from 'react-dom'
+import { cn } from '@/utils/cn'
+import { DialogStyles as S } from './styles'
+import { ARIA, POPUP_SLIDE, BACKDROP } from '../../config'
 import {
   useControlledState,
   useBodyScrollLock,
   useEscapeKey,
 } from '../../hooks'
-import { ARIA, POPUP_SLIDE, BACKDROP } from '../../config'
-import { DialogStyles as S } from './styles'
+import { Button } from '../form/button'
 import type {
   DialogContextValue,
   DialogRootProps,
@@ -57,11 +58,17 @@ function DialogRoot({
     (newOpen: boolean) => {
       setIsOpen(newOpen)
     },
-    [setIsOpen]
+    [setIsOpen],
+  )
+
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(
+    () => ({ open: isOpen, setOpen: handleSetOpen, blocking }),
+    [isOpen, handleSetOpen, blocking],
   )
 
   return (
-    <DialogContext.Provider value={{ open: isOpen, setOpen: handleSetOpen, blocking }}>
+    <DialogContext.Provider value={contextValue}>
       {children}
     </DialogContext.Provider>
   )
@@ -75,7 +82,7 @@ function DialogTrigger({ asChild, children, onClick, ref, ...props }: DialogTrig
       onClick?.(e as React.MouseEvent<HTMLButtonElement>)
       setOpen(true)
     },
-    [onClick, setOpen]
+    [onClick, setOpen],
   )
 
   if (asChild && React.isValidElement(children)) {
@@ -87,7 +94,7 @@ function DialogTrigger({ asChild, children, onClick, ref, ...props }: DialogTrig
       {
         onClick: handleClick,
         ref,
-      }
+      },
     )
   }
 
@@ -108,11 +115,11 @@ function DialogPortal({ children }: DialogPortalProps) {
 
   return createPortal(
     <AnimatePresence>{open && children}</AnimatePresence>,
-    document.body
+    document.body,
   )
 }
 
-function DialogBackdrop({ className, onClick, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: DialogBackdropProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+function DialogBackdrop({ className, onClick: _onClick, ref, onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, ...props }: DialogBackdropProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
   const { setOpen, blocking } = useDialogContext()
 
   const handleClick = useCallback(() => {
@@ -136,7 +143,7 @@ function DialogBackdrop({ className, onClick, ref, onDrag, onDragStart, onDragEn
   )
 }
 
-function DialogPopup({ className, children, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: DialogPopupProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+function DialogPopup({ className, children, ref, onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, ...props }: DialogPopupProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
   const { setOpen, blocking } = useDialogContext()
 
   // Handle escape key using shared hook
@@ -171,13 +178,15 @@ function DialogHeader({ className, ref, ...props }: DialogHeaderProps) {
   )
 }
 
-function DialogTitle({ className, ref, ...props }: DialogTitleProps) {
+function DialogTitle({ className, children, ref, ...props }: DialogTitleProps) {
   return (
     <h2
       ref={ref}
       className={cn(S.title, className)}
       {...props}
-    />
+    >
+      {children}
+    </h2>
   )
 }
 
@@ -211,7 +220,7 @@ function DialogClose({ asChild, children, onClick, className, ref, ...props }: D
         setOpen(false)
       }
     },
-    [onClick, blocking, setOpen]
+    [onClick, blocking, setOpen],
   )
 
   // Don't render close button for blocking dialogs unless explicitly provided
@@ -228,7 +237,7 @@ function DialogClose({ asChild, children, onClick, className, ref, ...props }: D
       {
         onClick: handleClick,
         ref,
-      }
+      },
     )
   }
 

@@ -14,7 +14,7 @@ export function ZIndexTokens({
 
   // Sort by z-index value
   const entries = Object.entries(zIndex).sort(
-    (a, b) => parseInt(a[1]) - parseInt(b[1])
+    (a, b) => parseInt(a[1]) - parseInt(b[1]),
   )
 
   return (
@@ -34,26 +34,26 @@ export function ZIndexTokens({
         </button>
       </div>
 
-      {showJson ? (
-        <TokenViewer data={zIndex} />
-      ) : (
-        <div className={S.grid.zIndex}>
-          {entries.map(([name, value], index) => (
-            <div
-              key={name}
-              className={ZIndexTokenStyles.item}
-              style={{
-                zIndex: parseInt(value),
-                transform: `translateY(${index * -4}px)`,
-              }}
-              title={`--z-${name}: ${value}`}
-            >
-              <p className={ZIndexTokenStyles.name}>{name}</p>
-              <p className={ZIndexTokenStyles.value}>{value}</p>
-            </div>
-          ))}
-        </div>
-      )}
+      {showJson
+        ? <TokenViewer data={zIndex} />
+        : (
+          <div className={S.grid.zIndex}>
+            {entries.map(([name, value], index) => (
+              <div
+                key={name}
+                className={ZIndexTokenStyles.item}
+                style={{
+                  zIndex: parseInt(value),
+                  transform: `translateY(${index * -4}px)`,
+                }}
+                title={`--z-${name}: ${value}`}
+              >
+                <p className={ZIndexTokenStyles.name}>{name}</p>
+                <p className={ZIndexTokenStyles.value}>{value}</p>
+              </div>
+            ))}
+          </div>
+        )}
     </div>
   )
 }

@@ -15,7 +15,6 @@ async function testProviderIcons() {
     const url = `${baseUrl}/agent-toolkit/icons/providers/${provider}.svg`
     try {
       const response = await fetch(url)
-      const contentType = response.headers.get('content-type')
       const text = await response.text()
 
       const status = response.ok ? '✅' : '❌'

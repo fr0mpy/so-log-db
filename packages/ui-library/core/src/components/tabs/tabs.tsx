@@ -1,8 +1,10 @@
 'use client'
 
-import { cn } from '@/utils/cn'
 import { createContext, useContext, useId, useRef, useCallback, useEffect } from 'react'
 import { motion, LayoutGroup } from 'motion/react'
+import { cn } from '@/utils/cn'
+import { TabsStyles as S } from './styles'
+import { SPRING } from '../../config'
 import { useControlledState } from '../../hooks/useControlledState'
 import type {
   TabsContextValue,
@@ -12,8 +14,6 @@ import type {
   TabsContentProps,
   TabsIndicatorProps,
 } from './types'
-import { SPRING } from '../../config'
-import { TabsStyles as S } from './styles'
 
 // Original spring with natural bounce - used at edges
 const SPRING_BOUNCE = SPRING.bouncy
@@ -41,7 +41,7 @@ function TabsRoot({ defaultValue, value, onValueChange, className, children, ref
   const [activeTab, setActiveTabState] = useControlledState<string>(
     value,
     defaultValue,
-    onValueChange
+    onValueChange,
   )
 
   // Track registered tabs in DOM order
@@ -73,14 +73,16 @@ function TabsRoot({ defaultValue, value, onValueChange, className, children, ref
   const getSpring = useCallback(() => currentSpringRef.current, [])
 
   return (
-    <TabsContext.Provider value={{
-      activeTab,
-      setActiveTab,
-      layoutId,
-      registerTab,
-      unregisterTab,
-      getSpring,
-    }}>
+    <TabsContext.Provider
+      value={{
+        activeTab,
+        setActiveTab,
+        layoutId,
+        registerTab,
+        unregisterTab,
+        getSpring,
+      }}
+    >
       <LayoutGroup>
         <div ref={ref} className={cn(S.root, className)} {...props}>
           {children}
@@ -131,7 +133,7 @@ function TabsTrigger({ value, className, children, ref, ...props }: TabsTriggerP
       className={cn(
         S.trigger.base,
         isActive ? S.trigger.active : S.trigger.inactive,
-        className
+        className,
       )}
       {...props}
     >
@@ -165,7 +167,7 @@ function TabsContent({ value, forceMount, className, children, ref, ...props }: 
       className={cn(
         S.content.base,
         !isActive && S.content.hidden,
-        className
+        className,
       )}
       {...props}
     >
@@ -178,7 +180,7 @@ function TabsContent({ value, forceMount, className, children, ref, ...props }: 
 // Tabs.Indicator (for custom indicator placement)
 // ============================================================================
 
-function TabsIndicator({ className, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: TabsIndicatorProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+function TabsIndicator({ className, ref, onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, ...props }: TabsIndicatorProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
   const { layoutId, getSpring } = useTabsContext()
 
   return (

@@ -11,19 +11,19 @@
 import { Inter, IBM_Plex_Mono } from 'next/font/google'
 
 export const fontSans = Inter({
-  subsets: ["latin"],
+  subsets: ['latin'],
   display: 'swap',
   variable: '--font-sans',
-  weight: ["400","500","600","700"],
+  weight: ['400', '500', '600', '700'],
   adjustFontFallback: true,
   preload: true,
 })
 
 export const fontMono = IBM_Plex_Mono({
-  subsets: ["latin"],
+  subsets: ['latin'],
   display: 'swap',
   variable: '--font-mono',
-  weight: ["400","500"],
+  weight: ['400', '500'],
   adjustFontFallback: true,
   preload: true,
 })

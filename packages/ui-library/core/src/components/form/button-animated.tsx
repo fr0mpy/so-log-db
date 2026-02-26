@@ -1,11 +1,11 @@
 'use client'
 
-import { cn } from '@/utils/cn'
-import { motion, AnimatePresence } from 'motion/react'
 import { useState, useEffect, isValidElement, cloneElement } from 'react'
-import { Progress } from '../display/progress'
-import { LOADING, DURATION, LABEL } from '../../config'
+import { motion, AnimatePresence } from 'motion/react'
+import { cn } from '@/utils/cn'
 import { ButtonStyles as S } from './styles'
+import { LOADING, DURATION, LABEL } from '../../config'
+import { Progress } from '../display/progress'
 import type { ButtonProps } from './button-types'
 
 /**
@@ -45,7 +45,7 @@ export function ButtonAnimated({
     sizeStyles,
     S.variants[variant],
     loading && S.loading,
-    className
+    className,
   )
 
   // When asChild is true, clone the child element with button styles and accessibility attrs

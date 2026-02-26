@@ -1,8 +1,9 @@
 import { useState } from 'react'
+import { Button } from '@stackone-ui/core/button'
 import {
   Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
-  Button, Input
-} from '@stackone-ui/core'
+} from '@stackone-ui/core/dialog'
+import { Input } from '@stackone-ui/core/input'
 
 export default function DialogPage() {
   const [blockingOpen, setBlockingOpen] = useState(false)

@@ -2,13 +2,13 @@
 
 import { useCallback, useEffect } from 'react'
 import { X, ChevronUp, ChevronDown } from 'lucide-react'
-import { useTranslations, aria } from '@stackone/i18n'
+import { Button } from '@stackone-ui/core/button'
 import { Dialog } from '@stackone-ui/core/dialog'
 import { Tabs } from '@stackone-ui/core/tabs'
-import { Button } from '@stackone-ui/core/button'
-import { DialogStyles, TabsStyles, FooterStyles, IconSize } from './styles'
-import { LogDetailHeader } from './LogDetailHeader'
+import { useTranslations, aria } from '@stackone/i18n'
 import { DetailsTab } from './DetailsTab'
+import { LogDetailHeader } from './LogDetailHeader'
+import { DialogStyles, TabsStyles, FooterStyles, IconSize } from './styles'
 import { UnderlyingRequestsTab } from './UnderlyingRequestsTab'
 import type { LogDetailDialogProps, LogEntryDetail } from './types'
 

@@ -1,11 +1,14 @@
 import { useState, useEffect, useCallback, Suspense, memo } from 'react'
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Menu } from 'lucide-react'
-import { ComponentErrorBoundary } from './ComponentErrorBoundary'
-import { Button, ScrollArea, Drawer, ThemeSwitcher } from '@stackone-ui/core'
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
+import { Button } from '@stackone-ui/core/button'
+import { Drawer } from '@stackone-ui/core/drawer'
 import { useIsMobile } from '@stackone-ui/core/hooks'
-import { componentRoutes, getAdjacentRoutes } from './routes/config'
+import { ScrollArea } from '@stackone-ui/core/scroll-area'
+import { ThemeSwitcher } from '@stackone-ui/core/theme-switcher'
+import { ComponentErrorBoundary } from './ComponentErrorBoundary'
 import { GalleryStyles as S } from './GalleryStyles'
+import { componentRoutes, getAdjacentRoutes } from './routes/config'
 
 // Loading fallback for lazy components
 const ComponentSkeleton = memo(() => (
@@ -67,11 +70,11 @@ export default function Gallery() {
 
   // Navigation handlers
   const goToNext = useCallback(() => {
-    if (next) navigate(`/${next.path}`)
+    if (next) void navigate(`/${next.path}`)
   }, [next, navigate])
 
   const goToPrevious = useCallback(() => {
-    if (previous) navigate(`/${previous.path}`)
+    if (previous) void navigate(`/${previous.path}`)
   }, [previous, navigate])
 
   const toggleDarkMode = useCallback(() => {

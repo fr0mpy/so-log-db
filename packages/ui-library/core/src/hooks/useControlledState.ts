@@ -16,7 +16,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 export function useControlledState<T>(
   controlled: T | undefined,
   defaultValue: T,
-  onChange?: (value: T) => void
+  onChange?: (value: T) => void,
 ): [T, (value: T | ((prev: T) => T)) => void] {
   const isControlled = controlled !== undefined
   const [internalValue, setInternalValue] = useState(defaultValue)
@@ -59,7 +59,7 @@ export function useControlledState<T>(
       // Always call onChange
       onChangeRef.current?.(resolvedValue)
     },
-    [] // Empty deps = stable reference
+    [], // Empty deps = stable reference
   )
 
   // Skip onChange on first render

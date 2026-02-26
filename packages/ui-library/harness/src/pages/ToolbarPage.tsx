@@ -1,5 +1,5 @@
 import { Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Link } from 'lucide-react'
-import { Toolbar, ToolbarButton, ToolbarSeparator, ToolbarGroup, ToolbarLink } from '@stackone-ui/core'
+import { Toolbar, ToolbarButton, ToolbarSeparator, ToolbarGroup, ToolbarLink } from '@stackone-ui/core/toolbar'
 
 export default function ToolbarPage() {
   return (

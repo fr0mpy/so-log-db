@@ -1,6 +1,6 @@
 import { cn } from '@/utils/cn'
-import { ScrollArea } from '../display/scroll-area'
 import { TableStyles as S } from './styles'
+import { ScrollArea } from '../display/scroll-area'
 import type {
   TableRootProps,
   TableHeaderProps,

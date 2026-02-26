@@ -1,4 +1,5 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Button } from '@stackone-ui/core'
+import { Button } from '@stackone-ui/core/button'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@stackone-ui/core/card'
 
 export default function CardPage() {
   return (

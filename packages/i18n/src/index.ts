@@ -1,5 +1,5 @@
-export { getTranslations } from 'next-intl/server'
-export { useTranslations } from 'next-intl'
+export { getTranslations, getLocale, getMessages } from 'next-intl/server'
+export { useTranslations, useLocale } from 'next-intl'
 export { locales, defaultLocale, localeNames, namespaces, LOCALE_COOKIE, type Locale } from './config'
 export { createOnError, createGetMessageFallback } from './logger'
 export { getShellMessages, getAgentToolkitMessages } from './messages'

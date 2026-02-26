@@ -1,4 +1,4 @@
-import { ScrollArea } from '@stackone-ui/core'
+import { ScrollArea } from '@stackone-ui/core/scroll-area'
 
 export default function ScrollAreaPage() {
   return (

@@ -2,9 +2,9 @@
 
 import { Copy, Check, ExternalLink } from 'lucide-react'
 import { cn } from '@/utils/cn'
+import { UrlBarStyles as S } from './styles'
 import { useCopyToClipboard } from '../../../hooks/useCopyToClipboard'
 import { Text } from '../../text'
-import { UrlBarStyles as S } from './styles'
 
 // ============================================================================
 // Types
@@ -78,11 +78,10 @@ export function UrlBar({
             onClick={() => copy(url)}
             aria-label="Copy URL to clipboard"
           >
-            {copied ? (
-              <Check className={S.iconSuccess} />
-            ) : (
-              <Copy className={S.icon} />
-            )}
+            {copied
+              ? <Check className={S.iconSuccess} />
+              :               <Copy className={S.icon} />
+            }
           </button>
         )}
       </div>

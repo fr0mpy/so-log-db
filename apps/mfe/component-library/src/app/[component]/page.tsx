@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
-import { componentRoutes, getRouteByPath, getAdjacentRoutes } from '../../routes'
 import { ComponentPageClient } from './ComponentPageClient'
+import { componentRoutes, getRouteByPath, getAdjacentRoutes } from '../../routes'
 
 interface PageProps {
   params: Promise<{ component: string }>

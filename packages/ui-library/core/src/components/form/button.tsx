@@ -6,7 +6,7 @@ import type { ButtonVariant, ButtonSize, ButtonProps } from './button-types'
 
 // Lazy load animated version only when loading prop is used
 const ButtonAnimated = lazy(() =>
-  import('./button-animated').then((mod) => ({ default: mod.ButtonAnimated }))
+  import('./button-animated').then((mod) => ({ default: mod.ButtonAnimated })),
 )
 
 /**
@@ -27,4 +27,5 @@ function Button({ loading, loadingText, ...props }: ButtonProps) {
 }
 
 export { Button }
+export { ButtonStyles } from './styles'
 export type { ButtonVariant, ButtonSize, ButtonProps }

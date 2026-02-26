@@ -4,8 +4,8 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Text } from '@stackone-ui/core/text'
 import { useTranslations, aria } from '@stackone/i18n'
-import type { DesignViewerProps } from './types'
 import { DesignViewerStyles as S } from './styles'
+import type { DesignViewerProps } from './types'
 
 export function DesignViewer({ screen }: DesignViewerProps) {
   const t = useTranslations()

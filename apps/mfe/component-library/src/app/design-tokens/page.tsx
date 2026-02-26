@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { baseTheme, stackoneGreen } from '@stackone-ui/core/theming'
 import {
   ColorTokens,
   SpacingTokens,
@@ -11,7 +12,6 @@ import {
   ZIndexTokens,
 } from '../../components/TokenSections'
 import { TokenViewer } from '../../components/TokenViewer'
-import { baseTheme, stackoneGreen } from '@stackone-ui/core/theming'
 
 const TabStyles = {
   nav: 'flex flex-wrap gap-1 p-1 bg-muted rounded-theme-lg mb-6',
@@ -148,34 +148,34 @@ export default function DesignTokensPage() {
         )}
 
         {/* Spacing */}
-        {(activeTab === 'all' || activeTab === 'spacing') && (
-          <SpacingTokens spacing={baseTheme.spacing} />
-        )}
+        {(activeTab === 'all' || activeTab === 'spacing')
+          && <SpacingTokens spacing={baseTheme.spacing} />
+        }
 
         {/* Shadows */}
-        {(activeTab === 'all' || activeTab === 'shadows') && (
-          <ShadowTokens shadows={baseTheme.shadow} />
-        )}
+        {(activeTab === 'all' || activeTab === 'shadows')
+          && <ShadowTokens shadows={baseTheme.shadow} />
+        }
 
         {/* Radius */}
-        {(activeTab === 'all' || activeTab === 'radius') && (
-          <RadiusTokens radius={baseTheme.radius} />
-        )}
+        {(activeTab === 'all' || activeTab === 'radius')
+          && <RadiusTokens radius={baseTheme.radius} />
+        }
 
         {/* Typography */}
-        {(activeTab === 'all' || activeTab === 'typography') && (
-          <TypographyTokens fonts={stackoneGreen.typography as unknown as Record<string, string>} />
-        )}
+        {(activeTab === 'all' || activeTab === 'typography')
+          && <TypographyTokens fonts={stackoneGreen.typography as unknown as Record<string, string>} />
+        }
 
         {/* Motion */}
-        {(activeTab === 'all' || activeTab === 'motion') && (
-          <MotionTokens motion={baseTheme.motion} />
-        )}
+        {(activeTab === 'all' || activeTab === 'motion')
+          && <MotionTokens motion={baseTheme.motion} />
+        }
 
         {/* Z-Index */}
-        {(activeTab === 'all' || activeTab === 'zindex') && (
-          <ZIndexTokens zIndex={baseTheme.zIndex} />
-        )}
+        {(activeTab === 'all' || activeTab === 'zindex')
+          && <ZIndexTokens zIndex={baseTheme.zIndex} />
+        }
       </div>
     </div>
   )

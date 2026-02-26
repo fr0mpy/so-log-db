@@ -1,4 +1,4 @@
-import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage as BreadcrumbPageItem } from '@stackone-ui/core'
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage as BreadcrumbPageItem } from '@stackone-ui/core/breadcrumb'
 
 export default function BreadcrumbPage() {
   return (

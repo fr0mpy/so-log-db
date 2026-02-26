@@ -1,6 +1,5 @@
 'use client'
 
-import { cn } from '@/utils/cn'
 import {
   useState,
   useRef,
@@ -11,9 +10,10 @@ import {
   useEffect,
 } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { useClickOutside, useEscapeKey } from '../../hooks'
-import { SPRING } from '../../config'
+import { cn } from '@/utils/cn'
 import { DropdownMenuStyles as S } from './styles'
+import { SPRING } from '../../config'
+import { useClickOutside, useEscapeKey } from '../../hooks'
 import type {
   MenuAlign,
   MenuItemProps,
@@ -137,7 +137,7 @@ function DropdownMenuRoot({
       }
       onOpenChange?.(newOpen)
     },
-    [isControlled, onOpenChange, triggerMode, openDelay, closeDelay]
+    [isControlled, onOpenChange, triggerMode, openDelay, closeDelay],
   )
 
   // Cleanup timers on unmount
@@ -157,7 +157,7 @@ function DropdownMenuRoot({
       openDelay,
       closeDelay,
     }),
-    [open, setOpen, triggerMode, openDelay, closeDelay]
+    [open, setOpen, triggerMode, openDelay, closeDelay],
   )
 
   return (
@@ -199,7 +199,7 @@ function DropdownMenuTrigger({ children, className }: DropdownMenuTriggerProps) 
         setOpen(true)
       }
     },
-    [open, setOpen]
+    [open, setOpen],
   )
 
   return (
@@ -251,6 +251,7 @@ function DropdownMenuPositioner({
   }, [setOpen, triggerMode])
 
   return (
+    /* eslint-disable-next-line jsx-a11y/no-static-element-interactions -- mouse events needed for hover trigger mode */
     <div
       ref={positionerRef}
       className={cn(S.positioner, S.alignment[align], className)}
@@ -266,11 +267,11 @@ function DropdownMenuPopup({
   className,
   children,
   ref,
-  onDrag,
-  onDragStart,
-  onDragEnd,
-  onAnimationStart,
-  onAnimationEnd,
+  onDrag: _onDrag,
+  onDragStart: _onDragStart,
+  onDragEnd: _onDragEnd,
+  onAnimationStart: _onAnimationStart,
+  onAnimationEnd: _onAnimationEnd,
   ...props
 }: DropdownMenuPopupProps & {
   onDrag?: unknown
@@ -311,11 +312,11 @@ function DropdownMenuItem({
   children,
   onClick,
   ref,
-  onDrag,
-  onDragStart,
-  onDragEnd,
-  onAnimationStart,
-  onAnimationEnd,
+  onDrag: _onDrag,
+  onDragStart: _onDragStart,
+  onDragEnd: _onDragEnd,
+  onAnimationStart: _onAnimationStart,
+  onAnimationEnd: _onAnimationEnd,
   ...props
 }: MenuItemProps & {
   onDrag?: unknown
@@ -331,7 +332,7 @@ function DropdownMenuItem({
       onClick?.(e)
       setOpen(false)
     },
-    [onClick, setOpen]
+    [onClick, setOpen],
   )
 
   const handleKeyDown = useCallback(
@@ -354,7 +355,7 @@ function DropdownMenuItem({
         items[prevIndex]?.focus()
       }
     },
-    []
+    [],
   )
 
   return (

@@ -10,7 +10,7 @@ import { useEffect, useRef } from 'react'
  */
 export function useEscapeKey(
   callback: () => void,
-  enabled: boolean = true
+  enabled: boolean = true,
 ): void {
   // Use ref to avoid re-adding listener when callback changes
   const callbackRef = useRef(callback)

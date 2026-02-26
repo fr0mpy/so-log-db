@@ -1,4 +1,5 @@
-import { DropdownMenu, Button } from '@stackone-ui/core'
+import { Button } from '@stackone-ui/core/button'
+import { DropdownMenu } from '@stackone-ui/core/dropdown-menu'
 
 export default function HoverCardPage() {
   return (

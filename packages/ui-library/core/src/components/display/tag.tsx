@@ -1,5 +1,5 @@
-import { cn } from '@/utils/cn'
 import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from '@/utils/cn'
 
 const tagVariants = cva(
   'inline-flex items-center rounded-theme-md px-2 py-0.5 text-xs font-semibold border',
@@ -19,14 +19,14 @@ const tagVariants = cva(
     defaultVariants: {
       variant: 'muted',
     },
-  }
+  },
 )
 
 export type TagVariant = VariantProps<typeof tagVariants>['variant']
 
 interface TagProps
   extends React.HTMLAttributes<HTMLSpanElement>,
-    VariantProps<typeof tagVariants> {
+  VariantProps<typeof tagVariants> {
   ref?: React.Ref<HTMLSpanElement>
 }
 

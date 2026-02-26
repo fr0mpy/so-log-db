@@ -1,4 +1,4 @@
-import { Badge } from '@stackone-ui/core'
+import { Badge } from '@stackone-ui/core/badge'
 
 export default function BadgePage() {
   return (

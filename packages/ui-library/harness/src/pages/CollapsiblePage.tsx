@@ -1,4 +1,5 @@
-import { Collapsible, CollapsibleTrigger, CollapsibleContent, Button } from '@stackone-ui/core'
+import { Button } from '@stackone-ui/core/button'
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@stackone-ui/core/collapsible'
 
 export default function CollapsiblePage() {
   return (

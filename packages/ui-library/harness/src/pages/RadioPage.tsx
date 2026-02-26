@@ -1,4 +1,4 @@
-import { RadioGroup, RadioGroupItem } from '@stackone-ui/core'
+import { RadioGroup, RadioGroupItem } from '@stackone-ui/core/radio'
 
 export default function RadioPage() {
   return (

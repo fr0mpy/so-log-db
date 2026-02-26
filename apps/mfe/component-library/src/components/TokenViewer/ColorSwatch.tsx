@@ -43,11 +43,10 @@ export function ColorSwatch({
           className={S.value}
           title="Click to copy hex value"
         >
-          {copied === 'value' ? (
-            <Check className="inline w-3 h-3 mr-0.5" />
-          ) : (
-            <Copy className="inline w-3 h-3 mr-0.5 opacity-50" />
-          )}
+          {copied === 'value'
+            ? <Check className="inline w-3 h-3 mr-0.5" />
+            :             <Copy className="inline w-3 h-3 mr-0.5 opacity-50" />
+          }
           {value}
         </button>
         {cssVar && (

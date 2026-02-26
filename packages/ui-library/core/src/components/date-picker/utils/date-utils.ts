@@ -11,9 +11,9 @@ import type { DateRange, WeekStartDay } from '../types'
 export function isSameDay(date1: Date | null, date2: Date | null): boolean {
   if (!date1 || !date2) return false
   return (
-    date1.getFullYear() === date2.getFullYear() &&
-    date1.getMonth() === date2.getMonth() &&
-    date1.getDate() === date2.getDate()
+    date1.getFullYear() === date2.getFullYear()
+    && date1.getMonth() === date2.getMonth()
+    && date1.getDate() === date2.getDate()
   )
 }
 
@@ -22,8 +22,8 @@ export function isSameDay(date1: Date | null, date2: Date | null): boolean {
  */
 export function isSameMonth(date1: Date, date2: Date): boolean {
   return (
-    date1.getFullYear() === date2.getFullYear() &&
-    date1.getMonth() === date2.getMonth()
+    date1.getFullYear() === date2.getFullYear()
+    && date1.getMonth() === date2.getMonth()
   )
 }
 
@@ -46,7 +46,7 @@ export function isDateDisabled(
   date: Date,
   minDate?: Date,
   maxDate?: Date,
-  disabledDates?: Date[]
+  disabledDates?: Date[],
 ): boolean {
   if (minDate && date < startOfDay(minDate)) return true
   if (maxDate && date > endOfDay(maxDate)) return true
@@ -146,7 +146,7 @@ export function getDaysInMonth(date: Date): number {
 export function formatDate(
   date: Date,
   locale: string = 'en-US',
-  options?: Intl.DateTimeFormatOptions
+  options?: Intl.DateTimeFormatOptions,
 ): string {
   const defaultOptions: Intl.DateTimeFormatOptions = {
     month: 'short',
@@ -161,7 +161,7 @@ export function formatDate(
  */
 export function formatDateRange(
   range: DateRange,
-  locale: string = 'en-US'
+  locale: string = 'en-US',
 ): string {
   if (!range.start || !range.end) return ''
 

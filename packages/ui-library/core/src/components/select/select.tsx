@@ -1,7 +1,5 @@
 'use client'
 
-import { cn } from '@/utils/cn'
-import { ChevronDown, Search } from 'lucide-react'
 import {
   useRef,
   useState,
@@ -12,13 +10,15 @@ import {
   createContext,
   useContext,
 } from 'react'
-import { createPortal } from 'react-dom'
+import { ChevronDown, Search } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Input } from '../form/input'
-import { useControlledState } from '../../hooks/useControlledState'
-import { useClickOutsideMultiple } from '../../hooks/useClickOutside'
-import { SPRING, PLACEHOLDER, POPUP_SNAPPY } from '../../config'
+import { createPortal } from 'react-dom'
+import { cn } from '@/utils/cn'
 import { SelectStyles as S } from './styles'
+import { SPRING, PLACEHOLDER, POPUP_SNAPPY } from '../../config'
+import { useClickOutsideMultiple } from '../../hooks/useClickOutside'
+import { useControlledState } from '../../hooks/useControlledState'
+import { Input } from '../form/input'
 import type {
   SelectContextValue,
   SelectRootProps,
@@ -105,7 +105,7 @@ function SelectRoot({
         setSearchQuery('')
       }
     },
-    isOpen
+    isOpen,
   )
 
   // Close on scroll to prevent dropdown from detaching from trigger
@@ -164,7 +164,7 @@ function SelectRoot({
       placement,
       variant,
       inModal,
-    ]
+    ],
   )
 
   return <SelectContext.Provider value={contextValue}>{children}</SelectContext.Provider>
@@ -191,7 +191,7 @@ function SelectTrigger({ children, className, ref }: SelectTriggerProps) {
       setIsOpen(false)
       setSearchQuery('')
     },
-    [setIsOpen, setSearchQuery, dropdownRef, triggerMode]
+    [setIsOpen, setSearchQuery, dropdownRef, triggerMode],
   )
 
   const handleClick = useCallback(() => {
@@ -221,7 +221,7 @@ function SelectTrigger({ children, className, ref }: SelectTriggerProps) {
         variant === 'ghost' ? S.trigger.ghost : S.trigger.base,
         S.trigger.width[width],
         isOpen && S.trigger.open,
-        className
+        className,
       )}
       aria-haspopup="listbox"
       aria-expanded={isOpen}
@@ -262,7 +262,7 @@ function SelectPortal({ children }: SelectPortalProps) {
 
   return createPortal(
     <AnimatePresence>{isOpen && children}</AnimatePresence>,
-    document.body
+    document.body,
   )
 }
 
@@ -283,7 +283,7 @@ function SelectPositioner({ children }: SelectPositionerProps) {
       setIsOpen(false)
       setSearchQuery('')
     },
-    [setIsOpen, setSearchQuery, triggerRef, triggerMode]
+    [setIsOpen, setSearchQuery, triggerRef, triggerMode],
   )
 
   // Use locked position (ref) to ensure animation returns to origin point
@@ -292,19 +292,20 @@ function SelectPositioner({ children }: SelectPositionerProps) {
   // For 'top' placement, position using bottom instead of top
   const positionStyle = placement === 'top'
     ? {
-        position: 'fixed' as const,
-        bottom: typeof window !== 'undefined' ? window.innerHeight - position.top : 0,
-        left: position.left,
-        width: position.minWidth,
-      }
+      position: 'fixed' as const,
+      bottom: typeof window !== 'undefined' ? window.innerHeight - position.top : 0,
+      left: position.left,
+      width: position.minWidth,
+    }
     : {
-        position: 'fixed' as const,
-        top: position.top,
-        left: position.left,
-        width: position.minWidth,
-      }
+      position: 'fixed' as const,
+      top: position.top,
+      left: position.left,
+      width: position.minWidth,
+    }
 
   return (
+    /* eslint-disable-next-line jsx-a11y/no-static-element-interactions -- mouse events needed for hover trigger mode */
     <div
       ref={dropdownRef}
       onMouseLeave={handleMouseLeave}
@@ -396,7 +397,7 @@ function SelectOption({ value: optionValue, children, className, ref, _optionCon
         S.option.base,
         isSelected && S.option.selected,
         isDisabled && S.option.disabled,
-        className
+        className,
       )}
     >
       {children}

@@ -1,11 +1,11 @@
 'use client'
 
-import { createContext, useContext, useState, useCallback } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { createContext, useContext, useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
-import { cn } from '../../utils/cn'
-import { SPRING } from '../../config/motion'
+import { motion, AnimatePresence } from 'motion/react'
 import { SideNavStyles as S, SIDENAV_DIMENSIONS } from './styles'
+import { SPRING } from '../../config/motion'
+import { cn } from '../../utils/cn'
 import type {
   SideNavContextValue,
   SideNavRootProps,
@@ -44,11 +44,11 @@ function SideNavRoot({
   className,
   ref,
   // Destructure Framer Motion conflicting props
-  onDrag,
-  onDragStart,
-  onDragEnd,
-  onAnimationStart,
-  onAnimationEnd,
+  onDrag: _onDrag,
+  onDragStart: _onDragStart,
+  onDragEnd: _onDragEnd,
+  onAnimationStart: _onAnimationStart,
+  onAnimationEnd: _onAnimationEnd,
   ...props
 }: SideNavRootProps & {
   onDrag?: unknown
@@ -67,8 +67,14 @@ function SideNavRoot({
     if (!disableHoverExpand) setIsExpanded(false)
   }, [disableHoverExpand])
 
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(
+    () => ({ isExpanded, collapsedWidth, expandedWidth }),
+    [isExpanded, collapsedWidth, expandedWidth],
+  )
+
   return (
-    <SideNavContext.Provider value={{ isExpanded, collapsedWidth, expandedWidth }}>
+    <SideNavContext.Provider value={contextValue}>
       <motion.aside
         ref={ref}
         animate={{ width: isExpanded ? expandedWidth : collapsedWidth }}
@@ -103,11 +109,11 @@ function SideNavTitle({
   ref,
   children,
   // Destructure Framer Motion conflicting props
-  onDrag,
-  onDragStart,
-  onDragEnd,
-  onAnimationStart,
-  onAnimationEnd,
+  onDrag: _onDrag,
+  onDragStart: _onDragStart,
+  onDragEnd: _onDragEnd,
+  onAnimationStart: _onAnimationStart,
+  onAnimationEnd: _onAnimationEnd,
   ...props
 }: SideNavTitleProps & {
   onDrag?: unknown
@@ -142,11 +148,11 @@ function SideNavSubtitle({
   ref,
   children,
   // Destructure Framer Motion conflicting props
-  onDrag,
-  onDragStart,
-  onDragEnd,
-  onAnimationStart,
-  onAnimationEnd,
+  onDrag: _onDrag,
+  onDragStart: _onDragStart,
+  onDragEnd: _onDragEnd,
+  onAnimationStart: _onAnimationStart,
+  onAnimationEnd: _onAnimationEnd,
   ...props
 }: SideNavSubtitleProps & {
   onDrag?: unknown
@@ -222,7 +228,7 @@ function SideNavItem({
   const itemClass = cn(
     S.item.base,
     isActive ? S.item.active : S.item.inactive,
-    className
+    className,
   )
 
   if (href) {

@@ -1,11 +1,11 @@
-import type { Metadata, Viewport } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
-import { getLocale, getMessages } from 'next-intl/server'
+import { FontSetup } from '@stackone-ui/core/fonts'
 import { ThemeProvider } from '@stackone-ui/core/providers'
 import { getThemeFromCookies, ThemeInitScript } from '@stackone-ui/core/providers/server'
-import { FontSetup } from '@stackone-ui/core/fonts'
-import { GallerySidebar, MobileWarning, LayoutStyles as S } from '../components'
 import { ScrollArea } from '@stackone-ui/core/scroll-area'
+import { getLocale, getMessages } from '@stackone/i18n'
+import { GallerySidebar, MobileWarning, LayoutStyles as S } from '../components'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 /** SEO: Base metadata */

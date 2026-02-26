@@ -1,7 +1,7 @@
 'use client'
 
-import { cn } from '@/utils/cn'
 import { useState } from 'react'
+import { cn } from '@/utils/cn'
 import { SliderStyles as S } from './styles'
 
 interface SliderProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange'> {

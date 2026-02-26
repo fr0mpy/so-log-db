@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, RefObject } from 'react'
+import { useEffect, useRef, type RefObject } from 'react'
 
 /**
  * Hook to detect clicks outside of an element.
@@ -12,7 +12,7 @@ import { useEffect, useRef, RefObject } from 'react'
 export function useClickOutside<T extends HTMLElement>(
   ref: RefObject<T | null>,
   callback: () => void,
-  enabled: boolean = true
+  enabled: boolean = true,
 ): void {
   // Use ref to avoid re-adding listener when callback changes
   const callbackRef = useRef(callback)
@@ -45,7 +45,7 @@ export function useClickOutside<T extends HTMLElement>(
 export function useClickOutsideMultiple<T extends HTMLElement>(
   refs: RefObject<T | null>[],
   callback: () => void,
-  enabled: boolean = true
+  enabled: boolean = true,
 ): void {
   const callbackRef = useRef(callback)
 
@@ -58,7 +58,7 @@ export function useClickOutsideMultiple<T extends HTMLElement>(
 
     const handleClickOutside = (event: MouseEvent) => {
       const isOutside = refs.every(
-        ref => ref.current && !ref.current.contains(event.target as Node)
+        ref => ref.current && !ref.current.contains(event.target as Node),
       )
       if (isOutside) {
         callbackRef.current()

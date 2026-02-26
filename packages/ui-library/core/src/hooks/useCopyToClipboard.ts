@@ -35,7 +35,7 @@ export interface UseCopyToClipboardReturn {
  * ```
  */
 export function useCopyToClipboard(
-  options: UseCopyToClipboardOptions = {}
+  options: UseCopyToClipboardOptions = {},
 ): UseCopyToClipboardReturn {
   const { duration = DEFAULT_COPIED_DURATION } = options
   const [copied, setCopied] = useState(false)
@@ -99,7 +99,7 @@ export function useCopyToClipboard(
         document.body.removeChild(textArea)
       }
     },
-    [duration]
+    [duration],
   )
 
   return { copy, copied, reset }

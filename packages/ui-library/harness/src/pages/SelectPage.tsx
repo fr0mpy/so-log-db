@@ -1,4 +1,4 @@
-import { Select } from '@stackone-ui/core'
+import { Select } from '@stackone-ui/core/select'
 
 const fruitOptions = [
   { value: 'apple', label: 'Apple' },

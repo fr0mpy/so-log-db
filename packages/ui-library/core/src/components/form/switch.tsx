@@ -1,7 +1,7 @@
 'use client'
 
-import { cn } from '@/utils/cn'
 import { useState, useId } from 'react'
+import { cn } from '@/utils/cn'
 import { SwitchStyles as S } from './styles'
 
 interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
@@ -34,7 +34,7 @@ function Switch({ className, label, id, checked, defaultChecked, onCheckedChange
           controlledChecked ? S.checked : S.unchecked,
           !controlledChecked && S.track.uncheckedBorder,
           props.disabled && S.track.disabled,
-          className
+          className,
         )}
       >
         <input
@@ -49,7 +49,7 @@ function Switch({ className, label, id, checked, defaultChecked, onCheckedChange
         <span
           className={cn(
             S.thumb.base,
-            controlledChecked ? S.thumb.checked : S.thumb.unchecked
+            controlledChecked ? S.thumb.checked : S.thumb.unchecked,
           )}
         />
       </label>

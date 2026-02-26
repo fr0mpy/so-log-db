@@ -1,4 +1,4 @@
-import { Spinner } from '@stackone-ui/core'
+import { Spinner } from '@stackone-ui/core/spinner'
 
 export default function SpinnerPage() {
   return (

@@ -1,6 +1,6 @@
 import { cn } from '@/utils/cn'
-import { SPINNER, DURATION, SR_ONLY } from '../../config'
 import { SpinnerStyles as S } from './styles'
+import { SPINNER, DURATION, SR_ONLY } from '../../config'
 
 interface SpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: 'sm' | 'md' | 'lg'

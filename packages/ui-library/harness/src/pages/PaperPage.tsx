@@ -1,4 +1,5 @@
-import { Paper, PaperHeader, PaperTitle, PaperDescription, PaperContent, PaperFooter, Button } from '@stackone-ui/core'
+import { Button } from '@stackone-ui/core/button'
+import { Paper, PaperHeader, PaperTitle, PaperDescription, PaperContent, PaperFooter } from '@stackone-ui/core/paper'
 
 export default function PaperPage() {
   return (

@@ -84,9 +84,9 @@ function PresetsList({ children, className, ref, ...props }: PresetsListProps) {
 
   return (
     <div ref={ref} className={cn(S.presets.container, className)} {...props}>
-      {presets.map((preset) => (
-        <PresetItem key={preset.value} preset={preset} />
-      ))}
+      {presets.map((preset) =>
+        <PresetItem key={preset.value} preset={preset} />,
+      )}
       {children}
     </div>
   )
@@ -127,7 +127,7 @@ function PresetItem({ preset, className, ref, ...props }: PresetItemProps) {
       className={cn(
         S.presets.item.base,
         isActive && S.presets.item.active,
-        className
+        className,
       )}
       {...props}
     >

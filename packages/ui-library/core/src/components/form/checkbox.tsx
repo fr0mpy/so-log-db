@@ -1,5 +1,5 @@
-import { cn } from '@/utils/cn'
 import { useId } from 'react'
+import { cn } from '@/utils/cn'
 import { CheckboxStyles as S } from './styles'
 
 interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {

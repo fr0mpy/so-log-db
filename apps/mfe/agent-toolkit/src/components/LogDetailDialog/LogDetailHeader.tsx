@@ -1,14 +1,14 @@
 'use client'
 
 import { Building2, Globe, Clock } from 'lucide-react'
-import { useTranslations, logs } from '@stackone/i18n'
-import { formatDate, formatTime } from '@stackone/utils/formatters'
-import { Text } from '@stackone-ui/core/text'
 import { Tag, type TagVariant } from '@stackone-ui/core/display'
 import { Badge, type BadgeVariant } from '@stackone-ui/core/display'
+import { Text } from '@stackone-ui/core/text'
+import { useTranslations, logs } from '@stackone/i18n'
+import { formatDate, formatTime } from '@stackone/utils/formatters'
 import { HeaderBar as HB, MetadataRow as MR } from './styles'
-import { ProviderIcon } from '../../components/ProviderIcon'
 import { LatencyBar } from '../../components/LatencyBar'
+import { ProviderIcon } from '../../components/ProviderIcon'
 import type { LogDetailHeaderProps } from './types'
 
 /** Map HTTP method to Tag variant */

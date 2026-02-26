@@ -1,8 +1,8 @@
 'use client'
 
-import { Text } from '@stackone-ui/core/text'
 import { Collapsible } from '@stackone-ui/core/collapsible'
 import { KeyValueList, JsonView } from '@stackone-ui/core/display'
+import { Text } from '@stackone-ui/core/text'
 import { Section as S } from './styles'
 import type { ResponseSectionProps } from './types'
 
@@ -39,19 +39,19 @@ export function ResponseSection({ response }: ResponseSectionProps) {
           <Collapsible.Trigger className={S.subHeader}>
             <div className="flex items-center justify-between w-full">
               <Text variant="body2" className={S.subTitle}>Body</Text>
-              {!response.bodyAvailable && (
-                <Text variant="caption" color="muted" italic>Not available</Text>
-              )}
+              {!response.bodyAvailable
+                && <Text variant="caption" color="muted" italic>Not available</Text>
+              }
             </div>
           </Collapsible.Trigger>
           <Collapsible.Content className={S.subContent}>
-            {response.bodyAvailable && response.body ? (
-              <JsonView data={response.body} />
-            ) : (
-              <Text variant="body2" color="muted" italic>
-                Response body is not available for this request.
-              </Text>
-            )}
+            {response.bodyAvailable && response.body
+              ? <JsonView data={response.body} />
+              : (
+                <Text variant="body2" color="muted" italic>
+                  Response body is not available for this request.
+                </Text>
+              )}
           </Collapsible.Content>
         </Collapsible>
       </Collapsible.Content>

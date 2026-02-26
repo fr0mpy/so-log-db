@@ -70,7 +70,7 @@ const DEFAULT_PAGE_SIZE = 20
  */
 export function usePagination<T>(
   data: readonly T[],
-  options: UsePaginationOptions = {}
+  options: UsePaginationOptions = {},
 ): UsePaginationResult<T> {
   const {
     defaultPageSize = DEFAULT_PAGE_SIZE,
@@ -91,7 +91,7 @@ export function usePagination<T>(
   // Memoize paginated data slice
   const paginatedData = useMemo(
     () => data.slice(startIndex, endIndex) as T[],
-    [data, startIndex, endIndex]
+    [data, startIndex, endIndex],
   )
 
   // Navigation state
@@ -105,7 +105,7 @@ export function usePagination<T>(
       setCurrentPage(validPage)
       onPageChange?.(validPage)
     },
-    [totalPages, onPageChange]
+    [totalPages, onPageChange],
   )
 
   const goToNextPage = useCallback(() => {
@@ -135,7 +135,7 @@ export function usePagination<T>(
       onPageSizeChange?.(size)
       onPageChange?.(1)
     },
-    [onPageSizeChange, onPageChange]
+    [onPageSizeChange, onPageChange],
   )
 
   // Reset to page 1 when dependencies change

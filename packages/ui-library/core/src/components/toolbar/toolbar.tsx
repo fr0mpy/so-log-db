@@ -1,7 +1,8 @@
 'use client'
 
+import { createContext, useContext, useMemo } from 'react'
 import { cn } from '@/utils/cn'
-import { createContext, useContext } from 'react'
+import { ToolbarStyles as S } from './styles'
 import type {
   ToolbarOrientation,
   ToolbarRootProps,
@@ -10,7 +11,6 @@ import type {
   ToolbarGroupProps,
   ToolbarLinkProps,
 } from './types'
-import { ToolbarStyles as S } from './styles'
 
 interface ToolbarContextValue {
   orientation: ToolbarOrientation
@@ -21,8 +21,11 @@ const ToolbarContext = createContext<ToolbarContextValue>({ orientation: 'horizo
 const useToolbarContext = () => useContext(ToolbarContext)
 
 function ToolbarRoot({ orientation = 'horizontal', className, children, ref, ...props }: ToolbarRootProps) {
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(() => ({ orientation }), [orientation])
+
   return (
-    <ToolbarContext.Provider value={{ orientation }}>
+    <ToolbarContext.Provider value={contextValue}>
       <div
         ref={ref}
         role="toolbar"
@@ -30,7 +33,7 @@ function ToolbarRoot({ orientation = 'horizontal', className, children, ref, ...
         className={cn(
           S.root.base,
           orientation === 'vertical' && S.root.vertical,
-          className
+          className,
         )}
         {...props}
       >
@@ -49,7 +52,7 @@ function ToolbarButton({ active, className, children, ref, ...props }: ToolbarBu
       className={cn(
         S.button.base,
         active ? S.button.active : S.button.inactive,
-        className
+        className,
       )}
       {...props}
     >
@@ -69,7 +72,7 @@ function ToolbarSeparator({ className, ref, ...props }: ToolbarSeparatorProps) {
       className={cn(
         S.separator.base,
         orientation === 'horizontal' ? S.separator.horizontal : S.separator.vertical,
-        className
+        className,
       )}
       {...props}
     />
@@ -86,7 +89,7 @@ function ToolbarGroup({ className, children, ref, ...props }: ToolbarGroupProps)
       className={cn(
         S.group.base,
         orientation === 'vertical' && S.group.vertical,
-        className
+        className,
       )}
       {...props}
     >

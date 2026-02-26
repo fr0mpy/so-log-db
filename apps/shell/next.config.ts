@@ -1,8 +1,8 @@
-import type { NextConfig } from 'next'
 import { PHASE_DEVELOPMENT_SERVER } from 'next/constants'
 import path from 'path'
 import withBundleAnalyzer from '@next/bundle-analyzer'
 import createNextIntlPlugin from 'next-intl/plugin'
+import type { NextConfig } from 'next'
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 
@@ -16,14 +16,14 @@ export default (phase: string) => {
   // MFE URLs for Multi-Zone routing
   // In dev mode, default to localhost; in prod, default to Vercel URLs
   const MFE_AGENT_TOOLKIT_URL =
-    process.env.MFE_AGENT_TOOLKIT_URL ||
-    (isDev ? 'http://localhost:3001' : 'https://stackone-agent-toolkit.vercel.app')
+    process.env.MFE_AGENT_TOOLKIT_URL
+    || (isDev ? 'http://localhost:3001' : 'https://stackone-agent-toolkit.vercel.app')
   const MFE_COMPONENT_LIBRARY_URL =
-    process.env.MFE_COMPONENT_LIBRARY_URL ||
-    (isDev ? 'http://localhost:3002' : 'https://stackone-component-library.vercel.app')
+    process.env.MFE_COMPONENT_LIBRARY_URL
+    || (isDev ? 'http://localhost:3002' : 'https://stackone-component-library.vercel.app')
   const MFE_DESIGN_REVIEW_URL =
-    process.env.MFE_DESIGN_REVIEW_URL ||
-    (isDev ? 'http://localhost:3003' : 'https://stackone-design-review.vercel.app')
+    process.env.MFE_DESIGN_REVIEW_URL
+    || (isDev ? 'http://localhost:3003' : 'https://stackone-design-review.vercel.app')
 
   const nextConfig: NextConfig = {
     experimental: {

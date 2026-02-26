@@ -1,5 +1,5 @@
-import type { ChartTooltipProps } from './types'
 import { StackedBarChartStyles as S } from './styles'
+import type { ChartTooltipProps } from './types'
 
 /**
  * Neumorphic tooltip for StackedBarChart

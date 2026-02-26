@@ -1,10 +1,10 @@
 'use client'
 
-import { cn } from '@/utils/cn'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState, useCallback } from 'react'
-import { ARIA } from '../../config'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { cn } from '@/utils/cn'
 import { CarouselStyles as S } from './styles'
+import { ARIA } from '../../config'
 
 interface CarouselProps extends React.HTMLAttributes<HTMLDivElement> {
   items: React.ReactNode[]
@@ -72,7 +72,7 @@ function Carousel({ items, showIndicators = true, className, ref, ...props }: Ca
                 S.indicators.dot.base,
                 index === currentIndex
                   ? S.indicators.dot.active
-                  : S.indicators.dot.inactive
+                  : S.indicators.dot.inactive,
               )}
               aria-label={ARIA.goToSlide(index + 1)}
             />

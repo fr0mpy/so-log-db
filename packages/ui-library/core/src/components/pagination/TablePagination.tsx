@@ -122,7 +122,7 @@ export function TablePagination({
                     {page}
                   </Pagination.Link>
                 </Pagination.Item>
-              )
+              ),
             )}
 
             <Pagination.Item>

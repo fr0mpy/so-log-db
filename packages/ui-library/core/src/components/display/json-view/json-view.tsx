@@ -10,7 +10,7 @@ import { JsonViewStyles as S } from './styles'
 // ============================================================================
 
 type JsonValue = string | number | boolean | null | JsonObject | JsonArray
-type JsonObject = { [key: string]: JsonValue }
+interface JsonObject { [key: string]: JsonValue }
 type JsonArray = JsonValue[]
 
 export interface JsonViewProps {
@@ -85,27 +85,27 @@ function CollapsibleBracket({
           <div className={S.nested}>
             {isArray
               ? (items as JsonValue[]).map((item, index) => (
-                  <div key={index} className={S.line}>
+                <div key={index} className={S.line}>
+                  <JsonNode
+                    value={item}
+                    depth={depth + 1}
+                    expandDepth={expandDepth}
+                    isLast={index === items.length - 1}
+                  />
+                </div>
+              ))
+              : (items as [string, JsonValue][]).map(([key, val], index) => (
+                <div key={key} className={S.line}>
+                  <JsonKey keyName={key}>
                     <JsonNode
-                      value={item}
+                      value={val}
                       depth={depth + 1}
                       expandDepth={expandDepth}
                       isLast={index === items.length - 1}
                     />
-                  </div>
-                ))
-              : (items as [string, JsonValue][]).map(([key, val], index) => (
-                  <div key={key} className={S.line}>
-                    <JsonKey keyName={key}>
-                      <JsonNode
-                        value={val}
-                        depth={depth + 1}
-                        expandDepth={expandDepth}
-                        isLast={index === items.length - 1}
-                      />
-                    </JsonKey>
-                  </div>
-                ))}
+                  </JsonKey>
+                </div>
+              ))}
           </div>
           <span className={S.bracket}>{closeBracket}</span>
         </>

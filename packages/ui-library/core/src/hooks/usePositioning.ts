@@ -68,7 +68,7 @@ export function usePositioning(side: Side): PositioningResult {
       arrowRotation: ARROW_ROTATION_MAP[side],
       arrowClasses: ARROW_POSITION_MAP[side],
     }),
-    [side]
+    [side],
   )
 }
 

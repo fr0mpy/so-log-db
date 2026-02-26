@@ -1,8 +1,8 @@
 'use client'
 
-import { Text } from '@stackone-ui/core/text'
 import { Collapsible } from '@stackone-ui/core/collapsible'
 import { KeyValueList, JsonView } from '@stackone-ui/core/display'
+import { Text } from '@stackone-ui/core/text'
 import { Section as S } from './styles'
 import type { RequestSectionProps } from './types'
 

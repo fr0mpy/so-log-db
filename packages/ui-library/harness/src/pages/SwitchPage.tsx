@@ -1,4 +1,4 @@
-import { Switch } from '@stackone-ui/core'
+import { Switch } from '@stackone-ui/core/switch'
 
 export default function SwitchPage() {
   return (

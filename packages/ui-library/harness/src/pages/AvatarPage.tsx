@@ -1,4 +1,4 @@
-import { Avatar } from '@stackone-ui/core'
+import { Avatar } from '@stackone-ui/core/avatar'
 
 export default function AvatarPage() {
   return (

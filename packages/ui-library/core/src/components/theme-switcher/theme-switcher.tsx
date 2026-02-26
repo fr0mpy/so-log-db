@@ -3,9 +3,9 @@
 import { useRef, useEffect } from 'react'
 import { Sun, Moon } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
-import { cn } from '../../utils'
-import { THEME_TIMING, OFFSET, SPRING, OPACITY, ARIA, DURATION } from '../../config'
 import { ThemeSwitcherStyles as S } from './styles'
+import { THEME_TIMING, OFFSET, SPRING, OPACITY, ARIA, DURATION } from '../../config'
+import { cn } from '../../utils'
 import type { ThemeSwitcherProps } from './types'
 
 /** Width: compact fits knob + padding, full allows knob to slide */
@@ -20,11 +20,11 @@ export function ThemeSwitcher({
   compact = false,
   className,
   // Destructure conflicting Framer Motion props
-  onDrag,
-  onDragStart,
-  onDragEnd,
-  onAnimationStart,
-  onAnimationEnd,
+  onDrag: _onDrag,
+  onDragStart: _onDragStart,
+  onDragEnd: _onDragEnd,
+  onAnimationStart: _onAnimationStart,
+  onAnimationEnd: _onAnimationEnd,
   ...props
 }: ThemeSwitcherProps) {
   // Track if toggle was user-initiated (should bounce) vs layout change (no bounce)

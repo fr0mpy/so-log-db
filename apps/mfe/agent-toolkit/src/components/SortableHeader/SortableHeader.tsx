@@ -1,9 +1,9 @@
 'use client'
 
 import { cn } from '@stackone-ui/core/utils'
-import type { SortableColumn, SortState } from '../../app/logs/_lib'
 import { SortIndicator } from './SortIndicator'
 import { SortableHeaderStyles as S } from './styles'
+import type { SortableColumn, SortState } from '../../app/logs/_lib'
 
 interface SortableHeaderProps {
   /** Column identifier for sorting */

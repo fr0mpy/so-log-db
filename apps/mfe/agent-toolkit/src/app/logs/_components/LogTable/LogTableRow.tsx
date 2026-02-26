@@ -1,14 +1,14 @@
 'use client'
 
 import { memo } from 'react'
+import { Tooltip } from '@stackone-ui/core/tooltip'
+import { cn } from '@stackone-ui/core/utils'
 import { useTranslations, logs } from '@stackone/i18n'
 import { formatDate, formatTime } from '@stackone/utils/formatters'
-import { cn } from '@stackone-ui/core/utils'
-import { Tooltip } from '@stackone-ui/core/tooltip'
-import { LogTableStyles } from './styles'
 import { LogTableActions } from './LogTableActions'
-import { ProviderIcon } from '../../../../components/ProviderIcon'
+import { LogTableStyles } from './styles'
 import { LatencyBar } from '../../../../components/LatencyBar'
+import { ProviderIcon } from '../../../../components/ProviderIcon'
 import {
   Text,
   DataTable,
@@ -35,7 +35,7 @@ interface LogTableRowProps {
   onActionKeyDown: (e: React.KeyboardEvent) => void
 }
 
-const RequestNameCell = memo(function RequestNameCell({ name }: { name: string }) {
+const RequestNameCell = memo(({ name }: { name: string }) => {
   return <span className={RequestCell.name}>{name}</span>
 })
 
@@ -54,7 +54,7 @@ function getMethodBadgeStyle(method: string): string {
  * A single row in the LogTable.
  * Renders all cells for a log entry including actions.
  */
-export const LogTableRow = memo(function LogTableRow({
+export const LogTableRow = memo(({
   log,
   index,
   isFocused,
@@ -65,12 +65,20 @@ export const LogTableRow = memo(function LogTableRow({
   onClick,
   onReplay,
   onActionKeyDown,
-}: LogTableRowProps) {
+}: LogTableRowProps) => {
   const t = useTranslations()
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      onClick()
+    }
+  }
 
   return (
     <div
       role="row"
+      tabIndex={0}
       data-row-index={index}
       aria-rowindex={index + 1}
       className={cn(rowClasses, isFocused && DataTable.rowFocused)}
@@ -78,6 +86,7 @@ export const LogTableRow = memo(function LogTableRow({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
+      onKeyDown={handleKeyDown}
     >
       {/* Timestamp */}
       <div className={cn(DataTable.cell, LogTableColumns.requested)}>

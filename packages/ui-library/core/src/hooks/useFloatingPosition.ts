@@ -113,7 +113,7 @@ export function useFloatingPosition({
         shift({
           padding: collisionPadding,
           crossAxis: true,
-        })
+        }),
       )
     }
 
@@ -122,7 +122,7 @@ export function useFloatingPosition({
       arrow({
         element: arrowRef,
         padding: 8, // Keep arrow from edges
-      })
+      }),
     )
 
     return result
@@ -143,7 +143,7 @@ export function useFloatingPosition({
   // Extract actual side/anchor after potential flip/shift
   const { side: actualSide, anchor: actualAnchor } = useMemo(
     () => fromPlacement(placement),
-    [placement]
+    [placement],
   )
 
   // Check if we flipped from original side

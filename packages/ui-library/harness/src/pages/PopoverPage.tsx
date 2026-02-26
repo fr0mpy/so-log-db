@@ -1,4 +1,5 @@
-import { Popover, Button } from '@stackone-ui/core'
+import { Button } from '@stackone-ui/core/button'
+import { Popover } from '@stackone-ui/core/popover'
 
 export default function PopoverPage() {
   return (

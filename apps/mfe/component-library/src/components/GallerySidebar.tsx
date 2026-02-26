@@ -1,20 +1,20 @@
 'use client'
 
 import { useState } from 'react'
-import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Menu } from 'lucide-react'
 import { Button } from '@stackone-ui/core/button'
-import { ScrollArea } from '@stackone-ui/core/scroll-area'
 import { Drawer } from '@stackone-ui/core/drawer'
-import { ThemeSwitcher } from '@stackone-ui/core/theme-switcher'
 import { useIsMobile } from '@stackone-ui/core/hooks'
 import { useTheme } from '@stackone-ui/core/providers'
+import { ScrollArea } from '@stackone-ui/core/scroll-area'
+import { ThemeSwitcher } from '@stackone-ui/core/theme-switcher'
 import { cn } from '@stackone-ui/core/utils'
 import { useTranslations, aria } from '@stackone/i18n'
 import { componentRoutes, Routes } from '../routes'
-import { LayoutStyles as S } from './styles'
 import { GallerySidebarLogo } from './GallerySidebarLogo'
+import { LayoutStyles as S } from './styles'
 
 /** Sidebar navigation links */
 interface SidebarNavProps {
@@ -34,7 +34,7 @@ function SidebarNav({ currentPath, onNavigate }: SidebarNavProps) {
         className={cn(
           S.navLink.base,
           'font-semibold',
-          isDesignTokens ? S.navLink.active : S.navLink.inactive
+          isDesignTokens ? S.navLink.active : S.navLink.inactive,
         )}
       >
         Design Tokens
@@ -51,7 +51,7 @@ function SidebarNav({ currentPath, onNavigate }: SidebarNavProps) {
           onClick={onNavigate}
           className={cn(
             S.navLink.base,
-            route.path === currentPath ? S.navLink.active : S.navLink.inactive
+            route.path === currentPath ? S.navLink.active : S.navLink.inactive,
           )}
         >
           {route.name}

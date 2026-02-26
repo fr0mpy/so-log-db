@@ -56,51 +56,51 @@ export function TypographyTokens({
         </button>
       </div>
 
-      {showJson ? (
-        <TokenViewer data={fonts} />
-      ) : (
-        <div className={S.grid.typography}>
-          {/* Font Families */}
-          <div className={S.section.wrapper}>
-            <p className={S.section.subtitle}>Font Families</p>
-            <div className="space-y-4">
-              {fontEntries.map(([name, value]) => (
-                <div key={name} className={TypographyStyles.sample.wrapper}>
-                  <p className={TypographyStyles.sample.label}>
-                    --font-{name}
-                  </p>
-                  <p
-                    className={`${TypographyStyles.sample.text} text-2xl`}
-                    style={{ fontFamily: value }}
-                  >
-                    The quick brown fox jumps over the lazy dog
-                  </p>
-                  <p className="font-mono text-xs text-muted-foreground truncate">
-                    {value}
-                  </p>
-                </div>
-              ))}
+      {showJson
+        ? <TokenViewer data={fonts} />
+        : (
+          <div className={S.grid.typography}>
+            {/* Font Families */}
+            <div className={S.section.wrapper}>
+              <p className={S.section.subtitle}>Font Families</p>
+              <div className="space-y-4">
+                {fontEntries.map(([name, value]) => (
+                  <div key={name} className={TypographyStyles.sample.wrapper}>
+                    <p className={TypographyStyles.sample.label}>
+                      --font-{name}
+                    </p>
+                    <p
+                      className={`${TypographyStyles.sample.text} text-2xl`}
+                      style={{ fontFamily: value }}
+                    >
+                      The quick brown fox jumps over the lazy dog
+                    </p>
+                    <p className="font-mono text-xs text-muted-foreground truncate">
+                      {value}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Text Size Scale */}
-          <div className={S.section.wrapper}>
-            <p className={S.section.subtitle}>Text Size Scale</p>
-            <div className={TypographyStyles.scale.wrapper}>
-              {textSizes.map(({ name, size, sample }) => (
-                <div key={name} className={TypographyStyles.scale.item}>
-                  <span className={TypographyStyles.scale.size}>
-                    {name}
-                    <br />
-                    <span className="text-muted-foreground/60">{size}</span>
-                  </span>
-                  <span className={`text-foreground ${name}`}>{sample}</span>
-                </div>
-              ))}
+            {/* Text Size Scale */}
+            <div className={S.section.wrapper}>
+              <p className={S.section.subtitle}>Text Size Scale</p>
+              <div className={TypographyStyles.scale.wrapper}>
+                {textSizes.map(({ name, size, sample }) => (
+                  <div key={name} className={TypographyStyles.scale.item}>
+                    <span className={TypographyStyles.scale.size}>
+                      {name}
+                      <br />
+                      <span className="text-muted-foreground/60">{size}</span>
+                    </span>
+                    <span className={`text-foreground ${name}`}>{sample}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
     </div>
   )
 }

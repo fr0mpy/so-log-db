@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from '@stackone-ui/core'
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from '@stackone-ui/core/pagination'
 
 export default function PaginationPage() {
   const [currentPage, setCurrentPage] = useState(1)

@@ -10,5 +10,5 @@ import type { LogDetailDialogProps } from './types'
  * until user clicks a log row to view details.
  */
 export const LogDetailDialogLazy = dynamic<LogDetailDialogProps>(
-  () => import('./LogDetailDialog').then((mod) => mod.LogDetailDialog)
+  () => import('./LogDetailDialog').then((mod) => mod.LogDetailDialog),
 )

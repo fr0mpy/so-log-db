@@ -1,10 +1,10 @@
 'use client'
 
-import { cn } from '@/utils/cn'
-import { Minus, Plus } from 'lucide-react'
 import { useState, useCallback } from 'react'
-import { ARIA } from '../../config'
+import { Minus, Plus } from 'lucide-react'
+import { cn } from '@/utils/cn'
 import { NumberInputStyles as S } from './styles'
+import { ARIA } from '../../config'
 
 // Stepper button styles
 const STEPPER_BASE = 'flex items-center justify-center h-10 w-10 cursor-pointer bg-neu-base shadow-neu-raised text-foreground transition-shadow duration-200 hover:shadow-neu-raised-lg active:shadow-neu-pressed-sm focus-visible:outline-none focus-visible:shadow-[var(--shadow-raised),var(--shadow-focus)] disabled:pointer-events-none disabled:opacity-50'
@@ -136,7 +136,7 @@ function NumberInput({
             !error && !success && NUMBER_INTERACTIVE,
             error && NUMBER_ERROR,
             success && NUMBER_SUCCESS,
-            className
+            className,
           )}
           {...props}
         />

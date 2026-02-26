@@ -1,8 +1,7 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
 import { MobileWarning as MobileWarningBase } from '@stackone-ui/core/mobile-warning'
-import { mobileWarning } from '@stackone/i18n'
+import { useTranslations, mobileWarning } from '@stackone/i18n'
 
 export function MobileWarning() {
   const t = useTranslations()

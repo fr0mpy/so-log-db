@@ -1,8 +1,8 @@
 'use client'
 
 import { cn } from '@stackone-ui/core/utils'
-import type { SortDirection } from '../../app/logs/_lib'
 import { SortIndicatorStyles as S } from './styles'
+import type { SortDirection } from '../../app/logs/_lib'
 
 interface SortIndicatorProps {
   /** Current sort direction for this column */

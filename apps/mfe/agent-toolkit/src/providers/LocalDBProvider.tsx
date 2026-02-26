@@ -15,7 +15,7 @@ export function LocalDBProvider({ children }: { children: ReactNode }) {
       setStatus({ ready: false, syncing: false })
       return
     }
-    initLocalDB({ backendUrl: POWERSYNC_URL, database: 'stackone' }).then(setStatus)
+    void initLocalDB({ backendUrl: POWERSYNC_URL, database: 'stackone' }).then(setStatus)
   }, [])
 
   return <LocalDBContext.Provider value={status}>{children}</LocalDBContext.Provider>

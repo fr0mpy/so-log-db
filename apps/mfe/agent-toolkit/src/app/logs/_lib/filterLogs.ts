@@ -1,13 +1,13 @@
+import { Status } from './constants'
 import type { LogEntry } from './types'
 import type { LogFilters } from './useLogFilters'
-import { Status } from './constants'
 
 /**
  * Filters logs based on status and search query
  */
 export function filterLogs(
   logs: readonly LogEntry[],
-  filters: LogFilters
+  filters: LogFilters,
 ): LogEntry[] {
   return logs.filter((log) => {
     // Status filter

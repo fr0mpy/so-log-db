@@ -1,6 +1,6 @@
 import { cn } from '@/utils/cn'
-import { DURATION } from '../../config'
 import { ProgressStyles as S } from './styles'
+import { DURATION } from '../../config'
 
 interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
   value?: number
@@ -43,19 +43,19 @@ function Progress({ value = 0, max = 100, segments = 10, indeterminate = false, 
             />
           </div>
         </>
-      ) : (
-        Array.from({ length: segments }).map((_, i) => (
+      )
+        : Array.from({ length: segments }).map((_, i) => (
           <div
             key={i}
             className={cn(
               S.segment.base,
               inverted
-                ? (i < filledSegments ? S.segment.invertedFilled : S.segment.invertedEmpty)
-                : (i < filledSegments ? S.segment.filled : S.segment.empty)
+                ? i < filledSegments ? S.segment.invertedFilled : S.segment.invertedEmpty
+                : i < filledSegments ? S.segment.filled : S.segment.empty,
             )}
           />
         ))
-      )}
+      }
     </div>
   )
 }

@@ -1,6 +1,6 @@
-import { getTranslations } from '@stackone/i18n'
 import { Paper } from '@stackone-ui/core/paper'
 import { Text } from '@stackone-ui/core/text'
+import { getTranslations } from '@stackone/i18n'
 import { PrefetchLink } from '@/components'
 import { HomeStyles as S } from './styles'
 import { Routes } from '../lib/routes'

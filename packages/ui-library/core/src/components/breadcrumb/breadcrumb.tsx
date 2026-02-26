@@ -1,5 +1,6 @@
-import { cn } from '@/utils/cn'
 import { ChevronRight } from 'lucide-react'
+import { cn } from '@/utils/cn'
+import { BreadcrumbStyles as S } from './styles'
 import { ARIA } from '../../config'
 import type {
   BreadcrumbRootProps,
@@ -9,7 +10,6 @@ import type {
   BreadcrumbSeparatorProps,
   BreadcrumbPageProps,
 } from './types'
-import { BreadcrumbStyles as S } from './styles'
 
 function BreadcrumbRoot({ className, ref, ...props }: BreadcrumbRootProps) {
   return (

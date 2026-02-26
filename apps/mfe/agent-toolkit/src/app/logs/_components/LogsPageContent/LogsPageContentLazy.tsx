@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import dynamic from "next/dynamic";
-import type { ComponentProps } from "react";
-import type { LogsPageContent as LogsPageContentType } from "./LogsPageContent";
-import { LogsSkeleton } from "../LogsSkeleton";
+import type { ComponentProps } from 'react'
+import dynamic from 'next/dynamic'
+import { LogsSkeleton } from '../LogsSkeleton'
+import type { LogsPageContent as LogsPageContentType } from './LogsPageContent'
 
-type LogsPageContentProps = ComponentProps<typeof LogsPageContentType>;
+type LogsPageContentProps = ComponentProps<typeof LogsPageContentType>
 
 export const LogsPageContentLazy = dynamic<LogsPageContentProps>(
-  () => import("./LogsPageContent").then((mod) => mod.LogsPageContent),
+  () => import('./LogsPageContent').then((mod) => mod.LogsPageContent),
   {
     loading: () => <LogsSkeleton />,
   },
-);
+)

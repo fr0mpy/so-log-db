@@ -41,7 +41,7 @@ interface LatencyBarProps {
 
 function getColorForDuration(
   duration: number,
-  thresholds: LatencyConfig['thresholds']
+  thresholds: LatencyConfig['thresholds'],
 ): 'success' | 'warning' | 'destructive' {
   if (duration < thresholds.fast.max) return 'success'
   if (duration < thresholds.medium.max) return 'warning'
@@ -59,7 +59,7 @@ export function LatencyBar({ duration, config = DEFAULT_CONFIG }: LatencyBarProp
   // Calculate filled segments (each segment = segmentMs)
   const filledSegments = Math.min(
     Math.ceil(duration / segmentMs),
-    maxSegments
+    maxSegments,
   )
 
   // Get color based on duration thresholds

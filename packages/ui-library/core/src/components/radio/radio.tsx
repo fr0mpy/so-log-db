@@ -1,6 +1,5 @@
 'use client'
 
-import { cn } from '@/utils/cn'
 import {
   createContext,
   useContext,
@@ -9,8 +8,10 @@ import {
   useMemo,
 } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { useControlledState } from '../../hooks/useControlledState'
+import { cn } from '@/utils/cn'
 import { RadioStyles as S } from './styles'
+import { SPRING } from '../../config'
+import { useControlledState } from '../../hooks/useControlledState'
 import type {
   RadioContextValue,
   RadioItemContextValue,
@@ -19,7 +20,6 @@ import type {
   RadioItemProps,
   RadioIndicatorProps,
 } from './types'
-import { SPRING } from '../../config'
 
 // Smooth spring for instant but organic feedback
 const FILL_SPRING = SPRING.snappy
@@ -66,7 +66,7 @@ function RadioRoot({
       name: groupName,
       disabled,
     }),
-    [currentValue, setValue, groupName, disabled]
+    [currentValue, setValue, groupName, disabled],
   )
 
   return <RadioContext.Provider value={contextValue}>{children}</RadioContext.Provider>
@@ -82,7 +82,7 @@ function RadioGroup({ children, orientation = 'vertical', className, ref, ...pro
       className={cn(
         S.group.base,
         orientation === 'vertical' ? S.group.vertical : S.group.horizontal,
-        className
+        className,
       )}
       {...props}
     >
@@ -131,7 +131,7 @@ function RadioItem({ value: itemValue, children, className, id, disabled: itemDi
       disabled: disabled || false,
       radioId,
     }),
-    [isSelected, disabled, radioId]
+    [isSelected, disabled, radioId],
   )
 
   return (
@@ -154,7 +154,7 @@ function RadioItem({ value: itemValue, children, className, id, disabled: itemDi
             htmlFor={radioId}
             className={cn(
               S.item.label.base,
-              disabled && S.item.label.disabled
+              disabled && S.item.label.disabled,
             )}
           >
             <RadioIndicator />
@@ -165,7 +165,7 @@ function RadioItem({ value: itemValue, children, className, id, disabled: itemDi
             htmlFor={radioId}
             className={cn(
               S.item.textLabel.base,
-              disabled && S.item.textLabel.disabled
+              disabled && S.item.textLabel.disabled,
             )}
           >
             {children}

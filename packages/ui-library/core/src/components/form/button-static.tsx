@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import { cn } from "@/utils/cn";
-import { isValidElement, cloneElement } from "react";
-import { ButtonStyles as S } from "./styles";
+import { isValidElement, cloneElement } from 'react'
+import { cn } from '@/utils/cn'
+import { ButtonStyles as S } from './styles'
 import type {
   ButtonVariant,
   ButtonSize,
   ButtonBaseProps,
-} from "./button-types";
+} from './button-types'
 
-export type { ButtonVariant, ButtonSize };
+export type { ButtonVariant, ButtonSize }
 
 export function ButtonStatic({
-  variant = "primary",
-  size = "md",
+  variant = 'primary',
+  size = 'md',
   iconOnly,
   disabled,
   className,
@@ -22,13 +22,13 @@ export function ButtonStatic({
   ref,
   ...props
 }: ButtonBaseProps) {
-  const sizeStyles = iconOnly ? S.iconOnly[size] : S.sizes[size];
+  const sizeStyles = iconOnly ? S.iconOnly[size] : S.sizes[size]
   const buttonClassName = cn(
     S.base,
     sizeStyles,
     S.variants[variant],
     className,
-  );
+  )
 
   // When asChild is true, clone the child element with button styles and accessibility attrs
   if (asChild && isValidElement(children)) {
@@ -40,9 +40,9 @@ export function ButtonStatic({
           (children as React.ReactElement<{ className?: string }>).props
             .className,
         ),
-        "aria-disabled": disabled,
+        'aria-disabled': disabled,
       },
-    );
+    )
   }
 
   return (
@@ -55,5 +55,5 @@ export function ButtonStatic({
     >
       <span className={S.content}>{children}</span>
     </button>
-  );
+  )
 }

@@ -22,7 +22,7 @@ export function preloadProviderIcons(): void {
   if ('requestIdleCallback' in window) {
     ;(window as Window & { requestIdleCallback: typeof requestIdleCallback }).requestIdleCallback(
       preload,
-      { timeout: 2000 }
+      { timeout: 2000 },
     )
   } else {
     setTimeout(preload, 100)

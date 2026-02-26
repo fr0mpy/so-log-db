@@ -10,16 +10,17 @@ import {
   isValidElement,
   useEffect,
 } from 'react'
-import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'motion/react'
+import { createPortal } from 'react-dom'
 import { cn } from '@/utils/cn'
+import { TooltipStyles as S } from './styles'
+import { SPRING } from '../../config'
 import {
   usePositioning,
   useFloatingPosition,
   type Side,
   type Anchor,
 } from '../../hooks'
-import { TooltipStyles as S } from './styles'
 import type {
   TooltipRootProps,
   TooltipTriggerProps,
@@ -29,7 +30,6 @@ import type {
   TooltipArrowProps,
   TooltipContextValue,
 } from './types'
-import { SPRING } from '../../config'
 
 // ============================================================================
 // Context
@@ -109,7 +109,7 @@ function TooltipRoot({
         onOpenChange?.(value)
       }
     },
-    [isControlled, onOpenChange, delayDuration]
+    [isControlled, onOpenChange, delayDuration],
   )
 
   // Cleanup timer on unmount
@@ -157,7 +157,7 @@ function TooltipTrigger({ asChild, children, onMouseEnter, onMouseLeave, onFocus
       setOpen(true)
       onMouseEnter?.(e)
     },
-    [setOpen, onMouseEnter]
+    [setOpen, onMouseEnter],
   )
 
   const handleMouseLeave = useCallback(
@@ -165,7 +165,7 @@ function TooltipTrigger({ asChild, children, onMouseEnter, onMouseLeave, onFocus
       setOpen(false)
       onMouseLeave?.(e)
     },
-    [setOpen, onMouseLeave]
+    [setOpen, onMouseLeave],
   )
 
   const handleFocus = useCallback(
@@ -173,7 +173,7 @@ function TooltipTrigger({ asChild, children, onMouseEnter, onMouseLeave, onFocus
       setOpen(true)
       onFocus?.(e)
     },
-    [setOpen, onFocus]
+    [setOpen, onFocus],
   )
 
   const handleBlur = useCallback(
@@ -181,7 +181,7 @@ function TooltipTrigger({ asChild, children, onMouseEnter, onMouseLeave, onFocus
       setOpen(false)
       onBlur?.(e)
     },
-    [setOpen, onBlur]
+    [setOpen, onBlur],
   )
 
   // Merge refs - include setReference for floating-ui positioning
@@ -195,7 +195,7 @@ function TooltipTrigger({ asChild, children, onMouseEnter, onMouseLeave, onFocus
       (triggerRef as React.MutableRefObject<HTMLElement | null>).current = node
       setReference(node)
     },
-    [ref, triggerRef, setReference]
+    [ref, triggerRef, setReference],
   )
 
   if (asChild && isValidElement(children)) {
@@ -210,6 +210,7 @@ function TooltipTrigger({ asChild, children, onMouseEnter, onMouseLeave, onFocus
   }
 
   return (
+    /* eslint-disable-next-line jsx-a11y/no-static-element-interactions -- tooltip trigger uses mouse/focus events for showing tooltip, not interactive behavior */
     <div
       ref={mergedRef as React.Ref<HTMLDivElement>}
       onMouseEnter={handleMouseEnter}

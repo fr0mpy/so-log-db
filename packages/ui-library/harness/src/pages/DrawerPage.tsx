@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Drawer, Button } from '@stackone-ui/core'
+import { Button } from '@stackone-ui/core/button'
+import { Drawer } from '@stackone-ui/core/drawer'
 
 export default function DrawerPage() {
   const [isOpen, setIsOpen] = useState(false)

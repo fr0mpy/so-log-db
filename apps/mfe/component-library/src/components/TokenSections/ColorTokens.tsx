@@ -58,13 +58,13 @@ export function ColorTokens({
   // Group colors by category
   const semanticColors = entries.filter(([name]) =>
     ['primary', 'secondary', 'destructive', 'success', 'warning', 'info', 'accent'].some(
-      (prefix) => name.startsWith(prefix)
-    )
+      (prefix) => name.startsWith(prefix),
+    ),
   )
   const neutralColors = entries.filter(([name]) =>
     ['background', 'foreground', 'surface', 'muted', 'border'].some(
-      (prefix) => name.startsWith(prefix)
-    )
+      (prefix) => name.startsWith(prefix),
+    ),
   )
   const neuColors = entries.filter(([name]) => name.startsWith('neu-'))
   const spinnerColors = entries.filter(([name]) => name.startsWith('spinner-'))
@@ -101,16 +101,16 @@ export function ColorTokens({
         </button>
       </div>
 
-      {showJson ? (
-        <TokenViewer data={colors} />
-      ) : (
-        <div className="space-y-6">
-          {semanticColors.length > 0 && renderColorGrid(semanticColors, 'Semantic Colors')}
-          {neutralColors.length > 0 && renderColorGrid(neutralColors, 'Neutral Colors')}
-          {neuColors.length > 0 && renderColorGrid(neuColors, 'Neumorphic Colors')}
-          {spinnerColors.length > 0 && renderColorGrid(spinnerColors, 'Spinner Colors')}
-        </div>
-      )}
+      {showJson
+        ? <TokenViewer data={colors} />
+        : (
+          <div className="space-y-6">
+            {semanticColors.length > 0 && renderColorGrid(semanticColors, 'Semantic Colors')}
+            {neutralColors.length > 0 && renderColorGrid(neutralColors, 'Neutral Colors')}
+            {neuColors.length > 0 && renderColorGrid(neuColors, 'Neumorphic Colors')}
+            {spinnerColors.length > 0 && renderColorGrid(spinnerColors, 'Spinner Colors')}
+          </div>
+        )}
     </div>
   )
 }

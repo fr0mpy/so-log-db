@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, useRef, type ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, useRef, useMemo, useCallback, type ReactNode } from 'react'
 import {
   setThemeCookie,
   migrateLocalStorageToCookie,
@@ -65,7 +65,7 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<ThemeMode>(initialTheme)
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() =>
-    resolveTheme(initialTheme)
+    resolveTheme(initialTheme),
   )
 
   // Track first render to skip class toggle (ThemeScript already set it)
@@ -103,21 +103,25 @@ export function ThemeProvider({
   }, [resolvedTheme])
 
   // Set theme and persist to cookie
-  const setTheme = (newTheme: ThemeMode) => {
+  const setTheme = useCallback((newTheme: ThemeMode) => {
     setThemeCookie(newTheme)
     setThemeState(newTheme)
     setResolvedTheme(resolveTheme(newTheme))
-  }
+  }, [])
 
   // Toggle between light and dark (skips system)
-  const toggle = () => {
-    const newTheme = resolvedTheme === 'light' ? 'dark' : 'light'
-    setTheme(newTheme)
-  }
+  const toggle = useCallback(() => {
+    setTheme(resolvedTheme === 'light' ? 'dark' : 'light')
+  }, [resolvedTheme, setTheme])
 
-  // Note: React Compiler auto-memoizes this context value
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo<ThemeContextValue>(
+    () => ({ theme, resolvedTheme, toggle, setTheme }),
+    [theme, resolvedTheme, toggle, setTheme],
+  )
+
   return (
-    <ThemeContext.Provider value={{ theme, resolvedTheme, toggle, setTheme }}>
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   )

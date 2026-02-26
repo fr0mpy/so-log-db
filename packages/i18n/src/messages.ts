@@ -1,13 +1,13 @@
+import enAgentToolkit from '../messages/en/agent-toolkit.json'
+import enCommon from '../messages/en/common.json'
+import enShell from '../messages/en/shell.json'
+import frAgentToolkit from '../messages/fr/agent-toolkit.json'
+import frCommon from '../messages/fr/common.json'
+import frShell from '../messages/fr/shell.json'
 import type { Locale } from './config'
 import type { AbstractIntlMessages } from 'next-intl'
 
 // Import all message files statically
-import enCommon from '../messages/en/common.json'
-import enShell from '../messages/en/shell.json'
-import enAgentToolkit from '../messages/en/agent-toolkit.json'
-import frCommon from '../messages/fr/common.json'
-import frShell from '../messages/fr/shell.json'
-import frAgentToolkit from '../messages/fr/agent-toolkit.json'
 
 const messages = {
   en: {
@@ -30,7 +30,7 @@ export type MessageNamespace = 'common' | 'shell' | 'agent-toolkit'
  */
 export function getMessages(
   locale: Locale,
-  namespaces: MessageNamespace[]
+  namespaces: MessageNamespace[],
 ): AbstractIntlMessages {
   const result: AbstractIntlMessages = {}
 

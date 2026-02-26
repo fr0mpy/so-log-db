@@ -1,4 +1,4 @@
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption } from '@stackone-ui/core'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption } from '@stackone-ui/core/table'
 
 export default function TablePage() {
   return (

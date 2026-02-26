@@ -1,5 +1,5 @@
-import { cn } from '@/utils/cn'
 import { User } from 'lucide-react'
+import { cn } from '@/utils/cn'
 import { AvatarStyles as S } from './styles'
 
 interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -17,13 +17,12 @@ function Avatar({ src, alt, fallback, size = 'md', className, ref, ...props }: A
       className={cn(S.root, S.sizes[size], className)}
       {...props}
     >
-      {src ? (
-        <img src={src} alt={alt || 'Avatar'} className={S.image} />
-      ) : fallback ? (
-        <span className={S.fallback}>{fallback}</span>
-      ) : (
-        <User className={S.fallbackIcon} />
-      )}
+      {src
+        ? <img src={src} alt={alt || 'Avatar'} className={S.image} />
+        : fallback
+          ? <span className={S.fallback}>{fallback}</span>
+          :         <User className={S.fallbackIcon} />
+      }
     </div>
   )
 }

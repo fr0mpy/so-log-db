@@ -1,7 +1,7 @@
 'use client'
 
-import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { useCallback } from 'react'
+import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import {
   FilterParams,
   FilterDefaults,
@@ -46,22 +46,22 @@ export function useLogFilters(): UseLogFiltersReturn {
       const query = params.toString()
       router.push(query ? `${pathname}?${query}` : pathname, { scroll: false })
     },
-    [searchParams, router, pathname]
+    [searchParams, router, pathname],
   )
 
   const setDateRange = useCallback(
     (value: DateRangeValue) => updateParams(FilterParams.dateRange, value),
-    [updateParams]
+    [updateParams],
   )
 
   const setStatus = useCallback(
     (value: StatusValue) => updateParams(FilterParams.status, value),
-    [updateParams]
+    [updateParams],
   )
 
   const setSearch = useCallback(
     (value: string) => updateParams(FilterParams.search, value),
-    [updateParams]
+    [updateParams],
   )
 
   return {

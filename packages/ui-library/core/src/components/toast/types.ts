@@ -4,7 +4,7 @@ import type { TargetAndTransition } from 'motion/react'
 export type ToastVariant = 'info' | 'success' | 'warning' | 'destructive' | 'loading'
 export type ToastPosition = 'top' | 'top-left' | 'top-right' | 'bottom' | 'bottom-left' | 'bottom-right' | 'left' | 'right'
 
-export type MotionVariant = {
+export interface MotionVariant {
   initial: TargetAndTransition
   animate: TargetAndTransition
   exit: TargetAndTransition

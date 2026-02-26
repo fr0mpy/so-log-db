@@ -1,4 +1,3 @@
-import { Button, ButtonStyles } from '@stackone-ui/core'
 import {
   Plus,
   ArrowRight,
@@ -13,6 +12,7 @@ import {
   Mail,
   Bell,
 } from 'lucide-react'
+import { Button, ButtonStyles } from '@stackone-ui/core/button'
 
 export default function ButtonPage() {
   return (

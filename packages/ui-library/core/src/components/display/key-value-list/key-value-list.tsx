@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react'
 import { Copy, Check } from 'lucide-react'
 import { cn } from '@/utils/cn'
+import { KeyValueListStyles as S } from './styles'
 import { useCopyToClipboard } from '../../../hooks/useCopyToClipboard'
 import { Text } from '../../text'
-import { KeyValueListStyles as S } from './styles'
 
 // ============================================================================
 // Types
@@ -60,7 +60,7 @@ export function KeyValueList({
   }, [copied])
 
   const handleCopy = (key: string, value: string) => {
-    copy(value)
+    void copy(value)
     setCopiedKey(key)
   }
 
@@ -91,11 +91,10 @@ export function KeyValueList({
                 onClick={() => handleCopy(key, String(value))}
                 aria-label={`Copy ${key} value`}
               >
-                {copied && copiedKey === key ? (
-                  <Check className={S.copyIconSuccess} />
-                ) : (
-                  <Copy className={S.copyIcon} />
-                )}
+                {copied && copiedKey === key
+                  ? <Check className={S.copyIconSuccess} />
+                  :                   <Copy className={S.copyIcon} />
+                }
               </button>
             )}
           </div>

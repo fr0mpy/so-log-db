@@ -58,7 +58,7 @@ export function useListKeyboardNavigation<T>({
       const row = containerRef.current?.querySelector(`[${rowAttribute}="${index}"]`)
       row?.scrollIntoView({ block: 'nearest' })
     },
-    [containerRef, rowAttribute]
+    [containerRef, rowAttribute],
   )
 
   const handleKeyDown = useCallback(
@@ -107,7 +107,7 @@ export function useListKeyboardNavigation<T>({
           break
       }
     },
-    [items, focusedIndex, onSelect, containerRef, scrollRowIntoView]
+    [items, focusedIndex, onSelect, containerRef, scrollRowIntoView],
   )
 
   const handleActionKeyDown = useCallback(
@@ -117,7 +117,7 @@ export function useListKeyboardNavigation<T>({
         containerRef.current?.focus()
       }
     },
-    [containerRef]
+    [containerRef],
   )
 
   // Reset focused index when dependencies change

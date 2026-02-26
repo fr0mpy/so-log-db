@@ -1,6 +1,5 @@
 'use client'
 
-import { cn } from '@/utils/cn'
 import {
   useState,
   useRef,
@@ -10,8 +9,9 @@ import {
   useMemo,
 } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { useClickOutside, SPRING_CONFIG } from '../../hooks'
+import { cn } from '@/utils/cn'
 import { MenuStyles as S } from './styles'
+import { useClickOutside, SPRING_CONFIG } from '../../hooks'
 import type {
   MenuRootProps,
   MenuTriggerProps,
@@ -64,7 +64,7 @@ function MenuRoot({
       }
       onOpenChange?.(newOpen)
     },
-    [isControlled, onOpenChange]
+    [isControlled, onOpenChange],
   )
 
   const contextValue = useMemo(
@@ -72,7 +72,7 @@ function MenuRoot({
       open,
       setOpen,
     }),
-    [open, setOpen]
+    [open, setOpen],
   )
 
   return <MenuContext.Provider value={contextValue}>{children}</MenuContext.Provider>
@@ -92,7 +92,7 @@ function MenuTrigger({ children, className }: MenuTriggerProps) {
         setOpen(true)
       }
     },
-    [setOpen]
+    [setOpen],
   )
 
   return (
@@ -121,7 +121,7 @@ function MenuPositioner({ align = 'start', children, className }: MenuPositioner
   useClickOutside(
     positionerRef,
     () => setOpen(false),
-    true
+    true,
   )
 
   return (
@@ -131,7 +131,7 @@ function MenuPositioner({ align = 'start', children, className }: MenuPositioner
   )
 }
 
-function MenuPopup({ className, children, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: MenuPopupProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+function MenuPopup({ className, children, ref, onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, ...props }: MenuPopupProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
   return (
     <motion.div
       ref={ref}
@@ -148,7 +148,7 @@ function MenuPopup({ className, children, ref, onDrag, onDragStart, onDragEnd, o
   )
 }
 
-function MenuItem({ className, children, onClick, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: MenuItemProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+function MenuItem({ className, children, onClick, ref, onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, ...props }: MenuItemProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
   const { setOpen } = useMenuContext()
 
   const handleClick = useCallback(
@@ -156,7 +156,7 @@ function MenuItem({ className, children, onClick, ref, onDrag, onDragStart, onDr
       onClick?.(e)
       setOpen(false)
     },
-    [onClick, setOpen]
+    [onClick, setOpen],
   )
 
   return (

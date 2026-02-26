@@ -1,5 +1,5 @@
-import { cn } from '@/utils/cn'
 import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from '@/utils/cn'
 
 const badgeVariants = cva(
   'inline-flex items-center rounded-theme-md px-2.5 py-0.5 text-xs font-medium',
@@ -18,14 +18,14 @@ const badgeVariants = cva(
     defaultVariants: {
       variant: 'primary',
     },
-  }
+  },
 )
 
 export type BadgeVariant = VariantProps<typeof badgeVariants>['variant']
 
 interface BadgeProps
   extends React.HTMLAttributes<HTMLSpanElement>,
-    VariantProps<typeof badgeVariants> {
+  VariantProps<typeof badgeVariants> {
   ref?: React.Ref<HTMLSpanElement>
 }
 

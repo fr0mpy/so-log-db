@@ -1,4 +1,4 @@
-import { Checkbox } from '@stackone-ui/core'
+import { Checkbox } from '@stackone-ui/core/checkbox'
 
 export default function CheckboxPage() {
   return (

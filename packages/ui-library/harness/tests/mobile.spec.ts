@@ -68,7 +68,7 @@ test.describe('Mobile Responsiveness', () => {
   test('navigation controls should be usable on mobile', async ({ page }) => {
     // Previous/Next buttons should be accessible
     const nextButton = page.locator('button').filter({ hasText: /Next/ }).or(
-      page.locator('button:has(svg.lucide-chevron-right)')
+      page.locator('button:has(svg.lucide-chevron-right)'),
     )
 
     if (await nextButton.first().isVisible()) {

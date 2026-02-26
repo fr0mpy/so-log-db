@@ -1,13 +1,13 @@
 'use client'
 
-import dynamic from 'next/dynamic'
 import type { ComponentProps } from 'react'
-import type { LogTable as LogTableType } from './LogTable'
-import { DataTable, LogTableColumns, LogTableSkeletonSizes } from '../../../../styles'
-import { Skeleton } from '@stackone-ui/core/skeleton'
+import dynamic from 'next/dynamic'
 import { Card } from '@stackone-ui/core/card'
 import { Paper } from '@stackone-ui/core/paper'
+import { Skeleton } from '@stackone-ui/core/skeleton'
 import { cn } from '@stackone-ui/core/utils'
+import { DataTable, LogTableColumns, LogTableSkeletonSizes } from '../../../../styles'
+import type { LogTable as LogTableType } from './LogTable'
 
 type LogTableProps = ComponentProps<typeof LogTableType>
 
@@ -92,5 +92,5 @@ export function LogTableSkeleton() {
  * LogTableSkeleton is still exported for use by LogTable during virtualizer initialization.
  */
 export const LogTableLazy = dynamic<LogTableProps>(
-  () => import('./LogTable').then((mod) => mod.LogTable)
+  () => import('./LogTable').then((mod) => mod.LogTable),
 )

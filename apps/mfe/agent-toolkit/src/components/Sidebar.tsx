@@ -2,14 +2,14 @@
 
 import { useState } from 'react'
 import { Settings } from 'lucide-react'
-import { useTranslations, aria, navigation } from '@stackone/i18n'
-import { SIDENAV_DIMENSIONS } from '@stackone-ui/core/sidenav'
 import { Select } from '@stackone-ui/core/select'
+import { SIDENAV_DIMENSIONS } from '@stackone-ui/core/sidenav'
 import { cn } from '@stackone-ui/core/utils'
-import { SidebarLogo } from './SidebarLogo'
-import { SidebarNav } from './SidebarNav'
+import { useTranslations, aria, navigation } from '@stackone/i18n'
 import { SettingsDialogLazy as SettingsDialog } from './SettingsDialogLazy'
 import { useSidebar } from './SidebarContext'
+import { SidebarLogo } from './SidebarLogo'
+import { SidebarNav } from './SidebarNav'
 import { SidebarStyles as S } from './styles'
 
 const PROJECTS = [
@@ -33,10 +33,11 @@ export function Sidebar() {
 
   const labelClasses = cn(
     S.footerLabel,
-    isExpanded ? S.footerLabelVisible : S.footerLabelHidden
+    isExpanded ? S.footerLabelVisible : S.footerLabelHidden,
   )
 
   return (
+    /* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- aside expands on hover for UX, not an interactive control */
     <aside
       className={S.root}
       style={{

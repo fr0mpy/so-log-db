@@ -1,7 +1,7 @@
 'use client'
 
-import { useTranslations, logs } from '@stackone/i18n'
 import { StackedBarChart } from '@stackone-ui/core/stacked-bar-chart'
+import { useTranslations, logs } from '@stackone/i18n'
 import type { LogsChartProps, LogEntry } from './types'
 
 /** Internal type for aggregating log data */

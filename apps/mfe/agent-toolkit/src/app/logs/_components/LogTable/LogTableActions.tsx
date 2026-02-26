@@ -2,9 +2,9 @@
 
 import { memo } from 'react'
 import { Play, Layers, Monitor, Puzzle, User } from 'lucide-react'
-import { useTranslations, logs } from '@stackone/i18n'
-import { Tooltip } from '@stackone-ui/core/tooltip'
 import { Button } from '@stackone-ui/core/button'
+import { Tooltip } from '@stackone-ui/core/tooltip'
+import { useTranslations, logs } from '@stackone/i18n'
 import { LogTableStyles } from './styles'
 import { RowActions } from '../../../../styles'
 
@@ -19,11 +19,11 @@ interface LogTableActionsProps {
  * Primary actions (Replay, Request Tester) are always visible.
  * Secondary actions (Batch Replay, Integration, Account) are hidden on smaller screens.
  */
-export const LogTableActions = memo(function LogTableActions({
+export const LogTableActions = memo(({
   logId,
   onReplay,
   onActionKeyDown,
-}: LogTableActionsProps) {
+}: LogTableActionsProps) => {
   const t = useTranslations()
 
   const handleStopPropagation = (e: React.MouseEvent) => {

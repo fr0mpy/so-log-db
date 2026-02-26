@@ -1,4 +1,4 @@
-import { Skeleton } from '@stackone-ui/core'
+import { Skeleton } from '@stackone-ui/core/skeleton'
 
 export default function SkeletonPage() {
   return (

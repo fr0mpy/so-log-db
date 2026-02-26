@@ -1,4 +1,4 @@
-import { Textarea } from '@stackone-ui/core'
+import { Textarea } from '@stackone-ui/core/textarea'
 
 export default function TextareaPage() {
   return (

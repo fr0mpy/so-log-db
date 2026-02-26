@@ -1,4 +1,4 @@
-import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink } from '@stackone-ui/core'
+import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink } from '@stackone-ui/core/navigation-menu'
 
 export default function NavigationMenuPage() {
   return (

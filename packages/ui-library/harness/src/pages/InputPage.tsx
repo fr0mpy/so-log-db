@@ -1,5 +1,5 @@
 import { Mail, Search } from 'lucide-react'
-import { Input } from '@stackone-ui/core'
+import { Input } from '@stackone-ui/core/input'
 
 export default function InputPage() {
   return (

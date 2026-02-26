@@ -1,9 +1,12 @@
 'use client'
 
-import { cn } from '@/utils/cn'
+import { useState, createContext, useContext, useRef, useCallback, useMemo } from 'react'
 import { ChevronDown } from 'lucide-react'
-import { useState, createContext, useContext, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
+import { cn } from '@/utils/cn'
+import { NavigationStyles as S } from './styles'
+import { SPRING, OFFSET } from '../../config'
+import { useIsTouchDevice, useClickOutside } from '../../hooks'
 import type {
   NavigationRootProps,
   NavigationListProps,
@@ -12,9 +15,6 @@ import type {
   NavigationContentProps,
   NavigationLinkProps,
 } from './types'
-import { SPRING, OFFSET } from '../../config'
-import { NavigationStyles as S } from './styles'
-import { useIsTouchDevice, useClickOutside } from '../../hooks'
 
 // Context to share open state between NavigationItem and NavigationContent
 const NavigationItemContext = createContext<{ isOpen: boolean }>({ isOpen: false })
@@ -43,7 +43,7 @@ function NavigationList({ className, children, ref, ...props }: NavigationListPr
   )
 }
 
-function NavigationItem({ hasDropdown, className, children, ref, ...props }: NavigationItemProps) {
+function NavigationItem({ hasDropdown, className, children, ref: _ref, ...props }: NavigationItemProps) {
   const [isOpen, setIsOpen] = useState(false)
   const isTouchDevice = useIsTouchDevice()
   const itemRef = useRef<HTMLLIElement>(null)
@@ -59,15 +59,18 @@ function NavigationItem({ hasDropdown, className, children, ref, ...props }: Nav
   // Desktop: hover to open/close
   const interactionHandlers = isTouchDevice
     ? {
-        onClick: () => hasDropdown && setIsOpen((prev) => !prev),
-      }
+      onClick: () => hasDropdown && setIsOpen((prev) => !prev),
+    }
     : {
-        onMouseEnter: () => hasDropdown && setIsOpen(true),
-        onMouseLeave: () => hasDropdown && setIsOpen(false),
-      }
+      onMouseEnter: () => hasDropdown && setIsOpen(true),
+      onMouseLeave: () => hasDropdown && setIsOpen(false),
+    }
+
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(() => ({ isOpen }), [isOpen])
 
   return (
-    <NavigationItemContext.Provider value={{ isOpen }}>
+    <NavigationItemContext.Provider value={contextValue}>
       <li
         ref={itemRef}
         className={cn(S.item, className)}
@@ -75,20 +78,18 @@ function NavigationItem({ hasDropdown, className, children, ref, ...props }: Nav
         {...props}
       >
         {hasDropdown ? (
-          <>
-            <div className={S.itemDropdownWrapper}>
-              {children}
-            </div>
-          </>
-        ) : (
-          children
-        )}
+          <div className={S.itemDropdownWrapper}>
+            {children}
+          </div>
+        )
+          : children
+        }
       </li>
     </NavigationItemContext.Provider>
   )
 }
 
-function NavigationTrigger({ className, children, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: NavigationTriggerProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+function NavigationTrigger({ className, children, ref, onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, ...props }: NavigationTriggerProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
   const { isOpen } = useContext(NavigationItemContext)
 
   return (
@@ -110,7 +111,7 @@ function NavigationTrigger({ className, children, ref, onDrag, onDragStart, onDr
   )
 }
 
-function NavigationContent({ className, children, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: NavigationContentProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+function NavigationContent({ className, children, ref, onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, ...props }: NavigationContentProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
   const { isOpen } = useContext(NavigationItemContext)
 
   return (
@@ -132,7 +133,7 @@ function NavigationContent({ className, children, ref, onDrag, onDragStart, onDr
   )
 }
 
-function NavigationLink({ className, children, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: NavigationLinkProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+function NavigationLink({ className, children, ref, onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, ...props }: NavigationLinkProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
   return (
     <motion.a
       ref={ref}

@@ -19,7 +19,7 @@ export type PaginationItem = number | 'ellipsis'
 export function generatePaginationNumbers(
   currentPage: number,
   totalPages: number,
-  siblings = 1
+  siblings = 1,
 ): PaginationItem[] {
   if (totalPages <= 0) return []
   if (totalPages === 1) return [1]

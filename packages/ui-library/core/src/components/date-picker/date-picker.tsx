@@ -9,16 +9,16 @@ import {
   useMemo,
   useEffect,
 } from 'react'
-import { createPortal } from 'react-dom'
-import { motion, AnimatePresence } from 'motion/react'
 import { Calendar as CalendarIcon, X } from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
+import { createPortal } from 'react-dom'
 import { cn } from '@/utils/cn'
-import { useControlledState } from '../../hooks/useControlledState'
-import { useClickOutsideMultiple } from '../../hooks/useClickOutside'
-import { useEscapeKey } from '../../hooks/useEscapeKey'
-import { POPUP, BACKDROP } from '../../config'
 import { DatePickerStyles as S } from './styles'
+import { POPUP, BACKDROP } from '../../config'
 import { formatDate, formatDateRange, today } from './utils/date-utils'
+import { useClickOutsideMultiple } from '../../hooks/useClickOutside'
+import { useControlledState } from '../../hooks/useControlledState'
+import { useEscapeKey } from '../../hooks/useEscapeKey'
 import type {
   DatePickerContextValue,
   DatePickerRootProps,
@@ -193,7 +193,7 @@ function DatePickerRoot({
       disabled,
       confirm,
       cancel,
-    ]
+    ],
   )
 
   return (
@@ -212,11 +212,11 @@ function DatePickerTrigger({
   className,
   ref,
   // Destructure conflicting props to avoid motion type errors
-  onDrag,
-  onDragStart,
-  onDragEnd,
-  onAnimationStart,
-  onAnimationEnd,
+  onDrag: _onDrag,
+  onDragStart: _onDragStart,
+  onDragEnd: _onDragEnd,
+  onAnimationStart: _onAnimationStart,
+  onAnimationEnd: _onAnimationEnd,
   ...props
 }: DatePickerTriggerProps) {
   const { isOpen, setIsOpen, triggerRef, disabled } = useDatePickerContext()
@@ -248,7 +248,7 @@ function DatePickerTrigger({
         S.trigger.base,
         S.trigger.width.auto,
         isOpen && S.trigger.open,
-        className
+        className,
       )}
       aria-haspopup="dialog"
       aria-expanded={isOpen}
@@ -286,7 +286,7 @@ function DatePickerValue({
           : formatDateRange(selectedRange, locale)
       }
       if (selectedRange.start) {
-        return formatDate(selectedRange.start, locale) + ' - ...'
+        return `${formatDate(selectedRange.start, locale)  } - ...`
       }
     }
 
@@ -317,7 +317,7 @@ function DatePickerPortal({ children, container }: DatePickerPortalProps) {
 
   return createPortal(
     <AnimatePresence>{isOpen && children}</AnimatePresence>,
-    portalContainer
+    portalContainer,
   )
 }
 
@@ -330,11 +330,11 @@ function DatePickerPopup({
   className,
   ref,
   // Destructure conflicting props to avoid motion type errors
-  onDrag,
-  onDragStart,
-  onDragEnd,
-  onAnimationStart,
-  onAnimationEnd,
+  onDrag: _onDrag,
+  onDragStart: _onDragStart,
+  onDragEnd: _onDragEnd,
+  onAnimationStart: _onAnimationStart,
+  onAnimationEnd: _onAnimationEnd,
   ...props
 }: DatePickerPopupProps) {
   const { setIsOpen, popupRef, triggerRef } = useDatePickerContext()
@@ -342,7 +342,7 @@ function DatePickerPopup({
   // Close on click outside (using multiple refs to exclude both popup and trigger)
   useClickOutsideMultiple(
     [popupRef as React.RefObject<HTMLElement>, triggerRef as React.RefObject<HTMLElement>],
-    () => setIsOpen(false)
+    () => setIsOpen(false),
   )
 
   // Close on escape

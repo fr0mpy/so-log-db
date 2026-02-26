@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { useTranslations } from 'next-intl'
 import { cn } from '@stackone-ui/core/utils'
+import { useTranslations } from '@stackone/i18n'
 import { SkipLinksStyles as S } from './styles'
 import type { SkipLinkTarget } from './types'
 
@@ -64,6 +64,7 @@ export function SkipLinks() {
   }
 
   return (
+    /* eslint-disable-next-line jsx-a11y/no-static-element-interactions -- focus/blur events track skip link visibility, not interactive behavior */
     <div
       ref={containerRef}
       className={cn(S.container, visible && S.containerVisible)}

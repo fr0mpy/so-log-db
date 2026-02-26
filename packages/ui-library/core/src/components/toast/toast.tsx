@@ -1,17 +1,17 @@
 'use client'
 
-import { cn } from '@/utils/cn'
+import { useState, useEffect, useCallback, createContext, useContext, useMemo } from 'react'
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle, Loader2 } from 'lucide-react'
-import { useState, useEffect, useCallback, createContext, useContext } from 'react'
-import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'motion/react'
-import { TOAST, SPRING, SR_ONLY, SLIDE_FADE, type SlideDirection } from '../../config'
+import { createPortal } from 'react-dom'
+import { cn } from '@/utils/cn'
 import {
   ToastStyles as S,
   variantStyles,
   iconStyles,
   containerStyles,
 } from './styles'
+import { TOAST, SPRING, SR_ONLY, SLIDE_FADE, type SlideDirection } from '../../config'
 import type {
   ToastVariant,
   ToastPosition,
@@ -72,8 +72,14 @@ function ToastProvider({ children }: ToastProviderProps) {
     setToasts((prev) => prev.filter((t) => t.id !== id))
   }, [])
 
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(
+    () => ({ toasts, addToast, removeToast }),
+    [toasts, addToast, removeToast],
+  )
+
   return (
-    <ToastContext.Provider value={{ toasts, addToast, removeToast }}>
+    <ToastContext.Provider value={contextValue}>
       {children}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
     </ToastContext.Provider>
@@ -96,15 +102,15 @@ function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
             className={cn(S.container.base, containerStyles[position])}
           >
             <AnimatePresence mode="popLayout">
-              {positionToasts.map((toast) => (
-                <ToastRoot key={toast.id} toast={toast} onClose={() => onRemove(toast.id)} />
-              ))}
+              {positionToasts.map((toast) =>
+                <ToastRoot key={toast.id} toast={toast} onClose={() => onRemove(toast.id)} />,
+              )}
             </AnimatePresence>
           </div>
         )
       })}
     </>,
-    document.body
+    document.body,
   )
 }
 

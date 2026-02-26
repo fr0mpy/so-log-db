@@ -1,8 +1,8 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
-import type { LogEntry, SortableColumn, SortState } from '../app/logs/_lib'
 import { createComparator, getDefaultDirection } from '../app/logs/_lib'
+import type { LogEntry, SortableColumn, SortState } from '../app/logs/_lib'
 
 interface UseTableSortOptions {
   /** Default column to sort by */
@@ -36,7 +36,7 @@ interface UseTableSortReturn {
  */
 export function useTableSort(
   data: readonly LogEntry[],
-  options?: UseTableSortOptions
+  options?: UseTableSortOptions,
 ): UseTableSortReturn {
   const [sortState, setSortState] = useState<SortState>({
     column: options?.column ?? null,

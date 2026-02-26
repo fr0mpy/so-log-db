@@ -2,14 +2,14 @@
 
 import { useState } from 'react'
 import { ChevronRight } from 'lucide-react'
-import { formatTimestamp } from '@stackone/utils/formatters'
-import { cn } from '@stackone-ui/core/utils'
-import { Text } from '@stackone-ui/core/text'
 import { Tag, type TagVariant } from '@stackone-ui/core/display'
 import { Badge, type BadgeVariant } from '@stackone-ui/core/display'
-import { UnderlyingRequestsStyles as S } from './styles'
+import { Text } from '@stackone-ui/core/text'
+import { cn } from '@stackone-ui/core/utils'
+import { formatTimestamp } from '@stackone/utils/formatters'
 import { RequestSection } from './RequestSection'
 import { ResponseSection } from './ResponseSection'
+import { UnderlyingRequestsStyles as S } from './styles'
 import { LatencyBar } from '../../components/LatencyBar'
 import type { UnderlyingRequestsTabProps, UnderlyingRequest } from './types'
 
@@ -55,7 +55,7 @@ function UnderlyingRequestRow({ request, isExpanded, onToggle }: UnderlyingReque
             className={cn(
               S.expandIcon,
               isExpanded && S.expandIconExpanded,
-              !hasDetails && 'opacity-0'
+              !hasDetails && 'opacity-0',
             )}
           />
           <Tag variant={METHOD_VARIANT[request.method] || 'muted'}>
@@ -73,9 +73,9 @@ function UnderlyingRequestRow({ request, isExpanded, onToggle }: UnderlyingReque
       {/* Expanded content */}
       {isExpanded && hasDetails && (
         <div className={S.expandedContent}>
-          {request.requestDetails && (
-            <RequestSection request={request.requestDetails} />
-          )}
+          {request.requestDetails
+            && <RequestSection request={request.requestDetails} />
+          }
           {request.responseDetails && (
             <div className="mt-3">
               <ResponseSection response={request.responseDetails} />

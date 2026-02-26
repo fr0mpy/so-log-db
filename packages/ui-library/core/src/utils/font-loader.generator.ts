@@ -12,9 +12,9 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import type { BrandTheme, GoogleFontConfig, FontConfig } from './theme.types'
 import { BRAND_NAMES } from '../theming/input'
 import * as themes from '../theming/input'
+import type { BrandTheme, GoogleFontConfig, FontConfig } from './theme.types'
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url)

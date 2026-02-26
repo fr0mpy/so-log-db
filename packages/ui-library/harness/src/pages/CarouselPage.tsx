@@ -1,4 +1,4 @@
-import { Carousel } from '@stackone-ui/core'
+import { Carousel } from '@stackone-ui/core/carousel'
 
 export default function CarouselPage() {
   const items = [

@@ -31,26 +31,26 @@ export function RadiusTokens({
         </button>
       </div>
 
-      {showJson ? (
-        <TokenViewer data={radius} />
-      ) : (
-        <div className={S.grid.radius}>
-          {entries.map(([name, value]) => (
-            <div key={name} className="text-center">
-              <div
-                className={RadiusTokenStyles.box}
-                style={{ borderRadius: value }}
-                title={`--radius-${name}: ${value}`}
-              />
-              <p className={RadiusTokenStyles.label}>
-                {name}
-                <br />
-                <span className="text-muted-foreground">{value}</span>
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
+      {showJson
+        ? <TokenViewer data={radius} />
+        : (
+          <div className={S.grid.radius}>
+            {entries.map(([name, value]) => (
+              <div key={name} className="text-center">
+                <div
+                  className={RadiusTokenStyles.box}
+                  style={{ borderRadius: value }}
+                  title={`--radius-${name}: ${value}`}
+                />
+                <p className={RadiusTokenStyles.label}>
+                  {name}
+                  <br />
+                  <span className="text-muted-foreground">{value}</span>
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
     </div>
   )
 }

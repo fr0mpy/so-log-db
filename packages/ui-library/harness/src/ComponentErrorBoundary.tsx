@@ -28,7 +28,7 @@ export class ComponentErrorBoundary extends React.Component<
     console.error(
       `Component error in ${this.props.name}:`,
       error,
-      errorInfo
+      errorInfo,
     )
     this.setState({ errorInfo })
   }

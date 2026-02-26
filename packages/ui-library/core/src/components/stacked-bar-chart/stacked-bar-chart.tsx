@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import type { StackedBarChartProps, TooltipData, ChartDataPoint } from './types'
-import { StackedBarChartStyles as S, SvgStyles } from './styles'
 import { ChartTooltip } from './chart-tooltip'
+import { StackedBarChartStyles as S, SvgStyles } from './styles'
 import { cn } from '../../utils'
+import type { StackedBarChartProps, TooltipData, ChartDataPoint } from './types'
 
 // Chart dimensions (viewBox coordinates)
 const VIEW_WIDTH = 1000

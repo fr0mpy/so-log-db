@@ -1,6 +1,6 @@
+import type { ReactNode } from 'react'
 import { Paper } from '@stackone-ui/core/paper'
 import { LogStats } from '../../../styles'
-import type { ReactNode } from 'react'
 
 interface StatCardProps {
   label: string

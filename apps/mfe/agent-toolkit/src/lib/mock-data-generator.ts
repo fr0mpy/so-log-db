@@ -52,7 +52,7 @@ function generateTimestamp(seed: number, bucket: TimeBucket, now: Date): Date {
 
   if (bucket === 'today') {
     const hour = businessHours.start + Math.floor(
-      seededRandom(seed) * Math.min(businessHours.duration, Math.max(1, now.getHours() - 7))
+      seededRandom(seed) * Math.min(businessHours.duration, Math.max(1, now.getHours() - 7)),
     )
     const minute = Math.floor(seededRandom(seed * 2) * 60)
     const second = Math.floor(seededRandom(seed * 3) * 60)
@@ -75,7 +75,7 @@ function generateTimestamp(seed: number, bucket: TimeBucket, now: Date): Date {
     ts.setHours(
       Math.floor(seededRandom(seed * 2) * 24),
       Math.floor(seededRandom(seed * 3) * 60),
-      Math.floor(seededRandom(seed * 4) * 60)
+      Math.floor(seededRandom(seed * 4) * 60),
     )
     return ts
   }
@@ -140,7 +140,7 @@ function createLog(index: number, baseSeed: number, bucket: TimeBucket, now: Dat
     queryParams: {
       page: 1,
       per_page: 50,
-      ...(seededRandom(seed * 13) > 0.5 ? { include: 'metadata' } : {}),
+      ...seededRandom(seed * 13) > 0.5 ? { include: 'metadata' } : {},
     } as Record<string, string | number>,
     body: baseRequest.method === 'POST' || baseRequest.method === 'PUT' ? {
       data: {
@@ -167,8 +167,8 @@ function createLog(index: number, baseSeed: number, bucket: TimeBucket, now: Dat
       ] : {
         error: {
           code: status === 401 ? 'unauthorized' : status === 404 ? 'not_found' : 'bad_request',
-          message: status === 401 ? 'Invalid or expired access token' :
-                   status === 404 ? 'Resource not found' : 'Invalid request parameters',
+          message: status === 401 ? 'Invalid or expired access token'
+            : status === 404 ? 'Resource not found' : 'Invalid request parameters',
         },
       },
       meta: { page: 1, per_page: 50, total: 25 },
@@ -180,34 +180,34 @@ function createLog(index: number, baseSeed: number, bucket: TimeBucket, now: Dat
   const underlyingRequestCount = hasUnderlyingRequests ? Math.floor(seededRandom(seed * 17) * 3) + 1 : 0
   const underlyingRequests: UnderlyingRequest[] | undefined = hasUnderlyingRequests
     ? Array.from({ length: underlyingRequestCount }, (_, i) => {
-        const urSeed = seed * 100 + i
-        const urTimestamp = new Date(timestamp.getTime() + Math.floor(seededRandom(urSeed) * duration))
-        const urDuration = Math.floor(seededRandom(urSeed * 2) * (duration / underlyingRequestCount))
-        const urStatus = seededRandom(urSeed * 3) > 0.2 ? 200 : status
-        return {
-          id: `ur_${seed}_${i + 1}`,
-          timestamp: urTimestamp.toISOString(),
+      const urSeed = seed * 100 + i
+      const urTimestamp = new Date(timestamp.getTime() + Math.floor(seededRandom(urSeed) * duration))
+      const urDuration = Math.floor(seededRandom(urSeed * 2) * (duration / underlyingRequestCount))
+      const urStatus = seededRandom(urSeed * 3) > 0.2 ? 200 : status
+      return {
+        id: `ur_${seed}_${i + 1}`,
+        timestamp: urTimestamp.toISOString(),
+        method: i === 0 ? 'GET' : seededRandom(urSeed * 4) > 0.5 ? 'POST' : 'GET',
+        url: `https://api.${providerSlug}.com/v1/internal/${i === 0 ? 'auth' : 'data'}`,
+        duration: urDuration,
+        status: urStatus,
+        requestDetails: {
           method: i === 0 ? 'GET' : seededRandom(urSeed * 4) > 0.5 ? 'POST' : 'GET',
-          url: `https://api.${providerSlug}.com/v1/internal/${i === 0 ? 'auth' : 'data'}`,
-          duration: urDuration,
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': '<redacted>',
+          },
+        },
+        responseDetails: {
           status: urStatus,
-          requestDetails: {
-            method: i === 0 ? 'GET' : seededRandom(urSeed * 4) > 0.5 ? 'POST' : 'GET',
-            headers: {
-              'Accept': 'application/json',
-              'Authorization': '<redacted>',
-            },
+          headers: {
+            'Content-Type': 'application/json',
           },
-          responseDetails: {
-            status: urStatus,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: urStatus === 200 ? { success: true } : { error: 'Request failed' },
-            bodyAvailable: true,
-          },
-        }
-      })
+          body: urStatus === 200 ? { success: true } : { error: 'Request failed' },
+          bodyAvailable: true,
+        },
+      }
+    })
     : undefined
 
   return {

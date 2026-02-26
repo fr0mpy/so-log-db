@@ -1,11 +1,11 @@
-import { Paper } from "@stackone-ui/core/paper";
-import { Skeleton } from "@stackone-ui/core/skeleton";
+import { Paper } from '@stackone-ui/core/paper'
+import { Skeleton } from '@stackone-ui/core/skeleton'
 import {
   Grid,
   LogStats,
   DataTable,
   LogsPageSkeleton as Skel,
-} from "../../../../styles";
+} from '../../../../styles'
 
 /**
  * Skeleton for logs content (chart, stats, table) - NO header.
@@ -36,11 +36,11 @@ export function LogsContentSkeleton() {
 
       <div className={DataTable.scrollWrapper}>
         <Paper className={DataTable.bodyPaper}>
-          {[...Array(10)].map((_, i) => (
-            <Skeleton key={i} className={Skel.tableRow} />
-          ))}
+          {[...Array(10)].map((_, i) =>
+            <Skeleton key={i} className={Skel.tableRow} />,
+          )}
         </Paper>
       </div>
     </>
-  );
+  )
 }

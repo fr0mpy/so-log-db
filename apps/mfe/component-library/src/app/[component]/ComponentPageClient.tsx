@@ -4,8 +4,8 @@ import { Suspense, lazy } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@stackone-ui/core/button'
-import type { ComponentRoute, AdjacentRoutes } from '../../routes'
 import { LayoutStyles as S } from '../../components/styles'
+import type { ComponentRoute, AdjacentRoutes } from '../../routes'
 
 /** Lazy-loaded component pages from harness */
 const componentPages: Record<string, React.LazyExoticComponent<React.ComponentType>> = {

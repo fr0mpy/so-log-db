@@ -22,7 +22,7 @@ export function usePrefetch(href: string) {
 
     // Check if already prefetched by another instance
     const existingLink = document.querySelector(
-      `link[rel="prefetch"][href="${href}"]`
+      `link[rel="prefetch"][href="${href}"]`,
     )
     if (existingLink) {
       prefetchedRef.current = true

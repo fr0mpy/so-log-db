@@ -45,4 +45,3 @@ export const DropdownMenuStyles = {
   label: MenuStyles.label,
   alignment: MenuStyles.alignment,
 } as const
-

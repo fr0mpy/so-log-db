@@ -16,7 +16,7 @@ function PaperRoot({ className, children, depth = 'md', ref, ...props }: PaperRo
       className={cn(
         depth === 'sm' ? S.root.inset : S.root.base,
         S.root.effects,
-        className
+        className,
       )}
       {...props}
     >

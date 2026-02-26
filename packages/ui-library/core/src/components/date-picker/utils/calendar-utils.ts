@@ -2,8 +2,8 @@
  * Calendar grid generation utilities for DatePicker component.
  */
 
-import type { WeekStartDay } from '../types'
 import { startOfMonth, startOfWeek, addDays, isSameDay } from './date-utils'
+import type { WeekStartDay } from '../types'
 
 export interface CalendarDay {
   date: Date
@@ -23,7 +23,7 @@ export interface CalendarMonth {
 export function generateCalendarMonth(
   date: Date,
   weekStartDay: WeekStartDay = 0,
-  locale: string = 'en-US'
+  locale: string = 'en-US',
 ): CalendarMonth {
   const firstDayOfMonth = startOfMonth(date)
   const startDate = startOfWeek(firstDayOfMonth, weekStartDay)
@@ -57,7 +57,7 @@ export function generateCalendarMonth(
  */
 export function generateWeekdayHeaders(
   startDate: Date,
-  locale: string = 'en-US'
+  locale: string = 'en-US',
 ): string[] {
   return Array.from({ length: 7 }, (_, i) => {
     const dayDate = addDays(startDate, i)
@@ -82,7 +82,7 @@ export function generateMonthOptions(locale: string = 'en-US'): { value: number;
  */
 export function generateYearRange(
   centerYear: number = new Date().getFullYear(),
-  range: number = 10
+  range: number = 10,
 ): number[] {
   const start = centerYear - range
   const end = centerYear + range

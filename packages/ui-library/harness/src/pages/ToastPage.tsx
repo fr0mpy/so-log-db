@@ -1,4 +1,5 @@
-import { ToastProvider, useToast, Button } from '@stackone-ui/core'
+import { Button } from '@stackone-ui/core/button'
+import { ToastProvider, useToast } from '@stackone-ui/core/toast'
 
 function ToastDemoContent() {
   const { addToast } = useToast()
@@ -32,9 +33,9 @@ function ToastDemoContent() {
             >
               {position}
             </Button>
-          ) : (
-            <div key={idx} />
           )
+            : <div key={idx} />,
+
         )}
       </div>
     </div>

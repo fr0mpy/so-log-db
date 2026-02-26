@@ -1,4 +1,5 @@
-import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel, Button } from '@stackone-ui/core'
+import { Button } from '@stackone-ui/core/button'
+import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel } from '@stackone-ui/core/dropdown-menu'
 
 export default function DropdownMenuPage() {
   return (

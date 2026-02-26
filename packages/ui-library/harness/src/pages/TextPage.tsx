@@ -1,4 +1,4 @@
-import { Text } from '@stackone-ui/core'
+import { Text } from '@stackone-ui/core/text'
 
 export default function TextPage() {
   return (

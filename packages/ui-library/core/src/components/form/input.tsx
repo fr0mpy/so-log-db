@@ -1,7 +1,7 @@
 'use client'
 
-import { cn } from '@/utils/cn'
 import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from '@/utils/cn'
 import { InputStyles as S } from './styles'
 
 // Input base styles
@@ -55,7 +55,7 @@ const inputVariants = cva(
       state: 'default',
       disabled: false,
     },
-  }
+  },
 )
 
 export type InputVariants = VariantProps<typeof inputVariants>
@@ -92,7 +92,7 @@ function Input({ className, type = 'text', label, error, success, helperText, le
             inputVariants({ state, disabled }),
             leftIcon && WITH_ICON_LEFT,
             rightIcon && WITH_ICON_RIGHT,
-            className
+            className,
           )}
           ref={ref}
           {...props}

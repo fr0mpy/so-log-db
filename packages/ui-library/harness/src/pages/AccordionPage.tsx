@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@stackone-ui/core'
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@stackone-ui/core/accordion'
 
 export default function AccordionPage() {
   return (

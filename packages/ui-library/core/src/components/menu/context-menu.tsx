@@ -1,6 +1,5 @@
 'use client'
 
-import { cn } from '@/utils/cn'
 import {
   useState,
   useRef,
@@ -10,8 +9,9 @@ import {
   useMemo,
 } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { useClickOutside, SPRING_CONFIG } from '../../hooks'
+import { cn } from '@/utils/cn'
 import { ContextMenuStyles as S } from './styles'
+import { useClickOutside, SPRING_CONFIG } from '../../hooks'
 import type {
   ContextMenuRootProps,
   ContextMenuTriggerProps,
@@ -65,7 +65,7 @@ function ContextMenuRoot({
       }
       onOpenChange?.(newOpen)
     },
-    [isControlled, onOpenChange]
+    [isControlled, onOpenChange],
   )
 
   const contextValue = useMemo(
@@ -75,7 +75,7 @@ function ContextMenuRoot({
       position,
       setPosition,
     }),
-    [open, setOpen, position]
+    [open, setOpen, position],
   )
 
   return (
@@ -92,11 +92,32 @@ function ContextMenuTrigger({ children, className }: ContextMenuTriggerProps) {
       setPosition({ x: event.clientX, y: event.clientY })
       setOpen(true)
     },
-    [setOpen, setPosition]
+    [setOpen, setPosition],
+  )
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      // Shift+F10 or Context Menu key opens context menu
+      if (event.key === 'ContextMenu' || (event.shiftKey && event.key === 'F10')) {
+        event.preventDefault()
+        const target = event.currentTarget as HTMLElement
+        const rect = target.getBoundingClientRect()
+        setPosition({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 })
+        setOpen(true)
+      }
+    },
+    [setOpen, setPosition],
   )
 
   return (
-    <div onContextMenu={handleContextMenu} className={className}>
+    <div
+      onContextMenu={handleContextMenu}
+      onKeyDown={handleKeyDown}
+      className={className}
+      role="button"
+      tabIndex={0}
+      aria-haspopup="menu"
+    >
       {children}
     </div>
   )
@@ -125,7 +146,7 @@ function ContextMenuPositioner({ children, className }: ContextMenuPositionerPro
   )
 }
 
-function ContextMenuPopup({ className, children, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: ContextMenuPopupProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+function ContextMenuPopup({ className, children, ref, onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, ...props }: ContextMenuPopupProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
   return (
     <motion.div
       ref={ref}
@@ -142,7 +163,7 @@ function ContextMenuPopup({ className, children, ref, onDrag, onDragStart, onDra
   )
 }
 
-function ContextMenuItem({ className, children, onClick, ref, onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, ...props }: MenuItemProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
+function ContextMenuItem({ className, children, onClick, ref, onDrag: _onDrag, onDragStart: _onDragStart, onDragEnd: _onDragEnd, onAnimationStart: _onAnimationStart, onAnimationEnd: _onAnimationEnd, ...props }: MenuItemProps & { onDrag?: unknown; onDragStart?: unknown; onDragEnd?: unknown; onAnimationStart?: unknown; onAnimationEnd?: unknown }) {
   const { setOpen } = useContextMenuContext()
 
   const handleClick = useCallback(
@@ -150,7 +171,7 @@ function ContextMenuItem({ className, children, onClick, ref, onDrag, onDragStar
       onClick?.(e)
       setOpen(false)
     },
-    [onClick, setOpen]
+    [onClick, setOpen],
   )
 
   return (

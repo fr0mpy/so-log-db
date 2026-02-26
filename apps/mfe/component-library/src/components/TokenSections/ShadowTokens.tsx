@@ -26,10 +26,10 @@ export function ShadowTokens({
   const controlShadows = entries.filter(([name]) => name.startsWith('control-'))
   const otherShadows = entries.filter(
     ([name]) =>
-      !name.startsWith('raised') &&
-      !name.startsWith('pressed') &&
-      !name.startsWith('variant-') &&
-      !name.startsWith('control-')
+      !name.startsWith('raised')
+      && !name.startsWith('pressed')
+      && !name.startsWith('variant-')
+      && !name.startsWith('control-'),
   )
 
   const renderShadowGrid = (shadowList: [string, string][], subtitle: string) => (
@@ -83,17 +83,17 @@ export function ShadowTokens({
         </div>
       </div>
 
-      {showJson ? (
-        <TokenViewer data={currentShadows} title={`${mode} mode shadows`} />
-      ) : (
-        <div className="space-y-8">
-          {raisedShadows.length > 0 && renderShadowGrid(raisedShadows, 'Raised (Elevated)')}
-          {pressedShadows.length > 0 && renderShadowGrid(pressedShadows, 'Pressed (Inset)')}
-          {otherShadows.length > 0 && renderShadowGrid(otherShadows, 'Utility')}
-          {variantShadows.length > 0 && renderShadowGrid(variantShadows, 'Variant')}
-          {controlShadows.length > 0 && renderShadowGrid(controlShadows, 'Control')}
-        </div>
-      )}
+      {showJson
+        ? <TokenViewer data={currentShadows} title={`${mode} mode shadows`} />
+        : (
+          <div className="space-y-8">
+            {raisedShadows.length > 0 && renderShadowGrid(raisedShadows, 'Raised (Elevated)')}
+            {pressedShadows.length > 0 && renderShadowGrid(pressedShadows, 'Pressed (Inset)')}
+            {otherShadows.length > 0 && renderShadowGrid(otherShadows, 'Utility')}
+            {variantShadows.length > 0 && renderShadowGrid(variantShadows, 'Variant')}
+            {controlShadows.length > 0 && renderShadowGrid(controlShadows, 'Control')}
+          </div>
+        )}
     </div>
   )
 }

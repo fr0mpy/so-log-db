@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { ChevronRight, Sparkles, ThumbsUp, ThumbsDown, ExternalLink, Loader2 } from 'lucide-react'
 import { cn } from '@stackone-ui/core/utils'
 import { useTranslations, aria } from '@stackone/i18n'
-import { ErrorExplainerStyles as S, Section } from './styles'
 import { useErrorExplainer } from './hooks'
+import { ErrorExplainerStyles as S, Section } from './styles'
 import type { ErrorExplainerProps } from './types'
 
 /**
@@ -47,14 +47,14 @@ export function ErrorExplainer({ show }: ErrorExplainerProps) {
               onClick={(e) => {
                 e.stopPropagation()
                 setIsExpanded(true)
-                generate()
+                void generate()
               }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault()
                   e.stopPropagation()
                   setIsExpanded(true)
-                  generate()
+                  void generate()
                 }
               }}
               role="button"
@@ -100,7 +100,7 @@ export function ErrorExplainer({ show }: ErrorExplainerProps) {
                 dangerouslySetInnerHTML={{
                   __html: state.explanation
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\n/g, '<br/>')
+                    .replace(/\n/g, '<br/>'),
                 }}
               />
 
@@ -131,31 +131,35 @@ export function ErrorExplainer({ show }: ErrorExplainerProps) {
                     type="button"
                     className={cn(
                       S.feedbackButton,
-                      state.feedback === 'positive' && S.feedbackButtonActive
+                      state.feedback === 'positive' && S.feedbackButtonActive,
                     )}
                     onClick={() => submitFeedback('positive')}
                     aria-label={t(aria.markAsHelpful)}
                     aria-pressed={state.feedback === 'positive'}
                   >
-                    <ThumbsUp className={cn(
-                      S.feedbackIcon,
-                      state.feedback === 'positive' ? 'text-success' : 'text-muted-foreground'
-                    )} />
+                    <ThumbsUp
+                      className={cn(
+                        S.feedbackIcon,
+                        state.feedback === 'positive' ? 'text-success' : 'text-muted-foreground',
+                      )}
+                    />
                   </button>
                   <button
                     type="button"
                     className={cn(
                       S.feedbackButton,
-                      state.feedback === 'negative' && S.feedbackButtonActive
+                      state.feedback === 'negative' && S.feedbackButtonActive,
                     )}
                     onClick={() => submitFeedback('negative')}
                     aria-label={t(aria.markAsNotHelpful)}
                     aria-pressed={state.feedback === 'negative'}
                   >
-                    <ThumbsDown className={cn(
-                      S.feedbackIcon,
-                      state.feedback === 'negative' ? 'text-destructive' : 'text-muted-foreground'
-                    )} />
+                    <ThumbsDown
+                      className={cn(
+                        S.feedbackIcon,
+                        state.feedback === 'negative' ? 'text-destructive' : 'text-muted-foreground',
+                      )}
+                    />
                   </button>
                 </div>
               </div>

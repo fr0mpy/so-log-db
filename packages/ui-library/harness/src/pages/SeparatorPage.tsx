@@ -1,4 +1,4 @@
-import { Separator } from '@stackone-ui/core'
+import { Separator } from '@stackone-ui/core/separator'
 
 export default function SeparatorPage() {
   return (

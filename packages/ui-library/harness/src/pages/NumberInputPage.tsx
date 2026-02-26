@@ -1,4 +1,4 @@
-import { NumberInput } from '@stackone-ui/core'
+import { NumberInput } from '@stackone-ui/core/number-input'
 
 export default function NumberInputPage() {
   return (

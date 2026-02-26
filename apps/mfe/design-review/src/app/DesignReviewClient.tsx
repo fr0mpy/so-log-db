@@ -1,11 +1,11 @@
 'use client'
 
-import { Text } from '@stackone-ui/core/text'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@stackone-ui/core/tabs'
+import { Text } from '@stackone-ui/core/text'
+import { PageStyles as S } from './styles'
 import { DesignViewer } from '../components/design-viewer'
 import { Logo } from '../components/logo'
 import { screenA, screenB } from '../data/screens'
-import { PageStyles as S } from './styles'
 
 interface DesignReviewClientProps {
   translations: {

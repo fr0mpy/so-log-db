@@ -1,4 +1,4 @@
-import { Alert, AlertTitle, AlertDescription } from '@stackone-ui/core'
+import { Alert, AlertTitle, AlertDescription } from '@stackone-ui/core/alert'
 
 export default function AlertPage() {
   return (

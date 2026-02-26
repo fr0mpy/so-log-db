@@ -110,7 +110,7 @@ function DateInput({
         handler()
       }
     },
-    []
+    [],
   )
 
   if (mode === 'single') {

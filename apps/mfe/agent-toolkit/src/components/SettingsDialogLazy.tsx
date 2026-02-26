@@ -13,5 +13,5 @@ interface SettingsDialogProps {
  * Defers settings UI until user opens the settings menu.
  */
 export const SettingsDialogLazy = dynamic<SettingsDialogProps>(
-  () => import('./SettingsDialog').then((mod) => mod.SettingsDialog)
+  () => import('./SettingsDialog').then((mod) => mod.SettingsDialog),
 )

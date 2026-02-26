@@ -1,18 +1,18 @@
 'use client'
 
-import { cn } from '../../utils/cn'
+import { createContext, useContext, cloneElement, isValidElement, useMemo } from 'react'
 import { ChevronDown } from 'lucide-react'
-import { createContext, useContext, cloneElement, isValidElement } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { useControlledState } from '../../hooks/useControlledState'
+import { CollapsibleStyles as S } from './styles'
 import { SPRING, DURATION } from '../../config'
+import { useControlledState } from '../../hooks/useControlledState'
+import { cn } from '../../utils/cn'
 import type {
   CollapsibleContextValue,
   CollapsibleRootProps,
   CollapsibleTriggerProps,
   CollapsibleContentProps,
 } from './types'
-import { CollapsibleStyles as S } from './styles'
 
 const CollapsibleContext = createContext<CollapsibleContextValue | undefined>(undefined)
 
@@ -32,11 +32,17 @@ function CollapsibleRoot({ defaultOpen = false, open, onOpenChange, className, c
   const [isOpen, setIsOpen] = useControlledState<boolean>(
     open,
     defaultOpen,
-    onOpenChange
+    onOpenChange,
+  )
+
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(
+    () => ({ open: isOpen, setOpen: setIsOpen }),
+    [isOpen, setIsOpen],
   )
 
   return (
-    <CollapsibleContext.Provider value={{ open: isOpen, setOpen: setIsOpen }}>
+    <CollapsibleContext.Provider value={contextValue}>
       <div ref={ref} data-state={isOpen ? 'open' : 'closed'} className={cn(S.root, className)} {...props}>
         {children}
       </div>
@@ -106,7 +112,7 @@ function CollapsibleContent({ className, children, ref, ...props }: CollapsibleC
   const { open } = useCollapsibleContext()
 
   // Destructure drag-related props to avoid conflicts with Framer Motion's drag types
-  const { onDrag, onDragEnd, onDragStart, ...motionSafeProps } = props as Record<string, unknown>
+  const { onDrag: _onDrag, onDragEnd: _onDragEnd, onDragStart: _onDragStart, ...motionSafeProps } = props as Record<string, unknown>
 
   return (
     <AnimatePresence initial={false}>
@@ -119,16 +125,16 @@ function CollapsibleContent({ className, children, ref, ...props }: CollapsibleC
             opacity: 1,
             transition: {
               height: { ...SPRING.default },
-              opacity: { duration: DURATION.normal, delay: DURATION.instant }
-            }
+              opacity: { duration: DURATION.normal, delay: DURATION.instant },
+            },
           }}
           exit={{
             height: 0,
             opacity: 0,
             transition: {
               height: { ...SPRING.default },
-              opacity: { duration: DURATION.fast }
-            }
+              opacity: { duration: DURATION.fast },
+            },
           }}
           data-state={open ? 'open' : 'closed'}
           className={S.contentWrapper}

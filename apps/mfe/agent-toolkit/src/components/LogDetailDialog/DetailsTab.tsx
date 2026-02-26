@@ -1,9 +1,9 @@
 'use client'
 
 import { UrlBar } from '@stackone-ui/core/display'
+import { ErrorExplainer } from './ErrorExplainer'
 import { RequestSection } from './RequestSection'
 import { ResponseSection } from './ResponseSection'
-import { ErrorExplainer } from './ErrorExplainer'
 import type { DetailsTabProps } from './types'
 
 /**

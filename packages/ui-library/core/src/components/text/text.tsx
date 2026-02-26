@@ -1,7 +1,7 @@
 import { cn } from '@/utils/cn'
 import { TextStyles as S } from './styles'
-import type { TextProps, LineClamp } from './types'
 import { DEFAULT_ELEMENT_MAP } from './types'
+import type { TextProps, LineClamp } from './types'
 
 /**
  * Text component for consistent typography across the application.
@@ -47,7 +47,7 @@ function TextComponent({
     lineClamp && S.lineClamps[lineClamp as LineClamp],
     italic && S.modifiers.italic,
     underline && S.modifiers.underline,
-    className
+    className,
   )
 
   return (

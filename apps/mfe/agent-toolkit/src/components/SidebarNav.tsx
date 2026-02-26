@@ -3,8 +3,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { FileText, Search, Compass, type LucideIcon } from 'lucide-react'
-import { useTranslations, navigation } from '@stackone/i18n'
 import { cn } from '@stackone-ui/core/utils'
+import { useTranslations, navigation } from '@stackone/i18n'
 import { Routes, BASE_PATH } from '../routes'
 import { useSidebar } from './SidebarContext'
 import { SidebarNavStyles as S } from './styles'
@@ -48,7 +48,7 @@ function NavItem({
       <span
         className={cn(
           S.item.label,
-          isExpanded ? S.item.labelVisible : S.item.labelHidden
+          isExpanded ? S.item.labelVisible : S.item.labelHidden,
         )}
       >
         {children}
@@ -78,7 +78,7 @@ function DecorativeNavItem({
       <span
         className={cn(
           S.item.label,
-          isExpanded ? S.item.labelVisible : S.item.labelHidden
+          isExpanded ? S.item.labelVisible : S.item.labelHidden,
         )}
       >
         {children}

@@ -1,4 +1,5 @@
-import { Tooltip, Button } from '@stackone-ui/core'
+import { Button } from '@stackone-ui/core/button'
+import { Tooltip } from '@stackone-ui/core/tooltip'
 
 export default function TooltipPage() {
   return (
