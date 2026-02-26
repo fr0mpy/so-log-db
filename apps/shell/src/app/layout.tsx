@@ -1,7 +1,7 @@
 import { NextIntlClientProvider } from 'next-intl'
-import { FontSetup } from '@stackone-ui/core/theming'
 import { getThemeFromCookies, ThemeInitScript } from '@stackone-ui/core/providers/server'
 import { SpeculationRules } from '@stackone-ui/core/speculation-rules'
+import { FontSetup } from '@stackone-ui/core/theming'
 import { getLocale, getMessages, getTranslations } from '@stackone/i18n'
 import { MFE_BASE_PATHS, MFE_ORIGINS } from '@/lib/mfe-urls'
 import { Providers } from './providers'
