@@ -4,8 +4,8 @@
  */
 
 export const LayoutStyles = {
-  /** Main container - full viewport height with modern units */
-  container: 'min-h-[100dvh] flex bg-background overflow-hidden',
+  /** Main container - fixed viewport height for flex children */
+  container: 'h-[100dvh] flex bg-background overflow-hidden',
 
   /** Sidebar - hidden on mobile, visible on md+ */
   sidebar: {
@@ -29,7 +29,7 @@ export const LayoutStyles = {
   },
 
   /** Main content area */
-  main: 'flex-1 min-w-0 overflow-y-auto bg-background',
+  main: 'flex-1 min-w-0 overflow-hidden bg-background',
 
   /** Scrollable content wrapper - responsive padding */
   scrollArea: 'h-full p-4 md:p-6 lg:p-8',
