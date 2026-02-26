@@ -13,3 +13,4 @@
 export * from './logger'
 export * from './storage'
 export * from './formatters'
+export * from './speculation-rules'

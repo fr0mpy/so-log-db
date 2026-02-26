@@ -13,6 +13,7 @@
     "./paper": "./src/components/paper/index.ts",
     "./scroll-area": "./src/components/display/scroll-area.tsx",
     "./sidenav": "./src/components/sidenav/index.ts",
+    "./speculation-rules": "./src/components/speculation-rules/index.ts",
     "./theme-switcher": "./src/components/theme-switcher/index.ts",
     "./text": "./src/components/text/index.ts",
     "./badge": "./src/components/display/badge.tsx",
@@ -62,7 +63,6 @@
     "./theming/input": "./src/theming/input/index.ts",
     "./theming/output/base.css": "./src/theming/output/base.css",
     "./theming/output/stackone-green.css": "./src/theming/output/stackone-green.css",
-    "./fonts": "./src/fonts/index.ts",
     "./tailwind.preset": "./tailwind.preset.ts",
     "./tailwind.config": "./tailwind.config.ts"
   },

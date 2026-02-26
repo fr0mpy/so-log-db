@@ -8,7 +8,8 @@
     ".": "./src/index.ts",
     "./logger": "./src/logger/index.ts",
     "./storage": "./src/storage/index.ts",
-    "./formatters": "./src/formatters/index.ts"
+    "./formatters": "./src/formatters/index.ts",
+    "./speculation-rules": "./src/speculation-rules/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

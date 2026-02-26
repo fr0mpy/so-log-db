@@ -1,7 +1,6 @@
 import { Paper } from '@stackone-ui/core/paper'
 import { Text } from '@stackone-ui/core/text'
 import { getTranslations } from '@stackone/i18n'
-import { PrefetchLink } from '@/components'
 import { HomeStyles as S } from './styles'
 import { Routes } from '../lib/routes'
 
@@ -14,9 +13,9 @@ export default async function HomePage() {
         <Paper className={S.paper}>
           <Paper.Header>
             <Paper.Title>
-              <PrefetchLink href={Routes.designReview} className={S.link}>
+              <a href={Routes.designReview} className={S.link}>
                 {t('navigation.designReview')}
-              </PrefetchLink>
+              </a>
             </Paper.Title>
             <Paper.Description>
               <Text as="span" color="muted">{t('home.designReviewDescription')}</Text>
@@ -27,9 +26,9 @@ export default async function HomePage() {
         <Paper className={S.paper}>
           <Paper.Header>
             <Paper.Title>
-              <PrefetchLink href={Routes.agentToolkit} className={S.link}>
+              <a href={Routes.agentToolkit} className={S.link}>
                 {t('navigation.agentToolkit')}
-              </PrefetchLink>
+              </a>
             </Paper.Title>
             <Paper.Description>
               <Text as="span" color="muted">{t('home.agentToolkitDescription')}</Text>
@@ -40,9 +39,9 @@ export default async function HomePage() {
         <Paper className={S.paper}>
           <Paper.Header>
             <Paper.Title>
-              <PrefetchLink href={Routes.componentLibrary} className={S.link}>
+              <a href={Routes.componentLibrary} className={S.link}>
                 {t('navigation.componentLibrary')}
-              </PrefetchLink>
+              </a>
             </Paper.Title>
             <Paper.Description>
               <Text as="span" color="muted">{t('home.componentLibraryDescription')}</Text>

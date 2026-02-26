@@ -1,8 +1,9 @@
 import { NextIntlClientProvider } from 'next-intl'
-import { FontSetup } from '@stackone-ui/core/fonts'
+import { FontSetup } from '@stackone-ui/core/theming'
 import { getThemeFromCookies, ThemeInitScript } from '@stackone-ui/core/providers/server'
+import { SpeculationRules } from '@stackone-ui/core/speculation-rules'
 import { getLocale, getMessages, getTranslations } from '@stackone/i18n'
-import { MFE_ORIGINS } from '@/lib/mfe-urls'
+import { MFE_BASE_PATHS, MFE_ORIGINS } from '@/lib/mfe-urls'
 import { Providers } from './providers'
 import type { Metadata } from 'next'
 import './globals.css'
@@ -46,6 +47,10 @@ export default async function RootLayout({
         {MFE_ORIGINS.map((origin) =>
           <link key={origin} rel="preconnect" href={origin} />,
         )}
+        {/* Speculation Rules for MFE prefetch/prerender (Chrome/Edge 109+) */}
+        <SpeculationRules
+          prefetchPaths={Object.values(MFE_BASE_PATHS).map((p) => `${p}/*`)}
+        />
       </head>
       <body className={FontSetup.bodyClassName}>
         <NextIntlClientProvider messages={messages}>
